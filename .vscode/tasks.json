@@ -1,0 +1,46 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build-api",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/src/Enfo.API/Enfo.API.csproj"
+            ],
+            "problemMatcher": "$tsc"
+        },
+        {
+            "label": "build-ui",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/src/Enfo.UI/Enfo.UI.csproj"
+            ],
+            "problemMatcher": "$tsc"
+        },
+        {
+            "label": "publish-api",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "publish",
+                "${workspaceFolder}/src/Enfo.API/Enfo.API.csproj"
+            ],
+            "problemMatcher": "$tsc"
+        },
+        {
+            "label": "watch-api",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "watch",
+                "run",
+                "${workspaceFolder}/src/Enfo.API/Enfo.API.csproj"
+            ],
+            "problemMatcher": "$tsc"
+        }
+    ]
+}
