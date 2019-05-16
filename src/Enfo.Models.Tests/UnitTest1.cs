@@ -1,7 +1,7 @@
 using System;
 using Xunit;
 
-namespace Enfo.Entities.Tests
+namespace Enfo.Models.Tests
 {
     public class UnitTest1
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Enfo.Entities
+namespace Enfo.Models
 {
     public class Class1
     {

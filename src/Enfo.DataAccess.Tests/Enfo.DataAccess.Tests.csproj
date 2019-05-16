@@ -17,7 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Enfo.DataAccess\Enfo.DataAccess.csproj" />
-    <ProjectReference Include="..\Enfo.Entities\Enfo.Entities.csproj" />
+    <ProjectReference Include="..\Enfo.Models\Enfo.Models.csproj" />
   </ItemGroup>
 
 </Project>

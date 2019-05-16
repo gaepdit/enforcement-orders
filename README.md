@@ -24,7 +24,7 @@ Enforcement order notices are time-critical and high-profile public information.
 
 The Visual Studio solution contains eight projects:
 
-* Entities - A class library containing the data models and business logic
+* Models - A class library containing the data models and business logic
 * DataAccess - A class library containing the database interaction
 * API - ASP.NET Core Web API
 * UI - ASP.NET Core Web App with Razor Pages

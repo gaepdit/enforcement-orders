@@ -13,7 +13,7 @@
 
 
   <ItemGroup>
-    <ProjectReference Include="..\Enfo.Entities\Enfo.Entities.csproj" />
+    <ProjectReference Include="..\Enfo.Models\Enfo.Models.csproj" />
     <ProjectReference Include="..\Enfo.API\Enfo.API.csproj" />
   </ItemGroup>
 

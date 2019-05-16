@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Enfo.Entities\Enfo.Entities.csproj" />
+    <ProjectReference Include="..\Enfo.Models\Enfo.Models.csproj" />
   </ItemGroup>
 
 </Project>
