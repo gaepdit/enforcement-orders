@@ -9,7 +9,7 @@ namespace Enfo.Models.Tests.Utils
         [Fact]
         public void ConcatNonEmptyStrings_Empty_ReturnsNull()
         {
-            string[] emptyStringArray = new string[0];
+            string[] emptyStringArray = Array.Empty<string>();
 
             string actual = ConcatNonEmptyStrings(emptyStringArray, ",");
 
