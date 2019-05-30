@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace Enfo.Models
+namespace Enfo.Models.Models
 {
-    public class LegalAuthority : ModelBase
+    public class LegalAuthority : BaseModel
     {
         [Required(ErrorMessage = "Legal Authority is required")]
         [DisplayName("Legal Authority")]

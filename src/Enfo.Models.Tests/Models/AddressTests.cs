@@ -1,6 +1,5 @@
-using System;
+using Enfo.Models.Models;
 using Xunit;
-using Enfo.Models;
 
 namespace Enfo.Models.Tests.Models
 {

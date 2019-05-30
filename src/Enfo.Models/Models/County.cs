@@ -1,12 +1,12 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Enfo.Models
+namespace Enfo.Models.Models
 {
-    public class County
+    public class County : BaseModel
     {
-        public int Id {get;set;}
+        public int Id { get; set; }
 
         [StringLength(20)]
-        public string CountyName {get;set;}
+        public string CountyName { get; set; }
     }
 }

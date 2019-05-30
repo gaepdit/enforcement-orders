@@ -2,9 +2,9 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using static Enfo.Models.Utils.StringFunctions;
 
-namespace Enfo.Models
+namespace Enfo.Models.Models
 {
-    public class Address : ModelBase
+    public class Address : BaseModel
     {
         // Postal (mailable) addresses only
 
@@ -39,9 +39,9 @@ namespace Enfo.Models
 
         private string CompileAddressString(string lineSeparator = ", ")
         {
-            string cityState = ConcatNonEmptyStrings(new string[] { this.City, this.State }, ", ");
-            string cityStateZip = ConcatNonEmptyStrings(new string[] { cityState, this.PostalCode }, " ");
-            return ConcatNonEmptyStrings(new string[] { this.Street, this.Street2, cityStateZip }, lineSeparator);
+            string cityState = ConcatNonEmptyStrings(new string[] { City, State }, ", ");
+            string cityStateZip = ConcatNonEmptyStrings(new string[] { cityState, PostalCode }, " ");
+            return ConcatNonEmptyStrings(new string[] { Street, Street2, cityStateZip }, lineSeparator);
         }
 
         public bool Active { get; set; } = true;
