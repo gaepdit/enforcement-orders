@@ -27,6 +27,7 @@ namespace Enfo.API
             services.AddDbContext<EnfoDbContext>(options => options.UseSqlite("Data Source=EnfoSqliteDatabase.db"));
 
             services.AddScoped<ICountyService, CountyService>();
+            services.AddScoped<ILegalAuthorityService, LegalAuthorityService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

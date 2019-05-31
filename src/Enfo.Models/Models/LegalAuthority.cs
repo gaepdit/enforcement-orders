@@ -5,6 +5,8 @@ namespace Enfo.Models.Models
 {
     public class LegalAuthority : BaseModel
     {
+        public int Id { get; set; }
+
         [Required(ErrorMessage = "Legal Authority is required")]
         [DisplayName("Legal Authority")]
         [StringLength(100)]

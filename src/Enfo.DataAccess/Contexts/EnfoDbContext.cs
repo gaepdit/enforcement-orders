@@ -9,6 +9,7 @@ namespace Enfo.DataAccess.Contexts
         public EnfoDbContext(DbContextOptions<EnfoDbContext> options) : base(options) { }
 
         public DbSet<County> Counties { get; set; }
+        public DbSet<LegalAuthority> LegalAuthorities { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
