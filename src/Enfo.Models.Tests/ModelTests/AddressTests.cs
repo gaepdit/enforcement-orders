@@ -1,12 +1,12 @@
 using Enfo.Models.Models;
 using Xunit;
 
-namespace Enfo.Models.Tests.Models
+namespace Enfo.Models.Tests.ModelTests
 {
     public class AddressTests
     {
         [Fact]
-        public void ComplexAddressToString_ReturnsCorrectString()
+        public void ComplexAddressToStringReturnsCorrectString()
         {
             var address = new Address()
             {
@@ -23,7 +23,7 @@ namespace Enfo.Models.Tests.Models
         }
 
         [Fact]
-        public void SimpleAddressToString_ReturnsCorrectString()
+        public void SimpleAddressToStringReturnsCorrectString()
         {
             var address = new Address()
             {

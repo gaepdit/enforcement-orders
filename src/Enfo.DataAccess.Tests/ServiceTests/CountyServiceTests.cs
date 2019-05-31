@@ -27,7 +27,7 @@ namespace Enfo.DataAccess.Tests.ServiceTests
         }
 
         [Fact]
-        public async Task GetAllReturnsCountyList()
+        public async Task GetAllReturnsCountyListAsync()
         {
             ICountyService countyService = GetCountyService();
 

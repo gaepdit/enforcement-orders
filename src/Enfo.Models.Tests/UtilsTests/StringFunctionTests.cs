@@ -2,12 +2,12 @@ using System;
 using Xunit;
 using static Enfo.Models.Utils.StringFunctions;
 
-namespace Enfo.Models.Tests.Utils
+namespace Enfo.Models.Tests.UtilsTests
 {
     public class StringFunctionTests
     {
         [Fact]
-        public void ConcatNonEmptyStrings_Empty_ReturnsNull()
+        public void ConcatEmptyStringsReturnsNull()
         {
             string[] emptyStringArray = Array.Empty<string>();
 
@@ -17,7 +17,7 @@ namespace Enfo.Models.Tests.Utils
         }
 
         [Fact]
-        public void ConcatNonEmptyString_NonemptyArray_ReturnsCorrectString()
+        public void ConcatNonEmptyStringArrayReturnsCorrectString()
         {
             var stringArray = new string[] { "abc", "def" };
 
@@ -27,7 +27,7 @@ namespace Enfo.Models.Tests.Utils
         }
 
         [Fact]
-        public void ConcatNonEmptyString_MixedArray_ReturnsCorrectString()
+        public void ConcatMixedArrayReturnsCorrectString()
         {
             var stringArray = new string[] { "abc", null, "def" };
 
