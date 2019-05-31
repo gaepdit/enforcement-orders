@@ -59,5 +59,27 @@ namespace Enfo.DataAccess.Tests.ServiceTests
 
             Assert.Equal(1, county.Id);
         }
+
+        [Fact]
+        public async Task GetByMissingIdReturnsNullAsync()
+        {
+            ICountyService countyService = GetCountyService();
+
+            CountyResource county = await countyService.GetByIdAsync(0)
+                .ConfigureAwait(false);
+
+            Assert.Null(county);
+        }
+
+        [Fact]
+        public async Task GetByMissingNameReturnsNullAsync()
+        {
+            ICountyService countyService = GetCountyService();
+
+            CountyResource county = await countyService.GetByNameAsync("None")
+                .ConfigureAwait(false);
+
+            Assert.Null(county);
+        }
     }
 }

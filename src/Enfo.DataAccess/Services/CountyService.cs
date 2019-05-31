@@ -24,8 +24,13 @@ namespace Enfo.DataAccess.Services
         public async Task<CountyResource> GetByIdAsync(int id)
         {
             var county = await Context.Counties
-                .FirstOrDefaultAsync(item => item.Id == id)
+                .FindAsync(id)
                 .ConfigureAwait(false);
+
+            if (county == null)
+            {
+                return null;
+            }
 
             return new CountyResource(county);
         }
@@ -33,8 +38,13 @@ namespace Enfo.DataAccess.Services
         public async Task<CountyResource> GetByNameAsync(string name)
         {
             var county = await Context.Counties
-                .FirstOrDefaultAsync(item => item.CountyName == name)
+                .SingleOrDefaultAsync(item => item.CountyName == name)
                 .ConfigureAwait(false);
+
+            if (county == null)
+            {
+                return null;
+            }
 
             return new CountyResource(county);
         }

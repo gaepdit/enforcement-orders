@@ -10,8 +10,11 @@ namespace Enfo.Models.Resources
 
         public CountyResource(County county)
         {
-            Id = county.Id;
-            CountyName = county.CountyName;
+            if (county != null)
+            {
+                Id = county.Id;
+                CountyName = county.CountyName;
+            }
         }
     }
 }
