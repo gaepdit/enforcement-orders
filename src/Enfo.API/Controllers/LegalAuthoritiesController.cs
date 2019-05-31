@@ -12,12 +12,12 @@ namespace Enfo.API.Controllers
     {
         private readonly ILegalAuthorityService service;
 
-        public LegalAuthoritiesController(ILegalAuthorityService legalAuthorityService)
+        public LegalAuthoritiesController(ILegalAuthorityService legalAuthorityService) 
             => service = legalAuthorityService;
 
         // GET: api/LegalAuthorities
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<LegalAuthorityResource>>> GetAllAsync()
+        public async Task<ActionResult<IEnumerable<LegalAuthorityResource>>> GetAllAsync() 
             => Ok(await service.GetAllAsync().ConfigureAwait(false));
 
         // GET: api/LegalAuthorities/5
@@ -34,5 +34,48 @@ namespace Enfo.API.Controllers
 
             return legalAuthority;
         }
+
+        //// PUT: api/LegalAuthorities/5
+        //[HttpPut("{id}")]
+        //public async Task<IActionResult> PutLegalAuthority(int id, LegalAuthorityResource legalAuthority)
+        //{
+        //    if (id != legalAuthority.Id)
+        //    {
+        //        return BadRequest();
+        //    }
+
+        //    _context.Entry(legalAuthority).State = EntityState.Modified;
+
+        //    try
+        //    {
+        //        await _context.SaveChangesAsync();
+        //    }
+        //    catch (DbUpdateConcurrencyException)
+        //    {
+        //        if (!LegalAuthorityExistsAsync(id))
+        //        {
+        //            return NotFound();
+        //        }
+        //        else
+        //        {
+        //            throw;
+        //        }
+        //    }
+
+        //    return NoContent();
+        //}
+
+        //// POST: api/LegalAuthorities
+        //[HttpPost]
+        //public async Task<ActionResult<LegalAuthority>> PostLegalAuthority(LegalAuthority legalAuthority)
+        //{
+        //    _context.LegalAuthorities.Add(legalAuthority);
+        //    await _context.SaveChangesAsync();
+
+        //    return CreatedAtAction("GetLegalAuthority", new { id = legalAuthority.Id }, legalAuthority);
+        //}
+
+        private async Task<bool> LegalAuthorityExistsAsync(int id) 
+            => await service.ExistsAsync(id).ConfigureAwait(false);
     }
 }

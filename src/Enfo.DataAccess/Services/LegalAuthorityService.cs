@@ -34,5 +34,28 @@ namespace Enfo.DataAccess.Services
 
             return new LegalAuthorityResource(item);
         }
+
+        public Task<bool> CreateAsync(LegalAuthorityResource item)
+        {
+
+            throw new System.NotImplementedException();
+        }
+
+        public Task<LegalAuthorityResource> UpdateAsync(int id, LegalAuthorityResource item)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        Task<LegalAuthorityResource> ILegalAuthorityService.CreateAsync(LegalAuthorityResource item)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public async Task<bool> ExistsAsync(int id)
+        {
+            return await Context.LegalAuthorities.AsNoTracking()
+                .AnyAsync(e => e.Id == id)
+                .ConfigureAwait(false);
+        }
     }
 }
