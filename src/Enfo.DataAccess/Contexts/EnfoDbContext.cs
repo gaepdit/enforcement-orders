@@ -1,0 +1,20 @@
+﻿using Enfo.DataAccess.SeedData;
+using Enfo.Models.Models;
+using Microsoft.EntityFrameworkCore;
+
+namespace Enfo.DataAccess.Contexts
+{
+    public class EnfoDbContext : DbContext
+    {
+        public EnfoDbContext(DbContextOptions<EnfoDbContext> options) : base(options) { }
+
+        public DbSet<County> Counties { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+
+            builder.Entity<County>().HasData(CountySeedData.GetCounties());
+        }
+    }
+}
