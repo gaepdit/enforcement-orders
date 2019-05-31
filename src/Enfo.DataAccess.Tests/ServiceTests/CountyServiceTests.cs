@@ -1,4 +1,4 @@
-﻿using Enfo.DataAccess.Contexts;
+using Enfo.DataAccess.Contexts;
 using Enfo.DataAccess.Services;
 using Enfo.Models.Resources;
 using Enfo.Models.Services;
@@ -12,10 +12,10 @@ namespace Enfo.DataAccess.Tests.ServiceTests
 {
     public class CountyServiceTests
     {
-        private ICountyService GetCountyService()
+        private ICountyService GetService([CallerMemberName] string dbName = null)
         {
             var options = new DbContextOptionsBuilder<EnfoDbContext>()
-                .UseSqlite("Data Source=EnfoSqliteTestDatabase.db")
+                .UseSqlite($"Data Source={dbName}.db")
                 .Options;
 
             var context = new EnfoDbContext(options);
@@ -27,59 +27,59 @@ namespace Enfo.DataAccess.Tests.ServiceTests
         }
 
         [Fact]
-        public async Task GetAllReturnsCountyListAsync()
+        public async Task GetAllCountiesReturnsListAsync()
         {
-            ICountyService countyService = GetCountyService();
+            ICountyService service = GetService();
 
-            IEnumerable<CountyResource> counties = await countyService.GetAllAsync()
+            IEnumerable<CountyResource> items = await service.GetAllAsync()
                 .ConfigureAwait(false);
 
-            Assert.Equal(159, counties.Count());
-            Assert.Equal("Appling", counties.First().CountyName);
+            Assert.Equal(159, items.Count());
+            Assert.Equal("Appling", items.First().CountyName);
         }
 
         [Fact]
-        public async Task GetByIdReturnsCountyAsync()
+        public async Task GetCountyByIdReturnsItemAsync()
         {
-            ICountyService countyService = GetCountyService();
+            ICountyService service = GetService();
 
-            CountyResource county = await countyService.GetByIdAsync(1)
+            CountyResource item = await service.GetByIdAsync(1)
                 .ConfigureAwait(false);
 
-            Assert.Equal("Appling", county.CountyName);
+            Assert.Equal("Appling", item.CountyName);
         }
 
         [Fact]
-        public async Task GetByNameReturnsCountyAsync()
+        public async Task GetCountyByNameReturnsItemAsync()
         {
-            ICountyService countyService = GetCountyService();
+            ICountyService service = GetService();
 
-            CountyResource county = await countyService.GetByNameAsync("Appling")
+            CountyResource item = await service.GetByNameAsync("Appling")
                 .ConfigureAwait(false);
 
-            Assert.Equal(1, county.Id);
+            Assert.Equal(1, item.Id);
         }
 
         [Fact]
-        public async Task GetByMissingIdReturnsNullAsync()
+        public async Task GetCountyByMissingIdReturnsNullAsync()
         {
-            ICountyService countyService = GetCountyService();
+            ICountyService service = GetService();
 
-            CountyResource county = await countyService.GetByIdAsync(0)
+            CountyResource item = await service.GetByIdAsync(-1)
                 .ConfigureAwait(false);
 
-            Assert.Null(county);
+            Assert.Null(item);
         }
 
         [Fact]
-        public async Task GetByMissingNameReturnsNullAsync()
+        public async Task GetCountyByMissingNameReturnsNullAsync()
         {
-            ICountyService countyService = GetCountyService();
+            ICountyService service = GetService();
 
-            CountyResource county = await countyService.GetByNameAsync("None")
+            CountyResource item = await service.GetByNameAsync("None")
                 .ConfigureAwait(false);
 
-            Assert.Null(county);
+            Assert.Null(item);
         }
     }
 }

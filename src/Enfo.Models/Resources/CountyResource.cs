@@ -8,6 +8,8 @@ namespace Enfo.Models.Resources
 
         public string CountyName { get; set; }
 
+        public CountyResource() { }
+
         public CountyResource(County county)
         {
             if (county != null)

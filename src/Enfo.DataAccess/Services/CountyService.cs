@@ -14,39 +14,39 @@ namespace Enfo.DataAccess.Services
 
         public async Task<IEnumerable<CountyResource>> GetAllAsync()
         {
-            var counties = await Context.Counties
+            var items = await Context.Counties.AsNoTracking()
                 .ToListAsync()
                 .ConfigureAwait(false);
 
-            return counties.Select(item => new CountyResource(item));
+            return items.Select(e => new CountyResource(e));
         }
 
         public async Task<CountyResource> GetByIdAsync(int id)
         {
-            var county = await Context.Counties
+            var item = await Context.Counties
                 .FindAsync(id)
                 .ConfigureAwait(false);
 
-            if (county == null)
+            if (item == null)
             {
                 return null;
             }
 
-            return new CountyResource(county);
+            return new CountyResource(item);
         }
 
         public async Task<CountyResource> GetByNameAsync(string name)
         {
-            var county = await Context.Counties
-                .SingleOrDefaultAsync(item => item.CountyName == name)
+            var item = await Context.Counties.AsNoTracking()
+                .SingleOrDefaultAsync(e => e.CountyName == name)
                 .ConfigureAwait(false);
 
-            if (county == null)
+            if (item == null)
             {
                 return null;
             }
 
-            return new CountyResource(county);
+            return new CountyResource(item);
         }
     }
 }
