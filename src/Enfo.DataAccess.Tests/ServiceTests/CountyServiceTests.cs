@@ -1,10 +1,12 @@
-using Enfo.DataAccess.Contexts;
+﻿using Enfo.DataAccess.Contexts;
 using Enfo.DataAccess.Services;
 using Enfo.Models.Resources;
 using Enfo.Models.Services;
+using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -34,8 +36,10 @@ namespace Enfo.DataAccess.Tests.ServiceTests
             IEnumerable<CountyResource> items = await service.GetAllAsync()
                 .ConfigureAwait(false);
 
-            Assert.Equal(159, items.Count());
-            Assert.Equal("Appling", items.First().CountyName);
+            var expected = new CountyResource() { Id = 1, CountyName = "Appling" };
+
+            items.Should().HaveCount(159);            
+            items.First().Should().BeEquivalentTo(expected);
         }
 
         [Fact]
@@ -46,7 +50,9 @@ namespace Enfo.DataAccess.Tests.ServiceTests
             CountyResource item = await service.GetByIdAsync(1)
                 .ConfigureAwait(false);
 
-            Assert.Equal("Appling", item.CountyName);
+            var expected = new CountyResource() { Id = 1, CountyName = "Appling" };
+
+            item.Should().BeEquivalentTo(expected);
         }
 
         [Fact]
@@ -57,7 +63,9 @@ namespace Enfo.DataAccess.Tests.ServiceTests
             CountyResource item = await service.GetByNameAsync("Appling")
                 .ConfigureAwait(false);
 
-            Assert.Equal(1, item.Id);
+            var expected = new CountyResource() { Id = 1, CountyName = "Appling" };
+
+            item.Should().BeEquivalentTo(expected);
         }
 
         [Fact]
@@ -68,7 +76,7 @@ namespace Enfo.DataAccess.Tests.ServiceTests
             CountyResource item = await service.GetByIdAsync(-1)
                 .ConfigureAwait(false);
 
-            Assert.Null(item);
+            item.Should().BeNull();
         }
 
         [Fact]
@@ -79,7 +87,7 @@ namespace Enfo.DataAccess.Tests.ServiceTests
             CountyResource item = await service.GetByNameAsync("None")
                 .ConfigureAwait(false);
 
-            Assert.Null(item);
+            item.Should().BeNull();
         }
     }
 }

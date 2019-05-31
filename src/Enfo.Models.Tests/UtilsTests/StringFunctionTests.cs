@@ -1,3 +1,4 @@
+using FluentAssertions;
 using System;
 using Xunit;
 using static Enfo.Models.Utils.StringFunctions;
@@ -13,7 +14,7 @@ namespace Enfo.Models.Tests.UtilsTests
 
             string actual = ConcatNonEmptyStrings(emptyStringArray, ",");
 
-            Assert.Equal("", actual);
+            actual.Should().BeEmpty();
         }
 
         [Fact]
@@ -23,7 +24,7 @@ namespace Enfo.Models.Tests.UtilsTests
 
             string actual = ConcatNonEmptyStrings(stringArray, ",");
 
-            Assert.Equal("abc,def", actual);
+            actual.Should().Be("abc,def");
         }
 
         [Fact]
@@ -33,7 +34,7 @@ namespace Enfo.Models.Tests.UtilsTests
 
             string actual = ConcatNonEmptyStrings(stringArray, ",");
 
-            Assert.Equal("abc,def", actual);
+            actual.Should().Be("abc,def");
         }
     }
 }

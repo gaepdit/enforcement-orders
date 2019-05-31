@@ -1,4 +1,5 @@
 using Enfo.Models.Models;
+using FluentAssertions;
 using Xunit;
 
 namespace Enfo.Models.Tests.ModelTests
@@ -17,9 +18,8 @@ namespace Enfo.Models.Tests.ModelTests
             };
 
             var actual = address.ToString();
-            string expected = "123 Any Street, Suite 404, Atlanta, GA 10101";
 
-            Assert.Equal(expected, actual);
+            actual.Should().Be("123 Any Street, Suite 404, Atlanta, GA 10101");
         }
 
         [Fact]
@@ -34,9 +34,7 @@ namespace Enfo.Models.Tests.ModelTests
             };
 
             var actual = address.ToString();
-            string expected = "123 Any Street, New York, NY 10101";
-
-            Assert.Equal(expected, actual);
+            actual.Should().Be("123 Any Street, New York, NY 10101");
         }
     }
 }

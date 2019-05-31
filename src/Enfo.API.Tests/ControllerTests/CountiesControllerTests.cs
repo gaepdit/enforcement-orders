@@ -2,6 +2,7 @@
 using Enfo.API.Tests.ServiceFakes;
 using Enfo.Models.Resources;
 using Enfo.Models.Services;
+using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,7 +30,7 @@ namespace Enfo.API.Tests.ControllerTests
                 .ConfigureAwait(false))
                 .Result;
 
-            Assert.IsType<OkObjectResult>(result);
+            result.Should().BeOfType<OkObjectResult>();
         }
 
         [Fact]
@@ -56,8 +57,10 @@ namespace Enfo.API.Tests.ControllerTests
                 .Result as OkObjectResult;
             var items = result.Value as IEnumerable<CountyResource>;
 
-            Assert.Equal(3, items.Count());
-            Assert.Equal("Appling", items.First().CountyName);
+            var expected = new CountyResource() { Id = 1, CountyName = "Appling" };
+
+            items.Should().HaveCount(3);
+            items.First().Should().BeEquivalentTo(expected);
         }
 
         [Fact]
@@ -70,9 +73,9 @@ namespace Enfo.API.Tests.ControllerTests
                 .ConfigureAwait(false))
                 .Value;
 
-            Assert.IsType<CountyResource>(value);
+            value.Should().BeOfType<CountyResource>();
         }
-        
+
         [Theory]
         [InlineData(1)]
         [InlineData(2)]
@@ -86,7 +89,7 @@ namespace Enfo.API.Tests.ControllerTests
                 .ConfigureAwait(false))
                 .Value as CountyResource;
 
-            Assert.Equal(countiesList.Find(item => item.Id == id), value);
+            value.Should().Be(countiesList.Find(e => e.Id == id));
         }
 
         [Fact]
@@ -99,7 +102,7 @@ namespace Enfo.API.Tests.ControllerTests
                 .ConfigureAwait(false))
                 .Value;
 
-            Assert.IsType<CountyResource>(value);
+            value.Should().BeOfType<CountyResource>();
         }
 
         [Theory]
@@ -115,7 +118,7 @@ namespace Enfo.API.Tests.ControllerTests
                 .ConfigureAwait(false))
                 .Value as CountyResource;
 
-            Assert.Equal(countiesList.Find(e => e.CountyName == name), value);
+            value.Should().Be(countiesList.Find(e => e.CountyName == name));
         }
 
         [Fact]
@@ -128,7 +131,7 @@ namespace Enfo.API.Tests.ControllerTests
                 .ConfigureAwait(false))
                 .Value;
 
-            Assert.Null(result);
+            result.Should().BeNull();
         }
 
         [Fact]
@@ -141,7 +144,7 @@ namespace Enfo.API.Tests.ControllerTests
                 .ConfigureAwait(false))
                 .Value;
 
-            Assert.Null(result);
+            result.Should().BeNull();
         }
     }
 }
