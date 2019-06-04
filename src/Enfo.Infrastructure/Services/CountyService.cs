@@ -1,4 +1,4 @@
-﻿using Enfo.DataAccess.Contexts;
+﻿using Enfo.Infrastructure.Contexts;
 using Enfo.Domain.Resources;
 using Enfo.Domain.Services;
 using Microsoft.EntityFrameworkCore;
@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Enfo.DataAccess.Services
+namespace Enfo.Infrastructure.Services
 {
     public class CountyService : BaseService, ICountyService
     {

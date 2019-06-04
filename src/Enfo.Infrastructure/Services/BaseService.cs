@@ -1,6 +1,6 @@
-﻿using Enfo.DataAccess.Contexts;
+﻿using Enfo.Infrastructure.Contexts;
 
-namespace Enfo.DataAccess.Services
+namespace Enfo.Infrastructure.Services
 {
     public abstract class BaseService
     {

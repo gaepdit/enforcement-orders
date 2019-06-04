@@ -1,8 +1,8 @@
-﻿using Enfo.DataAccess.SeedData;
+﻿using Enfo.Infrastructure.SeedData;
 using Enfo.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace Enfo.DataAccess.Contexts
+namespace Enfo.Infrastructure.Contexts
 {
     public class EnfoDbContext : DbContext
     {

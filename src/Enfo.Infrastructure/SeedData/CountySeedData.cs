@@ -1,7 +1,7 @@
 ﻿using Enfo.Domain.Models;
 using System.Collections.Generic;
 
-namespace Enfo.DataAccess.SeedData
+namespace Enfo.Infrastructure.SeedData
 {
     internal static class CountySeedData
     {

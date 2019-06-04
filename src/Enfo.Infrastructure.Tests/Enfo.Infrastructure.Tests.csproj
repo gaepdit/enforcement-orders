@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Enfo.DataAccess\Enfo.DataAccess.csproj" />
+    <ProjectReference Include="..\Enfo.Infrastructure\Enfo.Infrastructure.csproj" />
     <ProjectReference Include="..\Enfo.Domain\Enfo.Domain.csproj" />
   </ItemGroup>
 

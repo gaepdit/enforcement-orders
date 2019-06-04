@@ -1,5 +1,5 @@
-﻿using Enfo.DataAccess.Contexts;
-using Enfo.DataAccess.Services;
+﻿using Enfo.Infrastructure.Contexts;
+using Enfo.Infrastructure.Services;
 using Enfo.Domain.Resources;
 using Enfo.Domain.Services;
 using FluentAssertions;
@@ -10,7 +10,7 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Enfo.DataAccess.Tests.ServiceTests
+namespace Enfo.Infrastructure.Tests.ServiceTests
 {
     public class CountyServiceTests
     {

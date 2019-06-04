@@ -9,9 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Enfo.Domain", "src\Enfo.Dom
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Enfo.Domain.Tests", "src\Enfo.Domain.Tests\Enfo.Domain.Tests.csproj", "{CB2D6967-ED80-43FB-832D-69781F0759F6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Enfo.DataAccess", "src\Enfo.DataAccess\Enfo.DataAccess.csproj", "{F339E36D-F239-4AAD-BA7D-D098419370DD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Enfo.Infrastructure", "src\Enfo.Infrastructure\Enfo.Infrastructure.csproj", "{F339E36D-F239-4AAD-BA7D-D098419370DD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Enfo.DataAccess.Tests", "src\Enfo.DataAccess.Tests\Enfo.DataAccess.Tests.csproj", "{6FF2303D-AAB1-48D8-A650-3330E48467E3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Enfo.Infrastructure.Tests", "src\Enfo.Infrastructure.Tests\Enfo.Infrastructure.Tests.csproj", "{6FF2303D-AAB1-48D8-A650-3330E48467E3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Enfo.API", "src\Enfo.API\Enfo.API.csproj", "{34E2D0AF-C4FD-4D94-AF51-D926EC86D1BC}"
 EndProject
