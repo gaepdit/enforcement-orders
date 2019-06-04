@@ -5,9 +5,9 @@ VisualStudioVersion = 16.0.28803.452
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{A540C1B7-4A55-45C4-8967-CF2C8D3AC1B2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Enfo.Models", "src\Enfo.Models\Enfo.Models.csproj", "{93D8DE45-B5C4-425B-9254-FC4DBA2F1112}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Enfo.Domain", "src\Enfo.Domain\Enfo.Domain.csproj", "{93D8DE45-B5C4-425B-9254-FC4DBA2F1112}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Enfo.Models.Tests", "src\Enfo.Models.Tests\Enfo.Models.Tests.csproj", "{CB2D6967-ED80-43FB-832D-69781F0759F6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Enfo.Domain.Tests", "src\Enfo.Domain.Tests\Enfo.Domain.Tests.csproj", "{CB2D6967-ED80-43FB-832D-69781F0759F6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Enfo.DataAccess", "src\Enfo.DataAccess\Enfo.DataAccess.csproj", "{F339E36D-F239-4AAD-BA7D-D098419370DD}"
 EndProject

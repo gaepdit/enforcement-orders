@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Enfo.Models.Models
+namespace Enfo.Domain.Models
 {
     public class EnforcementOrder : BaseModel
     {

@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Enfo.Models.Models
+namespace Enfo.Domain.Models
 {
     public class County : BaseModel
     {

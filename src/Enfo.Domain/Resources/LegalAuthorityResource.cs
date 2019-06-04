@@ -1,7 +1,7 @@
-﻿using Enfo.Models.Models;
+﻿using Enfo.Domain.Models;
 using System.ComponentModel;
 
-namespace Enfo.Models.Resources
+namespace Enfo.Domain.Resources
 {
     public class LegalAuthorityResource
     {

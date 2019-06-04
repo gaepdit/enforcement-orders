@@ -14,7 +14,7 @@
 
 
   <ItemGroup>
-    <ProjectReference Include="..\Enfo.Models\Enfo.Models.csproj" />
+    <ProjectReference Include="..\Enfo.Domain\Enfo.Domain.csproj" />
     <ProjectReference Include="..\Enfo.API\Enfo.API.csproj" />
   </ItemGroup>
 

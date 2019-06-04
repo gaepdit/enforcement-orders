@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Enfo.Models.Models
+namespace Enfo.Domain.Models
 {
     public abstract class BaseModel
     {

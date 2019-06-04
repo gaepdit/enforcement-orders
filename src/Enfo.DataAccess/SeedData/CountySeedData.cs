@@ -1,4 +1,4 @@
-﻿using Enfo.Models.Models;
+﻿using Enfo.Domain.Models;
 using System.Collections.Generic;
 
 namespace Enfo.DataAccess.SeedData

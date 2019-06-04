@@ -1,8 +1,8 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using static Enfo.Models.Utils.StringFunctions;
+using static Enfo.Domain.Utils.StringFunctions;
 
-namespace Enfo.Models.Models
+namespace Enfo.Domain.Models
 {
     public class Address : BaseModel
     {

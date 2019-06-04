@@ -1,6 +1,6 @@
-using Enfo.Models.Models;
+using Enfo.Domain.Models;
 
-namespace Enfo.Models.Resources
+namespace Enfo.Domain.Resources
 {
     public class CountyResource
     {

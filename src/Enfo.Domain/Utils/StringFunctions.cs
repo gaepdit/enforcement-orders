@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 
-namespace Enfo.Models.Utils
+namespace Enfo.Domain.Utils
 {
     public static class StringFunctions
     {

@@ -1,8 +1,8 @@
 ﻿using Enfo.DataAccess.Contexts;
 using Enfo.DataAccess.Services;
-using Enfo.Models.Models;
-using Enfo.Models.Resources;
-using Enfo.Models.Services;
+using Enfo.Domain.Models;
+using Enfo.Domain.Resources;
+using Enfo.Domain.Services;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;

@@ -1,5 +1,5 @@
-﻿using Enfo.Models.Resources;
-using Enfo.Models.Services;
+﻿using Enfo.Domain.Resources;
+using Enfo.Domain.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;

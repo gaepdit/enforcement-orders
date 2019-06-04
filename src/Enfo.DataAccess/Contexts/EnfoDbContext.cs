@@ -1,5 +1,5 @@
 ﻿using Enfo.DataAccess.SeedData;
-using Enfo.Models.Models;
+using Enfo.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Enfo.DataAccess.Contexts

@@ -1,9 +1,9 @@
 using FluentAssertions;
 using System;
 using Xunit;
-using static Enfo.Models.Utils.StringFunctions;
+using static Enfo.Domain.Utils.StringFunctions;
 
-namespace Enfo.Models.Tests.UtilsTests
+namespace Enfo.Domain.Tests.UtilsTests
 {
     public class StringFunctionTests
     {

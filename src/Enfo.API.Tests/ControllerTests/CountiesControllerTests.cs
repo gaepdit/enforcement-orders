@@ -1,7 +1,7 @@
 ﻿using Enfo.API.Controllers;
 using Enfo.API.Tests.ServiceFakes;
-using Enfo.Models.Resources;
-using Enfo.Models.Services;
+using Enfo.Domain.Resources;
+using Enfo.Domain.Services;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;

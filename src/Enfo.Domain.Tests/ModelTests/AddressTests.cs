@@ -1,8 +1,8 @@
-using Enfo.Models.Models;
+using Enfo.Domain.Models;
 using FluentAssertions;
 using Xunit;
 
-namespace Enfo.Models.Tests.ModelTests
+namespace Enfo.Domain.Tests.ModelTests
 {
     public class AddressTests
     {

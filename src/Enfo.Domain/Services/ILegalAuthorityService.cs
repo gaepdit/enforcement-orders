@@ -1,8 +1,8 @@
-﻿using Enfo.Models.Resources;
+﻿using Enfo.Domain.Resources;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Enfo.Models.Services
+namespace Enfo.Domain.Services
 {
     public interface ILegalAuthorityService
     {
