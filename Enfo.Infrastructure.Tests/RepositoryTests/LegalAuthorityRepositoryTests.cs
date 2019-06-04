@@ -1,21 +1,18 @@
-﻿using Enfo.Infrastructure.Contexts;
-using Enfo.Infrastructure.Services;
-using Enfo.Domain.Models;
-using Enfo.Domain.Resources;
-using Enfo.Domain.Services;
+﻿using Enfo.Domain.Entities;
+using Enfo.Infrastructure.Contexts;
+using Enfo.Infrastructure.Repositories;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Enfo.Infrastructure.Tests.ServiceTests
+namespace Enfo.Infrastructure.Tests.RepositoryTests
 {
-    public class LegalAuthorityServiceTests
+    public class LegalAuthorityRepositoryTests
     {
-        private ILegalAuthorityService GetService([CallerMemberName] string dbName = null)
+        private ILegalAuthorityRepository GetRepository([CallerMemberName] string dbName = null)
         {
             var options = new DbContextOptionsBuilder<EnfoDbContext>()
                 .UseSqlite($"Data Source={dbName}.db")
@@ -35,32 +32,32 @@ namespace Enfo.Infrastructure.Tests.ServiceTests
 
             context.SaveChanges();
 
-            return new LegalAuthorityService(context);
+            return new LegalAuthorityRepository(context);
         }
 
         [Fact]
         public async Task GetAllLegalAuthoritiesReturnsListAsync()
         {
-            ILegalAuthorityService service = GetService();
+            ILegalAuthorityRepository repository = GetRepository();
 
-            IEnumerable<LegalAuthorityResource> items = await service.GetAllAsync()
-                .ConfigureAwait(true);
-            
-            var expected = new LegalAuthorityResource() { Id = 1, Active = true, AuthorityName = "ABC", OrderNumberTemplate = "abc" };
+            var items = await repository.ListAllAsync()
+               .ConfigureAwait(true);
+
+            var expected = new LegalAuthority() { Id = 1, Active = true, AuthorityName = "ABC", OrderNumberTemplate = "abc" };
 
             items.Should().HaveCount(3);
-            items.First().Should().BeEquivalentTo(expected);
+            items[0].Should().BeEquivalentTo(expected);
         }
 
         [Fact]
         public async Task GetLegalAuthorityByIdReturnsItemAsync()
         {
-            ILegalAuthorityService service = GetService();
+            ILegalAuthorityRepository repository = GetRepository();
 
-            LegalAuthorityResource item = await service.GetByIdAsync(1)
+            LegalAuthority item = await repository.GetByIdAsync(1)
                 .ConfigureAwait(false);
 
-            var expected = new LegalAuthorityResource() { Id = 1, Active = true, AuthorityName = "ABC", OrderNumberTemplate = "abc" };
+            var expected = new LegalAuthority() { Id = 1, Active = true, AuthorityName = "ABC", OrderNumberTemplate = "abc" };
 
             item.Should().BeEquivalentTo(expected);
         }
@@ -68,9 +65,9 @@ namespace Enfo.Infrastructure.Tests.ServiceTests
         [Fact]
         public async Task GetLegalAuthorityByMissingIdReturnsNullAsync()
         {
-            ILegalAuthorityService service = GetService();
+            ILegalAuthorityRepository repository = GetRepository();
 
-            LegalAuthorityResource item = await service.GetByIdAsync(-1)
+            LegalAuthority item = await repository.GetByIdAsync(-1)
                 .ConfigureAwait(false);
 
             item.Should().BeNull();
