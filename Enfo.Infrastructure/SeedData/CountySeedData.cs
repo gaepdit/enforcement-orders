@@ -1,4 +1,4 @@
-﻿using Enfo.Domain.Models;
+﻿using Enfo.Domain.Entities;
 using System.Collections.Generic;
 
 namespace Enfo.Infrastructure.SeedData

@@ -1,12 +1,10 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace Enfo.Domain.Models
+namespace Enfo.Domain.Entities
 {
-    public class LegalAuthority : BaseModel
+    public class LegalAuthority : BaseEntity
     {
-        public int Id { get; set; }
-
         [Required(ErrorMessage = "Legal Authority is required")]
         [DisplayName("Legal Authority")]
         [StringLength(100)]
@@ -15,7 +13,5 @@ namespace Enfo.Domain.Models
         [DisplayName("Order Number Template")]
         [StringLength(40)]
         public string OrderNumberTemplate { get; set; }
-
-        public bool Active { get; set; } = true;
     }
 }

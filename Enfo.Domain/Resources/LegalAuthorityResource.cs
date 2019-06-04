@@ -1,4 +1,4 @@
-﻿using Enfo.Domain.Models;
+﻿using Enfo.Domain.Entities;
 using System.ComponentModel;
 
 namespace Enfo.Domain.Resources
@@ -21,7 +21,7 @@ namespace Enfo.Domain.Resources
         {
             if (legalAuthority != null)
             {
-                Id = legalAuthority.Id;                
+                Id = legalAuthority.Id;
                 Active = legalAuthority.Active;
                 AuthorityName = legalAuthority.AuthorityName;
                 OrderNumberTemplate = legalAuthority.OrderNumberTemplate;

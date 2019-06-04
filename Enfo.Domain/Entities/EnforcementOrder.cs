@@ -3,9 +3,9 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Enfo.Domain.Models
+namespace Enfo.Domain.Entities
 {
-    public class EnforcementOrder : BaseModel
+    public class EnforcementOrder : BaseEntity
     {
         #region enums
 

@@ -1,4 +1,4 @@
-using Enfo.Domain.Models;
+using Enfo.Domain.Entities;
 
 namespace Enfo.Domain.Resources
 {

@@ -2,9 +2,9 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using static Enfo.Domain.Utils.StringFunctions;
 
-namespace Enfo.Domain.Models
+namespace Enfo.Domain.Entities
 {
-    public class Address : BaseModel
+    public class Address : BaseEntity
     {
         // Postal (mailable) addresses only
 
@@ -43,7 +43,5 @@ namespace Enfo.Domain.Models
             string cityStateZip = ConcatNonEmptyStrings(new string[] { cityState, PostalCode }, " ");
             return ConcatNonEmptyStrings(new string[] { Street, Street2, cityStateZip }, lineSeparator);
         }
-
-        public bool Active { get; set; } = true;
     }
 }
