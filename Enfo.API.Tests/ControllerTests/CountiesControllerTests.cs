@@ -1,7 +1,8 @@
 ﻿using Enfo.API.Controllers;
-using Enfo.API.Tests.ServiceFakes;
-using Enfo.Domain.Resources;
-using Enfo.Domain.Services;
+using Enfo.API.Resources;
+using Enfo.API.Tests.Repositories;
+using Enfo.Domain.Entities;
+using Enfo.Infrastructure.Repositories;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -13,18 +14,18 @@ namespace Enfo.API.Tests.ControllerTests
 {
     public class CountiesControllerTests
     {
-        private readonly List<CountyResource> countiesList = new List<CountyResource>
+        private readonly List<County> countiesList = new List<County>
         {
-            new CountyResource { Id = 1, CountyName = "Appling" },
-            new CountyResource { Id = 2, CountyName = "Atkinson" },
-            new CountyResource { Id = 3, CountyName = "Bacon" }
+            new County { Id = 1, CountyName = "Appling" },
+            new County { Id = 2, CountyName = "Atkinson" },
+            new County { Id = 3, CountyName = "Bacon" }
         };
 
         [Fact]
         public async Task GetReturnsOkAsync()
         {
-            ICountyService countyService = new CountyServiceFake(countiesList);
-            CountiesController controller = new CountiesController(countyService);
+            ICountyRepository repository = new CountyRepositoryFake(countiesList);
+            CountiesController controller = new CountiesController(repository);
 
             var result = (await controller.GetAllAsync()
                 .ConfigureAwait(false))
@@ -36,8 +37,8 @@ namespace Enfo.API.Tests.ControllerTests
         [Fact]
         public async Task GetReturnsCorrectTypeAsync()
         {
-            ICountyService countyService = new CountyServiceFake(countiesList);
-            CountiesController controller = new CountiesController(countyService);
+            ICountyRepository repository = new CountyRepositoryFake(countiesList);
+            CountiesController controller = new CountiesController(repository);
 
             var result = (await controller.GetAllAsync()
                 .ConfigureAwait(false))
@@ -49,25 +50,26 @@ namespace Enfo.API.Tests.ControllerTests
         [Fact]
         public async Task GetReturnsAllItemsAsync()
         {
-            ICountyService countyService = new CountyServiceFake(countiesList);
-            CountiesController controller = new CountiesController(countyService);
+            ICountyRepository repository = new CountyRepositoryFake(countiesList);
+            CountiesController controller = new CountiesController(repository);
 
             var result = (await controller.GetAllAsync()
                 .ConfigureAwait(false))
                 .Result as OkObjectResult;
+
             var items = result.Value as IEnumerable<CountyResource>;
 
-            var expected = new CountyResource() { Id = 1, CountyName = "Appling" };
+            var expected = new CountyResource() { Id = 1, CountyName = "Appling", Active = true };
 
             items.Should().HaveCount(3);
-            items.First().Should().BeEquivalentTo(expected);
+            items.ToList()[0].Should().BeEquivalentTo(expected);
         }
 
         [Fact]
         public async Task GetByIdReturnsCorrectTypeAsync()
         {
-            ICountyService countyService = new CountyServiceFake(countiesList);
-            CountiesController controller = new CountiesController(countyService);
+            ICountyRepository repository = new CountyRepositoryFake(countiesList);
+            CountiesController controller = new CountiesController(repository);
 
             var value = (await controller.GetByIdAsync(1)
                 .ConfigureAwait(false))
@@ -82,65 +84,23 @@ namespace Enfo.API.Tests.ControllerTests
         [InlineData(3)]
         public async Task GetByIdReturnsCorrectItemAsync(int id)
         {
-            ICountyService countyService = new CountyServiceFake(countiesList);
-            CountiesController controller = new CountiesController(countyService);
+            ICountyRepository repository = new CountyRepositoryFake(countiesList);
+            CountiesController controller = new CountiesController(repository);
 
             var value = (await controller.GetByIdAsync(id)
                 .ConfigureAwait(false))
-                .Value as CountyResource;
-
-            value.Should().Be(countiesList.Find(e => e.Id == id));
-        }
-
-        [Fact]
-        public async Task GetByNameReturnsCorrectTypeAsync()
-        {
-            ICountyService countyService = new CountyServiceFake(countiesList);
-            CountiesController controller = new CountiesController(countyService);
-
-            var value = (await controller.GetByNameAsync("Appling")
-                .ConfigureAwait(false))
                 .Value;
 
-            value.Should().BeOfType<CountyResource>();
-        }
-
-        [Theory]
-        [InlineData("Appling")]
-        [InlineData("Atkinson")]
-        [InlineData("Bacon")]
-        public async Task GetByNameReturnsCorrectItemAsync(string name)
-        {
-            ICountyService countyService = new CountyServiceFake(countiesList);
-            CountiesController controller = new CountiesController(countyService);
-
-            var value = (await controller.GetByNameAsync(name)
-                .ConfigureAwait(false))
-                .Value as CountyResource;
-
-            value.Should().Be(countiesList.Find(e => e.CountyName == name));
+            value.Should().BeEquivalentTo(new CountyResource(countiesList.Find(e => e.Id == id)));
         }
 
         [Fact]
         public async Task GetByMissingIdReturnsNotFoundAsync()
         {
-            ICountyService countyService = new CountyServiceFake(countiesList);
-            CountiesController controller = new CountiesController(countyService);
+            ICountyRepository repository = new CountyRepositoryFake(countiesList);
+            CountiesController controller = new CountiesController(repository);
 
-            var result = (await controller.GetByIdAsync(0)
-                .ConfigureAwait(false))
-                .Value;
-
-            result.Should().BeNull();
-        }
-
-        [Fact]
-        public async Task GetByMissingNameReturnsNotFoundAsync()
-        {
-            ICountyService countyService = new CountyServiceFake(countiesList);
-            CountiesController controller = new CountiesController(countyService);
-
-            var result = (await controller.GetByNameAsync("None")
+            CountyResource result = (await controller.GetByIdAsync(0)
                 .ConfigureAwait(false))
                 .Value;
 

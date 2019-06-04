@@ -1,7 +1,7 @@
 ﻿using Enfo.Domain.Entities;
 using System.ComponentModel;
 
-namespace Enfo.Domain.Resources
+namespace Enfo.API.Resources
 {
     public class LegalAuthorityResource
     {
@@ -13,18 +13,18 @@ namespace Enfo.Domain.Resources
         [DisplayName("Order Number Template")]
         public string OrderNumberTemplate { get; set; }
 
-        public bool Active { get; set; } = true;
+        public bool Active { get; set; }
 
         public LegalAuthorityResource() { }
 
-        public LegalAuthorityResource(LegalAuthority legalAuthority)
+        public LegalAuthorityResource(LegalAuthority entity)
         {
-            if (legalAuthority != null)
+            if (entity != null)
             {
-                Id = legalAuthority.Id;
-                Active = legalAuthority.Active;
-                AuthorityName = legalAuthority.AuthorityName;
-                OrderNumberTemplate = legalAuthority.OrderNumberTemplate;
+                Id = entity.Id;
+                Active = entity.Active;
+                AuthorityName = entity.AuthorityName;
+                OrderNumberTemplate = entity.OrderNumberTemplate;
             }
         }
     }

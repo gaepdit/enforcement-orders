@@ -1,6 +1,5 @@
 ﻿using Enfo.Infrastructure.Contexts;
-using Enfo.Infrastructure.Services;
-using Enfo.Domain.Services;
+using Enfo.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -26,8 +25,8 @@ namespace Enfo.API
 
             services.AddDbContext<EnfoDbContext>(options => options.UseSqlite("Data Source=EnfoSqliteDatabase.db"));
 
-            services.AddScoped<ICountyService, CountyService>();
-            services.AddScoped<ILegalAuthorityService, LegalAuthorityService>();
+            services.AddScoped<ICountyRepository, CountyRepository>();
+            services.AddScoped<ILegalAuthorityRepository, LegalAuthorityRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

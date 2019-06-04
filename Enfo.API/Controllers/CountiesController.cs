@@ -1,5 +1,6 @@
-﻿using Enfo.Domain.Resources;
-using Enfo.Domain.Services;
+﻿using Enfo.API.Resources;
+using System.Linq;
+using Enfo.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -11,22 +12,22 @@ namespace Enfo.API.Controllers
     [ApiController]
     public class CountiesController : ControllerBase
     {
-        private readonly ICountyService service;
+        private readonly ICountyRepository repository;
 
-        public CountiesController(ICountyService countyService) 
-            => service = countyService;
+        public CountiesController(ICountyRepository  repository) 
+            => this.repository = repository;
 
         // GET: api/Counties
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CountyResource>>> GetAllAsync()
-            => Ok(await service.GetAllAsync().ConfigureAwait(false));
+            => Ok((await repository.ListAllAsync().ConfigureAwait(false)).Select(e=>new CountyResource(e)));
 
         // GET: api/Counties/{id}
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<CountyResource>> GetByIdAsync(int id)
         {
-            var county = await service.GetByIdAsync(id)
+            var county = await repository.GetByIdAsync(id)
                 .ConfigureAwait(false);
 
             if (county == null)
@@ -34,23 +35,7 @@ namespace Enfo.API.Controllers
                 return NotFound();
             }
 
-            return county;
-        }
-
-        // GET: api/Counties/name/{name}
-        [HttpGet("name/{name}")]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<CountyResource>> GetByNameAsync(string name)
-        {
-            var county = await service.GetByNameAsync(name)
-                .ConfigureAwait(false);
-
-            if (county == null)
-            {
-                return NotFound();
-            }
-
-            return county;
+            return new CountyResource(county);
         }
     }
 }
