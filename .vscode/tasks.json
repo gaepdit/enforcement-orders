@@ -21,7 +21,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/src/Enfo.API/Enfo.API.csproj"
+                "${workspaceFolder}/Enfo.API/Enfo.API.csproj"
             ],
             "problemMatcher": "$tsc"
         },
@@ -31,7 +31,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/src/Enfo.UI/Enfo.UI.csproj"
+                "${workspaceFolder}/Enfo.UI/Enfo.UI.csproj"
             ],
             "problemMatcher": "$tsc"
         },

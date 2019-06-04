@@ -10,9 +10,9 @@
              "request": "launch",
              "preLaunchTask": "build-api",
              // If you have changed target frameworks, make sure to update the program path.
-             "program": "${workspaceFolder}/src/Enfo.API/bin/Debug/netcoreapp2.2/Enfo.API.dll",
+             "program": "${workspaceFolder}/Enfo.API/bin/Debug/netcoreapp2.2/Enfo.API.dll",
              "args": [],
-             "cwd": "${workspaceFolder}/src/Enfo.API",
+             "cwd": "${workspaceFolder}/Enfo.API",
              "stopAtEntry": false,
              "launchBrowser": {
                  "enabled": true
@@ -31,9 +31,9 @@
              "request": "launch",
              "preLaunchTask": "build-ui",
              // If you have changed target frameworks, make sure to update the program path.
-             "program": "${workspaceFolder}/src/Enfo.UI/bin/Debug/netcoreapp2.2/Enfo.UI.dll",
+             "program": "${workspaceFolder}/Enfo.UI/bin/Debug/netcoreapp2.2/Enfo.UI.dll",
              "args": [],
-             "cwd": "${workspaceFolder}/src/Enfo.UI",
+             "cwd": "${workspaceFolder}/Enfo.UI",
              "stopAtEntry": false,
              "launchBrowser": {
                  "enabled": true

@@ -3,23 +3,21 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28803.452
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{A540C1B7-4A55-45C4-8967-CF2C8D3AC1B2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Enfo.Domain", "Enfo.Domain\Enfo.Domain.csproj", "{93D8DE45-B5C4-425B-9254-FC4DBA2F1112}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Enfo.Domain", "src\Enfo.Domain\Enfo.Domain.csproj", "{93D8DE45-B5C4-425B-9254-FC4DBA2F1112}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Enfo.Domain.Tests", "Enfo.Domain.Tests\Enfo.Domain.Tests.csproj", "{CB2D6967-ED80-43FB-832D-69781F0759F6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Enfo.Domain.Tests", "src\Enfo.Domain.Tests\Enfo.Domain.Tests.csproj", "{CB2D6967-ED80-43FB-832D-69781F0759F6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Enfo.Infrastructure", "Enfo.Infrastructure\Enfo.Infrastructure.csproj", "{F339E36D-F239-4AAD-BA7D-D098419370DD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Enfo.Infrastructure", "src\Enfo.Infrastructure\Enfo.Infrastructure.csproj", "{F339E36D-F239-4AAD-BA7D-D098419370DD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Enfo.Infrastructure.Tests", "Enfo.Infrastructure.Tests\Enfo.Infrastructure.Tests.csproj", "{6FF2303D-AAB1-48D8-A650-3330E48467E3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Enfo.Infrastructure.Tests", "src\Enfo.Infrastructure.Tests\Enfo.Infrastructure.Tests.csproj", "{6FF2303D-AAB1-48D8-A650-3330E48467E3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Enfo.API", "Enfo.API\Enfo.API.csproj", "{34E2D0AF-C4FD-4D94-AF51-D926EC86D1BC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Enfo.API", "src\Enfo.API\Enfo.API.csproj", "{34E2D0AF-C4FD-4D94-AF51-D926EC86D1BC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Enfo.API.Tests", "Enfo.API.Tests\Enfo.API.Tests.csproj", "{B8DC7296-3AD6-4D12-B08C-D7492B958122}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Enfo.API.Tests", "src\Enfo.API.Tests\Enfo.API.Tests.csproj", "{B8DC7296-3AD6-4D12-B08C-D7492B958122}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Enfo.UI", "Enfo.UI\Enfo.UI.csproj", "{A86DF356-1E54-46CB-BA6A-CAE2A809C8A8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Enfo.UI", "src\Enfo.UI\Enfo.UI.csproj", "{A86DF356-1E54-46CB-BA6A-CAE2A809C8A8}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Enfo.UI.Tests", "src\Enfo.UI.Tests\Enfo.UI.Tests.csproj", "{CA9C5DE3-8FA2-4380-AD92-FA2BA8E37D2A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Enfo.UI.Tests", "Enfo.UI.Tests\Enfo.UI.Tests.csproj", "{CA9C5DE3-8FA2-4380-AD92-FA2BA8E37D2A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -130,16 +128,6 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{93D8DE45-B5C4-425B-9254-FC4DBA2F1112} = {A540C1B7-4A55-45C4-8967-CF2C8D3AC1B2}
-		{CB2D6967-ED80-43FB-832D-69781F0759F6} = {A540C1B7-4A55-45C4-8967-CF2C8D3AC1B2}
-		{F339E36D-F239-4AAD-BA7D-D098419370DD} = {A540C1B7-4A55-45C4-8967-CF2C8D3AC1B2}
-		{6FF2303D-AAB1-48D8-A650-3330E48467E3} = {A540C1B7-4A55-45C4-8967-CF2C8D3AC1B2}
-		{34E2D0AF-C4FD-4D94-AF51-D926EC86D1BC} = {A540C1B7-4A55-45C4-8967-CF2C8D3AC1B2}
-		{B8DC7296-3AD6-4D12-B08C-D7492B958122} = {A540C1B7-4A55-45C4-8967-CF2C8D3AC1B2}
-		{A86DF356-1E54-46CB-BA6A-CAE2A809C8A8} = {A540C1B7-4A55-45C4-8967-CF2C8D3AC1B2}
-		{CA9C5DE3-8FA2-4380-AD92-FA2BA8E37D2A} = {A540C1B7-4A55-45C4-8967-CF2C8D3AC1B2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {68F68277-2C87-49A5-BA19-84580C44D114}
