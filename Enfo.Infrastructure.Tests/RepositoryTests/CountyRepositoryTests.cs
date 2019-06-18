@@ -63,5 +63,18 @@ namespace Enfo.Infrastructure.Tests.RepositoryTests
 
             item.Should().BeNull();
         }
+
+        [Fact]
+        public async Task CountCountiesWithSpec()
+        {
+            ICountyRepository repository = GetRepository();
+
+            var spec = new Specification<County>(e => e.CountyName.StartsWith("B"));
+
+            int count = await repository.CountAsync(spec)
+                .ConfigureAwait(false);
+
+            count.Should().Be(16);
+        }
     }
 }

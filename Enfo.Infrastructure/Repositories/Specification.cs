@@ -1,0 +1,43 @@
+using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
+using Enfo.Domain.Repositories;
+
+namespace Enfo.Infrastructure.Repositories
+{
+    public class Specification<T> : ISpecification<T>
+    {
+        public Specification(Expression<Func<T, bool>> criteria)
+        {
+            Criteria = criteria;
+        }
+
+        public Expression<Func<T, bool>> Criteria { get; }
+
+        public List<Expression<Func<T, object>>> Includes { get; } =
+            new List<Expression<Func<T, object>>>();
+
+        public List<string> IncludeStrings { get; } =
+            new List<string>();
+
+        public Expression<Func<T, object>> OrderBy { get; }
+        public Expression<Func<T, object>> OrderByDescending { get; }
+        public Expression<Func<T, object>> GroupBy { get; }
+
+        public int Take { get; }
+        public int Skip { get; }
+        public bool isPagingEnabled { get; }
+
+
+        protected virtual void AddInclude(Expression<Func<T, object>> includeExpression)
+        {
+            Includes.Add(includeExpression);
+        }
+
+        // string-based includes allow for including children of children
+        protected virtual void AddInclude(string includeString)
+        {
+            IncludeStrings.Add(includeString);
+        }
+    }
+}

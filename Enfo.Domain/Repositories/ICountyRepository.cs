@@ -3,5 +3,5 @@ using Enfo.Domain.Repositories;
 
 namespace Enfo.Infrastructure.Repositories
 {
-    public interface ICountyRepository : IAsyncRepository<County> { }
+    public interface ICountyRepository : IAsyncReadOnlyRepository<County> { }
 }

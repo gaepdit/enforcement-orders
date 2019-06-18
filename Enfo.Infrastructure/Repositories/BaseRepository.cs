@@ -36,6 +36,11 @@ namespace Enfo.Infrastructure.Repositories
             context.Set<T>().Add(entity);
         }
 
+        public Task<int> CountAllAsync()
+        {
+            return context.Set<T>().CountAsync();
+        }
+
         public async Task<int> CountAsync(ISpecification<T> spec)
         {
             return await ApplySpecification(spec).CountAsync().ConfigureAwait(false);
@@ -44,6 +49,11 @@ namespace Enfo.Infrastructure.Repositories
         private IQueryable<T> ApplySpecification(ISpecification<T> spec)
         {
             return SpecificationEvaluator<T>.GetQuery(context.Set<T>().AsQueryable(), spec);
+        }
+
+        public Task CompleteAsync()
+        {
+            return context.SaveChangesAsync();
         }
     }
 }

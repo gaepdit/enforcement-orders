@@ -37,6 +37,11 @@ namespace Enfo.API.Tests.Repositories
             counties.Add(entity);
         }
 
+        public Task<int> CountAllAsync()
+        {
+            return Task.FromResult(counties.Count());
+        }
+
         public Task<int> CountAsync(ISpecification<County> spec)
         {
             return Task.FromResult(ApplySpecification(spec).Count());
