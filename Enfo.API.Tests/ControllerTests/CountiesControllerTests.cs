@@ -59,7 +59,12 @@ namespace Enfo.API.Tests.ControllerTests
 
             var items = result.Value as IEnumerable<CountyResource>;
 
-            var expected = new CountyResource() { Id = 1, CountyName = "Appling", Active = true };
+            var expected = new CountyResource
+            {
+                Id = 1,
+                CountyName = "Appling",
+                Active = true
+            };
 
             items.Should().HaveCount(3);
             items.ToList()[0].Should().BeEquivalentTo(expected);

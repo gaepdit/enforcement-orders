@@ -13,7 +13,7 @@ namespace Enfo.API.Resources
         [DisplayName("Order Number Template")]
         public string OrderNumberTemplate { get; set; }
 
-        public bool Active { get; set; }
+        public bool Active { get; set; } = true;
 
         public LegalAuthorityResource() { }
 

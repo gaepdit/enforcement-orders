@@ -1,80 +1,89 @@
-﻿// using Enfo.API.Resources;
-// using Microsoft.AspNetCore.Mvc;
-// using System.Collections.Generic;
-// using System.Threading.Tasks;
+﻿using Enfo.API.Resources;
+using Enfo.Domain.Entities;
+using Enfo.Infrastructure.Repositories;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-// namespace Enfo.API.Controllers
-// {
-//     [Route("api/[controller]")]
-//     [ApiController]
-//     public class LegalAuthoritiesController : ControllerBase
-//     {
-//         private readonly ILegalAuthorityService service;
+namespace Enfo.API.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class LegalAuthoritiesController : ControllerBase
+    {
+        private readonly ILegalAuthorityRepository repository;
 
-//         public LegalAuthoritiesController(ILegalAuthorityService legalAuthorityService) 
-//             => service = legalAuthorityService;
+        public LegalAuthoritiesController(ILegalAuthorityRepository repository)
+            => this.repository = repository;
 
-//         // GET: api/LegalAuthorities
-//         [HttpGet]
-//         public async Task<ActionResult<IEnumerable<LegalAuthorityResource>>> GetAllAsync() 
-//             => Ok(await service.GetAllAsync().ConfigureAwait(false));
+        // GET: api/LegalAuthorities
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<LegalAuthorityResource>>> GetAllAsync()
+            => Ok((await repository.ListAllAsync().ConfigureAwait(false))
+                .Select(e => new LegalAuthorityResource(e)));
 
-//         // GET: api/LegalAuthorities/5
-//         [HttpGet("{id}")]
-//         public async Task<ActionResult<LegalAuthorityResource>> GetByIdAsync(int id)
-//         {
-//             var legalAuthority = await service.GetByIdAsync(id)
-//                 .ConfigureAwait(false);
+        // GET: api/LegalAuthorities/5
+        [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<LegalAuthorityResource>> GetByIdAsync(int id)
+        {
+            var legalAuthority = await repository.GetByIdAsync(id)
+                .ConfigureAwait(false);
 
-//             if (legalAuthority == null)
-//             {
-//                 return NotFound();
-//             }
+            if (legalAuthority == null)
+            {
+                return NotFound();
+            }
 
-//             return legalAuthority;
-//         }
+            return new LegalAuthorityResource(legalAuthority);
+        }
 
-//         //// PUT: api/LegalAuthorities/5
-//         //[HttpPut("{id}")]
-//         //public async Task<IActionResult> PutLegalAuthority(int id, LegalAuthorityResource legalAuthority)
-//         //{
-//         //    if (id != legalAuthority.Id)
-//         //    {
-//         //        return BadRequest();
-//         //    }
+        // PUT: api/LegalAuthorities/5
+        // [Authorize]
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutLegalAuthority(
+            int id,
+            LegalAuthorityResource value)
+        {
+            if (id != value.Id)
+            {
+                return BadRequest();
+            }
 
-//         //    _context.Entry(legalAuthority).State = EntityState.Modified;
+            var item = await repository.GetByIdAsync(id).ConfigureAwait(false);
 
-//         //    try
-//         //    {
-//         //        await _context.SaveChangesAsync();
-//         //    }
-//         //    catch (DbUpdateConcurrencyException)
-//         //    {
-//         //        if (!LegalAuthorityExistsAsync(id))
-//         //        {
-//         //            return NotFound();
-//         //        }
-//         //        else
-//         //        {
-//         //            throw;
-//         //        }
-//         //    }
+            item.Active = value.Active;
+            item.AuthorityName = value.AuthorityName;
+            item.OrderNumberTemplate = value.OrderNumberTemplate;
+            item.UpdatedDate = DateTime.Now;
 
-//         //    return NoContent();
-//         //}
+            await repository.CompleteAsync().ConfigureAwait(false);
 
-//         //// POST: api/LegalAuthorities
-//         //[HttpPost]
-//         //public async Task<ActionResult<LegalAuthority>> PostLegalAuthority(LegalAuthority legalAuthority)
-//         //{
-//         //    _context.LegalAuthorities.Add(legalAuthority);
-//         //    await _context.SaveChangesAsync();
+            return Ok(value);
+        }
 
-//         //    return CreatedAtAction("GetLegalAuthority", new { id = legalAuthority.Id }, legalAuthority);
-//         //}
+        // POST: api/LegalAuthorities
+        // [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> PostLegalAuthority(
+            LegalAuthorityResource resource)
+        {
+            var item = new LegalAuthority()
+            {
+                AuthorityName = resource.AuthorityName,
+                OrderNumberTemplate = resource.OrderNumberTemplate,
+                Active = resource.Active
+            };
 
-//         private async Task<bool> LegalAuthorityExistsAsync(int id) 
-//             => await service.ExistsAsync(id).ConfigureAwait(false);
-//     }
-// }
+            repository.Add(item);
+
+            await repository.CompleteAsync().ConfigureAwait(false);
+
+            return CreatedAtAction(nameof(GetByIdAsync), item.Id);
+        }
+    }
+}

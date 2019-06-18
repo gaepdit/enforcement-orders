@@ -9,22 +9,22 @@ namespace Enfo.API.Tests.Repositories
 {
     public class CountyRepositoryFake : ICountyRepository
     {
-        private readonly List<County> counties;
+        private readonly List<County> list;
 
-        public CountyRepositoryFake(List<County> counties)
+        public CountyRepositoryFake(List<County> list)
         {
-            this.counties = counties;
+            this.list = list;
         }
 
         public Task<County> GetByIdAsync(int id)
         {
-            County county = counties.Find(e => e.Id == id);
-            return Task.FromResult(county);
+            County item = list.Find(e => e.Id == id);
+            return Task.FromResult(item);
         }
 
         public Task<IReadOnlyList<County>> ListAllAsync()
         {
-            return Task.FromResult(counties as IReadOnlyList<County>);
+            return Task.FromResult(list as IReadOnlyList<County>);
         }
 
         public Task<IReadOnlyList<County>> ListAsync(ISpecification<County> spec)
@@ -32,14 +32,9 @@ namespace Enfo.API.Tests.Repositories
             return Task.FromResult(ApplySpecification(spec).ToList() as IReadOnlyList<County>);
         }
 
-        public void Add(County entity)
-        {
-            counties.Add(entity);
-        }
-
         public Task<int> CountAllAsync()
         {
-            return Task.FromResult(counties.Count());
+            return Task.FromResult(list.Count());
         }
 
         public Task<int> CountAsync(ISpecification<County> spec)
@@ -49,7 +44,7 @@ namespace Enfo.API.Tests.Repositories
 
         private IQueryable<County> ApplySpecification(ISpecification<County> spec)
         {
-            return SpecificationEvaluator<County>.GetQuery(counties.AsQueryable(), spec);
+            return SpecificationEvaluator<County>.GetQuery(list.AsQueryable(), spec);
         }
     }
 }

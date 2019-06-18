@@ -1,9 +1,9 @@
 ﻿using Enfo.API.Resources;
-using System.Linq;
 using Enfo.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Enfo.API.Controllers
@@ -14,13 +14,14 @@ namespace Enfo.API.Controllers
     {
         private readonly ICountyRepository repository;
 
-        public CountiesController(ICountyRepository  repository) 
+        public CountiesController(ICountyRepository repository)
             => this.repository = repository;
 
         // GET: api/Counties
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CountyResource>>> GetAllAsync()
-            => Ok((await repository.ListAllAsync().ConfigureAwait(false)).Select(e=>new CountyResource(e)));
+            => Ok((await repository.ListAllAsync().ConfigureAwait(false))
+                .Select(e => new CountyResource(e)));
 
         // GET: api/Counties/{id}
         [HttpGet("{id}")]
