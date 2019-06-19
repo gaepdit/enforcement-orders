@@ -4,7 +4,8 @@ using System.Threading.Tasks;
 
 namespace Enfo.Domain.Repositories
 {
-    public interface IAsyncReadOnlyRepository<T> where T : BaseEntity
+    public interface IAsyncReadOnlyRepository<T> 
+        where T : BaseEntity
     {
         Task<T> GetByIdAsync(int id);
         Task<IReadOnlyList<T>> ListAllAsync();

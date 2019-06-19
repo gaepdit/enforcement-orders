@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 
 namespace Enfo.Infrastructure.Repositories
 {
-    public abstract class BaseRepository<T> : IAsyncRepository<T> where T : BaseEntity
+    public abstract class BaseRepository<T> : IAsyncRepository<T>
+        where T : BaseEntity
     {
         protected readonly DbContext context;
 

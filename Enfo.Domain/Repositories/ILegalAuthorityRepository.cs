@@ -1,7 +1,6 @@
 using Enfo.Domain.Entities;
-using Enfo.Domain.Repositories;
 
-namespace Enfo.Infrastructure.Repositories
+namespace Enfo.Domain.Repositories
 {
     public interface ILegalAuthorityRepository : IAsyncRepository<LegalAuthority> { }
 }

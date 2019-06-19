@@ -1,5 +1,5 @@
 ﻿using Enfo.API.Resources;
-using Enfo.Infrastructure.Repositories;
+using Enfo.Domain.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;

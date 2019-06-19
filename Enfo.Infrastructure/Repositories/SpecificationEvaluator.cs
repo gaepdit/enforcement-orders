@@ -5,7 +5,8 @@ using System.Linq;
 
 namespace Enfo.Infrastructure.Repositories
 {
-    public static class SpecificationEvaluator<T> where T : BaseEntity
+    public static class SpecificationEvaluator<T> 
+        where T : BaseEntity
     {
         public static IQueryable<T> GetQuery(IQueryable<T> inputQuery, ISpecification<T> specification)
         {
@@ -39,7 +40,7 @@ namespace Enfo.Infrastructure.Repositories
             }
 
             // Apply paging if enabled
-            if (specification.isPagingEnabled)
+            if (specification.IsPagingEnabled)
             {
                 query = query.Skip(specification.Skip)
                              .Take(specification.Take);

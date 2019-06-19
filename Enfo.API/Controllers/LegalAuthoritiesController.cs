@@ -1,6 +1,6 @@
-﻿using Enfo.API.Resources;
+using Enfo.API.Resources;
 using Enfo.Domain.Entities;
-using Enfo.Infrastructure.Repositories;
+using Enfo.Domain.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

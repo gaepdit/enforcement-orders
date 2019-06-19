@@ -1,4 +1,5 @@
 ﻿using Enfo.Domain.Entities;
+using Enfo.Domain.Repositories;
 using Enfo.Infrastructure.Contexts;
 using Enfo.Infrastructure.Repositories;
 using FluentAssertions;

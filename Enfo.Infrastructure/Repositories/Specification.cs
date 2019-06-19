@@ -1,7 +1,7 @@
+using Enfo.Domain.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using Enfo.Domain.Repositories;
 
 namespace Enfo.Infrastructure.Repositories
 {
@@ -26,7 +26,7 @@ namespace Enfo.Infrastructure.Repositories
 
         public int Take { get; }
         public int Skip { get; }
-        public bool isPagingEnabled { get; }
+        public bool IsPagingEnabled { get; }
 
 
         protected virtual void AddInclude(Expression<Func<T, object>> includeExpression)

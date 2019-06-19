@@ -2,7 +2,7 @@
 using Enfo.API.Resources;
 using Enfo.API.Tests.Repositories;
 using Enfo.Domain.Entities;
-using Enfo.Infrastructure.Repositories;
+using Enfo.Domain.Repositories;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
