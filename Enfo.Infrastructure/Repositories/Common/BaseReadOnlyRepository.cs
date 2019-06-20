@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace Enfo.Infrastructure.Repositories
 {
-    public abstract class BaseRepository<T> : IAsyncRepository<T>
+    public abstract class BaseReadOnlyRepository<T> : IAsyncReadOnlyRepository<T>
         where T : BaseEntity
     {
         protected readonly DbContext context;
 
-        public BaseRepository(DbContext context)
+        public BaseReadOnlyRepository(DbContext context)
         {
             this.context = context;
         }
@@ -32,11 +32,6 @@ namespace Enfo.Infrastructure.Repositories
             return await ApplySpecification(spec).ToListAsync().ConfigureAwait(false);
         }
 
-        public void Add(T entity)
-        {
-            context.Set<T>().Add(entity);
-        }
-
         public Task<int> CountAllAsync()
         {
             return context.Set<T>().CountAsync();
@@ -50,11 +45,6 @@ namespace Enfo.Infrastructure.Repositories
         private IQueryable<T> ApplySpecification(ISpecification<T> spec)
         {
             return SpecificationEvaluator<T>.GetQuery(context.Set<T>().AsQueryable(), spec);
-        }
-
-        public Task CompleteAsync()
-        {
-            return context.SaveChangesAsync();
         }
     }
 }

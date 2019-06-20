@@ -8,7 +8,10 @@ namespace Enfo.Infrastructure.Contexts
     {
         public EnfoDbContext(DbContextOptions<EnfoDbContext> options) : base(options) { }
 
+        public DbSet<Address> Addresses { get; set; }
         public DbSet<County> Counties { get; set; }
+        public DbSet<EnforcementOrder> EnforcementOrders { get; set; }
+        public DbSet<EpdContact> EpdContacts { get; set; }
         public DbSet<LegalAuthority> LegalAuthorities { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
