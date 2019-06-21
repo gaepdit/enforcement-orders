@@ -1,4 +1,5 @@
 ﻿using Enfo.API.Resources;
+using Enfo.Domain.Entities;
 using Enfo.Domain.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -12,31 +13,30 @@ namespace Enfo.API.Controllers
     [ApiController]
     public class CountiesController : ControllerBase
     {
-        private readonly ICountyRepository repository;
+        private readonly IAsyncReadableRepository<County> repository;
 
-        public CountiesController(ICountyRepository repository)
+        public CountiesController(IAsyncReadableRepository<County> repository)
             => this.repository = repository;
 
         // GET: api/Counties
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<CountyResource>>> GetAllAsync()
+        public async Task<ActionResult<IEnumerable<CountyResource>>> Get()
             => Ok((await repository.ListAllAsync().ConfigureAwait(false))
                 .Select(e => new CountyResource(e)));
 
         // GET: api/Counties/{id}
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<CountyResource>> GetByIdAsync(int id)
+        public async Task<ActionResult<CountyResource>> Get(int id)
         {
-            var county = await repository.GetByIdAsync(id)
-                .ConfigureAwait(false);
+            var item = await repository.GetByIdAsync(id).ConfigureAwait(false);
 
-            if (county == null)
+            if (item == null)
             {
                 return NotFound();
             }
 
-            return new CountyResource(county);
+            return new CountyResource(item);
         }
     }
 }

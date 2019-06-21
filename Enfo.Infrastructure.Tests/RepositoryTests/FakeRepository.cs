@@ -1,4 +1,5 @@
 ﻿using Enfo.Domain.Entities;
+using Enfo.Infrastructure.Contexts;
 using Enfo.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -14,19 +15,19 @@ namespace Enfo.Infrastructure.Tests.RepositoryTests
             public string Name { get; set; }
         }
 
-        public class ReadOnlyRepository : BaseReadOnlyRepository<Entity>
+        public class ReadableRepository : ReadableRepository<Entity>
         {
-            public ReadOnlyRepository(EntityDbContext context) : base(context) { }
+            public ReadableRepository(EntityDbContext context) : base(context) { }
         }
 
-        public class WritableRepository : BaseWritableRepository<Entity>
+        public class WritableRepository : WritableRepository<Entity>
         {
             public WritableRepository(EntityDbContext context) : base(context) { }
         }
 
-        public class EntityDbContext : DbContext
+        public class EntityDbContext : EnfoDbContext
         {
-            public EntityDbContext(DbContextOptions<EntityDbContext> options) : base(options) { }
+            public EntityDbContext(DbContextOptions<EnfoDbContext> options) : base(options) { }
             public DbSet<Entity> Entities { get; set; }
             protected override void OnModelCreating(ModelBuilder builder)
             {

@@ -1,14 +1,14 @@
 using Enfo.Domain.Entities;
 using Enfo.Domain.Repositories;
-using Microsoft.EntityFrameworkCore;
+using Enfo.Infrastructure.Contexts;
 using System.Threading.Tasks;
 
 namespace Enfo.Infrastructure.Repositories
 {
-    public abstract class BaseWritableRepository<T> : BaseReadOnlyRepository<T>, IAsyncRepository<T>
+    public class WritableRepository<T> : ReadableRepository<T>, IAsyncWritableRepository<T>
         where T : BaseEntity
     {
-        public BaseWritableRepository(DbContext context) : base(context) { }
+        public WritableRepository(EnfoDbContext context) : base(context) { }
 
         public void Add(T entity)
         {

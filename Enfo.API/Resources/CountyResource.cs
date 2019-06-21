@@ -5,20 +5,18 @@ namespace Enfo.API.Resources
     public class CountyResource
     {
         public int Id { get; set; }
-
+        public bool Active { get; set; }
         public string CountyName { get; set; }
-
-        public bool Active { get; set; } 
 
         public CountyResource() { }
 
-        public CountyResource(County entity)
+        public CountyResource(County item)
         {
-            if (entity != null)
+            if (item != null)
             {
-                Id = entity.Id;
-                Active = entity.Active;
-                CountyName = entity.CountyName;
+                Id = item.Id;
+                Active = item.Active;
+                CountyName = item.CountyName;
             }
         }
     }

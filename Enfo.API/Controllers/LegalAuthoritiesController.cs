@@ -4,7 +4,6 @@ using Enfo.Domain.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,75 +14,62 @@ namespace Enfo.API.Controllers
     [ApiController]
     public class LegalAuthoritiesController : ControllerBase
     {
-        private readonly ILegalAuthorityRepository repository;
+        private readonly IAsyncWritableRepository<LegalAuthority> repository;
 
-        public LegalAuthoritiesController(ILegalAuthorityRepository repository)
+        public LegalAuthoritiesController(IAsyncWritableRepository<LegalAuthority> repository)
             => this.repository = repository;
 
         // GET: api/LegalAuthorities
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<LegalAuthorityResource>>> GetAllAsync()
+        public async Task<ActionResult<IEnumerable<LegalAuthorityResource>>> Get()
             => Ok((await repository.ListAllAsync().ConfigureAwait(false))
                 .Select(e => new LegalAuthorityResource(e)));
 
         // GET: api/LegalAuthorities/5
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<LegalAuthorityResource>> GetByIdAsync(int id)
+        public async Task<ActionResult<LegalAuthorityResource>> Get(int id)
         {
-            var legalAuthority = await repository.GetByIdAsync(id)
-                .ConfigureAwait(false);
+            var item = await repository.GetByIdAsync(id).ConfigureAwait(false);
 
-            if (legalAuthority == null)
+            if (item == null)
             {
                 return NotFound();
             }
 
-            return new LegalAuthorityResource(legalAuthority);
+            return new LegalAuthorityResource(item);
+        }
+
+        // POST: api/LegalAuthorities
+        //[Authorize]
+        [HttpPost]
+        public async Task<IActionResult> Post(
+            LegalAuthorityResource resource)
+        {
+            var item = resource.NewLegalAuthority();
+            repository.Add(item);
+            await repository.CompleteAsync().ConfigureAwait(false);
+
+            return CreatedAtAction(nameof(Get), item.Id);
         }
 
         // PUT: api/LegalAuthorities/5
-        // [Authorize]
+        //[Authorize]
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutLegalAuthority(
+        public async Task<IActionResult> Put(
             int id,
-            LegalAuthorityResource value)
+            LegalAuthorityResource resource)
         {
-            if (id != value.Id)
+            if (id != resource.Id)
             {
                 return BadRequest();
             }
 
             var item = await repository.GetByIdAsync(id).ConfigureAwait(false);
-
-            item.Active = value.Active;
-            item.AuthorityName = value.AuthorityName;
-            item.OrderNumberTemplate = value.OrderNumberTemplate;
-            item.UpdatedDate = DateTime.Now;
-
+            item.UpdateFrom(resource);
             await repository.CompleteAsync().ConfigureAwait(false);
 
-            return Ok(value);
-        }
-
-        // POST: api/LegalAuthorities
-        // [Authorize]
-        [HttpPost]
-        public async Task<IActionResult> PostLegalAuthority(
-            LegalAuthorityResource resource)
-        {
-            var item = new LegalAuthority()
-            {
-                AuthorityName = resource.AuthorityName,
-                OrderNumberTemplate = resource.OrderNumberTemplate,
-                Active = resource.Active
-            };
-
-            repository.Add(item);
-
-            await repository.CompleteAsync().ConfigureAwait(false);
-
-            return CreatedAtAction(nameof(GetByIdAsync), item.Id);
+            return Ok(resource);
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using Enfo.API.Controllers;
 using Enfo.API.Resources;
-using Enfo.API.Tests.Repositories;
+using Enfo.API.Tests.RepositoryFakes;
 using Enfo.Domain.Entities;
 using Enfo.Domain.Repositories;
 using FluentAssertions;
@@ -24,11 +24,10 @@ namespace Enfo.API.Tests.ControllerTests
         [Fact]
         public async Task GetReturnsOkAsync()
         {
-            ILegalAuthorityRepository repository = new LegalAuthorityRepositoryFake(itemsList);
+            IAsyncWritableRepository<LegalAuthority> repository = new WritableRepositoryFake<LegalAuthority>(itemsList);
             LegalAuthoritiesController controller = new LegalAuthoritiesController(repository);
 
-            var result = (await controller.GetAllAsync()
-                .ConfigureAwait(false))
+            var result = (await controller.Get().ConfigureAwait(false))
                 .Result;
 
             result.Should().BeOfType<OkObjectResult>();
@@ -37,11 +36,10 @@ namespace Enfo.API.Tests.ControllerTests
         [Fact]
         public async Task GetReturnsCorrectTypeAsync()
         {
-            ILegalAuthorityRepository repository = new LegalAuthorityRepositoryFake(itemsList);
+            IAsyncWritableRepository<LegalAuthority> repository = new WritableRepositoryFake<LegalAuthority>(itemsList);
             LegalAuthoritiesController controller = new LegalAuthoritiesController(repository);
 
-            var result = (await controller.GetAllAsync()
-                .ConfigureAwait(false))
+            var result = (await controller.Get().ConfigureAwait(false))
                 .Result as OkObjectResult;
 
             Assert.IsAssignableFrom<IEnumerable<LegalAuthorityResource>>(result.Value);
@@ -50,11 +48,10 @@ namespace Enfo.API.Tests.ControllerTests
         [Fact]
         public async Task GetReturnsAllItemsAsync()
         {
-            ILegalAuthorityRepository repository = new LegalAuthorityRepositoryFake(itemsList);
+            IAsyncWritableRepository<LegalAuthority> repository = new WritableRepositoryFake<LegalAuthority>(itemsList);
             LegalAuthoritiesController controller = new LegalAuthoritiesController(repository);
 
-            var result = (await controller.GetAllAsync()
-                .ConfigureAwait(false))
+            var result = (await controller.Get().ConfigureAwait(false))
                 .Result as OkObjectResult;
 
             var items = result.Value as IEnumerable<LegalAuthorityResource>;
@@ -74,11 +71,10 @@ namespace Enfo.API.Tests.ControllerTests
         [Fact]
         public async Task GetByIdReturnsCorrectTypeAsync()
         {
-            ILegalAuthorityRepository repository = new LegalAuthorityRepositoryFake(itemsList);
+            IAsyncWritableRepository<LegalAuthority> repository = new WritableRepositoryFake<LegalAuthority>(itemsList);
             LegalAuthoritiesController controller = new LegalAuthoritiesController(repository);
 
-            var value = (await controller.GetByIdAsync(1)
-                .ConfigureAwait(false))
+            var value = (await controller.Get(1).ConfigureAwait(false))
                 .Value;
 
             value.Should().BeOfType<LegalAuthorityResource>();
@@ -90,11 +86,10 @@ namespace Enfo.API.Tests.ControllerTests
         [InlineData(3)]
         public async Task GetByIdReturnsCorrectItemAsync(int id)
         {
-            ILegalAuthorityRepository repository = new LegalAuthorityRepositoryFake(itemsList);
+            IAsyncWritableRepository<LegalAuthority> repository = new WritableRepositoryFake<LegalAuthority>(itemsList);
             LegalAuthoritiesController controller = new LegalAuthoritiesController(repository);
 
-            var value = (await controller.GetByIdAsync(id)
-                .ConfigureAwait(false))
+            var value = (await controller.Get(id).ConfigureAwait(false))
                 .Value;
 
             value.Should().BeEquivalentTo(new LegalAuthorityResource(itemsList.Find(e => e.Id == id)));
@@ -103,11 +98,10 @@ namespace Enfo.API.Tests.ControllerTests
         [Fact]
         public async Task GetByMissingIdReturnsNotFoundAsync()
         {
-            ILegalAuthorityRepository repository = new LegalAuthorityRepositoryFake(itemsList);
+            IAsyncWritableRepository<LegalAuthority> repository = new WritableRepositoryFake<LegalAuthority>(itemsList);
             LegalAuthoritiesController controller = new LegalAuthoritiesController(repository);
 
-            LegalAuthorityResource result = (await controller.GetByIdAsync(0)
-                .ConfigureAwait(false))
+            LegalAuthorityResource result = (await controller.Get(0).ConfigureAwait(false))
                 .Value;
 
             result.Should().BeNull();
@@ -116,7 +110,7 @@ namespace Enfo.API.Tests.ControllerTests
         [Fact]
         public async Task AddNewItemReturnsCorrectly()
         {
-            ILegalAuthorityRepository repository = new LegalAuthorityRepositoryFake(itemsList);
+            IAsyncWritableRepository<LegalAuthority> repository = new WritableRepositoryFake<LegalAuthority>(itemsList);
             LegalAuthoritiesController controller = new LegalAuthoritiesController(repository);
 
             LegalAuthorityResource item = new LegalAuthorityResource()
@@ -125,16 +119,17 @@ namespace Enfo.API.Tests.ControllerTests
                 OrderNumberTemplate = "abc"
             };
 
-            IActionResult result = await controller.PostLegalAuthority(item).ConfigureAwait(false);
+            var postResult = controller.Post(item).ConfigureAwait(false);
+            var result = await postResult;
 
             result.Should().BeOfType<CreatedAtActionResult>();
-            (result as CreatedAtActionResult).ActionName.Should().Be("GetByIdAsync");
+            (result as CreatedAtActionResult).ActionName.Should().Be("Get");
         }
 
         [Fact]
         public async Task UpdateItem()
         {
-            ILegalAuthorityRepository repository = new LegalAuthorityRepositoryFake(itemsList);
+            IAsyncWritableRepository<LegalAuthority> repository = new WritableRepositoryFake<LegalAuthority>(itemsList);
             LegalAuthoritiesController controller = new LegalAuthoritiesController(repository);
 
             var target = new LegalAuthorityResource
@@ -145,17 +140,14 @@ namespace Enfo.API.Tests.ControllerTests
                 OrderNumberTemplate = "none"
             };
 
-            var original = await repository.GetByIdAsync(target.Id)
-                .ConfigureAwait(false);
+            var original = await repository.GetByIdAsync(target.Id).ConfigureAwait(false);
 
-            IActionResult result = await controller.PutLegalAuthority(original.Id, target)
-                .ConfigureAwait(false);
+            IActionResult result = await controller.Put(original.Id, target).ConfigureAwait(false);
 
             result.Should().BeOfType<OkObjectResult>();
             (result as OkObjectResult).StatusCode.Should().Be(200);
 
-            var updated = await repository.GetByIdAsync(target.Id)
-                .ConfigureAwait(false);
+            var updated = await repository.GetByIdAsync(target.Id).ConfigureAwait(false);
 
             updated.Should().BeEquivalentTo(target);
         }

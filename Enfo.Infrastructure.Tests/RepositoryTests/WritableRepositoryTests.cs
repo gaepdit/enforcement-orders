@@ -1,4 +1,5 @@
 ﻿using Enfo.Domain.Repositories;
+using Enfo.Infrastructure.Contexts;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -11,9 +12,9 @@ namespace Enfo.Infrastructure.Tests.RepositoryTests
 {
     public class WritableRepositoryTests
     {
-        private IAsyncRepository<Entity> GetRepository([CallerMemberName] string dbName = null)
+        private IAsyncWritableRepository<Entity> GetRepository([CallerMemberName] string dbName = null)
         {
-            var options = new DbContextOptionsBuilder<EntityDbContext>()
+            var options = new DbContextOptionsBuilder<EnfoDbContext>()
                 .UseSqlite($"Data Source={dbName}.db")
                 .Options;
 
@@ -28,7 +29,7 @@ namespace Enfo.Infrastructure.Tests.RepositoryTests
         [Fact]
         public async Task AddNewItemIncreasesCount()
         {
-            IAsyncRepository<Entity> repository = GetRepository();
+            IAsyncWritableRepository<Entity> repository = GetRepository();
             Entity item = new Entity { Name = "Cherry" };
             int preCount = await repository.CountAllAsync().ConfigureAwait(false);
             repository.Add(item);
@@ -42,7 +43,7 @@ namespace Enfo.Infrastructure.Tests.RepositoryTests
         [Fact]
         public async Task AddNewItemIsAddedCorrectly()
         {
-            IAsyncRepository<Entity> repository = GetRepository();
+            IAsyncWritableRepository<Entity> repository = GetRepository();
             Entity item = new Entity { Name = "Cherry" };
             repository.Add(item);
             await repository.CompleteAsync().ConfigureAwait(false);
@@ -56,7 +57,7 @@ namespace Enfo.Infrastructure.Tests.RepositoryTests
         [Fact]
         public async Task AddNewItemFailsIfMissingRequiredProperty()
         {
-            IAsyncRepository<Entity> repository = GetRepository();
+            IAsyncWritableRepository<Entity> repository = GetRepository();
             repository.Add(new Entity { });
 
             Func<Task> action = async () => { await repository.CompleteAsync().ConfigureAwait(false); };

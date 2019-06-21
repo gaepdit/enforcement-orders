@@ -1,4 +1,5 @@
 ﻿using Enfo.Domain.Repositories;
+using Enfo.Infrastructure.Contexts;
 using Enfo.Infrastructure.Repositories;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
@@ -11,11 +12,11 @@ using static Enfo.Infrastructure.Tests.RepositoryTests.FakeRepository;
 
 namespace Enfo.Infrastructure.Tests.RepositoryTests
 {
-    public class ReadOnlyRepositoryTests
+    public class ReadableRepositoryTests
     {
-        private IAsyncReadOnlyRepository<Entity> GetRepository([CallerMemberName] string dbName = null)
+        private IAsyncReadableRepository<Entity> GetRepository([CallerMemberName] string dbName = null)
         {
-            var options = new DbContextOptionsBuilder<EntityDbContext>()
+            var options = new DbContextOptionsBuilder<EnfoDbContext>()
                 .UseSqlite($"Data Source={dbName}.db")
                 .Options;
 
@@ -24,13 +25,13 @@ namespace Enfo.Infrastructure.Tests.RepositoryTests
             context.Database.EnsureDeleted();
             context.Database.EnsureCreated();
 
-            return new ReadOnlyRepository(context);
+            return new ReadableRepository(context);
         }
 
         [Fact]
         public async Task GetAllReturnsListAsync()
         {
-            IAsyncReadOnlyRepository<Entity> repository = GetRepository();
+            IAsyncReadableRepository<Entity> repository = GetRepository();
             IReadOnlyList<Entity> items = await repository.ListAllAsync().ConfigureAwait(false);
 
             var expected = new Entity() { Id = 1, Name = "Apple", Active = true };
@@ -42,7 +43,7 @@ namespace Enfo.Infrastructure.Tests.RepositoryTests
         [Fact]
         public async Task GetByIdReturnsItemAsync()
         {
-            IAsyncReadOnlyRepository<Entity> repository = GetRepository();
+            IAsyncReadableRepository<Entity> repository = GetRepository();
 
             Entity item = await repository.GetByIdAsync(2).ConfigureAwait(false);
 
@@ -54,7 +55,7 @@ namespace Enfo.Infrastructure.Tests.RepositoryTests
         [Fact]
         public async Task GetByMissingIdReturnsNullAsync()
         {
-            IAsyncReadOnlyRepository<Entity> repository = GetRepository();
+            IAsyncReadableRepository<Entity> repository = GetRepository();
             Entity item = await repository.GetByIdAsync(-1).ConfigureAwait(false);
 
             item.Should().BeNull();
@@ -63,7 +64,7 @@ namespace Enfo.Infrastructure.Tests.RepositoryTests
         [Fact]
         public async Task CountWithSpec()
         {
-            IAsyncReadOnlyRepository<Entity> repository = GetRepository();
+            IAsyncReadableRepository<Entity> repository = GetRepository();
             var spec = new Specification<Entity>(e => e.Name.StartsWith("B", StringComparison.CurrentCultureIgnoreCase));
             int count = await repository.CountAsync(spec).ConfigureAwait(false);
 

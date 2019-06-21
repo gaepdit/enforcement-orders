@@ -1,4 +1,5 @@
 ﻿using Enfo.Domain.Entities;
+using System;
 using System.ComponentModel;
 
 namespace Enfo.API.Resources
@@ -6,6 +7,7 @@ namespace Enfo.API.Resources
     public class LegalAuthorityResource
     {
         public int Id { get; set; }
+        public bool Active { get; set; } = true;
 
         [DisplayName("Legal Authority")]
         public string AuthorityName { get; set; }
@@ -13,19 +15,39 @@ namespace Enfo.API.Resources
         [DisplayName("Order Number Template")]
         public string OrderNumberTemplate { get; set; }
 
-        public bool Active { get; set; } = true;
-
         public LegalAuthorityResource() { }
 
-        public LegalAuthorityResource(LegalAuthority entity)
+        public LegalAuthorityResource(LegalAuthority item)
         {
-            if (entity != null)
+            if (item != null)
             {
-                Id = entity.Id;
-                Active = entity.Active;
-                AuthorityName = entity.AuthorityName;
-                OrderNumberTemplate = entity.OrderNumberTemplate;
+                Id = item.Id;
+                Active = item.Active;
+                AuthorityName = item.AuthorityName;
+                OrderNumberTemplate = item.OrderNumberTemplate;
             }
+        }
+
+        public LegalAuthority NewLegalAuthority()
+        {
+            return new LegalAuthority()
+            {
+                AuthorityName = AuthorityName,
+                OrderNumberTemplate = OrderNumberTemplate,
+                Active = Active
+            };
+
+        }
+    }
+
+    public static class LegalAuthorityExtension
+    {
+        public static void UpdateFrom(this LegalAuthority item, LegalAuthorityResource resource)
+        {
+            item.Active = resource.Active;
+            item.AuthorityName = resource.AuthorityName;
+            item.OrderNumberTemplate = resource.OrderNumberTemplate;
+            item.UpdatedDate = DateTime.Now;
         }
     }
 }
