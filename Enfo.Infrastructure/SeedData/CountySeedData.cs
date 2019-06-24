@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Enfo.Infrastructure.SeedData
 {
-    internal static class CountySeedData
+    internal static class SeedData
     {
         public static County[] GetCounties()
         {

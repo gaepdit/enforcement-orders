@@ -1,6 +1,8 @@
 ﻿using Enfo.Domain.Entities;
-using Enfo.Infrastructure.SeedData;
 using Microsoft.EntityFrameworkCore;
+using System;
+using static Enfo.Infrastructure.SeedData.DevSeedData;
+using static Enfo.Infrastructure.SeedData.SeedData;
 
 namespace Enfo.Infrastructure.Contexts
 {
@@ -18,7 +20,14 @@ namespace Enfo.Infrastructure.Contexts
         {
             base.OnModelCreating(builder);
 
-            builder.Entity<County>().HasData(CountySeedData.GetCounties());
+            builder.Entity<County>().HasData(GetCounties());
+
+            if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
+            {
+                builder.Entity<LegalAuthority>().HasData(GetLegalAuthorities());
+                builder.Entity<Address>().HasData(GetAddresses());
+                builder.Entity<EpdContact>().HasData(GetEpdContacts());
+            }
         }
     }
 }

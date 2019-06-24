@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 
 namespace Enfo.API
 {
@@ -14,6 +15,11 @@ namespace Enfo.API
             using (var scope = host.Services.CreateScope())
             using (var context = scope.ServiceProvider.GetService<EnfoDbContext>())
             {
+                if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == EnvironmentName.Development)
+                {
+                    context.Database.EnsureDeleted();
+                }
+
                 context.Database.EnsureCreated();
             }
 
