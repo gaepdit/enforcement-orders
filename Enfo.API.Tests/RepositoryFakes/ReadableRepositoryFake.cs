@@ -1,8 +1,10 @@
-using Enfo.Domain.Entities;
+﻿using Enfo.Domain.Entities;
 using Enfo.Domain.Repositories;
 using Enfo.Infrastructure.Repositories;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace Enfo.API.Tests.RepositoryFakes
@@ -21,6 +23,26 @@ namespace Enfo.API.Tests.RepositoryFakes
         {
             T item = list.Find(e => e.Id == id);
             return Task.FromResult(item);
+        }
+
+        public Task<T> GetByIdAsync(int id, Expression<Func<T, object>> includeExpression)
+        {
+            var spec = new Specification<T>(e => e.Id == id);
+            spec.Includes.Add(includeExpression);
+
+            return Task.FromResult(ApplySpecification(spec).SingleOrDefault());
+        }
+
+        public Task<T> GetByIdAsync(int id, List<string> includeStrings)
+        {
+            var spec = new Specification<T>(e => e.Id == id);
+
+            foreach (var includeString in includeStrings)
+            {
+                spec.IncludeStrings.Add(includeString);
+            }
+
+            return Task.FromResult(ApplySpecification(spec).SingleOrDefault());
         }
 
         public Task<IReadOnlyList<T>> ListAsync()
