@@ -31,11 +31,11 @@ namespace Enfo.Infrastructure.Tests.RepositoryTests
         {
             IAsyncWritableRepository<Entity> repository = GetRepository();
             Entity item = new Entity { Name = "Cherry" };
-            int preCount = await repository.CountAllAsync().ConfigureAwait(false);
+            int preCount = await repository.CountAsync().ConfigureAwait(false);
             repository.Add(item);
             await repository.CompleteAsync().ConfigureAwait(false);
 
-            int postCount = await repository.CountAllAsync().ConfigureAwait(false);
+            int postCount = await repository.CountAsync().ConfigureAwait(false);
 
             postCount.Should().Be(preCount + 1);
         }

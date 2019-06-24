@@ -1,4 +1,4 @@
-﻿using Enfo.Domain.Entities;
+using Enfo.Domain.Entities;
 using Enfo.Domain.Repositories;
 using Enfo.Infrastructure.Repositories;
 using System.Collections.Generic;
@@ -23,29 +23,29 @@ namespace Enfo.API.Tests.RepositoryFakes
             return Task.FromResult(item);
         }
 
-        public Task<IReadOnlyList<T>> ListAllAsync()
+        public Task<IReadOnlyList<T>> ListAsync()
         {
             return Task.FromResult(list as IReadOnlyList<T>);
         }
 
-        public Task<IReadOnlyList<T>> ListAsync(ISpecification<T> spec)
+        public Task<IReadOnlyList<T>> ListAsync(ISpecification<T> specification)
         {
-            return Task.FromResult(ApplySpecification(spec).ToList() as IReadOnlyList<T>);
+            return Task.FromResult(ApplySpecification(specification).ToList() as IReadOnlyList<T>);
         }
 
-        public Task<int> CountAllAsync()
+        public Task<int> CountAsync()
         {
             return Task.FromResult(list.Count());
         }
 
-        public Task<int> CountAsync(ISpecification<T> spec)
+        public Task<int> CountAsync(ISpecification<T> specification)
         {
-            return Task.FromResult(ApplySpecification(spec).Count());
+            return Task.FromResult(ApplySpecification(specification).Count());
         }
 
-        private IQueryable<T> ApplySpecification(ISpecification<T> spec)
+        private IQueryable<T> ApplySpecification(ISpecification<T> specification)
         {
-            return SpecificationEvaluator<T>.GetQuery(list.AsQueryable(), spec);
+            return SpecificationEvaluator<T>.GetQuery(list.AsQueryable(), specification);
         }
     }
 }

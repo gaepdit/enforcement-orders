@@ -32,7 +32,7 @@ namespace Enfo.Infrastructure.Tests.RepositoryTests
         public async Task GetAllReturnsListAsync()
         {
             IAsyncReadableRepository<Entity> repository = GetRepository();
-            IReadOnlyList<Entity> items = await repository.ListAllAsync().ConfigureAwait(false);
+            IReadOnlyList<Entity> items = await repository.ListAsync().ConfigureAwait(false);
 
             var expected = new Entity() { Id = 1, Name = "Apple", Active = true };
 
@@ -65,8 +65,8 @@ namespace Enfo.Infrastructure.Tests.RepositoryTests
         public async Task CountWithSpec()
         {
             IAsyncReadableRepository<Entity> repository = GetRepository();
-            var spec = new Specification<Entity>(e => e.Name.StartsWith("B", StringComparison.CurrentCultureIgnoreCase));
-            int count = await repository.CountAsync(spec).ConfigureAwait(false);
+            var specification = new Specification<Entity>(e => e.Name.StartsWith("B", StringComparison.CurrentCultureIgnoreCase));
+            int count = await repository.CountAsync(specification).ConfigureAwait(false);
 
             count.Should().Be(1);
         }

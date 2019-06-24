@@ -21,7 +21,7 @@ namespace Enfo.API.Controllers
         // GET: api/Counties
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CountyResource>>> Get()
-            => Ok((await repository.ListAllAsync().ConfigureAwait(false))
+            => Ok((await repository.ListAsync().ConfigureAwait(false))
                 .Select(e => new CountyResource(e)));
 
         // GET: api/Counties/{id}

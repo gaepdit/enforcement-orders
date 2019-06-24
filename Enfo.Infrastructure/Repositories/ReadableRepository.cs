@@ -23,24 +23,24 @@ namespace Enfo.Infrastructure.Repositories
             return await context.Set<T>().FindAsync(id).ConfigureAwait(false);
         }
 
-        public async Task<IReadOnlyList<T>> ListAllAsync()
+        public async Task<IReadOnlyList<T>> ListAsync()
         {
             return await context.Set<T>().ToListAsync().ConfigureAwait(false);
         }
 
-        public async Task<IReadOnlyList<T>> ListAsync(ISpecification<T> spec)
+        public async Task<IReadOnlyList<T>> ListAsync(ISpecification<T> specification)
         {
-            return await ApplySpecification(spec).ToListAsync().ConfigureAwait(false);
+            return await ApplySpecification(specification).ToListAsync().ConfigureAwait(false);
         }
 
-        public Task<int> CountAllAsync()
+        public Task<int> CountAsync()
         {
             return context.Set<T>().CountAsync();
         }
 
-        public async Task<int> CountAsync(ISpecification<T> spec)
+        public async Task<int> CountAsync(ISpecification<T> specification)
         {
-            return await ApplySpecification(spec).CountAsync().ConfigureAwait(false);
+            return await ApplySpecification(specification).CountAsync().ConfigureAwait(false);
         }
 
         private IQueryable<T> ApplySpecification(ISpecification<T> spec)

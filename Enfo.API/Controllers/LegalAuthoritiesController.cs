@@ -22,7 +22,7 @@ namespace Enfo.API.Controllers
         // GET: api/LegalAuthorities
         [HttpGet]
         public async Task<ActionResult<IEnumerable<LegalAuthorityResource>>> Get()
-            => Ok((await repository.ListAllAsync().ConfigureAwait(false))
+            => Ok((await repository.ListAsync().ConfigureAwait(false))
                 .Select(e => new LegalAuthorityResource(e)));
 
         // GET: api/LegalAuthorities/5

@@ -8,9 +8,9 @@ namespace Enfo.Domain.Repositories
         where T : BaseEntity
     {
         Task<T> GetByIdAsync(int id);
-        Task<IReadOnlyList<T>> ListAllAsync();
-        Task<IReadOnlyList<T>> ListAsync(ISpecification<T> spec);
-        Task<int> CountAllAsync();
-        Task<int> CountAsync(ISpecification<T> spec);
+        Task<IReadOnlyList<T>> ListAsync();
+        Task<IReadOnlyList<T>> ListAsync(ISpecification<T> specification);
+        Task<int> CountAsync();
+        Task<int> CountAsync(ISpecification<T> specification);
     }
 }
