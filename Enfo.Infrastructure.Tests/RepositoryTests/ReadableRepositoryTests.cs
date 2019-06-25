@@ -1,74 +1,113 @@
-﻿using Enfo.Domain.Repositories;
-using Enfo.Infrastructure.Contexts;
+﻿using Enfo.Domain.Entities;
+using Enfo.Domain.Repositories;
 using Enfo.Infrastructure.Repositories;
 using FluentAssertions;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Xunit;
-using static Enfo.Infrastructure.Tests.RepositoryTests.FakeRepository;
+using static Enfo.Infrastructure.Tests.Helpers.RepositoryHelpers;
 
 namespace Enfo.Infrastructure.Tests.RepositoryTests
 {
     public class ReadableRepositoryTests
     {
-        private IAsyncReadableRepository<Entity> GetRepository([CallerMemberName] string dbName = null)
-        {
-            var options = new DbContextOptionsBuilder<EnfoDbContext>()
-                .UseSqlite($"Data Source={dbName}.db")
-                .Options;
-
-            var context = new EntityDbContext(options);
-
-            context.Database.EnsureDeleted();
-            context.Database.EnsureCreated();
-
-            return new ReadableRepository(context);
-        }
-
         [Fact]
         public async Task GetAllReturnsListAsync()
         {
-            IAsyncReadableRepository<Entity> repository = GetRepository();
-            IReadOnlyList<Entity> items = await repository.ListAsync().ConfigureAwait(false);
+            IAsyncReadableRepository<County> repository = GetRepository<County>();
 
-            var expected = new Entity() { Id = 1, Name = "Apple", Active = true };
+            IReadOnlyList<County> items = await repository.ListAsync().ConfigureAwait(false);
 
-            items.Should().HaveCount(2);
+            items.Should().HaveCount(159);
+            var expected = new County { Id = 1, CountyName = "Appling" };
             items[0].Should().BeEquivalentTo(expected);
         }
 
         [Fact]
         public async Task GetByIdReturnsItemAsync()
         {
-            IAsyncReadableRepository<Entity> repository = GetRepository();
+            IAsyncReadableRepository<County> repository = GetRepository<County>();
 
-            Entity item = await repository.GetByIdAsync(2).ConfigureAwait(false);
+            County item = await repository.GetByIdAsync(1).ConfigureAwait(false);
 
-            var expected = new Entity() { Id = 2, Name = "Banana", Active = false };
-
+            var expected = new County { Id = 1, CountyName = "Appling" };
             item.Should().BeEquivalentTo(expected);
         }
 
         [Fact]
         public async Task GetByMissingIdReturnsNullAsync()
         {
-            IAsyncReadableRepository<Entity> repository = GetRepository();
-            Entity item = await repository.GetByIdAsync(-1).ConfigureAwait(false);
+            IAsyncReadableRepository<County> repository = GetRepository<County>();
+
+            County item = await repository.GetByIdAsync(-1).ConfigureAwait(false);
 
             item.Should().BeNull();
         }
 
         [Fact]
-        public async Task CountWithSpec()
+        public async Task CountWithSpecification()
         {
-            IAsyncReadableRepository<Entity> repository = GetRepository();
-            var specification = new Specification<Entity>(e => e.Name.StartsWith("B", StringComparison.CurrentCultureIgnoreCase));
+            IAsyncReadableRepository<County> repository = GetRepository<County>();
+
+            var specification = new Specification<County>(e => e.CountyName.StartsWith("B", StringComparison.CurrentCultureIgnoreCase));
             int count = await repository.CountAsync(specification).ConfigureAwait(false);
 
-            count.Should().Be(1);
+            count.Should().Be(16);
+        }
+
+        [Fact]
+        public async Task CountAll()
+        {
+            var repository = GetRepository<EpdContact>();
+
+            int count = await repository.CountAsync().ConfigureAwait(false);
+
+            count.Should().Be(3);
+        }
+
+        [Fact]
+        public async Task GetByIdReturnsItemWithRelatedEntityAsync()
+        {
+            var repository = GetRepository<EpdContact>();
+
+            var item = await repository.GetByIdAsync(2000).ConfigureAwait(false);
+
+            // since this passes, are the GetByIdAsync overloads with includes even needed?
+
+            var expectedAddress = new Address { Id = 2000, Active = true, City = "Atlanta", PostalCode = "30354", State = "GA", Street = "4244 International Parkway", Street2 = "Suite 120" };
+            var expectedContact = new EpdContact { Id = 2000, Active = false, Address = expectedAddress, AddressId = 2000, ContactName = "Mr. Keith M. Bentley", Email = "null", Organization = "Environmental Protection Division", Title = "Chief, Air Protection Branch" };
+
+            item.Should().BeEquivalentTo(expectedContact);
+            item.Address.Should().BeEquivalentTo(expectedAddress);
+        }
+
+        [Fact]
+        public async Task GetByIdWithIncludeReturnsItemWithRelatedEntityAsync()
+        {
+            var repository = GetRepository<EpdContact>();
+
+            var item = await repository.GetByIdAsync(2000, e => e.Address).ConfigureAwait(false);
+
+            var expectedAddress = new Address { Id = 2000, Active = true, City = "Atlanta", PostalCode = "30354", State = "GA", Street = "4244 International Parkway", Street2 = "Suite 120" };
+            var expectedContact = new EpdContact { Id = 2000, Active = false, Address = expectedAddress, AddressId = 2000, ContactName = "Mr. Keith M. Bentley", Email = "null", Organization = "Environmental Protection Division", Title = "Chief, Air Protection Branch" };
+
+            item.Should().BeEquivalentTo(expectedContact);
+            item.Address.Should().BeEquivalentTo(expectedAddress);
+        }
+
+        [Fact]
+        public async Task GetByIdWithIncludeStringsReturnsItemWithRelatedEntityAsync()
+        {
+            var repository = GetRepository<EpdContact>();
+
+            var item = await repository.GetByIdAsync(2000, new List<string> { "Address" }).ConfigureAwait(false);
+
+            var expectedAddress = new Address { Id = 2000, Active = true, City = "Atlanta", PostalCode = "30354", State = "GA", Street = "4244 International Parkway", Street2 = "Suite 120" };
+            var expectedContact = new EpdContact { Id = 2000, Active = false, Address = expectedAddress, AddressId = 2000, ContactName = "Mr. Keith M. Bentley", Email = "null", Organization = "Environmental Protection Division", Title = "Chief, Air Protection Branch" };
+
+            item.Should().BeEquivalentTo(expectedContact);
+            item.Address.Should().BeEquivalentTo(expectedAddress);
         }
     }
 }

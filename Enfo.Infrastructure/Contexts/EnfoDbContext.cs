@@ -21,13 +21,6 @@ namespace Enfo.Infrastructure.Contexts
             base.OnModelCreating(builder);
 
             builder.Entity<County>().HasData(GetCounties());
-
-            if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
-            {
-                builder.Entity<LegalAuthority>().HasData(GetLegalAuthorities());
-                builder.Entity<Address>().HasData(GetAddresses());
-                builder.Entity<EpdContact>().HasData(GetEpdContacts());
-            }
         }
     }
 }

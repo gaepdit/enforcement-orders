@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Enfo.Infrastructure.SeedData
 {
-    internal static partial class DevSeedData
+    public static partial class DevSeedData
     {
         public static LegalAuthority[] GetLegalAuthorities()
         {

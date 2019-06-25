@@ -1,4 +1,5 @@
 ﻿using Enfo.Infrastructure.Contexts;
+using Enfo.Infrastructure.SeedData;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,6 +22,11 @@ namespace Enfo.API
                 }
 
                 context.Database.EnsureCreated();
+
+                if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == EnvironmentName.Development)
+                {
+                    context.SeedTestData();
+                }
             }
 
             host.Run();
