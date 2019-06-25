@@ -18,7 +18,7 @@ namespace Enfo.API.Tests.ControllerTests
         public async Task GetReturnsOkAsync()
         {
             IAsyncReadableRepository<County> repository = this.GetRepository<County>();
-            CountiesController controller = new CountiesController(repository);
+            var controller = new CountiesController(repository);
 
             var result = (await controller.Get().ConfigureAwait(false))
                 .Result;
@@ -30,7 +30,7 @@ namespace Enfo.API.Tests.ControllerTests
         public async Task GetReturnsCorrectTypeAsync()
         {
             IAsyncReadableRepository<County> repository = this.GetRepository<County>();
-            CountiesController controller = new CountiesController(repository);
+            var controller = new CountiesController(repository);
 
             var result = (await controller.Get().ConfigureAwait(false))
                 .Result as OkObjectResult;
@@ -42,7 +42,7 @@ namespace Enfo.API.Tests.ControllerTests
         public async Task GetReturnsAllItemsAsync()
         {
             IAsyncReadableRepository<County> repository = this.GetRepository<County>();
-            CountiesController controller = new CountiesController(repository);
+            var controller = new CountiesController(repository);
 
             var result = (await controller.Get().ConfigureAwait(false))
                 .Result as OkObjectResult;
@@ -64,7 +64,7 @@ namespace Enfo.API.Tests.ControllerTests
         public async Task GetByIdReturnsCorrectTypeAsync()
         {
             IAsyncReadableRepository<County> repository = this.GetRepository<County>();
-            CountiesController controller = new CountiesController(repository);
+            var controller = new CountiesController(repository);
 
             var value = (await controller.Get(1).ConfigureAwait(false))
                 .Value;
@@ -79,7 +79,7 @@ namespace Enfo.API.Tests.ControllerTests
         public async Task GetByIdReturnsCorrectItemAsync(int id)
         {
             IAsyncReadableRepository<County> repository = this.GetRepository<County>(id);
-            CountiesController controller = new CountiesController(repository);
+            var controller = new CountiesController(repository);
 
             var value = (await controller.Get(id).ConfigureAwait(false))
                 .Value;
@@ -93,7 +93,7 @@ namespace Enfo.API.Tests.ControllerTests
         public async Task GetByMissingIdReturnsNotFoundAsync()
         {
             IAsyncReadableRepository<County> repository = this.GetRepository<County>();
-            CountiesController controller = new CountiesController(repository);
+            var controller = new CountiesController(repository);
 
             CountyResource result = (await controller.Get(0).ConfigureAwait(false))
                 .Value;

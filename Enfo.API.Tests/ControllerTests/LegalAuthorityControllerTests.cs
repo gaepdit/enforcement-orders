@@ -17,7 +17,7 @@ namespace Enfo.API.Tests.ControllerTests
         public async Task GetReturnsOkAsync()
         {
             var repository = this.GetRepository<LegalAuthority>();
-            LegalAuthoritiesController controller = new LegalAuthoritiesController(repository);
+            var controller = new LegalAuthoritiesController(repository);
 
             var result = (await controller.Get().ConfigureAwait(false))
                 .Result;
@@ -29,7 +29,7 @@ namespace Enfo.API.Tests.ControllerTests
         public async Task GetReturnsCorrectTypeAsync()
         {
             var repository = this.GetRepository<LegalAuthority>();
-            LegalAuthoritiesController controller = new LegalAuthoritiesController(repository);
+            var controller = new LegalAuthoritiesController(repository);
 
             var result = (await controller.Get().ConfigureAwait(false))
                 .Result as OkObjectResult;
@@ -41,7 +41,7 @@ namespace Enfo.API.Tests.ControllerTests
         public async Task GetReturnsAllItemsAsync()
         {
             var repository = this.GetRepository<LegalAuthority>();
-            LegalAuthoritiesController controller = new LegalAuthoritiesController(repository);
+            var controller = new LegalAuthoritiesController(repository);
 
             var result = (await controller.Get().ConfigureAwait(false))
                 .Result as OkObjectResult;
@@ -64,7 +64,7 @@ namespace Enfo.API.Tests.ControllerTests
         public async Task GetByIdReturnsCorrectTypeAsync()
         {
             var repository = this.GetRepository<LegalAuthority>();
-            LegalAuthoritiesController controller = new LegalAuthoritiesController(repository);
+            var controller = new LegalAuthoritiesController(repository);
 
             var value = (await controller.Get(1).ConfigureAwait(false))
                 .Value;
@@ -79,7 +79,7 @@ namespace Enfo.API.Tests.ControllerTests
         public async Task GetByIdReturnsCorrectItemAsync(int id)
         {
             var repository = this.GetRepository<LegalAuthority>(id);
-            LegalAuthoritiesController controller = new LegalAuthoritiesController(repository);
+            var controller = new LegalAuthoritiesController(repository);
 
             var value = (await controller.Get(id).ConfigureAwait(false))
                 .Value;
@@ -93,7 +93,7 @@ namespace Enfo.API.Tests.ControllerTests
         public async Task GetByMissingIdReturnsNotFoundAsync()
         {
             var repository = this.GetRepository<LegalAuthority>();
-            LegalAuthoritiesController controller = new LegalAuthoritiesController(repository);
+            var controller = new LegalAuthoritiesController(repository);
 
             LegalAuthorityResource result = (await controller.Get(0).ConfigureAwait(false))
                 .Value;
@@ -105,7 +105,7 @@ namespace Enfo.API.Tests.ControllerTests
         public async Task AddNewItemReturnsCorrectly()
         {
             var repository = this.GetRepository<LegalAuthority>();
-            LegalAuthoritiesController controller = new LegalAuthoritiesController(repository);
+            var controller = new LegalAuthoritiesController(repository);
 
             LegalAuthorityResource item = new LegalAuthorityResource()
             {
@@ -113,18 +113,45 @@ namespace Enfo.API.Tests.ControllerTests
                 OrderNumberTemplate = "abc"
             };
 
-            var postResult = controller.Post(item).ConfigureAwait(false);
-            var result = await postResult;
+            var result = await controller.Post(item).ConfigureAwait(false);
 
             result.Should().BeOfType<CreatedAtActionResult>();
             (result as CreatedAtActionResult).ActionName.Should().Be("Get");
         }
 
         [Fact]
+        public async Task AddNewItemIsAddedCorrectly()
+        {
+            var repository = this.GetRepository<LegalAuthority>();
+            var controller = new LegalAuthoritiesController(repository);
+
+            var item = new LegalAuthorityResource()
+            {
+                AuthorityName = "New",
+                OrderNumberTemplate = "abc"
+            };
+
+            var result = await controller.Post(item).ConfigureAwait(false);
+
+            var id = (int)(result as CreatedAtActionResult).Value;
+            var addedItem = new LegalAuthorityResource(await repository.GetByIdAsync(id).ConfigureAwait(false));
+
+            var expected = new LegalAuthorityResource()
+            {
+                Id = 22,
+                Active = true,
+                AuthorityName = "New",
+                OrderNumberTemplate = "abc"
+            };
+
+            addedItem.Should().BeEquivalentTo(expected);
+        }
+
+        [Fact]
         public async Task UpdateItem()
         {
             var repository = this.GetRepository<LegalAuthority>();
-            LegalAuthoritiesController controller = new LegalAuthoritiesController(repository);
+            var controller = new LegalAuthoritiesController(repository);
 
             var target = new LegalAuthorityResource
             {

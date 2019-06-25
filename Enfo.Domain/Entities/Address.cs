@@ -27,7 +27,8 @@ namespace Enfo.Domain.Entities
 
         [DisplayName("Postal Code")]
         [StringLength(10)]
-        [RegularExpression("^\\d{5}(-\\d{4})?$", ErrorMessage = "Valid US Postal Code is required")]
+        [RegularExpression("^\\d{5}(-\\d{4})?$", 
+            ErrorMessage = "Valid US Postal Code is required")]
         public string PostalCode { get; set; }
 
         public const string Country = "USA";

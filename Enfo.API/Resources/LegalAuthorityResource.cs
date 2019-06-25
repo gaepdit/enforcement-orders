@@ -44,10 +44,13 @@ namespace Enfo.API.Resources
     {
         public static void UpdateFrom(this LegalAuthority item, LegalAuthorityResource resource)
         {
-            item.Active = resource.Active;
-            item.AuthorityName = resource.AuthorityName;
-            item.OrderNumberTemplate = resource.OrderNumberTemplate;
-            item.UpdatedDate = DateTime.Now;
+            if (resource != null)
+            {
+                item.Active = resource.Active;
+                item.AuthorityName = resource.AuthorityName;
+                item.OrderNumberTemplate = resource.OrderNumberTemplate;
+                item.UpdatedDate = DateTime.Now;
+            }
         }
     }
 }
