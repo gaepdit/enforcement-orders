@@ -2,9 +2,9 @@ using Enfo.Domain.Entities;
 
 namespace Enfo.Domain.Repositories
 {
-    public interface IAsyncWritableRepository<T> : IAsyncReadableRepository<T>, IUnitOfWork 
-        where T : BaseEntity
+    public interface IAsyncWritableRepository<TEntity> : IAsyncReadableRepository<TEntity>, IUnitOfWork 
+        where TEntity : BaseEntity
     {
-        void Add(T entity);
+        void Add(TEntity entity);
     }
 }

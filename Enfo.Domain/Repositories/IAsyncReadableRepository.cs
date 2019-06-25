@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 
 namespace Enfo.Domain.Repositories
 {
-    public interface IAsyncReadableRepository<T>
-        where T : BaseEntity
+    public interface IAsyncReadableRepository<TEntity>
+        where TEntity : BaseEntity
     {
-        Task<T> GetByIdAsync(int id);
-        Task<T> GetByIdAsync(int id, Expression<Func<T, object>> includeExpression);
-        Task<T> GetByIdAsync(int id, List<string> includeStrings);
-        Task<IReadOnlyList<T>> ListAsync();
-        Task<IReadOnlyList<T>> ListAsync(ISpecification<T> specification);
+        Task<TEntity> GetByIdAsync(int id);
+        Task<TEntity> GetByIdAsync(int id, Expression<Func<TEntity, object>> includeExpression);
+        Task<TEntity> GetByIdAsync(int id, List<string> includeStrings);
+        Task<IReadOnlyList<TEntity>> ListAsync();
+        Task<IReadOnlyList<TEntity>> ListAsync(ISpecification<TEntity> specification);
         Task<int> CountAsync();
-        Task<int> CountAsync(ISpecification<T> specification);
+        Task<int> CountAsync(ISpecification<TEntity> specification);
     }
 }

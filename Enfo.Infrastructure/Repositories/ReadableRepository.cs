@@ -10,8 +10,8 @@ using System.Threading.Tasks;
 
 namespace Enfo.Infrastructure.Repositories
 {
-    public class ReadableRepository<T> : IAsyncReadableRepository<T>
-        where T : BaseEntity
+    public class ReadableRepository<TEntity> : IAsyncReadableRepository<TEntity>
+        where TEntity : BaseEntity
     {
         internal readonly EnfoDbContext context;
 
@@ -20,48 +20,48 @@ namespace Enfo.Infrastructure.Repositories
             this.context = context;
         }
 
-        public async Task<T> GetByIdAsync(int id)
+        public async Task<TEntity> GetByIdAsync(int id)
         {
-            return await context.Set<T>().FindAsync(id).ConfigureAwait(false);
+            return await context.Set<TEntity>().FindAsync(id).ConfigureAwait(false);
         }
 
-        public async Task<T> GetByIdAsync(int id, Expression<Func<T, object>> includeExpression)
+        public async Task<TEntity> GetByIdAsync(int id, Expression<Func<TEntity, object>> includeExpression)
         {
-            var spec = new EntityWithIncludeExpressionSpecification<T>(id, includeExpression);
+            var spec = new EntityWithIncludeExpressionSpecification<TEntity>(id, includeExpression);
 
             return await ApplySpecification(spec).SingleOrDefaultAsync().ConfigureAwait(false);
         }
 
-        public async Task<T> GetByIdAsync(int id, List<string> includeStrings)
+        public async Task<TEntity> GetByIdAsync(int id, List<string> includeStrings)
         {
-            var spec = new EntityWithIncludeExpressionSpecification<T>(id, includeStrings);
+            var spec = new EntityWithIncludeExpressionSpecification<TEntity>(id, includeStrings);
 
             return await ApplySpecification(spec).SingleOrDefaultAsync().ConfigureAwait(false);
         }
 
-        public async Task<IReadOnlyList<T>> ListAsync()
+        public async Task<IReadOnlyList<TEntity>> ListAsync()
         {
-            return await context.Set<T>().ToListAsync().ConfigureAwait(false);
+            return await context.Set<TEntity>().ToListAsync().ConfigureAwait(false);
         }
 
-        public async Task<IReadOnlyList<T>> ListAsync(ISpecification<T> specification)
+        public async Task<IReadOnlyList<TEntity>> ListAsync(ISpecification<TEntity> specification)
         {
             return await ApplySpecification(specification).ToListAsync().ConfigureAwait(false);
         }
 
         public Task<int> CountAsync()
         {
-            return context.Set<T>().CountAsync();
+            return context.Set<TEntity>().CountAsync();
         }
 
-        public async Task<int> CountAsync(ISpecification<T> specification)
+        public async Task<int> CountAsync(ISpecification<TEntity> specification)
         {
             return await ApplySpecification(specification).CountAsync().ConfigureAwait(false);
         }
 
-        private IQueryable<T> ApplySpecification(ISpecification<T> spec)
+        private IQueryable<TEntity> ApplySpecification(ISpecification<TEntity> spec)
         {
-            return SpecificationEvaluator<T>.GetQuery(context.Set<T>().AsQueryable(), spec);
+            return SpecificationEvaluator<TEntity>.GetQuery(context.Set<TEntity>().AsQueryable(), spec);
         }
     }
 }
