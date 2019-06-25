@@ -16,7 +16,7 @@ namespace Enfo.API.Tests.ControllerTests
         [Fact]
         public async Task GetReturnsOkAsync()
         {
-            var repository = GetRepository<LegalAuthority>();
+            var repository = this.GetRepository<LegalAuthority>();
             LegalAuthoritiesController controller = new LegalAuthoritiesController(repository);
 
             var result = (await controller.Get().ConfigureAwait(false))
@@ -28,7 +28,7 @@ namespace Enfo.API.Tests.ControllerTests
         [Fact]
         public async Task GetReturnsCorrectTypeAsync()
         {
-            var repository = GetRepository<LegalAuthority>();
+            var repository = this.GetRepository<LegalAuthority>();
             LegalAuthoritiesController controller = new LegalAuthoritiesController(repository);
 
             var result = (await controller.Get().ConfigureAwait(false))
@@ -40,7 +40,7 @@ namespace Enfo.API.Tests.ControllerTests
         [Fact]
         public async Task GetReturnsAllItemsAsync()
         {
-            var repository = GetRepository<LegalAuthority>();
+            var repository = this.GetRepository<LegalAuthority>();
             LegalAuthoritiesController controller = new LegalAuthoritiesController(repository);
 
             var result = (await controller.Get().ConfigureAwait(false))
@@ -63,7 +63,7 @@ namespace Enfo.API.Tests.ControllerTests
         [Fact]
         public async Task GetByIdReturnsCorrectTypeAsync()
         {
-            var repository = GetRepository<LegalAuthority>();
+            var repository = this.GetRepository<LegalAuthority>();
             LegalAuthoritiesController controller = new LegalAuthoritiesController(repository);
 
             var value = (await controller.Get(1).ConfigureAwait(false))
@@ -78,7 +78,7 @@ namespace Enfo.API.Tests.ControllerTests
         [InlineData(21)]
         public async Task GetByIdReturnsCorrectItemAsync(int id)
         {
-            var repository = GetRepository<LegalAuthority>();
+            var repository = this.GetRepository<LegalAuthority>(id);
             LegalAuthoritiesController controller = new LegalAuthoritiesController(repository);
 
             var value = (await controller.Get(id).ConfigureAwait(false))
@@ -92,7 +92,7 @@ namespace Enfo.API.Tests.ControllerTests
         [Fact]
         public async Task GetByMissingIdReturnsNotFoundAsync()
         {
-            var repository = GetRepository<LegalAuthority>();
+            var repository = this.GetRepository<LegalAuthority>();
             LegalAuthoritiesController controller = new LegalAuthoritiesController(repository);
 
             LegalAuthorityResource result = (await controller.Get(0).ConfigureAwait(false))
@@ -104,7 +104,7 @@ namespace Enfo.API.Tests.ControllerTests
         [Fact]
         public async Task AddNewItemReturnsCorrectly()
         {
-            var repository = GetRepository<LegalAuthority>();
+            var repository = this.GetRepository<LegalAuthority>();
             LegalAuthoritiesController controller = new LegalAuthoritiesController(repository);
 
             LegalAuthorityResource item = new LegalAuthorityResource()
@@ -123,7 +123,7 @@ namespace Enfo.API.Tests.ControllerTests
         [Fact]
         public async Task UpdateItem()
         {
-            var repository = GetRepository<LegalAuthority>();
+            var repository = this.GetRepository<LegalAuthority>();
             LegalAuthoritiesController controller = new LegalAuthoritiesController(repository);
 
             var target = new LegalAuthorityResource

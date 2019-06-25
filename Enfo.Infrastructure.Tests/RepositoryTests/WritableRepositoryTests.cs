@@ -15,7 +15,7 @@ namespace Enfo.Infrastructure.Tests.RepositoryTests
         [Fact]
         public async Task AddNewItemIncreasesCount()
         {
-            IAsyncWritableRepository<County> repository = GetRepository<County>();
+            IAsyncWritableRepository<County> repository = this.GetRepository<County>();
 
             int preCount = await repository.CountAsync().ConfigureAwait(false);
 
@@ -31,7 +31,7 @@ namespace Enfo.Infrastructure.Tests.RepositoryTests
         [Fact]
         public async Task AddNewItemIsAddedCorrectly()
         {
-            IAsyncWritableRepository<County> repository = GetRepository<County>();
+            IAsyncWritableRepository<County> repository = this.GetRepository<County>();
 
             County item = new County { CountyName = "NewCounty" };
             repository.Add(item);
@@ -46,7 +46,7 @@ namespace Enfo.Infrastructure.Tests.RepositoryTests
         [Fact]
         public async Task AddNewItemFailsIfMissingRequiredProperty()
         {
-            IAsyncWritableRepository<County> repository = GetRepository<County>();
+            IAsyncWritableRepository<County> repository = this.GetRepository<County>();
             repository.Add(new County { });
 
             Func<Task> action = async () => { await repository.CompleteAsync().ConfigureAwait(false); };
@@ -60,7 +60,7 @@ namespace Enfo.Infrastructure.Tests.RepositoryTests
         [Fact]
         public async Task AddNewItemWithExistingRelatedEntityIsAddedCorrectly()
         {
-            var repository = GetRepository<EpdContact>();
+            var repository = this.GetRepository<EpdContact>();
 
             var newContact = new EpdContact { AddressId = 2002, ContactName = "Mr. Fake Name", Email = "fake.name@example.com", Organization = "Environmental Protection Division", Title = "" };
             repository.Add(newContact);
@@ -77,7 +77,7 @@ namespace Enfo.Infrastructure.Tests.RepositoryTests
         [Fact]
         public async Task AddNewItemWithNewRelatedEntityIsAddedCorrectly()
         {
-            var repository = GetRepository<EpdContact>();
+            var repository = this.GetRepository<EpdContact>();
 
             var newAddress = new Address { City = "Atlanta", PostalCode = "33333", State = "GA", Street = "123 Fake St" };
             var newContact = new EpdContact { Address = newAddress, ContactName = "Mr. Fake Name", Email = "fake.name@example.com", Organization = "Environmental Protection Division", Title = "" };

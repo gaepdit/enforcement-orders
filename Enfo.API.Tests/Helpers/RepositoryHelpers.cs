@@ -10,11 +10,11 @@ namespace Enfo.API.Tests.Helpers
 {
     internal static class RepositoryHelpers
     {
-        public static IAsyncWritableRepository<TEntity> GetRepository<TEntity>([CallerMemberName] string dbName = null)
+        public static IAsyncWritableRepository<TEntity> GetRepository<TEntity>(this object callingClass, int appendToName = 0, [CallerMemberName] string dbName = null)
             where TEntity : BaseEntity
         {
             var options = new DbContextOptionsBuilder<EnfoDbContext>()
-                .UseSqlite($"Data Source={dbName}.db")
+                .UseSqlite($"Data Source={callingClass}_{dbName}_{appendToName}_Test.db")
                 .Options;
 
             var context = new EnfoDbContext(options);

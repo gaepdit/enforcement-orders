@@ -15,7 +15,7 @@ namespace Enfo.Infrastructure.Tests.RepositoryTests
         [Fact]
         public async Task GetAllReturnsListAsync()
         {
-            IAsyncReadableRepository<County> repository = GetRepository<County>();
+            IAsyncReadableRepository<County> repository = this.GetRepository<County>();
 
             IReadOnlyList<County> items = await repository.ListAsync().ConfigureAwait(false);
 
@@ -27,7 +27,7 @@ namespace Enfo.Infrastructure.Tests.RepositoryTests
         [Fact]
         public async Task GetByIdReturnsItemAsync()
         {
-            IAsyncReadableRepository<County> repository = GetRepository<County>();
+            IAsyncReadableRepository<County> repository = this.GetRepository<County>();
 
             County item = await repository.GetByIdAsync(1).ConfigureAwait(false);
 
@@ -38,7 +38,7 @@ namespace Enfo.Infrastructure.Tests.RepositoryTests
         [Fact]
         public async Task GetByMissingIdReturnsNullAsync()
         {
-            IAsyncReadableRepository<County> repository = GetRepository<County>();
+            IAsyncReadableRepository<County> repository = this.GetRepository<County>();
 
             County item = await repository.GetByIdAsync(-1).ConfigureAwait(false);
 
@@ -48,7 +48,7 @@ namespace Enfo.Infrastructure.Tests.RepositoryTests
         [Fact]
         public async Task CountWithSpecification()
         {
-            IAsyncReadableRepository<County> repository = GetRepository<County>();
+            IAsyncReadableRepository<County> repository = this.GetRepository<County>();
 
             var specification = new Specification<County>(e => e.CountyName.StartsWith("B", StringComparison.CurrentCultureIgnoreCase));
             int count = await repository.CountAsync(specification).ConfigureAwait(false);
@@ -59,7 +59,7 @@ namespace Enfo.Infrastructure.Tests.RepositoryTests
         [Fact]
         public async Task CountAll()
         {
-            var repository = GetRepository<EpdContact>();
+            var repository = this.GetRepository<EpdContact>();
 
             int count = await repository.CountAsync().ConfigureAwait(false);
 
@@ -69,7 +69,7 @@ namespace Enfo.Infrastructure.Tests.RepositoryTests
         [Fact]
         public async Task GetByIdReturnsItemWithRelatedEntityAsync()
         {
-            var repository = GetRepository<EpdContact>();
+            var repository = this.GetRepository<EpdContact>();
 
             var item = await repository.GetByIdAsync(2000).ConfigureAwait(false);
 
@@ -85,7 +85,7 @@ namespace Enfo.Infrastructure.Tests.RepositoryTests
         [Fact]
         public async Task GetByIdWithIncludeReturnsItemWithRelatedEntityAsync()
         {
-            var repository = GetRepository<EpdContact>();
+            var repository = this.GetRepository<EpdContact>();
 
             var item = await repository.GetByIdAsync(2000, e => e.Address).ConfigureAwait(false);
 
@@ -99,7 +99,7 @@ namespace Enfo.Infrastructure.Tests.RepositoryTests
         [Fact]
         public async Task GetByIdWithIncludeStringsReturnsItemWithRelatedEntityAsync()
         {
-            var repository = GetRepository<EpdContact>();
+            var repository = this.GetRepository<EpdContact>();
 
             var item = await repository.GetByIdAsync(2000, new List<string> { "Address" }).ConfigureAwait(false);
 
