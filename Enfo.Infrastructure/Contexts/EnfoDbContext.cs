@@ -12,7 +12,7 @@ namespace Enfo.Infrastructure.Contexts
 
         public DbSet<Address> Addresses { get; set; }
         public DbSet<County> Counties { get; set; }
-        public DbSet<EnforcementOrder> EnforcementOrders { get; set; }
+        public DbSet<Order> EnforcementOrders { get; set; }
         public DbSet<EpdContact> EpdContacts { get; set; }
         public DbSet<LegalAuthority> LegalAuthorities { get; set; }
 

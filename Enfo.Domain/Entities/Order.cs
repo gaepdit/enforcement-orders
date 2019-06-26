@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Enfo.Domain.Entities
 {
-    public class EnforcementOrder : BaseEntity
+    public class Order : BaseEntity
     {
         #region enums
 
