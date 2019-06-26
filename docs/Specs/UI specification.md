@@ -1,45 +1,35 @@
 # ENFO UI Specification
 
-## Admin UI
+If the label ***(Admin)*** is applied to a page or section, then it applies to all sub-pages as well.
 
-* Dashboard [Index]
-    - Current proposed orders [#proposed]
-    - Current executed orders [#executed]
-* Enforcement Orders [Orders]
-    - View all
-        - Filters
-            - Facility name
-            - Authority
-            - County
-            - Date range
-            - Executed/Proposed/All
-            - Active/Deleted/All
-        - Results
-        - Pagination options
-    - Create new (form) [Orders/Add]
-    - View single [Orders/{id}]
-    - Edit single [Orders/{id}/Edit]
-* Admin lists
-    - Public Comment Contacts
-    - Counties
-    - Legal Authorities
-* User Admin [Users]
-    - List all users
-    - View user [Users/{id}]
-    - Edit user permissions [Users/{id}/Edit]
-
-## Public UI
-
-* Search [Index]
-    - Form 
-        - Facility name
-        - Authority
-        - County
-        - Date range
-        - Status (Executed/Proposed/All)
-    - Results
-    - Pagination options
-* Details [Details/{id}]
-* Current proposed orders [Proposed]
-* Current executed orders [Executed]
-* RSS feed
+* Dashboard `/`
+    - Current orders
+        - Current proposed orders
+        - Current executed orders
+    - ***(Admin)*** Unpublished orders
+        - Pending orders
+        - Draft orders
+* Search `/Orders`
+    - View (limited details) `/Orders/Details/{id}`
+    - Current proposed orders `/Orders/CurrentProposed`
+    - Recently executed orders `/Orders/RecentExecuted`
+* ***(Admin)*** Search (allows additional fields) `/OrdersAdmin`
+    - View (full details) `/OrdersAdmin/Details/{id}`
+    - Create `/OrdersAdmin/Create`
+    - Edit `/OrdersAdmin/Edit/{id}`
+    - Delete `/OrdersAdmin/Delete/{id}`
+* ***(Admin)*** Maintenance `/Maintenance`
+    - EPD Contacts `/Maintenance/EpdContacts`
+    - Addresses `/Maintenance/Addresses`
+    - Legal Authorities `/Maintenance/LegalAuthorities`
+* ***(Admin)*** Profile `/Account`
+    - Log in `/Account/Login`
+    - Edit profile `/Account/Edit`
+    - Change password `/Account/ChangePassword`
+    - Reset password `/Account/ForgotPassword`
+* ***(Admin)*** Users `/Users`
+    - Register new user `/Users/Register`
+    - View user `/Users/Details/{id}`
+    - Edit user profile `/Users/Edit/{id}`
+* Change log `/Changelog`
+* API documentation `/api-docs/`
