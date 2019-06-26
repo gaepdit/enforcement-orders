@@ -1,5 +1,6 @@
 using Enfo.API.Controllers;
 using Enfo.API.Resources;
+using Enfo.API.Tests.Helpers;
 using Enfo.Domain.Entities;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
@@ -7,7 +8,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
-using static Enfo.API.Tests.Helpers.RepositoryHelpers;
 
 namespace Enfo.API.Tests.ControllerTests
 {
@@ -148,7 +148,7 @@ namespace Enfo.API.Tests.ControllerTests
         }
 
         [Fact]
-        public async Task UpdateItem()
+        public async Task UpdateItemSucceeds()
         {
             var repository = this.GetRepository<LegalAuthority>();
             var controller = new LegalAuthoritiesController(repository);

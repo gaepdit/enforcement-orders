@@ -30,7 +30,7 @@ namespace Enfo.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<EpdContactResource>> Get(int id)
         {
-            var item = await repository.GetByIdAsync(id, e => e.Address).ConfigureAwait(false);
+            var item = await repository.GetByIdAsync(id).ConfigureAwait(false);
 
             if (item == null)
             {

@@ -1,5 +1,6 @@
 ﻿using Enfo.API.Controllers;
 using Enfo.API.Resources;
+using Enfo.API.Tests.Helpers;
 using Enfo.Domain.Entities;
 using Enfo.Domain.Repositories;
 using FluentAssertions;
@@ -8,7 +9,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
-using static Enfo.API.Tests.Helpers.RepositoryHelpers;
 
 namespace Enfo.API.Tests.ControllerTests
 {

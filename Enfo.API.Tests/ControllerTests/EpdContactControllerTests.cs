@@ -82,6 +82,7 @@ namespace Enfo.API.Tests.ControllerTests
             var expected = new EpdContactResource(await repository.GetByIdAsync(id).ConfigureAwait(false));
 
             value.Should().BeEquivalentTo(expected);
+            value.Address.Should().NotBeNull().And.BeEquivalentTo(expected.Address);
         }
 
         [Fact]
@@ -135,7 +136,7 @@ namespace Enfo.API.Tests.ControllerTests
         }
 
         [Fact]
-        public async Task UpdateItem()
+        public async Task UpdateItemSucceeds()
         {
             var repository = this.GetRepository<EpdContact>();
             var controller = new EpdContactsController(repository);
