@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 
-namespace Enfo.Domain.Repositories
+namespace Enfo.Domain.Specifications
 {
     public interface ISpecification<T>
     {
         Expression<Func<T, bool>> Criteria { get; }
+
+        bool IsSatisfiedBy(T entity);
+
         List<Expression<Func<T, object>>> Includes { get; }
         List<string> IncludeStrings { get; }
 

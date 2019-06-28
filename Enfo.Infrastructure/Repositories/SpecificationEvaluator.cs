@@ -1,11 +1,11 @@
 ﻿using Enfo.Domain.Entities;
-using Enfo.Domain.Repositories;
+using Enfo.Domain.Specifications;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 
 namespace Enfo.Infrastructure.Repositories
 {
-    public static class SpecificationEvaluator<T> 
+    public static class SpecificationEvaluator<T>
         where T : BaseEntity
     {
         public static IQueryable<T> GetQuery(IQueryable<T> inputQuery, ISpecification<T> specification)

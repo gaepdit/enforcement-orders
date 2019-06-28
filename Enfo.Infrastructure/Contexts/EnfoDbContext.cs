@@ -1,7 +1,5 @@
 ﻿using Enfo.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
-using static Enfo.Infrastructure.SeedData.DevSeedData;
 using static Enfo.Infrastructure.SeedData.SeedData;
 
 namespace Enfo.Infrastructure.Contexts

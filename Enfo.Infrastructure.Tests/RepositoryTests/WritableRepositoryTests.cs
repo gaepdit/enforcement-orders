@@ -1,12 +1,12 @@
 ﻿using Enfo.Domain.Entities;
 using Enfo.Domain.Repositories;
+using Enfo.Infrastructure.Tests.Helpers;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
-using static Enfo.Infrastructure.Tests.Helpers.RepositoryHelpers;
 
 namespace Enfo.Infrastructure.Tests.RepositoryTests
 {

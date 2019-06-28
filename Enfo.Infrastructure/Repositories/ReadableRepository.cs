@@ -1,11 +1,11 @@
 using Enfo.Domain.Entities;
 using Enfo.Domain.Repositories;
+using Enfo.Domain.Specifications;
 using Enfo.Infrastructure.Contexts;
+using Enfo.Infrastructure.Specifications;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace Enfo.Infrastructure.Repositories
@@ -25,18 +25,9 @@ namespace Enfo.Infrastructure.Repositories
             return await context.Set<TEntity>().FindAsync(id).ConfigureAwait(false);
         }
 
-        public async Task<TEntity> GetByIdAsync(int id, Expression<Func<TEntity, object>> includeExpression)
+        public async Task<TEntity> GetByIdAsync(int id, ISpecification<TEntity> specification)
         {
-            var spec = new EntityWithIncludeExpressionSpecification<TEntity>(id, includeExpression);
-
-            return await ApplySpecification(spec).SingleOrDefaultAsync().ConfigureAwait(false);
-        }
-
-        public async Task<TEntity> GetByIdAsync(int id, List<string> includeStrings)
-        {
-            var spec = new EntityWithIncludeExpressionSpecification<TEntity>(id, includeStrings);
-
-            return await ApplySpecification(spec).SingleOrDefaultAsync().ConfigureAwait(false);
+            return await ApplySpecification(specification).SingleOrDefaultAsync(e => e.Id == id).ConfigureAwait(false);
         }
 
         public async Task<IReadOnlyList<TEntity>> ListAsync()

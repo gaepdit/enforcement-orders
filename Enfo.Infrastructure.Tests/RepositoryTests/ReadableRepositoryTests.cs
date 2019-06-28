@@ -1,12 +1,12 @@
-﻿using Enfo.Domain.Entities;
+using Enfo.Domain.Entities;
 using Enfo.Domain.Repositories;
-using Enfo.Infrastructure.Repositories;
+using Enfo.Domain.Specifications;
+using Enfo.Infrastructure.Tests.Helpers;
 using FluentAssertions;
-using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
-using static Enfo.Infrastructure.Tests.Helpers.RepositoryHelpers;
 
 namespace Enfo.Infrastructure.Tests.RepositoryTests
 {
@@ -45,13 +45,18 @@ namespace Enfo.Infrastructure.Tests.RepositoryTests
             item.Should().BeNull();
         }
 
+        private class CountyNameStartsWithLetterSpecification : Specification<County>
+        {
+            public CountyNameStartsWithLetterSpecification(char startsWith)
+                : base(e => e.CountyName.StartsWith(startsWith)) { }
+        }
+
         [Fact]
         public async Task CountWithSpecification()
         {
             IAsyncReadableRepository<County> repository = this.GetRepository<County>();
 
-            var specification = new Specification<County>(e => e.CountyName.StartsWith("B", StringComparison.CurrentCultureIgnoreCase));
-            int count = await repository.CountAsync(specification).ConfigureAwait(false);
+            int count = await repository.CountAsync(new CountyNameStartsWithLetterSpecification('B')).ConfigureAwait(false);
 
             count.Should().Be(16);
         }
@@ -73,8 +78,6 @@ namespace Enfo.Infrastructure.Tests.RepositoryTests
 
             var item = await repository.GetByIdAsync(2000).ConfigureAwait(false);
 
-            // since this passes, are the GetByIdAsync overloads with includes even needed?
-
             var expectedAddress = new Address { Id = 2000, Active = true, City = "Atlanta", PostalCode = "30354", State = "GA", Street = "4244 International Parkway", Street2 = "Suite 120" };
             var expectedContact = new EpdContact { Id = 2000, Active = false, Address = expectedAddress, AddressId = 2000, ContactName = "Mr. Keith M. Bentley", Email = "null", Organization = "Environmental Protection Division", Title = "Chief, Air Protection Branch" };
 
@@ -83,31 +86,34 @@ namespace Enfo.Infrastructure.Tests.RepositoryTests
         }
 
         [Fact]
-        public async Task GetByIdWithIncludeReturnsItemWithRelatedEntityAsync()
+        public async Task GetAllWithSpecificationReturnsCorrectListAsync()
         {
-            var repository = this.GetRepository<EpdContact>();
+            IAsyncReadableRepository<Address> repository = this.GetRepository<Address>();
 
-            var item = await repository.GetByIdAsync(2000, e => e.Address).ConfigureAwait(false);
+            IReadOnlyList<Address> items = await repository.ListAsync(new ExcludeInactiveItemsSpecification<Address>()).ConfigureAwait(false);
 
-            var expectedAddress = new Address { Id = 2000, Active = true, City = "Atlanta", PostalCode = "30354", State = "GA", Street = "4244 International Parkway", Street2 = "Suite 120" };
-            var expectedContact = new EpdContact { Id = 2000, Active = false, Address = expectedAddress, AddressId = 2000, ContactName = "Mr. Keith M. Bentley", Email = "null", Organization = "Environmental Protection Division", Title = "Chief, Air Protection Branch" };
-
-            item.Should().BeEquivalentTo(expectedContact);
-            item.Address.Should().BeEquivalentTo(expectedAddress);
+            items.Should().HaveCount(2);
+            items.Any(e => !e.Active).Should().BeFalse();
         }
 
         [Fact]
-        public async Task GetByIdWithIncludeStringsReturnsItemWithRelatedEntityAsync()
+        public async Task GetByIdIncludedWithSpecificationReturnsItemAsync()
         {
-            var repository = this.GetRepository<EpdContact>();
+            IAsyncReadableRepository<Address> repository = this.GetRepository<Address>();
 
-            var item = await repository.GetByIdAsync(2000, new List<string> { "Address" }).ConfigureAwait(false);
+            Address item = await repository.GetByIdAsync(2000, new ExcludeInactiveItemsSpecification<Address>()).ConfigureAwait(false);
 
-            var expectedAddress = new Address { Id = 2000, Active = true, City = "Atlanta", PostalCode = "30354", State = "GA", Street = "4244 International Parkway", Street2 = "Suite 120" };
-            var expectedContact = new EpdContact { Id = 2000, Active = false, Address = expectedAddress, AddressId = 2000, ContactName = "Mr. Keith M. Bentley", Email = "null", Organization = "Environmental Protection Division", Title = "Chief, Air Protection Branch" };
+            item.Should().NotBeNull();
+        }
 
-            item.Should().BeEquivalentTo(expectedContact);
-            item.Address.Should().BeEquivalentTo(expectedAddress);
+        [Fact]
+        public async Task GetByIdExcludedWithSpecificationReturnsNullAsync()
+        {
+            IAsyncReadableRepository<Address> repository = this.GetRepository<Address>();
+
+            Address item = await repository.GetByIdAsync(2001, new ExcludeInactiveItemsSpecification<Address>()).ConfigureAwait(false);
+
+            item.Should().BeNull();
         }
     }
 }

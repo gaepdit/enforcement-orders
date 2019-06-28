@@ -1,11 +1,10 @@
-using Enfo.Domain.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 
-namespace Enfo.Infrastructure.Repositories
+namespace Enfo.Domain.Specifications
 {
-    public class Specification<T> : ISpecification<T>
+    public abstract class Specification<T> : ISpecification<T>
     {
         public Specification(Expression<Func<T, bool>> criteria)
         {
@@ -13,6 +12,12 @@ namespace Enfo.Infrastructure.Repositories
         }
 
         public Expression<Func<T, bool>> Criteria { get; }
+
+        public bool IsSatisfiedBy(T entity)
+        {
+            Func<T, bool> predicate = Criteria.Compile();
+            return predicate(entity);
+        }
 
         public List<Expression<Func<T, object>>> Includes { get; } =
             new List<Expression<Func<T, object>>>();
