@@ -1,11 +1,12 @@
 using Enfo.Domain.Entities;
 using Enfo.Domain.Specifications;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Enfo.Domain.Repositories
 {
-    public interface IAsyncReadableRepository<TEntity>
+    public interface IAsyncReadableRepository<TEntity> : IDisposable
         where TEntity : BaseEntity
     {
         Task<TEntity> GetByIdAsync(int id);

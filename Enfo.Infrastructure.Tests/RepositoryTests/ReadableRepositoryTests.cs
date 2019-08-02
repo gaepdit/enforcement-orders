@@ -15,34 +15,37 @@ namespace Enfo.Infrastructure.Tests.RepositoryTests
         [Fact]
         public async Task GetAllReturnsListAsync()
         {
-            IAsyncReadableRepository<County> repository = this.GetRepository<County>();
+            using (IAsyncReadableRepository<County> repository = this.GetRepository<County>())
+            {
+                IReadOnlyList<County> items = await repository.ListAsync().ConfigureAwait(false);
 
-            IReadOnlyList<County> items = await repository.ListAsync().ConfigureAwait(false);
-
-            items.Should().HaveCount(159);
-            var expected = new County { Id = 1, CountyName = "Appling" };
-            items[0].Should().BeEquivalentTo(expected);
+                items.Should().HaveCount(159);
+                var expected = new County { Id = 1, CountyName = "Appling" };
+                items[0].Should().BeEquivalentTo(expected);
+            }
         }
 
         [Fact]
         public async Task GetByIdReturnsItemAsync()
         {
-            IAsyncReadableRepository<County> repository = this.GetRepository<County>();
+            using (IAsyncReadableRepository<County> repository = this.GetRepository<County>())
+            {
+                County item = await repository.GetByIdAsync(1).ConfigureAwait(false);
 
-            County item = await repository.GetByIdAsync(1).ConfigureAwait(false);
-
-            var expected = new County { Id = 1, CountyName = "Appling" };
-            item.Should().BeEquivalentTo(expected);
+                var expected = new County { Id = 1, CountyName = "Appling" };
+                item.Should().BeEquivalentTo(expected);
+            }
         }
 
         [Fact]
         public async Task GetByMissingIdReturnsNullAsync()
         {
-            IAsyncReadableRepository<County> repository = this.GetRepository<County>();
+            using (IAsyncReadableRepository<County> repository = this.GetRepository<County>())
+            {
+                County item = await repository.GetByIdAsync(-1).ConfigureAwait(false);
 
-            County item = await repository.GetByIdAsync(-1).ConfigureAwait(false);
-
-            item.Should().BeNull();
+                item.Should().BeNull();
+            }
         }
 
         private class CountyNameStartsWithLetterSpecification : Specification<County>
@@ -54,66 +57,72 @@ namespace Enfo.Infrastructure.Tests.RepositoryTests
         [Fact]
         public async Task CountWithSpecification()
         {
-            IAsyncReadableRepository<County> repository = this.GetRepository<County>();
+            using (IAsyncReadableRepository<County> repository = this.GetRepository<County>())
+            {
+                int count = await repository.CountAsync(new CountyNameStartsWithLetterSpecification('B')).ConfigureAwait(false);
 
-            int count = await repository.CountAsync(new CountyNameStartsWithLetterSpecification('B')).ConfigureAwait(false);
-
-            count.Should().Be(16);
+                count.Should().Be(16);
+            }
         }
 
         [Fact]
         public async Task CountAll()
         {
-            var repository = this.GetRepository<EpdContact>();
+            using (var repository = this.GetRepository<EpdContact>())
+            {
+                int count = await repository.CountAsync().ConfigureAwait(false);
 
-            int count = await repository.CountAsync().ConfigureAwait(false);
-
-            count.Should().Be(3);
+                count.Should().Be(3);
+            }
         }
 
         [Fact]
         public async Task GetByIdReturnsItemWithRelatedEntityAsync()
         {
-            var repository = this.GetRepository<EpdContact>();
+            using (var repository = this.GetRepository<EpdContact>())
+            {
+                var item = await repository.GetByIdAsync(2000).ConfigureAwait(false);
 
-            var item = await repository.GetByIdAsync(2000).ConfigureAwait(false);
+                var expectedAddress = new Address { Id = 2000, Active = true, City = "Atlanta", PostalCode = "30354", State = "GA", Street = "4244 International Parkway", Street2 = "Suite 120" };
+                var expectedContact = new EpdContact { Id = 2000, Active = false, Address = expectedAddress, AddressId = 2000, ContactName = "Mr. Keith M. Bentley", Email = "null", Organization = "Environmental Protection Division", Title = "Chief, Air Protection Branch" };
 
-            var expectedAddress = new Address { Id = 2000, Active = true, City = "Atlanta", PostalCode = "30354", State = "GA", Street = "4244 International Parkway", Street2 = "Suite 120" };
-            var expectedContact = new EpdContact { Id = 2000, Active = false, Address = expectedAddress, AddressId = 2000, ContactName = "Mr. Keith M. Bentley", Email = "null", Organization = "Environmental Protection Division", Title = "Chief, Air Protection Branch" };
-
-            item.Should().BeEquivalentTo(expectedContact);
-            item.Address.Should().BeEquivalentTo(expectedAddress);
+                item.Should().BeEquivalentTo(expectedContact);
+                item.Address.Should().BeEquivalentTo(expectedAddress);
+            }
         }
 
         [Fact]
         public async Task GetAllWithSpecificationReturnsCorrectListAsync()
         {
-            IAsyncReadableRepository<Address> repository = this.GetRepository<Address>();
+            using (IAsyncReadableRepository<Address> repository = this.GetRepository<Address>())
+            {
+                IReadOnlyList<Address> items = await repository.ListAsync(new ExcludeInactiveItemsSpecification<Address>()).ConfigureAwait(false);
 
-            IReadOnlyList<Address> items = await repository.ListAsync(new ExcludeInactiveItemsSpecification<Address>()).ConfigureAwait(false);
-
-            items.Should().HaveCount(2);
-            items.Any(e => !e.Active).Should().BeFalse();
+                items.Should().HaveCount(2);
+                items.Any(e => !e.Active).Should().BeFalse();
+            }
         }
 
         [Fact]
         public async Task GetByIdIncludedWithSpecificationReturnsItemAsync()
         {
-            IAsyncReadableRepository<Address> repository = this.GetRepository<Address>();
+            using (IAsyncReadableRepository<Address> repository = this.GetRepository<Address>())
+            {
+                Address item = await repository.GetByIdAsync(2000, new ExcludeInactiveItemsSpecification<Address>()).ConfigureAwait(false);
 
-            Address item = await repository.GetByIdAsync(2000, new ExcludeInactiveItemsSpecification<Address>()).ConfigureAwait(false);
-
-            item.Should().NotBeNull();
+                item.Should().NotBeNull();
+            }
         }
 
         [Fact]
         public async Task GetByIdExcludedWithSpecificationReturnsNullAsync()
         {
-            IAsyncReadableRepository<Address> repository = this.GetRepository<Address>();
+            using (IAsyncReadableRepository<Address> repository = this.GetRepository<Address>())
+            {
+                Address item = await repository.GetByIdAsync(2001, new ExcludeInactiveItemsSpecification<Address>()).ConfigureAwait(false);
 
-            Address item = await repository.GetByIdAsync(2001, new ExcludeInactiveItemsSpecification<Address>()).ConfigureAwait(false);
-
-            item.Should().BeNull();
+                item.Should().BeNull();
+            }
         }
     }
 }

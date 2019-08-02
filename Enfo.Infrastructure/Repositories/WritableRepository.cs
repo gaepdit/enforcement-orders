@@ -15,7 +15,7 @@ namespace Enfo.Infrastructure.Repositories
             context.Set<TEntity>().Add(entity);
         }
 
-        public Task CompleteAsync()
+        public Task<int> CompleteAsync()
         {
             return context.SaveChangesAsync();
         }
