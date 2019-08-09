@@ -2,7 +2,6 @@
 using Enfo.API.Resources;
 using Enfo.API.Tests.Helpers;
 using Enfo.Domain.Entities;
-using Enfo.Domain.Repositories;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -17,7 +16,7 @@ namespace Enfo.API.Tests.ControllerTests
         [Fact]
         public async Task GetReturnsOkAsync()
         {
-            IAsyncReadableRepository<County> repository = this.GetRepository<County>();
+            var repository = this.GetRepository<County>();
             var controller = new CountiesController(repository);
 
             var result = (await controller.Get().ConfigureAwait(false))
@@ -29,7 +28,7 @@ namespace Enfo.API.Tests.ControllerTests
         [Fact]
         public async Task GetReturnsCorrectTypeAsync()
         {
-            IAsyncReadableRepository<County> repository = this.GetRepository<County>();
+            var repository = this.GetRepository<County>();
             var controller = new CountiesController(repository);
 
             var result = (await controller.Get().ConfigureAwait(false))
@@ -41,7 +40,7 @@ namespace Enfo.API.Tests.ControllerTests
         [Fact]
         public async Task GetReturnsAllItemsAsync()
         {
-            IAsyncReadableRepository<County> repository = this.GetRepository<County>();
+            var repository = this.GetRepository<County>();
             var controller = new CountiesController(repository);
 
             var result = (await controller.Get().ConfigureAwait(false))
@@ -61,9 +60,31 @@ namespace Enfo.API.Tests.ControllerTests
         }
 
         [Fact]
+        public async Task GetPaginatedReturnsSomeItemsAsync()
+        {
+            var repository = this.GetRepository<County>();
+            var controller = new CountiesController(repository);
+
+            var result = (await controller.Get(10, 2).ConfigureAwait(false))
+                .Result as OkObjectResult;
+
+            var items = result.Value as IEnumerable<CountyResource>;
+
+            var expected = new CountyResource
+            {
+                Id = 11,
+                CountyName = "Bibb",
+                Active = true
+            };
+
+            items.Should().HaveCount(10);
+            items.ToList()[0].Should().BeEquivalentTo(expected);
+        }
+
+        [Fact]
         public async Task GetByIdReturnsCorrectTypeAsync()
         {
-            IAsyncReadableRepository<County> repository = this.GetRepository<County>();
+            var repository = this.GetRepository<County>();
             var controller = new CountiesController(repository);
 
             var value = (await controller.Get(1).ConfigureAwait(false))
@@ -78,7 +99,7 @@ namespace Enfo.API.Tests.ControllerTests
         [InlineData(3)]
         public async Task GetByIdReturnsCorrectItemAsync(int id)
         {
-            IAsyncReadableRepository<County> repository = this.GetRepository<County>(id);
+            var repository = this.GetRepository<County>(id);
             var controller = new CountiesController(repository);
 
             var value = (await controller.Get(id).ConfigureAwait(false))
@@ -92,7 +113,7 @@ namespace Enfo.API.Tests.ControllerTests
         [Fact]
         public async Task GetByMissingIdReturnsNotFoundAsync()
         {
-            IAsyncReadableRepository<County> repository = this.GetRepository<County>();
+            var repository = this.GetRepository<County>();
             var controller = new CountiesController(repository);
 
             CountyResource result = (await controller.Get(0).ConfigureAwait(false))

@@ -1,6 +1,7 @@
 ﻿using Enfo.API.Resources;
 using Enfo.Domain.Entities;
 using Enfo.Domain.Repositories;
+using Enfo.Domain.Specifications;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -16,13 +17,15 @@ namespace Enfo.API.Controllers
     {
         private readonly IAsyncWritableRepository<EpdContact> repository;
 
-        public EpdContactsController(IAsyncWritableRepository<EpdContact> repository)
-            => this.repository = repository;
+        public EpdContactsController(IAsyncWritableRepository<EpdContact> repository) =>
+            this.repository = repository;
 
-        // GET: api/EpdContacts
+        // GET: api/EpdContacts?pageSize&pageIndex
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<EpdContactResource>>> Get()
-            => Ok((await repository.ListAsync().ConfigureAwait(false))
+        public async Task<ActionResult<IEnumerable<EpdContactResource>>> Get(int pageSize = 0, int pageIndex = 0) =>
+            Ok((await repository
+                .ListAsync(Pagination.FromPageSizeAndIndex(pageSize, pageIndex))
+                .ConfigureAwait(false))
                 .Select(e => new EpdContactResource(e)));
 
         // GET: api/EpdContacts/5

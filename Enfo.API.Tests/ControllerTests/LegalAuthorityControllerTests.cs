@@ -61,6 +61,29 @@ namespace Enfo.API.Tests.ControllerTests
         }
 
         [Fact]
+        public async Task GetPaginatedReturnsSomeActiveItemsAsync()
+        {
+            var repository = this.GetRepository<LegalAuthority>();
+            var controller = new LegalAuthoritiesController(repository);
+
+            var result = (await controller.Get(2, 1).ConfigureAwait(false))
+                .Result as OkObjectResult;
+
+            var items = result.Value as IEnumerable<LegalAuthorityResource>;
+
+            var expected = new LegalAuthorityResource
+            {
+                Id = 1,
+                Active = true,
+                AuthorityName = "Air Quality Act",
+                OrderNumberTemplate = "EPD-AQC-"
+            };
+
+            items.Should().HaveCount(2);
+            items.ToList()[0].Should().BeEquivalentTo(expected);
+        }
+
+        [Fact]
         public async Task GetByIdReturnsCorrectTypeAsync()
         {
             var repository = this.GetRepository<LegalAuthority>();

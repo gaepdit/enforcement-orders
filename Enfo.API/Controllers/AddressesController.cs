@@ -1,6 +1,7 @@
 using Enfo.API.Resources;
 using Enfo.Domain.Entities;
 using Enfo.Domain.Repositories;
+using Enfo.Domain.Specifications;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -16,13 +17,15 @@ namespace Enfo.API.Controllers
     {
         private readonly IAsyncWritableRepository<Address> repository;
 
-        public AddressesController(IAsyncWritableRepository<Address> repository)
-            => this.repository = repository;
+        public AddressesController(IAsyncWritableRepository<Address> repository) =>
+            this.repository = repository;
 
-        // GET: api/Addresses
+        // GET: api/Addresses?pageSize&pageIndex
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<AddressResource>>> Get()
-            => Ok((await repository.ListAsync().ConfigureAwait(false))
+        public async Task<ActionResult<IEnumerable<AddressResource>>> Get(int pageSize = 0, int pageIndex = 0) =>
+            Ok((await repository
+                .ListAsync(Pagination.FromPageSizeAndIndex(pageSize, pageIndex))
+                .ConfigureAwait(false))
                 .Select(e => new AddressResource(e)));
 
         // GET: api/Addresses/5
