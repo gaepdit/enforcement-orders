@@ -26,7 +26,7 @@ namespace Enfo.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<IEnumerable<EpdContactResource>>> Get(int pageSize = 0, int pageIndex = 0) =>
             Ok((await repository
-                .ListAsync(Pagination.FromPageSizeAndIndex(pageSize, pageIndex))
+                .ListAsync(new EpdContactIncludeAddressSpec(), Pagination.FromPageSizeAndIndex(pageSize, pageIndex))
                 .ConfigureAwait(false))
                 .Select(e => new EpdContactResource(e)));
 
@@ -36,7 +36,7 @@ namespace Enfo.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<EpdContactResource>> Get(int id)
         {
-            var item = await repository.GetByIdAsync(id).ConfigureAwait(false);
+            var item = await repository.GetByIdAsync(id, new EpdContactIncludeAddressSpec()).ConfigureAwait(false);
 
             if (item == null)
             {
