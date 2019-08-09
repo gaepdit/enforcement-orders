@@ -56,7 +56,7 @@ namespace Enfo.API.Tests.ControllerTests
                 OrderNumberTemplate = "EPD-AQC-"
             };
 
-            items.Should().HaveCount(3);
+            items.Should().HaveCount(2);
             items.ToList()[0].Should().BeEquivalentTo(expected);
         }
 
@@ -130,7 +130,7 @@ namespace Enfo.API.Tests.ControllerTests
             var repository = this.GetRepository<LegalAuthority>();
             var controller = new LegalAuthoritiesController(repository);
 
-            LegalAuthorityResource item = new LegalAuthorityResource()
+            var item = new LegalAuthorityCreateResource()
             {
                 AuthorityName = "New",
                 OrderNumberTemplate = "abc"
@@ -148,7 +148,7 @@ namespace Enfo.API.Tests.ControllerTests
             var repository = this.GetRepository<LegalAuthority>();
             var controller = new LegalAuthoritiesController(repository);
 
-            var item = new LegalAuthorityResource()
+            var item = new LegalAuthorityCreateResource()
             {
                 AuthorityName = "New",
                 OrderNumberTemplate = "abc"

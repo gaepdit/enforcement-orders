@@ -1,15 +1,11 @@
 using Enfo.Domain.Entities;
-using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace Enfo.API.Resources
 {
-    public class EpdContactResource
+    public class EpdContactCreateResource
     {
-        public int Id { get; set; }
-        public bool Active { get; set; }
-
         [DisplayName("Contact Name")]
         [StringLength(50)]
         [Required(ErrorMessage = "Contact Name is required")]
@@ -23,9 +19,8 @@ namespace Enfo.API.Resources
         [Required(ErrorMessage = "Organization is required")]
         public string Organization { get; set; }
 
-        public virtual AddressResource Address { get; set; }
-        [Required(ErrorMessage = "Address is required")]
-        public int? AddressId { get; set; }
+        [Required(ErrorMessage = "Address ID is required")]
+        public int AddressId { get; set; }
 
         [RegularExpression("^\\D?(\\d{3})\\D?\\D?(\\d{3})\\D?(\\d{4})$",
             ErrorMessage = "Please enter valid a phone number")]
@@ -37,22 +32,17 @@ namespace Enfo.API.Resources
         [StringLength(100)]
         public string Email { get; set; }
 
-        public EpdContactResource() { }
-
-        public EpdContactResource(EpdContact item)
+        public EpdContact NewEpdContact()
         {
-            if (item != null)
+            return new EpdContact()
             {
-                Id = item.Id;
-                Active = item.Active;
-                ContactName = item.ContactName;
-                Title = item.Title;
-                Organization = item.Organization;
-                Address = new AddressResource(item.Address);
-                AddressId = item.AddressId;
-                Telephone = item.Telephone;
-                Email = item.Email;
-            }
+                AddressId = AddressId,
+                ContactName = ContactName,
+                Email = Email,
+                Organization = Organization,
+                Telephone = Telephone,
+                Title = Title
+            };
         }
     }
 }

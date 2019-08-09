@@ -27,17 +27,6 @@ namespace Enfo.API.Resources
                 OrderNumberTemplate = item.OrderNumberTemplate;
             }
         }
-
-        public LegalAuthority NewLegalAuthority()
-        {
-            return new LegalAuthority()
-            {
-                AuthorityName = AuthorityName,
-                OrderNumberTemplate = OrderNumberTemplate,
-                Active = Active
-            };
-
-        }
     }
 
     public static class LegalAuthorityExtension

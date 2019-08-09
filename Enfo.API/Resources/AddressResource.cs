@@ -1,10 +1,7 @@
 ﻿using Enfo.Domain.Entities;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Enfo.API.Resources
 {
@@ -50,19 +47,6 @@ namespace Enfo.API.Resources
                 State = item.State;
                 PostalCode = item.PostalCode;
             }
-        }
-
-        public Address NewAddress()
-        {
-            return new Address
-            {
-                Active = Active,
-                City = City,
-                PostalCode = PostalCode,
-                State = State,
-                Street = Street,
-                Street2 = Street2
-            };
         }
     }
 

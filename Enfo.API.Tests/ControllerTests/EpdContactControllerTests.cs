@@ -1,4 +1,4 @@
-﻿using Enfo.API.Controllers;
+using Enfo.API.Controllers;
 using Enfo.API.Resources;
 using Enfo.API.Tests.Helpers;
 using Enfo.Domain.Entities;
@@ -103,8 +103,7 @@ namespace Enfo.API.Tests.ControllerTests
             var repository = this.GetRepository<EpdContact>();
             var controller = new EpdContactsController(repository);
 
-            var newAddress = new AddressResource { City = "Atlanta", PostalCode = "33333", State = "GA", Street = "123 Fake St" };
-            var newContact = new EpdContactResource { Address = newAddress, ContactName = "Mr. Fake Name", Email = "fake.name@example.com", Organization = "Environmental Protection Division", Title = "" };
+            var newContact = new EpdContactCreateResource { AddressId = 2000, ContactName = "Mr. Fake Name", Email = "fake.name@example.com", Organization = "Environmental Protection Division", Title = "" };
 
             var postResult = controller.Post(newContact).ConfigureAwait(false);
             var result = await postResult;
@@ -119,20 +118,18 @@ namespace Enfo.API.Tests.ControllerTests
             var repository = this.GetRepository<EpdContact>();
             var controller = new EpdContactsController(repository);
 
-            var newAddress = new AddressResource { City = "Atlanta", PostalCode = "33333", State = "GA", Street = "123 Fake St" };
-            var newContact = new EpdContactResource { Address = newAddress, ContactName = "Mr. Fake Name", Email = "fake.name@example.com", Organization = "Environmental Protection Division", Title = "" };
+            var contact = new EpdContactCreateResource { AddressId = 2000, ContactName = "Mr. Fake Name", Email = "fake.name@example.com", Organization = "Environmental Protection Division", Title = "" };
 
-            await controller.Post(newContact).ConfigureAwait(false);
+            await controller.Post(contact).ConfigureAwait(false);
 
             EpdContactResource addedItem = (await controller.Get(2003).ConfigureAwait(false))
                 .Value;
 
             // Contact and address ID get added with next value in DB
+            var newContact = contact.NewEpdContact();
             newContact.Id = 2003;
-            newContact.AddressId = 2003;
-            newContact.Address.Id = 2003;
 
-            addedItem.Should().BeEquivalentTo(newContact);
+            addedItem.Should().BeEquivalentTo(contact);
         }
 
         [Fact]
@@ -141,7 +138,7 @@ namespace Enfo.API.Tests.ControllerTests
             var repository = this.GetRepository<EpdContact>();
             var controller = new EpdContactsController(repository);
 
-            var target = new EpdContactResource { Id = 2000, AddressId = 2002, ContactName = "Name One Update", Email = "email@example.com", Organization = "Com", Telephone = "555-1212", Title = "Title" };
+            var target = new EpdContactUpdateResource { Id = 2000, AddressId = 2002, ContactName = "Name One Update", Email = "email@example.com", Organization = "Com", Telephone = "555-1212", Title = "Title" };
 
             var original = await repository.GetByIdAsync(target.Id).ConfigureAwait(false);
 
@@ -149,11 +146,6 @@ namespace Enfo.API.Tests.ControllerTests
 
             result.Should().BeOfType<OkObjectResult>();
             (result as OkObjectResult).StatusCode.Should().Be(200);
-
-            // Contact can be saved with null address if address ID is present,
-            // but will be returned from database with address entity included
-            var addressRepository = this.GetRepository<Address>();
-            target.Address = new AddressResource(await addressRepository.GetByIdAsync(2002).ConfigureAwait(false));
 
             var updated = await repository.GetByIdAsync(target.Id).ConfigureAwait(false);
 

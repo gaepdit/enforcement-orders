@@ -110,7 +110,7 @@ namespace Enfo.API.Tests.ControllerTests
             var repository = this.GetRepository<Address>();
             var controller = new AddressesController(repository);
 
-            var item = new AddressResource() { City = "Atlanta", PostalCode = "33333", State = "GA", Street = "123 Fake St" };
+            var item = new AddressCreateResource() { City = "Atlanta", PostalCode = "33333", State = "GA", Street = "123 Fake St" };
 
             var result = await controller.Post(item).ConfigureAwait(false);
 
@@ -124,17 +124,16 @@ namespace Enfo.API.Tests.ControllerTests
             var repository = this.GetRepository<Address>();
             var controller = new AddressesController(repository);
 
-            var item = new AddressResource() { City = "Atlanta", PostalCode = "33333", State = "GA", Street = "123 Fake St" };
+            var item = new AddressCreateResource() { City = "Atlanta", PostalCode = "33333", State = "GA", Street = "123 Fake St" };
 
             var result = await controller.Post(item).ConfigureAwait(false);
 
             var id = (int)(result as CreatedAtActionResult).Value;
             var addedItem = new AddressResource(await repository.GetByIdAsync(id).ConfigureAwait(false));
 
-            // item gets new ID when added to DB
-            item.Id = 2003;
+            var expected = new AddressResource() { Id = 2003, Active = true, City = "Atlanta", PostalCode = "33333", State = "GA", Street = "123 Fake St", Street2 = null };
 
-            addedItem.Should().BeEquivalentTo(item);
+            addedItem.Should().BeEquivalentTo(expected);
         }
 
         [Fact]

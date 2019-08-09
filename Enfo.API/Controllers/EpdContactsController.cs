@@ -1,4 +1,4 @@
-using Enfo.API.Resources;
+﻿using Enfo.API.Resources;
 using Enfo.Domain.Entities;
 using Enfo.Domain.Repositories;
 using Enfo.Domain.Specifications;
@@ -51,7 +51,7 @@ namespace Enfo.API.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Post(EpdContactResource resource)
+        public async Task<IActionResult> Post(EpdContactCreateResource resource)
         {
             var item = resource.NewEpdContact();
             repository.Add(item);
@@ -66,7 +66,7 @@ namespace Enfo.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Put(int id, EpdContactResource resource)
+        public async Task<IActionResult> Put(int id, EpdContactUpdateResource resource)
         {
             if (id != resource.Id)
             {

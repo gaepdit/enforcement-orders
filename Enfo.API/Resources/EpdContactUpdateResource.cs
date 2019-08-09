@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Enfo.API.Resources
 {
-    public class EpdContactResource
+    public class EpdContactUpdateResource
     {
         public int Id { get; set; }
         public bool Active { get; set; }
@@ -23,8 +23,7 @@ namespace Enfo.API.Resources
         [Required(ErrorMessage = "Organization is required")]
         public string Organization { get; set; }
 
-        public virtual AddressResource Address { get; set; }
-        [Required(ErrorMessage = "Address is required")]
+        [Required(ErrorMessage = "Address ID is required")]
         public int? AddressId { get; set; }
 
         [RegularExpression("^\\D?(\\d{3})\\D?\\D?(\\d{3})\\D?(\\d{4})$",
@@ -36,22 +35,22 @@ namespace Enfo.API.Resources
             ErrorMessage = "Please provide a valid email address")]
         [StringLength(100)]
         public string Email { get; set; }
+    }
 
-        public EpdContactResource() { }
-
-        public EpdContactResource(EpdContact item)
+    public static class EpdContactExtension
+    {
+        public static void UpdateFrom(this EpdContact item, EpdContactUpdateResource resource)
         {
-            if (item != null)
+            if (resource != null)
             {
-                Id = item.Id;
-                Active = item.Active;
-                ContactName = item.ContactName;
-                Title = item.Title;
-                Organization = item.Organization;
-                Address = new AddressResource(item.Address);
-                AddressId = item.AddressId;
-                Telephone = item.Telephone;
-                Email = item.Email;
+                item.Active = resource.Active;
+                item.AddressId = resource.AddressId;
+                item.ContactName = resource.ContactName;
+                item.Email = resource.Email;
+                item.Organization = resource.Organization;
+                item.Telephone = resource.Telephone;
+                item.Title = resource.Title;
+                item.UpdatedDate = DateTime.Now;
             }
         }
     }
