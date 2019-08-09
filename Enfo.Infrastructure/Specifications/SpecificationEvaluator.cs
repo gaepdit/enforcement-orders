@@ -3,15 +3,13 @@ using Enfo.Domain.Specifications;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 
-namespace Enfo.Infrastructure.Repositories
+namespace Enfo.Infrastructure.Specifications
 {
-    public static class SpecificationEvaluator<T>
-        where T : BaseEntity
+    public static class SpecificationEvaluator
     {
-        public static IQueryable<T> GetQuery(IQueryable<T> inputQuery, ISpecification<T> specification)
+        internal static IQueryable<TEntity> Apply<TEntity>(this IQueryable<TEntity> query, ISpecification<TEntity> specification)
+            where TEntity : BaseEntity
         {
-            var query = inputQuery;
-
             // modify the IQueryable using the specification's criteria expression
             if (specification.Criteria != null)
             {
@@ -37,13 +35,6 @@ namespace Enfo.Infrastructure.Repositories
             if (specification.GroupBy != null)
             {
                 query = query.GroupBy(specification.GroupBy).SelectMany(x => x);
-            }
-
-            // Apply paging if enabled
-            if (specification.IsPagingEnabled)
-            {
-                query = query.Skip(specification.Skip)
-                             .Take(specification.Take);
             }
 
             return query;

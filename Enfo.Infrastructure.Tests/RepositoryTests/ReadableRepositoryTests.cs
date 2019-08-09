@@ -3,8 +3,10 @@ using Enfo.Domain.Repositories;
 using Enfo.Domain.Specifications;
 using Enfo.Infrastructure.Tests.Helpers;
 using FluentAssertions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -12,6 +14,20 @@ namespace Enfo.Infrastructure.Tests.RepositoryTests
 {
     public class ReadableRepositoryTests
     {
+        // helpers
+        private class CountyNameStartsWithLetterSpecification : Specification<County>
+        {
+            private readonly char startsWith;
+
+            public CountyNameStartsWithLetterSpecification(char startsWith) =>
+                this.startsWith = startsWith;
+
+            public override Expression<Func<County, bool>> Criteria =>
+                e => e.CountyName.StartsWith(startsWith);
+        }
+
+        // Tests
+
         [Fact]
         public async Task GetAllReturnsListAsync()
         {
@@ -46,12 +62,6 @@ namespace Enfo.Infrastructure.Tests.RepositoryTests
 
                 item.Should().BeNull();
             }
-        }
-
-        private class CountyNameStartsWithLetterSpecification : Specification<County>
-        {
-            public CountyNameStartsWithLetterSpecification(char startsWith)
-                : base(e => e.CountyName.StartsWith(startsWith)) { }
         }
 
         [Fact]
@@ -91,15 +101,18 @@ namespace Enfo.Infrastructure.Tests.RepositoryTests
             }
         }
 
-        [Fact]
-        public async Task GetAllWithSpecificationReturnsCorrectListAsync()
+        [Theory]
+        [InlineData(ActiveInactive.ActiveOnly, 2, true)]
+        [InlineData(ActiveInactive.InactiveOnly, 1, false)]
+        [InlineData(ActiveInactive.All, 3, true)]
+        public async Task GetAllWithSpecificationReturnsCorrectListAsync(ActiveInactive set, int countExpected, bool activeExpected)
         {
             using (IAsyncReadableRepository<Address> repository = this.GetRepository<Address>())
             {
-                IReadOnlyList<Address> items = await repository.ListAsync(new ExcludeInactiveItemsSpecification<Address>()).ConfigureAwait(false);
+                IReadOnlyList<Address> items = await repository.ListAsync(new ActiveOrInactiveItemsSpec<Address>(set)).ConfigureAwait(false);
 
-                items.Should().HaveCount(2);
-                items.Any(e => !e.Active).Should().BeFalse();
+                items.Should().HaveCount(countExpected);
+                items.Any(e => e.Active).Should().Equals(activeExpected);
             }
         }
 
@@ -108,8 +121,7 @@ namespace Enfo.Infrastructure.Tests.RepositoryTests
         {
             using (IAsyncReadableRepository<Address> repository = this.GetRepository<Address>())
             {
-                Address item = await repository.GetByIdAsync(2000, new ExcludeInactiveItemsSpecification<Address>()).ConfigureAwait(false);
-
+                Address item = await repository.GetByIdAsync(2000, new ActiveOrInactiveItemsSpec<Address>(ActiveInactive.ActiveOnly)).ConfigureAwait(false);
                 item.Should().NotBeNull();
             }
         }
@@ -119,9 +131,54 @@ namespace Enfo.Infrastructure.Tests.RepositoryTests
         {
             using (IAsyncReadableRepository<Address> repository = this.GetRepository<Address>())
             {
-                Address item = await repository.GetByIdAsync(2001, new ExcludeInactiveItemsSpecification<Address>()).ConfigureAwait(false);
-
+                Address item = await repository.GetByIdAsync(2001, new ActiveOrInactiveItemsSpec<Address>(ActiveInactive.ActiveOnly)).ConfigureAwait(false);
                 item.Should().BeNull();
+            }
+        }
+
+        [Fact]
+        public async Task GetPaginatedReturnsPartialListAsync()
+        {
+            using (IAsyncReadableRepository<County> repository = this.GetRepository<County>())
+            {
+                var pagination = Pagination.FromPageSkipAndTake(10, 20);
+
+                IReadOnlyList<County> items = await repository.ListAsync(pagination).ConfigureAwait(false);
+
+                items.Should().HaveCount(20);
+                var expected = new County { Id = 11, CountyName = "Bibb" };
+                items[0].Should().BeEquivalentTo(expected);
+            }
+        }
+
+        [Fact]
+        public async Task GetPaginatedByPageSizeReturnsPartialListAsync()
+        {
+            using (IAsyncReadableRepository<County> repository = this.GetRepository<County>())
+            {
+                var pagination = Pagination.FromPageSizeAndIndex(10, 2);
+
+                IReadOnlyList<County> items = await repository.ListAsync(pagination).ConfigureAwait(false);
+
+                items.Should().HaveCount(10);
+                var expected = new County { Id = 11, CountyName = "Bibb" };
+                items[0].Should().BeEquivalentTo(expected);
+            }
+        }
+
+        [Fact]
+        public async Task GetPaginatedWithSpecification()
+        {
+            using (IAsyncReadableRepository<County> repository = this.GetRepository<County>())
+            {
+                var spec = new CountyNameStartsWithLetterSpecification('B');
+                var pagination = Pagination.FromPageSizeAndIndex(3, 2);
+
+                IReadOnlyList<County> items = await repository.ListAsync(spec, pagination).ConfigureAwait(false);
+
+                items.Should().HaveCount(3);
+                var expected = new County { Id = 6, CountyName = "Banks" };
+                items[0].Should().BeEquivalentTo(expected);
             }
         }
     }

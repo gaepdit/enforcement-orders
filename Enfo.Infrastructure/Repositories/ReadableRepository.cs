@@ -2,10 +2,10 @@ using Enfo.Domain.Entities;
 using Enfo.Domain.Repositories;
 using Enfo.Domain.Specifications;
 using Enfo.Infrastructure.Contexts;
+using Enfo.Infrastructure.Specifications;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Enfo.Infrastructure.Repositories
@@ -15,46 +15,41 @@ namespace Enfo.Infrastructure.Repositories
     {
         internal readonly EnfoDbContext context;
 
-        public ReadableRepository(EnfoDbContext context)
-        {
+        public ReadableRepository(EnfoDbContext context) =>
             this.context = context;
-        }
 
-        public async Task<TEntity> GetByIdAsync(int id)
-        {
-            return await context.Set<TEntity>().FindAsync(id).ConfigureAwait(false);
-        }
+        public async Task<TEntity> GetByIdAsync(int id) =>
+            await context.Set<TEntity>().FindAsync(id).ConfigureAwait(false);
 
-        public async Task<TEntity> GetByIdAsync(int id, ISpecification<TEntity> specification)
-        {
-            return await ApplySpecification(specification).SingleOrDefaultAsync(e => e.Id == id).ConfigureAwait(false);
-        }
+        public async Task<TEntity> GetByIdAsync(int id, ISpecification<TEntity> specification) =>
+            await context.Set<TEntity>().Apply(specification)
+            .SingleOrDefaultAsync(e => e.Id == id).ConfigureAwait(false);
 
-        public async Task<IReadOnlyList<TEntity>> ListAsync()
-        {
-            return await context.Set<TEntity>().ToListAsync().ConfigureAwait(false);
-        }
+        public async Task<IReadOnlyList<TEntity>> ListAsync() =>
+            await context.Set<TEntity>().ToListAsync().ConfigureAwait(false);
 
-        public async Task<IReadOnlyList<TEntity>> ListAsync(ISpecification<TEntity> specification)
-        {
-            return await ApplySpecification(specification).ToListAsync().ConfigureAwait(false);
-        }
+        public async Task<IReadOnlyList<TEntity>> ListAsync(ISpecification<TEntity> specification) =>
+            await context.Set<TEntity>().Apply(specification)
+            .ToListAsync().ConfigureAwait(false);
 
-        public Task<int> CountAsync()
-        {
-            return context.Set<TEntity>().CountAsync();
-        }
+        public async Task<IReadOnlyList<TEntity>> ListAsync(IPagination pagination) =>
+            await context.Set<TEntity>().Apply(pagination)
+            .ToListAsync().ConfigureAwait(false);
 
-        public async Task<int> CountAsync(ISpecification<TEntity> specification)
-        {
-            return await ApplySpecification(specification).CountAsync().ConfigureAwait(false);
-        }
+        public async Task<IReadOnlyList<TEntity>> ListAsync(
+            ISpecification<TEntity> specification,
+            IPagination pagination) =>
+            await context.Set<TEntity>().Apply(specification).Apply(pagination)
+            .ToListAsync().ConfigureAwait(false);
 
-        private IQueryable<TEntity> ApplySpecification(ISpecification<TEntity> spec)
-        {
-            return SpecificationEvaluator<TEntity>.GetQuery(context.Set<TEntity>().AsQueryable(), spec);
-        }
+        public Task<int> CountAsync() =>
+            context.Set<TEntity>().CountAsync();
 
+        public async Task<int> CountAsync(ISpecification<TEntity> specification) =>
+            await context.Set<TEntity>().Apply(specification)
+            .CountAsync().ConfigureAwait(false);
+
+        // IDisposable
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls
 
