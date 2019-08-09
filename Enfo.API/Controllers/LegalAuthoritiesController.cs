@@ -22,6 +22,8 @@ namespace Enfo.API.Controllers
 
         // GET: api/LegalAuthorities?pageSize&pageIndex
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<IEnumerable<LegalAuthorityResource>>> Get(int pageSize = 0, int pageIndex = 0) =>
             Ok((await repository
                 .ListAsync(Pagination.FromPageSizeAndIndex(pageSize, pageIndex))
@@ -30,6 +32,7 @@ namespace Enfo.API.Controllers
 
         // GET: api/LegalAuthorities/5
         [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<LegalAuthorityResource>> Get(int id)
         {
@@ -46,6 +49,8 @@ namespace Enfo.API.Controllers
         // POST: api/LegalAuthorities
         //[Authorize]
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Post(
             LegalAuthorityResource resource)
         {
@@ -59,6 +64,9 @@ namespace Enfo.API.Controllers
         // PUT: api/LegalAuthorities/5
         //[Authorize]
         [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Put(
             int id,
             LegalAuthorityResource resource)

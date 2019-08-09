@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OpenApi.Models;
 
 namespace Enfo.API
 {
@@ -28,6 +29,20 @@ namespace Enfo.API
 
             services.AddScoped(typeof(IAsyncWritableRepository<>), typeof(WritableRepository<>));
             services.AddScoped(typeof(IAsyncReadableRepository<>), typeof(ReadableRepository<>));
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v2", new OpenApiInfo
+                {
+                    Title = "Georgia EPD Enforcement Orders API",
+                    Version = "v2",
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Douglas Waldron",
+                        Email = "douglas.waldron@dnr.ga.gov"
+                    }
+                });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -42,6 +57,13 @@ namespace Enfo.API
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            app.UseSwagger(c => { c.RouteTemplate = "api-docs/{documentName}/swagger.json"; });
+            app.UseSwaggerUI(c =>
+            {
+                c.RoutePrefix = "api-docs";
+                c.SwaggerEndpoint("/api-docs/v2/swagger.json", "API v2");
+            });
 
             app.UseHttpsRedirection();
             app.UseMvc();
