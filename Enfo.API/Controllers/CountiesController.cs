@@ -1,4 +1,4 @@
-using Enfo.API.Resources;
+﻿using Enfo.API.Resources;
 using Enfo.Domain.Entities;
 using Enfo.Domain.Pagination;
 using Enfo.Domain.Repositories;
@@ -20,15 +20,15 @@ namespace Enfo.API.Controllers
         public CountiesController(IAsyncReadableRepository<County> repository) =>
             this.repository = repository;
 
-        // GET: api/Counties?pageSize&pageIndex
+        // GET: api/Counties?pageSize&page
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<IEnumerable<CountyResource>>> Get(
             int pageSize = 0,
-            int pageIndex = 0) =>
+            int page = 0) =>
             Ok((await repository
-                .ListAsync(Pagination.FromPageSizeAndIndex(pageSize, pageIndex))
+                .ListAsync(Pagination.FromPageSizeAndNumber(pageSize, page))
                 .ConfigureAwait(false))
                 .Select(e => new CountyResource(e)));
 

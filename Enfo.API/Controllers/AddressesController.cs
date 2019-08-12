@@ -21,16 +21,16 @@ namespace Enfo.API.Controllers
         public AddressesController(IAsyncWritableRepository<Address> repository) =>
             this.repository = repository;
 
-        // GET: api/Addresses?pageSize&pageIndex
+        // GET: api/Addresses?pageSize&page
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<IEnumerable<AddressResource>>> Get(
             int pageSize = 0,
-            int pageIndex = 0,
+            int page = 0,
             bool includeInactive = false)
         {
-            var pagination = Pagination.FromPageSizeAndIndex(pageSize, pageIndex);
+            var pagination = Pagination.FromPageSizeAndNumber(pageSize, page);
             var spec = new ExcludeInactiveItemsSpec<Address>(includeInactive);
 
             return Ok((await repository.ListAsync(spec, pagination).ConfigureAwait(false))

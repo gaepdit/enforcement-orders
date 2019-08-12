@@ -150,7 +150,7 @@ namespace Enfo.Infrastructure.Tests.RepositoryTests
         {
             using (IAsyncReadableRepository<County> repository = this.GetRepository<County>())
             {
-                var pagination = Pagination.FromPageSizeAndIndex(10, 2);
+                var pagination = Pagination.FromPageSizeAndNumber(10, 2);
 
                 IReadOnlyList<County> items = await repository.ListAsync(pagination).ConfigureAwait(false);
 
@@ -166,7 +166,7 @@ namespace Enfo.Infrastructure.Tests.RepositoryTests
             using (IAsyncReadableRepository<County> repository = this.GetRepository<County>())
             {
                 var spec = new CountyNameStartsWithLetterSpecification('B');
-                var pagination = Pagination.FromPageSizeAndIndex(3, 2);
+                var pagination = Pagination.FromPageSizeAndNumber(3, 2);
 
                 IReadOnlyList<County> items = await repository.ListAsync(spec, pagination).ConfigureAwait(false);
 

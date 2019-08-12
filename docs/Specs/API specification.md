@@ -2,23 +2,40 @@
 
 ## Address
 
-* GET: `api/Addresses`
+* GET: `api/Addresses/{?params}`
+
+    | parameter      | data type     |
+    |----------------|---------------|
+    | pageSize       | int           |
+    | page           | int           |
 
 * GET: `api/Addresses/{int:id}`
 
-* *[Authorize]* POST: `api/Addresses`
+* *[Authorize]* POST: `api/Addresses/{?params}`
+
+    | parameter      | data type     |
+    |----------------|---------------|
+    | pageSize       | int           |
+    | page           | int           |
 
 * *[Authorize]* PUT: `api/Addresses/{int:id}`
 
 ## County
 
-* GET: `api/Counties`
+* GET: `api/Counties/{?params}`
+
+    | parameter      | data type     |
+    |----------------|---------------|
+    | pageSize       | int           |
+    | page           | int           |
 
 * GET: `api/Counties/{int:id}`
 
 ## Enforcement Order
 
-* GET: `api/Orders/{?params}`
+* GET: `api/EnforcementOrders/{?params}`
+
+    Only authorized users can request Orders with pubStatus other than "Published".
 
     | parameter      | data type        |
     |----------------|------------------|
@@ -32,56 +49,76 @@
     | sortOrder      | SortOrder        |
     | orderNumber    | string           |
     | textContains   | string           |
-    | page           | int              |
     | pageSize       | int              |
+    | page           | int              |
 
-* GET: `api/Orders/{int:id}`
+* GET: `api/EnforcementOrders/{int:id}`
 
-* *[Authorize]* GET: `api/Orders/Detailed/{int:id}`
+* *[Authorize]* GET: `api/EnforcementOrders/Detailed/{int:id}`
 
-* GET: `api/Orders/CurrentProposed/{?params}`
+* GET: `api/EnforcementOrders/Count/{?params}`
+
+    Only authorized users can request Orders with pubStatus other than "Published".
+
+    | parameter      | data type        |
+    |----------------|------------------|
+    | facilityFilter | string           |
+    | county         | string           |
+    | fromDate       | DateTime?        |
+    | tillDate       | DateTime?        |
+    | status         | ActivityState    |
+    | pubStatus      | PublicationState |
+    | sortOrder      | SortOrder        |
+    | orderNumber    | string           |
+
+* GET: `api/EnforcementOrders/CurrentProposed/{?params}`
 
     Current Proposed are public proposed orders with comment close date in the future and publication date in the past
 
     | parameter      | data type     |
     |----------------|---------------|
-    | page           | int           |
     | pageSize       | int           |
+    | page           | int           |
 
-* GET: `api/Orders/RecentlyExecuted/{?params}`
+* GET: `api/EnforcementOrders/RecentlyExecuted/{?params}`
 
     Recently Executed are public executed orders with publication date within current week
 
     | parameter      | data type     |
     |----------------|---------------|
-    | page           | int           |
     | pageSize       | int           |
+    | page           | int           |
 
-* *[Authorize]* GET: `api/Orders/Draft/{?params}`
+* *[Authorize]* GET: `api/EnforcementOrders/Draft/{?params}`
 
     Draft are orders with publication status set to Draft
 
     | parameter      | data type     |
     |----------------|---------------|
-    | page           | int           |
     | pageSize       | int           |
+    | page           | int           |
 
-* *[Authorize]* GET: `api/Orders/Pending/{?params}`
+* *[Authorize]* GET: `api/EnforcementOrders/Pending/{?params}`
 
     Pending are public proposed or executed orders with publication date after the current week
 
     | parameter      | data type     |
     |----------------|---------------|
-    | page           | int           |
     | pageSize       | int           |
+    | page           | int           |
 
-* *[Authorize]* POST: `api/Orders`
+* *[Authorize]* POST: `api/EnforcementOrders`
 
-* *[Authorize]* PUT: `api/Orders/{int:id}`
+* *[Authorize]* PUT: `api/EnforcementOrders/{int:id}`
 
 ## EPD Contact
 
-* GET: `api/EpdContacts`
+* GET: `api/EpdContacts/{?params}`
+
+    | parameter      | data type     |
+    |----------------|---------------|
+    | pageSize       | int           |
+    | page           | int           |
 
 * GET: `api/EpdContacts/{int:id}`
 
@@ -91,7 +128,12 @@
 
 ## Legal Authority
 
-* GET: `api/LegalAuthorities`
+* GET: `api/LegalAuthorities/{?params}`
+
+    | parameter      | data type     |
+    |----------------|---------------|
+    | pageSize       | int           |
+    | page           | int           |
 
 * GET: `api/LegalAuthorities/{int:id}`
 

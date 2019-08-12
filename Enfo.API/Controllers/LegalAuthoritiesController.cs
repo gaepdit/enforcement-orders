@@ -21,16 +21,16 @@ namespace Enfo.API.Controllers
         public LegalAuthoritiesController(IAsyncWritableRepository<LegalAuthority> repository) =>
             this.repository = repository;
 
-        // GET: api/LegalAuthorities?pageSize&pageIndex
+        // GET: api/LegalAuthorities?pageSize&page
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<IEnumerable<LegalAuthorityResource>>> Get(
             int pageSize = 0,
-            int pageIndex = 0,
+            int page = 0,
             bool includeInactive = false)
         {
-            var pagination = Pagination.FromPageSizeAndIndex(pageSize, pageIndex);
+            var pagination = Pagination.FromPageSizeAndNumber(pageSize, page);
             var spec = new ExcludeInactiveItemsSpec<LegalAuthority>(includeInactive);
 
             return Ok((await repository.ListAsync(spec, pagination).ConfigureAwait(false))

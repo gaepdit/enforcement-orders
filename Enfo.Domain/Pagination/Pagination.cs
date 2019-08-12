@@ -20,14 +20,14 @@
             return new Pagination(skip, take);
         }
 
-        public static Pagination FromPageSizeAndIndex(int pageSize, int pageIndex)
+        public static Pagination FromPageSizeAndNumber(int pageSize, int page)
         {
-            if (pageIndex <= 0 || pageSize <= 0)
+            if (page <= 0 || pageSize <= 0)
             {
                 return new Pagination();
             }
 
-            return new Pagination((pageIndex - 1) * pageSize, pageSize);
+            return new Pagination((page - 1) * pageSize, pageSize);
         }
     }
 }
