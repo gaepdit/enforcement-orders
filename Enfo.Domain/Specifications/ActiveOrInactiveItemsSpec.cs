@@ -4,7 +4,7 @@ using Enfo.Domain.Entities;
 
 namespace Enfo.Domain.Specifications
 {
-    public class ActiveOrInactiveItemsSpec<TEntity> : Specification<TEntity> where TEntity : BaseEntity
+    public class ActiveOrInactiveItemsSpec<TEntity> : BaseSpecification<TEntity> where TEntity : BaseEntity
     {
         private readonly ActiveInactive set;
 

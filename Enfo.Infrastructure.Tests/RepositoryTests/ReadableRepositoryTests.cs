@@ -15,15 +15,9 @@ namespace Enfo.Infrastructure.Tests.RepositoryTests
     public class ReadableRepositoryTests
     {
         // helpers
-        private class CountyNameStartsWithLetterSpecification : Specification<County>
+        private class CountyNameStartsWithLetterSpecification : BaseSpecification<County>
         {
-            private readonly char startsWith;
-
-            public CountyNameStartsWithLetterSpecification(char startsWith) =>
-                this.startsWith = startsWith;
-
-            public override Expression<Func<County, bool>> Criteria =>
-                e => e.CountyName.StartsWith(startsWith);
+            public CountyNameStartsWithLetterSpecification(char startsWith) : base(e => e.CountyName.StartsWith(startsWith)) { }
         }
 
         // Tests
