@@ -1,5 +1,5 @@
 ﻿using Enfo.Domain.Entities;
-using Enfo.Domain.Specifications;
+using Enfo.Domain.Pagination;
 using System.Linq;
 
 namespace Enfo.Infrastructure.Specifications

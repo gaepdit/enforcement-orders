@@ -1,4 +1,4 @@
-﻿namespace Enfo.Domain.Specifications
+﻿namespace Enfo.Domain.Pagination
 {
     public interface IPagination
     {

@@ -1,4 +1,5 @@
 using Enfo.Domain.Entities;
+using Enfo.Domain.Pagination;
 using Enfo.Domain.Repositories;
 using Enfo.Domain.Specifications;
 using Enfo.Infrastructure.Contexts;
