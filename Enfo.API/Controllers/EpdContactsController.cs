@@ -24,11 +24,17 @@ namespace Enfo.API.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<IEnumerable<EpdContactResource>>> Get(int pageSize = 0, int pageIndex = 0) =>
-            Ok((await repository
-                .ListAsync(new EpdContactIncludeAddressSpec(), Pagination.FromPageSizeAndIndex(pageSize, pageIndex))
-                .ConfigureAwait(false))
+        public async Task<ActionResult<IEnumerable<EpdContactResource>>> Get(
+            int pageSize = 0,
+            int pageIndex = 0,
+            bool includeInactive = false)
+        {
+            var pagination = Pagination.FromPageSizeAndIndex(pageSize, pageIndex);
+            var spec = new EpdContactIncludeAddressSpec(includeInactive);
+
+            return Ok((await repository.ListAsync(spec, pagination).ConfigureAwait(false))
                 .Select(e => new EpdContactResource(e)));
+        }
 
         // GET: api/EpdContacts/5
         [HttpGet("{id}", Name = "Get")]
@@ -36,7 +42,7 @@ namespace Enfo.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<EpdContactResource>> Get(int id)
         {
-            var item = await repository.GetByIdAsync(id, new EpdContactIncludeAddressSpec()).ConfigureAwait(false);
+            var item = await repository.GetByIdAsync(id, new EpdContactIncludeAddressSpec(true)).ConfigureAwait(false);
 
             if (item == null)
             {

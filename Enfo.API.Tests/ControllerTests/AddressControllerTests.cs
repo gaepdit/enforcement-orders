@@ -38,12 +38,38 @@ namespace Enfo.API.Tests.ControllerTests
         }
 
         [Fact]
-        public async Task GetReturnsAllItemsAsync()
+        public async Task GetReturnsAllActiveItemsAsync()
         {
             var repository = this.GetRepository<Address>();
             var controller = new AddressesController(repository);
 
             var result = (await controller.Get().ConfigureAwait(false))
+                .Result as OkObjectResult;
+
+            var items = result.Value as IEnumerable<AddressResource>;
+
+            var expected = new AddressResource
+            {
+                Id = 2000,
+                Active = true,
+                City = "Atlanta",
+                PostalCode = "30354",
+                State = "GA",
+                Street = "4244 International Parkway",
+                Street2 = "Suite 120"
+            };
+
+            items.Should().HaveCount(2);
+            items.ToList()[0].Should().BeEquivalentTo(expected);
+        }
+
+        [Fact]
+        public async Task GetWithInactiveReturnsAllItemsAsync()
+        {
+            var repository = this.GetRepository<Address>();
+            var controller = new AddressesController(repository);
+
+            var result = (await controller.Get(includeInactive: true).ConfigureAwait(false))
                 .Result as OkObjectResult;
 
             var items = result.Value as IEnumerable<AddressResource>;

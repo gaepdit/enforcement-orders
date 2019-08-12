@@ -23,7 +23,9 @@ namespace Enfo.API.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<IEnumerable<CountyResource>>> Get(int pageSize = 0, int pageIndex = 0) =>
+        public async Task<ActionResult<IEnumerable<CountyResource>>> Get(
+            int pageSize = 0,
+            int pageIndex = 0) =>
             Ok((await repository
                 .ListAsync(Pagination.FromPageSizeAndIndex(pageSize, pageIndex))
                 .ConfigureAwait(false))

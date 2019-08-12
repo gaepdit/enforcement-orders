@@ -88,7 +88,7 @@ namespace Enfo.Infrastructure.Tests.RepositoryTests
                 var item = await repository.GetByIdAsync(2000).ConfigureAwait(false);
 
                 var expectedAddress = new Address { Id = 2000, Active = true, City = "Atlanta", PostalCode = "30354", State = "GA", Street = "4244 International Parkway", Street2 = "Suite 120" };
-                var expectedContact = new EpdContact { Id = 2000, Active = false, Address = expectedAddress, AddressId = 2000, ContactName = "Mr. Keith M. Bentley", Email = "null", Organization = "Environmental Protection Division", Title = "Chief, Air Protection Branch" };
+                var expectedContact = new EpdContact { Id = 2000, Active = false, Address = expectedAddress, AddressId = 2000, ContactName = "Mr. Keith M. Bentley", Email = null, Organization = "Environmental Protection Division", Title = "Chief, Air Protection Branch" };
 
                 item.Should().BeEquivalentTo(expectedContact);
                 item.Address.Should().BeEquivalentTo(expectedAddress);
@@ -96,17 +96,16 @@ namespace Enfo.Infrastructure.Tests.RepositoryTests
         }
 
         [Theory]
-        [InlineData(ActiveInactive.ActiveOnly, 2, true)]
-        [InlineData(ActiveInactive.InactiveOnly, 1, false)]
-        [InlineData(ActiveInactive.All, 3, true)]
-        public async Task GetAllWithSpecificationReturnsCorrectListAsync(ActiveInactive set, int countExpected, bool activeExpected)
+        [InlineData(false, 2)]
+        [InlineData(true, 3)]
+        public async Task GetAllWithSpecificationReturnsCorrectListAsync(bool includeInactive, int countExpected)
         {
             using (IAsyncReadableRepository<Address> repository = this.GetRepository<Address>())
             {
-                IReadOnlyList<Address> items = await repository.ListAsync(new ActiveOrInactiveItemsSpec<Address>(set)).ConfigureAwait(false);
+                var items = await repository.ListAsync(new ExcludeInactiveItemsSpec<Address>(includeInactive)).ConfigureAwait(false);
 
                 items.Should().HaveCount(countExpected);
-                items.Any(e => e.Active).Should().Equals(activeExpected);
+                items.Any(e => !e.Active).Should().Equals(includeInactive);
             }
         }
 
@@ -115,7 +114,7 @@ namespace Enfo.Infrastructure.Tests.RepositoryTests
         {
             using (IAsyncReadableRepository<Address> repository = this.GetRepository<Address>())
             {
-                Address item = await repository.GetByIdAsync(2000, new ActiveOrInactiveItemsSpec<Address>(ActiveInactive.ActiveOnly)).ConfigureAwait(false);
+                Address item = await repository.GetByIdAsync(2000, new ExcludeInactiveItemsSpec<Address>()).ConfigureAwait(false);
                 item.Should().NotBeNull();
             }
         }
@@ -125,7 +124,7 @@ namespace Enfo.Infrastructure.Tests.RepositoryTests
         {
             using (IAsyncReadableRepository<Address> repository = this.GetRepository<Address>())
             {
-                Address item = await repository.GetByIdAsync(2001, new ActiveOrInactiveItemsSpec<Address>(ActiveInactive.ActiveOnly)).ConfigureAwait(false);
+                Address item = await repository.GetByIdAsync(2001, new ExcludeInactiveItemsSpec<Address>()).ConfigureAwait(false);
                 item.Should().BeNull();
             }
         }

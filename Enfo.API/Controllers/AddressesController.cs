@@ -24,11 +24,17 @@ namespace Enfo.API.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<IEnumerable<AddressResource>>> Get(int pageSize = 0, int pageIndex = 0) =>
-            Ok((await repository
-                .ListAsync(Pagination.FromPageSizeAndIndex(pageSize, pageIndex))
-                .ConfigureAwait(false))
+        public async Task<ActionResult<IEnumerable<AddressResource>>> Get(
+            int pageSize = 0,
+            int pageIndex = 0,
+            bool includeInactive = false)
+        {
+            var pagination = Pagination.FromPageSizeAndIndex(pageSize, pageIndex);
+            var spec = new ExcludeInactiveItemsSpec<Address>(includeInactive);
+
+            return Ok((await repository.ListAsync(spec, pagination).ConfigureAwait(false))
                 .Select(e => new AddressResource(e)));
+        }
 
         // GET: api/Addresses/5
         [HttpGet("{id}")]

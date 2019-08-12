@@ -1,4 +1,4 @@
-using Enfo.API.Controllers;
+﻿using Enfo.API.Controllers;
 using Enfo.API.Resources;
 using Enfo.API.Tests.Helpers;
 using Enfo.Domain.Entities;
@@ -38,7 +38,7 @@ namespace Enfo.API.Tests.ControllerTests
         }
 
         [Fact]
-        public async Task GetReturnsAllItemsAsync()
+        public async Task GetReturnsAllActiveItemsAsync()
         {
             var repository = this.GetRepository<EpdContact>();
             var controller = new EpdContactsController(repository);
@@ -48,8 +48,26 @@ namespace Enfo.API.Tests.ControllerTests
 
             var items = result.Value as IEnumerable<EpdContactResource>;
 
+            var expectedAddress = new AddressResource { Id = 2002, Active = true, City = "Atlanta", PostalCode = "30334", State = "GA", Street = "2 Martin Luther King Jr. Drive SE", Street2 = "Suite 1054 East" };
+            var expectedContact = new EpdContactResource { Id = 2002, Active = true, AddressId = 2002, Address = expectedAddress, ContactName = "Mr. Chuck Mueller", Email = "Chuck.mueller@dnr.ga.gov", Organization = "Environmental Protection Division", Title = "Chief, Land Protection Branch" };
+
+            items.Should().HaveCount(1);
+            items.ToList()[0].Should().BeEquivalentTo(expectedContact);
+        }
+
+        [Fact]
+        public async Task GetWithInactiveReturnsAllItemsAsync()
+        {
+            var repository = this.GetRepository<EpdContact>();
+            var controller = new EpdContactsController(repository);
+
+            var result = (await controller.Get(includeInactive: true).ConfigureAwait(false))
+                .Result as OkObjectResult;
+
+            var items = result.Value as IEnumerable<EpdContactResource>;
+
             var expectedAddress = new AddressResource { Id = 2000, Active = true, City = "Atlanta", PostalCode = "30354", State = "GA", Street = "4244 International Parkway", Street2 = "Suite 120" };
-            var expectedContact = new EpdContactResource { Id = 2000, Active = false, Address = expectedAddress, AddressId = 2000, ContactName = "Mr. Keith M. Bentley", Email = "null", Organization = "Environmental Protection Division", Title = "Chief, Air Protection Branch" };
+            var expectedContact = new EpdContactResource { Id = 2000, Active = false, Address = expectedAddress, AddressId = 2000, ContactName = "Mr. Keith M. Bentley", Email = null, Organization = "Environmental Protection Division", Title = "Chief, Air Protection Branch" };
 
             items.Should().HaveCount(3);
             items.ToList()[0].Should().BeEquivalentTo(expectedContact);
