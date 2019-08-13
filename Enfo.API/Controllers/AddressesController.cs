@@ -58,8 +58,7 @@ namespace Enfo.API.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Post(
-            AddressCreateResource resource)
+        public async Task<IActionResult> Post([FromBody] AddressCreateResource resource)
         {
             var item = resource.NewAddress();
             repository.Add(item);
@@ -76,7 +75,7 @@ namespace Enfo.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Put(
             int id,
-            AddressResource resource)
+            [FromBody] AddressResource resource)
         {
             if (id != resource.Id)
             {

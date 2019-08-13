@@ -23,7 +23,7 @@ namespace Enfo.API.Controllers
 
         // GET: api/LegalAuthorities?pageSize&page
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IEnumerable<LegalAuthorityResource>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<IEnumerable<LegalAuthorityResource>>> Get(
             int pageSize = 0,
@@ -39,7 +39,7 @@ namespace Enfo.API.Controllers
 
         // GET: api/LegalAuthorities/5
         [HttpGet("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(LegalAuthorityResource), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<LegalAuthorityResource>> Get(int id)
         {
@@ -56,10 +56,9 @@ namespace Enfo.API.Controllers
         // POST: api/LegalAuthorities
         //[Authorize]
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Post(
-            LegalAuthorityCreateResource resource)
+        public async Task<IActionResult> Post([FromBody] LegalAuthorityCreateResource resource)
         {
             var item = resource.NewLegalAuthority();
             repository.Add(item);
@@ -71,12 +70,12 @@ namespace Enfo.API.Controllers
         // PUT: api/LegalAuthorities/5
         //[Authorize]
         [HttpPut("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(LegalAuthorityResource), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Put(
             int id,
-            LegalAuthorityResource resource)
+            [FromBody] LegalAuthorityResource resource)
         {
             if (id != resource.Id)
             {

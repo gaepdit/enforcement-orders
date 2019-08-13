@@ -23,7 +23,7 @@ namespace Enfo.API.Controllers
 
         // GET: api/EpdContacts?pageSize&page
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IEnumerable<EpdContactResource>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<IEnumerable<EpdContactResource>>> Get(
             int pageSize = 0,
@@ -39,7 +39,7 @@ namespace Enfo.API.Controllers
 
         // GET: api/EpdContacts/5
         [HttpGet("{id}", Name = "Get")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(EpdContactResource), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<EpdContactResource>> Get(int id)
         {
@@ -56,9 +56,9 @@ namespace Enfo.API.Controllers
         // POST: api/EpdContacts
         //[Authorize]
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Post(EpdContactCreateResource resource)
+        public async Task<IActionResult> Post([FromBody] EpdContactCreateResource resource)
         {
             var item = resource.NewEpdContact();
             repository.Add(item);
@@ -70,10 +70,12 @@ namespace Enfo.API.Controllers
         // PUT: api/EpdContacts/5
         //[Authorize]
         [HttpPut("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(EpdContactUpdateResource), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Put(int id, EpdContactUpdateResource resource)
+        public async Task<IActionResult> Put(
+            int id,
+            [FromBody] EpdContactUpdateResource resource)
         {
             if (id != resource.Id)
             {

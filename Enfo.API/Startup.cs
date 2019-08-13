@@ -42,6 +42,8 @@ namespace Enfo.API
                         Email = "douglas.waldron@dnr.ga.gov"
                     }
                 });
+                c.DescribeAllEnumsAsStrings();
+                c.DescribeStringEnumsInCamelCase();
             });
         }
 
