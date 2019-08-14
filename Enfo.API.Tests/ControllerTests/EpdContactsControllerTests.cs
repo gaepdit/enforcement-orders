@@ -2,6 +2,7 @@
 using Enfo.API.Resources;
 using Enfo.API.Tests.Helpers;
 using Enfo.Domain.Entities;
+using Enfo.Infrastructure.SeedData;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ using Xunit;
 
 namespace Enfo.API.Tests.ControllerTests
 {
-    public class EpdContactControllerTests
+    public class EpdContactsControllerTests
     {
         [Fact]
         public async Task GetReturnsOkAsync()
@@ -48,11 +49,13 @@ namespace Enfo.API.Tests.ControllerTests
 
             var items = result.Value as IEnumerable<EpdContactResource>;
 
-            var expectedAddress = new AddressResource { Id = 2002, Active = true, City = "Atlanta", PostalCode = "30334", State = "GA", Street = "2 Martin Luther King Jr. Drive SE", Street2 = "Suite 1054 East" };
-            var expectedContact = new EpdContactResource { Id = 2002, Active = true, AddressId = 2002, Address = expectedAddress, ContactName = "Mr. Chuck Mueller", Email = "Chuck.mueller@dnr.ga.gov", Organization = "Environmental Protection Division", Title = "Chief, Land Protection Branch" };
+            var originalList = DevSeedData.GetEpdContacts().Where(e => e.Active).ToArray();
+            var expected = new EpdContactResource(originalList[0]);
+            expected.Address = new AddressResource(
+                DevSeedData.GetAddresses().Single(e => e.Id == expected.AddressId));
 
-            items.Should().HaveCount(1);
-            items.ToList()[0].Should().BeEquivalentTo(expectedContact);
+            items.Should().HaveCount(originalList.Length);
+            items.ToList()[0].Should().BeEquivalentTo(expected);
         }
 
         [Fact]
@@ -66,11 +69,13 @@ namespace Enfo.API.Tests.ControllerTests
 
             var items = result.Value as IEnumerable<EpdContactResource>;
 
-            var expectedAddress = new AddressResource { Id = 2000, Active = true, City = "Atlanta", PostalCode = "30354", State = "GA", Street = "4244 International Parkway", Street2 = "Suite 120" };
-            var expectedContact = new EpdContactResource { Id = 2000, Active = false, Address = expectedAddress, AddressId = 2000, ContactName = "Mr. Keith M. Bentley", Email = null, Organization = "Environmental Protection Division", Title = "Chief, Air Protection Branch" };
+            var originalList = DevSeedData.GetEpdContacts();
+            var expected = new EpdContactResource(originalList[0]);
+            expected.Address = new AddressResource(
+                DevSeedData.GetAddresses().Single(e => e.Id == expected.AddressId));
 
-            items.Should().HaveCount(3);
-            items.ToList()[0].Should().BeEquivalentTo(expectedContact);
+            items.Should().HaveCount(originalList.Length);
+            items.ToList()[0].Should().BeEquivalentTo(expected);
         }
 
         [Fact]
@@ -97,7 +102,10 @@ namespace Enfo.API.Tests.ControllerTests
             var value = (await controller.Get(id).ConfigureAwait(false))
                 .Value;
 
-            var expected = new EpdContactResource(await repository.GetByIdAsync(id).ConfigureAwait(false));
+            var originalList = DevSeedData.GetEpdContacts();
+            var expected = new EpdContactResource(originalList.Single(e => e.Id == id));
+            expected.Address = new AddressResource(
+                DevSeedData.GetAddresses().Single(e => e.Id == expected.AddressId));
 
             value.Should().BeEquivalentTo(expected);
             value.Address.Should().NotBeNull().And.BeEquivalentTo(expected.Address);

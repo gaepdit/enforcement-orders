@@ -2,6 +2,7 @@ using Enfo.API.Controllers;
 using Enfo.API.Resources;
 using Enfo.API.Tests.Helpers;
 using Enfo.Domain.Entities;
+using Enfo.Infrastructure.SeedData;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ using Xunit;
 
 namespace Enfo.API.Tests.ControllerTests
 {
-    public class LegalAuthorityControllerTests
+    public class LegalAuthoritiesControllerTests
     {
         [Fact]
         public async Task GetReturnsOkAsync()
@@ -38,7 +39,7 @@ namespace Enfo.API.Tests.ControllerTests
         }
 
         [Fact]
-        public async Task GetReturnsAllItemsAsync()
+        public async Task GetReturnsAllActiveItemsAsync()
         {
             var repository = this.GetRepository<LegalAuthority>();
             var controller = new LegalAuthoritiesController(repository);
@@ -48,15 +49,28 @@ namespace Enfo.API.Tests.ControllerTests
 
             var items = result.Value as IEnumerable<LegalAuthorityResource>;
 
-            var expected = new LegalAuthorityResource
-            {
-                Id = 1,
-                Active = true,
-                AuthorityName = "Air Quality Act",
-                OrderNumberTemplate = "EPD-AQC-"
-            };
+            var originalList = DevSeedData.GetLegalAuthorities().Where(e => e.Active).ToArray();
+            var expected = new LegalAuthorityResource(originalList[0]);
 
-            items.Should().HaveCount(2);
+            items.Should().HaveCount(originalList.Length);
+            items.ToList()[0].Should().BeEquivalentTo(expected);
+        }
+
+        [Fact]
+        public async Task GetWithInactiveReturnsAllItemsAsync()
+        {
+            var repository = this.GetRepository<LegalAuthority>();
+            var controller = new LegalAuthoritiesController(repository);
+
+            var result = (await controller.Get(includeInactive: true).ConfigureAwait(false))
+                .Result as OkObjectResult;
+
+            var items = result.Value as IEnumerable<LegalAuthorityResource>;
+
+            var originalList = DevSeedData.GetLegalAuthorities();
+            var expected = new LegalAuthorityResource(originalList[0]);
+
+            items.Should().HaveCount(originalList.Length);
             items.ToList()[0].Should().BeEquivalentTo(expected);
         }
 
@@ -66,20 +80,19 @@ namespace Enfo.API.Tests.ControllerTests
             var repository = this.GetRepository<LegalAuthority>();
             var controller = new LegalAuthoritiesController(repository);
 
-            var result = (await controller.Get(2, 1).ConfigureAwait(false))
+            int pageSize = 2;
+            int pageNum = 1;
+            int itemNum = (pageNum - 1) * pageSize + 1;
+
+            var result = (await controller.Get(pageSize, pageNum).ConfigureAwait(false))
                 .Result as OkObjectResult;
 
             var items = result.Value as IEnumerable<LegalAuthorityResource>;
 
-            var expected = new LegalAuthorityResource
-            {
-                Id = 1,
-                Active = true,
-                AuthorityName = "Air Quality Act",
-                OrderNumberTemplate = "EPD-AQC-"
-            };
+            var originalList = DevSeedData.GetLegalAuthorities();
+            var expected = new LegalAuthorityResource(originalList[itemNum - 1]);
 
-            items.Should().HaveCount(2);
+            items.Should().HaveCount(pageSize);
             items.ToList()[0].Should().BeEquivalentTo(expected);
         }
 
@@ -107,7 +120,8 @@ namespace Enfo.API.Tests.ControllerTests
             var value = (await controller.Get(id).ConfigureAwait(false))
                 .Value;
 
-            var expected = new LegalAuthorityResource(await repository.GetByIdAsync(id).ConfigureAwait(false));
+            var originalList = DevSeedData.GetLegalAuthorities();
+            var expected = new LegalAuthorityResource(originalList.Single(e => e.Id == id));
 
             value.Should().BeEquivalentTo(expected);
         }

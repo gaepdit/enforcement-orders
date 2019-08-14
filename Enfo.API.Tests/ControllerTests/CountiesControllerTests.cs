@@ -1,4 +1,5 @@
-﻿using Enfo.API.Controllers;
+﻿using Enfo.Infrastructure.SeedData;
+using Enfo.API.Controllers;
 using Enfo.API.Resources;
 using Enfo.API.Tests.Helpers;
 using Enfo.Domain.Entities;
@@ -48,14 +49,10 @@ namespace Enfo.API.Tests.ControllerTests
 
             var items = result.Value as IEnumerable<CountyResource>;
 
-            var expected = new CountyResource
-            {
-                Id = 1,
-                CountyName = "Appling",
-                Active = true
-            };
+            var originalList = SeedData.GetCounties();
+            var expected = new CountyResource(originalList[0]);
 
-            items.Should().HaveCount(159);
+            items.Should().HaveCount(originalList.Length);
             items.ToList()[0].Should().BeEquivalentTo(expected);
         }
 
@@ -65,19 +62,19 @@ namespace Enfo.API.Tests.ControllerTests
             var repository = this.GetRepository<County>();
             var controller = new CountiesController(repository);
 
-            var result = (await controller.Get(10, 2).ConfigureAwait(false))
+            int pageSize = 10;
+            int pageNum = 2;
+            int itemNum = (pageNum - 1) * pageSize + 1;
+
+            var result = (await controller.Get(pageSize, pageNum).ConfigureAwait(false))
                 .Result as OkObjectResult;
 
             var items = result.Value as IEnumerable<CountyResource>;
 
-            var expected = new CountyResource
-            {
-                Id = 11,
-                CountyName = "Bibb",
-                Active = true
-            };
+            var originalList = SeedData.GetCounties();
+            var expected = new CountyResource(originalList[itemNum - 1]);
 
-            items.Should().HaveCount(10);
+            items.Should().HaveCount(pageSize);
             items.ToList()[0].Should().BeEquivalentTo(expected);
         }
 
@@ -116,7 +113,7 @@ namespace Enfo.API.Tests.ControllerTests
             var repository = this.GetRepository<County>();
             var controller = new CountiesController(repository);
 
-            CountyResource result = (await controller.Get(0).ConfigureAwait(false))
+            var result = (await controller.Get(0).ConfigureAwait(false))
                 .Value;
 
             result.Should().BeNull();

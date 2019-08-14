@@ -2,6 +2,7 @@ using Enfo.API.Controllers;
 using Enfo.API.Resources;
 using Enfo.API.Tests.Helpers;
 using Enfo.Domain.Entities;
+using Enfo.Infrastructure.SeedData;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ using Xunit;
 
 namespace Enfo.API.Tests.ControllerTests
 {
-    public class AddressControllerTests
+    public class AddressesControllerTests
     {
         [Fact]
         public async Task GetReturnsOkAsync()
@@ -48,18 +49,10 @@ namespace Enfo.API.Tests.ControllerTests
 
             var items = result.Value as IEnumerable<AddressResource>;
 
-            var expected = new AddressResource
-            {
-                Id = 2000,
-                Active = true,
-                City = "Atlanta",
-                PostalCode = "30354",
-                State = "GA",
-                Street = "4244 International Parkway",
-                Street2 = "Suite 120"
-            };
+            var originalList = DevSeedData.GetAddresses().Where(e => e.Active).ToArray();
+            var expected = new AddressResource(originalList[0]);
 
-            items.Should().HaveCount(2);
+            items.Should().HaveCount(originalList.Length);
             items.ToList()[0].Should().BeEquivalentTo(expected);
         }
 
@@ -74,18 +67,10 @@ namespace Enfo.API.Tests.ControllerTests
 
             var items = result.Value as IEnumerable<AddressResource>;
 
-            var expected = new AddressResource
-            {
-                Id = 2000,
-                Active = true,
-                City = "Atlanta",
-                PostalCode = "30354",
-                State = "GA",
-                Street = "4244 International Parkway",
-                Street2 = "Suite 120"
-            };
+            var originalList = DevSeedData.GetAddresses();
+            var expected = new AddressResource(originalList[0]);
 
-            items.Should().HaveCount(3);
+            items.Should().HaveCount(originalList.Length);
             items.ToList()[0].Should().BeEquivalentTo(expected);
         }
 
@@ -113,7 +98,8 @@ namespace Enfo.API.Tests.ControllerTests
             var value = (await controller.Get(id).ConfigureAwait(false))
                 .Value;
 
-            var expected = new AddressResource(await repository.GetByIdAsync(id).ConfigureAwait(false));
+            var originalList = DevSeedData.GetAddresses();
+            var expected = new AddressResource(originalList.Single(e => e.Id == id));
 
             value.Should().BeEquivalentTo(expected);
         }
