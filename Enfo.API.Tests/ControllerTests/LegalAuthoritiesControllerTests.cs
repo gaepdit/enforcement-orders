@@ -146,8 +146,7 @@ namespace Enfo.API.Tests.ControllerTests
 
             var item = new LegalAuthorityCreateResource()
             {
-                AuthorityName = "New",
-                OrderNumberTemplate = "abc"
+                AuthorityName = "New"
             };
 
             var result = await controller.Post(item).ConfigureAwait(false);
@@ -164,8 +163,7 @@ namespace Enfo.API.Tests.ControllerTests
 
             var item = new LegalAuthorityCreateResource()
             {
-                AuthorityName = "New",
-                OrderNumberTemplate = "abc"
+                AuthorityName = "New"
             };
 
             var result = await controller.Post(item).ConfigureAwait(false);
@@ -177,8 +175,7 @@ namespace Enfo.API.Tests.ControllerTests
             {
                 Id = 22,
                 Active = true,
-                AuthorityName = "New",
-                OrderNumberTemplate = "abc"
+                AuthorityName = "New"
             };
 
             addedItem.Should().BeEquivalentTo(expected);
@@ -194,8 +191,7 @@ namespace Enfo.API.Tests.ControllerTests
             {
                 Active = false,
                 AuthorityName = "XYZ",
-                Id = 1,
-                OrderNumberTemplate = "none"
+                Id = 1
             };
 
             var original = await repository.GetByIdAsync(target.Id).ConfigureAwait(false);

@@ -1,6 +1,7 @@
 ﻿using Enfo.Domain.Entities;
 using System;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace Enfo.API.Resources
 {
@@ -10,13 +11,10 @@ namespace Enfo.API.Resources
         public bool Active { get; set; } = true;
 
         [DisplayName("Legal Authority")]
+        [Required(ErrorMessage = "Legal Authority name is required")]
         public string AuthorityName { get; set; }
 
-        [DisplayName("Order Number Template")]
-        public string OrderNumberTemplate { get; set; }
-
         public LegalAuthorityResource() { }
-
         public LegalAuthorityResource(LegalAuthority item)
         {
             if (item != null)
@@ -24,7 +22,6 @@ namespace Enfo.API.Resources
                 Id = item.Id;
                 Active = item.Active;
                 AuthorityName = item.AuthorityName;
-                OrderNumberTemplate = item.OrderNumberTemplate;
             }
         }
     }
@@ -37,7 +34,6 @@ namespace Enfo.API.Resources
             {
                 item.Active = resource.Active;
                 item.AuthorityName = resource.AuthorityName;
-                item.OrderNumberTemplate = resource.OrderNumberTemplate;
                 item.UpdatedDate = DateTime.Now;
             }
         }

@@ -7,8 +7,5 @@ namespace Enfo.Domain.Entities
         [Required]
         [StringLength(100)]
         public string AuthorityName { get; set; }
-
-        [StringLength(40)]
-        public string OrderNumberTemplate { get; set; }
     }
 }
