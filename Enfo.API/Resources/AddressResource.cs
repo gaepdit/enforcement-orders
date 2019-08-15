@@ -34,7 +34,6 @@ namespace Enfo.API.Resources
         public string PostalCode { get; set; }
 
         public AddressResource() { }
-
         public AddressResource(Address item)
         {
             if (item != null)

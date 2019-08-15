@@ -14,6 +14,13 @@ namespace Enfo.API.Tests.ControllerTests
 {
     public class CountiesControllerTests
     {
+        private readonly County[] originalList;
+
+        public CountiesControllerTests()
+        {
+            originalList = ProdSeedData.GetCounties();
+        }
+
         [Fact]
         public async Task GetReturnsOkAsync()
         {
@@ -49,7 +56,6 @@ namespace Enfo.API.Tests.ControllerTests
 
             var items = result.Value as IEnumerable<CountyResource>;
 
-            var originalList = SeedData.GetCounties();
             var expected = new CountyResource(originalList[0]);
 
             items.Should().HaveCount(originalList.Length);
@@ -64,15 +70,14 @@ namespace Enfo.API.Tests.ControllerTests
 
             int pageSize = 10;
             int pageNum = 2;
-            int itemNum = (pageNum - 1) * pageSize + 1;
+            int firstItemIndex = (pageNum - 1) * pageSize;
 
             var result = (await controller.Get(pageSize, pageNum).ConfigureAwait(false))
                 .Result as OkObjectResult;
 
             var items = result.Value as IEnumerable<CountyResource>;
 
-            var originalList = SeedData.GetCounties();
-            var expected = new CountyResource(originalList[itemNum - 1]);
+            var expected = new CountyResource(originalList[firstItemIndex]);
 
             items.Should().HaveCount(pageSize);
             items.ToList()[0].Should().BeEquivalentTo(expected);

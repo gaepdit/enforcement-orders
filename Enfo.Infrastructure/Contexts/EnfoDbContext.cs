@@ -1,6 +1,6 @@
-﻿using Enfo.Domain.Entities;
+using Enfo.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using static Enfo.Infrastructure.SeedData.SeedData;
+using Enfo.Infrastructure.SeedData;
 
 namespace Enfo.Infrastructure.Contexts
 {
@@ -18,7 +18,10 @@ namespace Enfo.Infrastructure.Contexts
         {
             base.OnModelCreating(builder);
 
-            builder.Entity<County>().HasData(GetCounties());
+            builder.Entity<County>().HasData(ProdSeedData.GetCounties());
+            builder.Entity<LegalAuthority>().HasData(ProdSeedData.GetLegalAuthorities());
+            builder.Entity<Address>().HasData(ProdSeedData.GetAddresses());
+            builder.Entity<EpdContact>().HasData(ProdSeedData.GetEpdContacts());
         }
     }
 }

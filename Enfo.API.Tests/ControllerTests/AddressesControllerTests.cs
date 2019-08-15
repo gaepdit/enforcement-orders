@@ -14,6 +14,13 @@ namespace Enfo.API.Tests.ControllerTests
 {
     public class AddressesControllerTests
     {
+        private readonly Address[] originalList;
+
+        public AddressesControllerTests()
+        {
+            originalList = ProdSeedData.GetAddresses();
+        }
+
         [Fact]
         public async Task GetReturnsOkAsync()
         {
@@ -49,10 +56,9 @@ namespace Enfo.API.Tests.ControllerTests
 
             var items = result.Value as IEnumerable<AddressResource>;
 
-            var originalList = DevSeedData.GetAddresses().Where(e => e.Active).ToArray();
-            var expected = new AddressResource(originalList[0]);
+            var expected = new AddressResource(originalList.Where(e => e.Active).ToArray()[0]);
 
-            items.Should().HaveCount(originalList.Length);
+            items.Should().HaveCount(originalList.Where(e => e.Active).ToArray().Length);
             items.ToList()[0].Should().BeEquivalentTo(expected);
         }
 
@@ -67,7 +73,6 @@ namespace Enfo.API.Tests.ControllerTests
 
             var items = result.Value as IEnumerable<AddressResource>;
 
-            var originalList = DevSeedData.GetAddresses();
             var expected = new AddressResource(originalList[0]);
 
             items.Should().HaveCount(originalList.Length);
@@ -98,7 +103,6 @@ namespace Enfo.API.Tests.ControllerTests
             var value = (await controller.Get(id).ConfigureAwait(false))
                 .Value;
 
-            var originalList = DevSeedData.GetAddresses();
             var expected = new AddressResource(originalList.Single(e => e.Id == id));
 
             value.Should().BeEquivalentTo(expected);
@@ -143,7 +147,11 @@ namespace Enfo.API.Tests.ControllerTests
             var id = (int)(result as CreatedAtActionResult).Value;
             var addedItem = new AddressResource(await repository.GetByIdAsync(id).ConfigureAwait(false));
 
-            var expected = new AddressResource() { Id = 2003, Active = true, City = "Atlanta", PostalCode = "33333", State = "GA", Street = "123 Fake St", Street2 = null };
+            // Item gets added with next value in DB
+            var expected = new AddressResource(item.NewAddress())
+            {
+                Id = originalList.Max(e => e.Id) + 1
+            };
 
             addedItem.Should().BeEquivalentTo(expected);
         }

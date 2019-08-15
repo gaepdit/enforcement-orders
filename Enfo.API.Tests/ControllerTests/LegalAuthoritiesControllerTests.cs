@@ -14,6 +14,13 @@ namespace Enfo.API.Tests.ControllerTests
 {
     public class LegalAuthoritiesControllerTests
     {
+        private readonly LegalAuthority[] originalList;
+
+        public LegalAuthoritiesControllerTests()
+        {
+            originalList = ProdSeedData.GetLegalAuthorities();
+        }
+
         [Fact]
         public async Task GetReturnsOkAsync()
         {
@@ -49,10 +56,9 @@ namespace Enfo.API.Tests.ControllerTests
 
             var items = result.Value as IEnumerable<LegalAuthorityResource>;
 
-            var originalList = DevSeedData.GetLegalAuthorities().Where(e => e.Active).ToArray();
-            var expected = new LegalAuthorityResource(originalList[0]);
+            var expected = new LegalAuthorityResource(originalList.Where(e => e.Active).ToArray()[0]);
 
-            items.Should().HaveCount(originalList.Length);
+            items.Should().HaveCount(originalList.Count(e => e.Active));
             items.ToList()[0].Should().BeEquivalentTo(expected);
         }
 
@@ -67,7 +73,6 @@ namespace Enfo.API.Tests.ControllerTests
 
             var items = result.Value as IEnumerable<LegalAuthorityResource>;
 
-            var originalList = DevSeedData.GetLegalAuthorities();
             var expected = new LegalAuthorityResource(originalList[0]);
 
             items.Should().HaveCount(originalList.Length);
@@ -89,7 +94,6 @@ namespace Enfo.API.Tests.ControllerTests
 
             var items = result.Value as IEnumerable<LegalAuthorityResource>;
 
-            var originalList = DevSeedData.GetLegalAuthorities();
             var expected = new LegalAuthorityResource(originalList[itemNum - 1]);
 
             items.Should().HaveCount(pageSize);
@@ -120,7 +124,6 @@ namespace Enfo.API.Tests.ControllerTests
             var value = (await controller.Get(id).ConfigureAwait(false))
                 .Value;
 
-            var originalList = DevSeedData.GetLegalAuthorities();
             var expected = new LegalAuthorityResource(originalList.Single(e => e.Id == id));
 
             value.Should().BeEquivalentTo(expected);
@@ -173,7 +176,7 @@ namespace Enfo.API.Tests.ControllerTests
 
             var expected = new LegalAuthorityResource()
             {
-                Id = 22,
+                Id = originalList.Max(e => e.Id) + 1,
                 Active = true,
                 AuthorityName = "New"
             };

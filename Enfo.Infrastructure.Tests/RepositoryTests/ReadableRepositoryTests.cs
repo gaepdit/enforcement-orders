@@ -2,12 +2,12 @@ using Enfo.Domain.Entities;
 using Enfo.Domain.Pagination;
 using Enfo.Domain.Repositories;
 using Enfo.Domain.Specifications;
+using Enfo.Infrastructure.SeedData;
 using Enfo.Infrastructure.Tests.Helpers;
 using FluentAssertions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -15,10 +15,22 @@ namespace Enfo.Infrastructure.Tests.RepositoryTests
 {
     public class ReadableRepositoryTests
     {
-        // helpers
-        private class CountyNameStartsWithLetterSpecification : BaseSpecification<County>
+        private readonly County[] counties;
+        private readonly Address[] addresses;
+        private readonly EpdContact[] epdContacts;
+
+        public ReadableRepositoryTests()
         {
-            public CountyNameStartsWithLetterSpecification(char startsWith) : base(e => e.CountyName.StartsWith(startsWith)) { }
+            counties = ProdSeedData.GetCounties();
+            addresses = ProdSeedData.GetAddresses();
+            epdContacts = ProdSeedData.GetEpdContacts();
+        }
+
+        // helpers
+        private class CountyNameStartsWithSpecification : BaseSpecification<County>
+        {
+            public CountyNameStartsWithSpecification(string startsWith)
+                : base(e => e.CountyName.StartsWith(startsWith, StringComparison.InvariantCultureIgnoreCase)) { }
         }
 
         // Tests
@@ -28,23 +40,21 @@ namespace Enfo.Infrastructure.Tests.RepositoryTests
         {
             using (IAsyncReadableRepository<County> repository = this.GetRepository<County>())
             {
-                IReadOnlyList<County> items = await repository.ListAsync().ConfigureAwait(false);
-
-                items.Should().HaveCount(159);
-                var expected = new County { Id = 1, CountyName = "Appling" };
-                items[0].Should().BeEquivalentTo(expected);
+                var items = await repository.ListAsync().ConfigureAwait(false);
+                items.Should().HaveCount(counties.Length);
+                items[0].Should().BeEquivalentTo(counties[0]);
             }
         }
 
-        [Fact]
-        public async Task GetByIdReturnsItemAsync()
+        [Theory]
+        [InlineData(1)]
+        [InlineData(2)]
+        public async Task GetByIdReturnsItemAsync(int id)
         {
             using (IAsyncReadableRepository<County> repository = this.GetRepository<County>())
             {
-                County item = await repository.GetByIdAsync(1).ConfigureAwait(false);
-
-                var expected = new County { Id = 1, CountyName = "Appling" };
-                item.Should().BeEquivalentTo(expected);
+                var item = await repository.GetByIdAsync(id).ConfigureAwait(false);
+                item.Should().BeEquivalentTo(counties.Single(e => e.Id == id));
             }
         }
 
@@ -53,20 +63,26 @@ namespace Enfo.Infrastructure.Tests.RepositoryTests
         {
             using (IAsyncReadableRepository<County> repository = this.GetRepository<County>())
             {
-                County item = await repository.GetByIdAsync(-1).ConfigureAwait(false);
-
+                var item = await repository.GetByIdAsync(-1).ConfigureAwait(false);
                 item.Should().BeNull();
             }
         }
 
-        [Fact]
-        public async Task CountWithSpecification()
+        [Theory]
+        [InlineData("A")]
+        [InlineData("B")]
+        [InlineData("Ba")]
+        public async Task CountWithSpecification(string startsWith)
         {
             using (IAsyncReadableRepository<County> repository = this.GetRepository<County>())
             {
-                int count = await repository.CountAsync(new CountyNameStartsWithLetterSpecification('B')).ConfigureAwait(false);
-
-                count.Should().Be(16);
+                var count = await repository
+                    .CountAsync(new CountyNameStartsWithSpecification(startsWith))
+                    .ConfigureAwait(false);
+                count.Should().Be(counties
+                    .Count(e => e.CountyName.StartsWith(
+                        startsWith,
+                        StringComparison.InvariantCultureIgnoreCase)));
             }
         }
 
@@ -75,104 +91,126 @@ namespace Enfo.Infrastructure.Tests.RepositoryTests
         {
             using (var repository = this.GetRepository<EpdContact>())
             {
-                int count = await repository.CountAsync().ConfigureAwait(false);
-
-                count.Should().Be(3);
-            }
-        }
-
-        [Fact]
-        public async Task GetByIdReturnsItemWithRelatedEntityAsync()
-        {
-            using (var repository = this.GetRepository<EpdContact>())
-            {
-                var item = await repository.GetByIdAsync(2000).ConfigureAwait(false);
-
-                var expectedAddress = new Address { Id = 2000, Active = true, City = "Atlanta", PostalCode = "30354", State = "GA", Street = "4244 International Parkway", Street2 = "Suite 120" };
-                var expectedContact = new EpdContact { Id = 2000, Active = false, Address = expectedAddress, AddressId = 2000, ContactName = "Mr. Keith M. Bentley", Email = null, Organization = "Environmental Protection Division", Title = "Chief, Air Protection Branch" };
-
-                item.Should().BeEquivalentTo(expectedContact);
-                item.Address.Should().BeEquivalentTo(expectedAddress);
+                var count = await repository.CountAsync().ConfigureAwait(false);
+                count.Should().Be(epdContacts.Length);
             }
         }
 
         [Theory]
-        [InlineData(false, 2)]
-        [InlineData(true, 3)]
-        public async Task GetAllWithSpecificationReturnsCorrectListAsync(bool includeInactive, int countExpected)
+        [InlineData(2000)]
+        [InlineData(2001)]
+        public async Task GetByIdReturnsItemWithRelatedEntityAsync(int id)
+        {
+            using (var repository = this.GetRepository<EpdContact>())
+            {
+                var item = await repository.GetByIdAsync(
+                    id, 
+                    new EpdContactIncludeAddressSpec(includeInactive: true))
+                    .ConfigureAwait(false);
+
+                var expectedContact = epdContacts.Single(e => e.Id == id);
+                expectedContact.Address = addresses.Single(e => e.Id == expectedContact.AddressId);
+
+                item.Should().BeEquivalentTo(expectedContact);
+            }
+        }
+
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        public async Task GetAllWithSpecificationReturnsCorrectListAsync(bool includeInactive)
         {
             using (IAsyncReadableRepository<Address> repository = this.GetRepository<Address>())
             {
                 var items = await repository.ListAsync(new ExcludeInactiveItemsSpec<Address>(includeInactive)).ConfigureAwait(false);
 
-                items.Should().HaveCount(countExpected);
+                items.Should().HaveCount(addresses.Count(e => e.Active || includeInactive));
                 items.Any(e => !e.Active).Should().Equals(includeInactive);
             }
         }
 
-        [Fact]
-        public async Task GetByIdIncludedWithSpecificationReturnsItemAsync()
+        [Theory]
+        [InlineData(2000)]
+        [InlineData(2001)]
+        public async Task GetByIdIncludedWithSpecificationReturnsItemAsync(int id)
         {
             using (IAsyncReadableRepository<Address> repository = this.GetRepository<Address>())
             {
-                Address item = await repository.GetByIdAsync(2000, new ExcludeInactiveItemsSpec<Address>()).ConfigureAwait(false);
-                item.Should().NotBeNull();
-            }
-        }
+                var item = await repository.GetByIdAsync(id, new ExcludeInactiveItemsSpec<Address>()).ConfigureAwait(false);
 
-        [Fact]
-        public async Task GetByIdExcludedWithSpecificationReturnsNullAsync()
-        {
-            using (IAsyncReadableRepository<Address> repository = this.GetRepository<Address>())
-            {
-                Address item = await repository.GetByIdAsync(2001, new ExcludeInactiveItemsSpec<Address>()).ConfigureAwait(false);
-                item.Should().BeNull();
+                if (addresses.Single(e => e.Id == id).Active)
+                {
+                    item.Should().NotBeNull();
+                }
+                else
+                {
+                    item.Should().BeNull();
+                }
             }
         }
 
         [Fact]
         public async Task GetPaginatedReturnsPartialListAsync()
         {
+            int skip = 10;
+            int take = 2;
+            int firstItemIndex = skip;
+
             using (IAsyncReadableRepository<County> repository = this.GetRepository<County>())
             {
-                var pagination = Pagination.FromPageSkipAndTake(10, 20);
+                var pagination = Pagination.FromPageSkipAndTake(skip, take);
 
-                IReadOnlyList<County> items = await repository.ListAsync(pagination).ConfigureAwait(false);
+                var items = await repository.ListAsync(pagination).ConfigureAwait(false);
 
-                items.Should().HaveCount(20);
-                var expected = new County { Id = 11, CountyName = "Bibb" };
-                items[0].Should().BeEquivalentTo(expected);
+                items.Should().HaveCount(take);
+                items[0].Should().BeEquivalentTo(counties[firstItemIndex]);
             }
         }
 
         [Fact]
         public async Task GetPaginatedByPageSizeReturnsPartialListAsync()
         {
+            int pageSize = 10;
+            int pageNum = 2;
+            int itemIndex = (pageNum - 1) * pageSize;
+
             using (IAsyncReadableRepository<County> repository = this.GetRepository<County>())
             {
-                var pagination = Pagination.FromPageSizeAndNumber(10, 2);
+                var pagination = Pagination.FromPageSizeAndNumber(pageSize, pageNum);
 
-                IReadOnlyList<County> items = await repository.ListAsync(pagination).ConfigureAwait(false);
+                var items = await repository.ListAsync(pagination).ConfigureAwait(false);
 
-                items.Should().HaveCount(10);
-                var expected = new County { Id = 11, CountyName = "Bibb" };
-                items[0].Should().BeEquivalentTo(expected);
+                items.Should().HaveCount(pageSize);
+                items[0].Should().BeEquivalentTo(counties[itemIndex]);
             }
         }
 
-        [Fact]
-        public async Task GetPaginatedWithSpecification()
+        [Theory]
+        [InlineData("A")]
+        [InlineData("B")]
+        [InlineData("Ba")]
+        public async Task GetPaginatedWithSpecification(string startsWith)
         {
+            int pageSize = 10;
+            int pageNum = 1;
+            int itemIndex = (pageNum - 1) * pageSize;
+
             using (IAsyncReadableRepository<County> repository = this.GetRepository<County>())
             {
-                var spec = new CountyNameStartsWithLetterSpecification('B');
-                var pagination = Pagination.FromPageSizeAndNumber(3, 2);
+                var spec = new CountyNameStartsWithSpecification(startsWith);
+                var pagination = Pagination.FromPageSizeAndNumber(pageSize, pageNum);
 
                 IReadOnlyList<County> items = await repository.ListAsync(spec, pagination).ConfigureAwait(false);
 
-                items.Should().HaveCount(3);
-                var expected = new County { Id = 6, CountyName = "Banks" };
-                items[0].Should().BeEquivalentTo(expected);
+                items.Should().HaveCount(Math.Min(
+                    pageSize,
+                    counties.Count(e => e.CountyName.StartsWith(
+                        startsWith,
+                        StringComparison.InvariantCultureIgnoreCase))));
+                items[0].Should().BeEquivalentTo(
+                    counties.First(e => e.CountyName.StartsWith(
+                        startsWith, 
+                        StringComparison.InvariantCultureIgnoreCase)));
             }
         }
     }

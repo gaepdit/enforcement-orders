@@ -1,5 +1,6 @@
 ﻿using Enfo.Domain.Entities;
 using Enfo.Domain.Repositories;
+using Enfo.Infrastructure.SeedData;
 using Enfo.Infrastructure.Tests.Helpers;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
@@ -12,20 +13,27 @@ namespace Enfo.Infrastructure.Tests.RepositoryTests
 {
     public class WritableRepositoryTests
     {
+        private readonly County[] counties;
+        private readonly EpdContact[] epdContacts;
+
+        public WritableRepositoryTests()
+        {
+            counties = ProdSeedData.GetCounties();
+            epdContacts = ProdSeedData.GetEpdContacts();
+        }
+
         [Fact]
         public async Task AddNewItemIncreasesCount()
         {
             using (IAsyncWritableRepository<County> repository = this.GetRepository<County>())
             {
-                int preCount = await repository.CountAsync().ConfigureAwait(false);
-
                 County item = new County { CountyName = "NewCounty" };
                 repository.Add(item);
                 await repository.CompleteAsync().ConfigureAwait(false);
 
                 int postCount = await repository.CountAsync().ConfigureAwait(false);
 
-                postCount.Should().Be(preCount + 1);
+                postCount.Should().Be(counties.Length + 1);
             }
         }
 
@@ -38,10 +46,9 @@ namespace Enfo.Infrastructure.Tests.RepositoryTests
                 repository.Add(item);
                 await repository.CompleteAsync().ConfigureAwait(false);
 
-                County addedItem = await repository.GetByIdAsync(160).ConfigureAwait(false);
-                var expected = new County { Id = 160, Active = true, CountyName = "NewCounty" };
+                var addedItem = await repository.GetByIdAsync(item.Id).ConfigureAwait(false);
 
-                addedItem.Should().BeEquivalentTo(expected);
+                addedItem.Should().BeEquivalentTo(item);
             }
         }
 
@@ -67,35 +74,14 @@ namespace Enfo.Infrastructure.Tests.RepositoryTests
             using (var repository = this.GetRepository<EpdContact>())
             {
                 var newContact = new EpdContact { AddressId = 2002, ContactName = "Mr. Fake Name", Email = "fake.name@example.com", Organization = "Environmental Protection Division", Title = "" };
+
                 repository.Add(newContact);
                 await repository.CompleteAsync().ConfigureAwait(false);
 
                 var itemList = await repository.ListAsync().ConfigureAwait(false);
-
-                newContact.Id.Should().Be(2003);
-
-                itemList.Count.Should().Be(4);
-                itemList.Single(e => e.Id == 2003).Should().BeEquivalentTo(newContact);
-            }
-        }
-
-        [Fact]
-        public async Task AddNewItemWithNewRelatedEntityIsAddedCorrectly()
-        {
-            using (var repository = this.GetRepository<EpdContact>())
-            {
-                var newAddress = new Address { City = "Atlanta", PostalCode = "33333", State = "GA", Street = "123 Fake St" };
-                var newContact = new EpdContact { Address = newAddress, ContactName = "Mr. Fake Name", Email = "fake.name@example.com", Organization = "Environmental Protection Division", Title = "" };
-                repository.Add(newContact);
-                await repository.CompleteAsync().ConfigureAwait(false);
-
-                var itemList = await repository.ListAsync().ConfigureAwait(false);
-
-                newAddress.Id.Should().Be(2003);
-                newContact.Id.Should().Be(2003);
-
-                itemList.Count.Should().Be(4);
-                itemList.Single(e => e.Id == 2003).Should().BeEquivalentTo(newContact);
+                
+                itemList.Count.Should().Be(epdContacts.Length + 1);
+                itemList.Single(e => e.Id == newContact.Id).Should().BeEquivalentTo(newContact);
             }
         }
     }

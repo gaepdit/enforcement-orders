@@ -14,6 +14,14 @@ namespace Enfo.API.Tests.ControllerTests
 {
     public class EpdContactsControllerTests
     {
+        private readonly EpdContact[] originalList;
+        private readonly Address[] originalAddresses;
+
+        public EpdContactsControllerTests()
+        {
+            originalAddresses = ProdSeedData.GetAddresses();
+            originalList = ProdSeedData.GetEpdContacts();
+        }
         [Fact]
         public async Task GetReturnsOkAsync()
         {
@@ -49,12 +57,13 @@ namespace Enfo.API.Tests.ControllerTests
 
             var items = result.Value as IEnumerable<EpdContactResource>;
 
-            var originalList = DevSeedData.GetEpdContacts().Where(e => e.Active).ToArray();
-            var expected = new EpdContactResource(originalList[0]);
-            expected.Address = new AddressResource(
-                DevSeedData.GetAddresses().Single(e => e.Id == expected.AddressId));
+            var expected = new EpdContactResource(
+                originalList.Where(e => e.Active).ToArray()[0]);
 
-            items.Should().HaveCount(originalList.Length);
+            expected.Address = new AddressResource(
+                originalAddresses.Single(e => e.Id == expected.AddressId));
+
+            items.Should().HaveCount(originalList.Count(e => e.Active));
             items.ToList()[0].Should().BeEquivalentTo(expected);
         }
 
@@ -69,10 +78,10 @@ namespace Enfo.API.Tests.ControllerTests
 
             var items = result.Value as IEnumerable<EpdContactResource>;
 
-            var originalList = DevSeedData.GetEpdContacts();
             var expected = new EpdContactResource(originalList[0]);
+
             expected.Address = new AddressResource(
-                DevSeedData.GetAddresses().Single(e => e.Id == expected.AddressId));
+                originalAddresses.Single(e => e.Id == expected.AddressId));
 
             items.Should().HaveCount(originalList.Length);
             items.ToList()[0].Should().BeEquivalentTo(expected);
@@ -102,10 +111,11 @@ namespace Enfo.API.Tests.ControllerTests
             var value = (await controller.Get(id).ConfigureAwait(false))
                 .Value;
 
-            var originalList = DevSeedData.GetEpdContacts();
-            var expected = new EpdContactResource(originalList.Single(e => e.Id == id));
+            var expected = new EpdContactResource(
+                originalList.Single(e => e.Id == id));
+
             expected.Address = new AddressResource(
-                DevSeedData.GetAddresses().Single(e => e.Id == expected.AddressId));
+                originalAddresses.Single(e => e.Id == expected.AddressId));
 
             value.Should().BeEquivalentTo(expected);
             value.Address.Should().NotBeNull().And.BeEquivalentTo(expected.Address);
@@ -146,14 +156,16 @@ namespace Enfo.API.Tests.ControllerTests
 
             var contact = new EpdContactCreateResource { AddressId = 2000, ContactName = "Mr. Fake Name", Email = "fake.name@example.com", Organization = "Environmental Protection Division", Title = "" };
 
-            await controller.Post(contact).ConfigureAwait(false);
+            var result = await controller.Post(contact).ConfigureAwait(false);
 
-            EpdContactResource addedItem = (await controller.Get(2003).ConfigureAwait(false))
-                .Value;
+            var id = (int)(result as CreatedAtActionResult).Value;
+            var addedItem = new EpdContactResource(await repository.GetByIdAsync(id).ConfigureAwait(false));
 
-            // Contact and address ID get added with next value in DB
-            var newContact = contact.NewEpdContact();
-            newContact.Id = 2003;
+            // Item gets added with next value in DB
+            var newContact = new EpdContactResource(contact.NewEpdContact())
+            {
+                Id = originalList.Max(e => e.Id) + 1
+            };
 
             addedItem.Should().BeEquivalentTo(contact);
         }
