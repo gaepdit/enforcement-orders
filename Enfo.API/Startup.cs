@@ -1,12 +1,12 @@
-﻿using Enfo.Domain.Repositories;
+using Enfo.Domain.Repositories;
 using Enfo.Infrastructure.Contexts;
 using Enfo.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 
 namespace Enfo.API
@@ -23,7 +23,7 @@ namespace Enfo.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddControllers();
 
             services.AddDbContext<EnfoDbContext>(options => options.UseSqlite("Data Source=EnfoSqliteDatabase.db"));
 
@@ -42,13 +42,14 @@ namespace Enfo.API
                         Email = "douglas.waldron@dnr.ga.gov"
                     }
                 });
-                c.DescribeAllEnumsAsStrings();
-                c.DescribeStringEnumsInCamelCase();
             });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(
+            IApplicationBuilder app,
+            IWebHostEnvironment env,
+            EnfoDbContext context)
         {
             if (env.IsDevelopment())
             {
@@ -60,6 +61,8 @@ namespace Enfo.API
                 app.UseHsts();
             }
 
+            app.UseHttpsRedirection();
+
             app.UseSwagger(c => { c.RouteTemplate = "api-docs/{documentName}/swagger.json"; });
             app.UseSwaggerUI(c =>
             {
@@ -67,8 +70,19 @@ namespace Enfo.API
                 c.SwaggerEndpoint("/api-docs/v2/swagger.json", "API v2");
             });
 
-            app.UseHttpsRedirection();
-            app.UseMvc();
+            app.UseRouting();
+            // app.UseAuthorization();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
+
+            // Initialize database
+            if (env.IsDevelopment())
+            {
+                context.Database.EnsureDeleted();
+            }
+            context.Database.EnsureCreated();
         }
     }
 }

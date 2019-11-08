@@ -30,7 +30,7 @@ namespace Enfo.Infrastructure.Tests.RepositoryTests
         private class CountyNameStartsWithSpecification : BaseSpecification<County>
         {
             public CountyNameStartsWithSpecification(string startsWith)
-                : base(e => e.CountyName.StartsWith(startsWith, StringComparison.InvariantCultureIgnoreCase)) { }
+                : base(e => e.CountyName.ToLower().StartsWith(startsWith.ToLower())) { }
         }
 
         // Tests
@@ -72,6 +72,7 @@ namespace Enfo.Infrastructure.Tests.RepositoryTests
         [InlineData("A")]
         [InlineData("B")]
         [InlineData("Ba")]
+        [InlineData("bA")]
         public async Task CountWithSpecification(string startsWith)
         {
             using (IAsyncReadableRepository<County> repository = this.GetRepository<County>())

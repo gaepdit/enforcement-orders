@@ -1,39 +1,18 @@
-﻿using Enfo.Infrastructure.Contexts;
-using Enfo.Infrastructure.SeedData;
-using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.DependencyInjection;
-using System;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 
 namespace Enfo.API
 {
     public class Program
     {
-        public static void Main(string[] args)
-        {
-            var host = CreateWebHostBuilder(args).Build();
+        public static void Main(string[] args) =>
+            CreateHostBuilder(args).Build().Run();
 
-            using (var scope = host.Services.CreateScope())
-            using (var context = scope.ServiceProvider.GetService<EnfoDbContext>())
-            {
-                if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == EnvironmentName.Development)
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    context.Database.EnsureDeleted();
-                }
-
-                context.Database.EnsureCreated();
-
-                if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == EnvironmentName.Development)
-                {
-                    context.SeedTestData();
-                }
-            }
-
-            host.Run();
-        }
-
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>();
+                    webBuilder.UseStartup<Startup>();
+                });
     }
 }
