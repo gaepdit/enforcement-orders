@@ -1,4 +1,4 @@
-using Enfo.Domain.Repositories;
+﻿using Enfo.Domain.Repositories;
 using Enfo.Infrastructure.Contexts;
 using Enfo.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Builder;
@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using System;
 
 namespace Enfo.API
 {
@@ -24,6 +25,12 @@ namespace Enfo.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.AddHsts(options =>
+            {
+                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                options.MaxAge = TimeSpan.FromSeconds(300);
+            });
 
             services.AddDbContext<EnfoDbContext>(options => options.UseSqlite("Data Source=EnfoSqliteDatabase.db"));
 
