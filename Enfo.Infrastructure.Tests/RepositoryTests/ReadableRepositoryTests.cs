@@ -33,6 +33,12 @@ namespace Enfo.Infrastructure.Tests.RepositoryTests
                 : base(e => e.CountyName.ToLower().StartsWith(startsWith.ToLower())) { }
         }
 
+        private class CountyNameStartsWithSpecificationCaseSensitive : BaseSpecification<County>
+        {
+            public CountyNameStartsWithSpecificationCaseSensitive(string startsWith)
+                : base(e => e.CountyName.StartsWith(startsWith)) { }
+        }
+
         // Tests
 
         [Fact]
@@ -87,6 +93,24 @@ namespace Enfo.Infrastructure.Tests.RepositoryTests
             }
         }
 
+        [Theory]
+        [InlineData("A")]
+        [InlineData("a")]
+        [InlineData("Ba")]
+        [InlineData("bA")]
+        public async Task CountWithSpecificationCaseSensitive(string startsWith)
+        {
+            using (IAsyncReadableRepository<County> repository = this.GetRepository<County>())
+            {
+                var count = await repository
+                    .CountAsync(new CountyNameStartsWithSpecificationCaseSensitive(startsWith))
+                    .ConfigureAwait(false);
+                count.Should().Be(counties
+                    .Count(e => e.CountyName.StartsWith(
+                        startsWith)));
+            }
+        }
+
         [Fact]
         public async Task CountAll()
         {
@@ -105,7 +129,7 @@ namespace Enfo.Infrastructure.Tests.RepositoryTests
             using (var repository = this.GetRepository<EpdContact>())
             {
                 var item = await repository.GetByIdAsync(
-                    id, 
+                    id,
                     new EpdContactIncludeAddressSpec(includeInactive: true))
                     .ConfigureAwait(false);
 
@@ -210,7 +234,7 @@ namespace Enfo.Infrastructure.Tests.RepositoryTests
                         StringComparison.InvariantCultureIgnoreCase))));
                 items[0].Should().BeEquivalentTo(
                     counties.First(e => e.CountyName.StartsWith(
-                        startsWith, 
+                        startsWith,
                         StringComparison.InvariantCultureIgnoreCase)));
             }
         }
