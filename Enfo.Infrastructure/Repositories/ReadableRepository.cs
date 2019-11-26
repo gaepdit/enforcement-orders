@@ -1,9 +1,8 @@
 using Enfo.Domain.Entities;
-using Enfo.Domain.Pagination;
+using Enfo.Domain.Querying;
 using Enfo.Domain.Repositories;
-using Enfo.Domain.Specifications;
 using Enfo.Infrastructure.Contexts;
-using Enfo.Infrastructure.Specifications;
+using Enfo.Infrastructure.QueryingEvaluators;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -11,47 +10,42 @@ using System.Threading.Tasks;
 
 namespace Enfo.Infrastructure.Repositories
 {
-    public class ReadableRepository<TEntity> : IAsyncReadableRepository<TEntity>
-        where TEntity : BaseEntity
+    public class ReadableRepository<T> : IAsyncReadableRepository<T>
+        where T : BaseEntity
     {
         internal readonly EnfoDbContext context;
 
         public ReadableRepository(EnfoDbContext context) =>
             this.context = context;
 
-        public async Task<TEntity> GetByIdAsync(int id) =>
-            await context.Set<TEntity>().FindAsync(id).ConfigureAwait(false);
-
-        public async Task<TEntity> GetByIdAsync(int id, ISpecification<TEntity> specification) =>
-            await context.Set<TEntity>().Apply(specification)
+        public async Task<T> GetByIdAsync(
+            int id,
+            ISpecification<T> specification = null,
+            IInclusion<T> inclusion = null) =>
+            await context.Set<T>()
+                .Apply(specification)
+                .Apply(inclusion)
             .SingleOrDefaultAsync(e => e.Id == id).ConfigureAwait(false);
 
-        public async Task<IReadOnlyList<TEntity>> ListAsync() =>
-            await context.Set<TEntity>().ToListAsync().ConfigureAwait(false);
-
-        public async Task<IReadOnlyList<TEntity>> ListAsync(ISpecification<TEntity> specification) =>
-            await context.Set<TEntity>().Apply(specification)
+        public async Task<IReadOnlyList<T>> ListAsync(
+            ISpecification<T> specification = null,
+            IPagination pagination = null,
+            ISorting<T> sorting = null,
+            IInclusion<T> inclusion = null) =>
+            await context.Set<T>()
+                .Apply(specification)
+                .Apply(sorting)
+                .Apply(pagination)
+                .Apply(inclusion)
             .ToListAsync().ConfigureAwait(false);
 
-        public async Task<IReadOnlyList<TEntity>> ListAsync(IPagination pagination) =>
-            await context.Set<TEntity>().Apply(pagination)
-            .ToListAsync().ConfigureAwait(false);
-
-        public async Task<IReadOnlyList<TEntity>> ListAsync(
-            ISpecification<TEntity> specification,
-            IPagination pagination) =>
-            await context.Set<TEntity>().Apply(specification).Apply(pagination)
-            .ToListAsync().ConfigureAwait(false);
-
-        public Task<int> CountAsync() =>
-            context.Set<TEntity>().CountAsync();
-
-        public async Task<int> CountAsync(ISpecification<TEntity> specification) =>
-            await context.Set<TEntity>().Apply(specification)
+        public async Task<int> CountAsync(
+            ISpecification<T> specification) =>
+            await context.Set<T>()
+                .Apply(specification)
             .CountAsync().ConfigureAwait(false);
 
-        // IDisposable
-        #region IDisposable Support
+        // IDisposable Support
         private bool disposedValue = false; // To detect redundant calls
 
         protected virtual void Dispose(bool disposing)
@@ -83,6 +77,5 @@ namespace Enfo.Infrastructure.Repositories
             // uncomment the following line if the finalizer is overridden above.
             GC.SuppressFinalize(this);
         }
-        #endregion
     }
 }

@@ -1,6 +1,6 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using static Enfo.Domain.Utils.StringFunctions;
+using static Enfo.Domain.Utils.StringUtils;
 
 namespace Enfo.Domain.Entities
 {
@@ -27,7 +27,7 @@ namespace Enfo.Domain.Entities
 
         [DisplayName("Postal Code")]
         [StringLength(10)]
-        [RegularExpression("^\\d{5}(-\\d{4})?$", 
+        [RegularExpression("^\\d{5}(-\\d{4})?$",
             ErrorMessage = "Valid US Postal Code is required")]
         public string PostalCode { get; set; }
 

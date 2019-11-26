@@ -1,24 +1,25 @@
 using Enfo.Domain.Entities;
-using Enfo.Domain.Pagination;
-using Enfo.Domain.Specifications;
+using Enfo.Domain.Querying;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Enfo.Domain.Repositories
 {
-    public interface IAsyncReadableRepository<TEntity> : IDisposable
-        where TEntity : BaseEntity
+    public interface IAsyncReadableRepository<T> : IDisposable
+        where T : BaseEntity
     {
-        Task<TEntity> GetByIdAsync(int id);
-        Task<TEntity> GetByIdAsync(int id, ISpecification<TEntity> specification);
+        Task<T> GetByIdAsync(
+            int id,
+            ISpecification<T> specification = null,
+            IInclusion<T> inclusion = null);
 
-        Task<IReadOnlyList<TEntity>> ListAsync();
-        Task<IReadOnlyList<TEntity>> ListAsync(ISpecification<TEntity> specification);
-        Task<IReadOnlyList<TEntity>> ListAsync(IPagination pagination);
-        Task<IReadOnlyList<TEntity>> ListAsync(ISpecification<TEntity> specification, IPagination pagination);
+        Task<IReadOnlyList<T>> ListAsync(
+            ISpecification<T> specification = null,
+            IPagination pagination = null,
+            ISorting<T> sorting = null,
+            IInclusion<T> inclusion = null);
 
-        Task<int> CountAsync();
-        Task<int> CountAsync(ISpecification<TEntity> specification);
+        Task<int> CountAsync(ISpecification<T> specification = null);
     }
 }

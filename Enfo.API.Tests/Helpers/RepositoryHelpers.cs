@@ -10,8 +10,8 @@ namespace Enfo.API.Tests.Helpers
 {
     internal static class RepositoryHelpers
     {
-        public static IAsyncWritableRepository<TEntity> GetRepository<TEntity>(this object callingClass, int appendToName = 0, [CallerMemberName] string dbName = null)
-            where TEntity : BaseEntity
+        public static IAsyncWritableRepository<T> GetRepository<T>(this object callingClass, int appendToName = 0, [CallerMemberName] string dbName = null)
+            where T : BaseEntity
         {
             var options = new DbContextOptionsBuilder<EnfoDbContext>()
                 .UseSqlite($"Data Source={callingClass}_{dbName}_{appendToName}_Test.db")
@@ -23,7 +23,7 @@ namespace Enfo.API.Tests.Helpers
             context.Database.EnsureCreated();
             context.SeedTestData();
 
-            return new WritableRepository<TEntity>(context);
+            return new WritableRepository<T>(context);
         }
     }
 }

@@ -5,14 +5,14 @@ using System.Threading.Tasks;
 
 namespace Enfo.Infrastructure.Repositories
 {
-    public class WritableRepository<TEntity> : ReadableRepository<TEntity>, IAsyncWritableRepository<TEntity>
-        where TEntity : BaseEntity
+    public class WritableRepository<T> : ReadableRepository<T>, IAsyncWritableRepository<T>
+        where T : BaseEntity
     {
         public WritableRepository(EnfoDbContext context) : base(context) { }
 
-        public void Add(TEntity entity)
+        public void Add(T entity)
         {
-            context.Set<TEntity>().Add(entity);
+            context.Set<T>().Add(entity);
         }
 
         public Task<int> CompleteAsync()

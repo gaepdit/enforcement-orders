@@ -1,14 +1,14 @@
 using Enfo.API.Resources;
 using Enfo.Domain.Entities;
-using Enfo.Domain.Pagination;
+using Enfo.Domain.Querying;
 using Enfo.Domain.Repositories;
-using Enfo.Domain.Specifications;
-using Microsoft.AspNetCore.Authorization;
+// using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using static Enfo.API.ApiPagination;
 
 namespace Enfo.API.Controllers
 {
@@ -26,14 +26,14 @@ namespace Enfo.API.Controllers
         [ProducesResponseType(typeof(IEnumerable<LegalAuthorityResource>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<IEnumerable<LegalAuthorityResource>>> Get(
-            int pageSize = 0,
-            int page = 0,
+            int pageSize = DefaultPageSize,
+            int page = 1,
             bool includeInactive = false)
         {
-            var pagination = Pagination.FromPageSizeAndNumber(pageSize, page);
-            var spec = new ExcludeInactiveItemsSpec<LegalAuthority>(includeInactive);
+            var spec = new ActiveItemsSpec<LegalAuthority>(includeInactive);
 
-            return Ok((await repository.ListAsync(spec, pagination).ConfigureAwait(false))
+            return Ok((await repository.ListAsync(spec, Paginate(pageSize, page))
+                .ConfigureAwait(false))
                 .Select(e => new LegalAuthorityResource(e)));
         }
 

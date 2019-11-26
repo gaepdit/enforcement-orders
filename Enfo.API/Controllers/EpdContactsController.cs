@@ -1,14 +1,14 @@
 ﻿using Enfo.API.Resources;
 using Enfo.Domain.Entities;
-using Enfo.Domain.Pagination;
+using Enfo.Domain.Querying;
 using Enfo.Domain.Repositories;
-using Enfo.Domain.Specifications;
-using Microsoft.AspNetCore.Authorization;
+// using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using static Enfo.API.ApiPagination;
 
 namespace Enfo.API.Controllers
 {
@@ -26,14 +26,16 @@ namespace Enfo.API.Controllers
         [ProducesResponseType(typeof(IEnumerable<EpdContactResource>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<IEnumerable<EpdContactResource>>> Get(
-            int pageSize = 0,
-            int page = 0,
+            int pageSize = DefaultPageSize,
+            int page = 1,
             bool includeInactive = false)
         {
-            var pagination = Pagination.FromPageSizeAndNumber(pageSize, page);
-            var spec = new EpdContactIncludeAddressSpec(includeInactive);
+            var spec = new ActiveItemsSpec<EpdContact>(includeInactive);
+            var paging = Paginate(pageSize, page);
+            var include = new EpdContactIncludingAddress();
 
-            return Ok((await repository.ListAsync(spec, pagination).ConfigureAwait(false))
+            return Ok((await repository.ListAsync(spec, paging, inclusion: include)
+                .ConfigureAwait(false))
                 .Select(e => new EpdContactResource(e)));
         }
 
@@ -43,7 +45,10 @@ namespace Enfo.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<EpdContactResource>> Get(int id)
         {
-            var item = await repository.GetByIdAsync(id, new EpdContactIncludeAddressSpec(true)).ConfigureAwait(false);
+            var item = await repository.GetByIdAsync(id,
+                new ActiveItemsSpec<EpdContact>(true),
+                new EpdContactIncludingAddress()
+            ).ConfigureAwait(false);
 
             if (item == null)
             {

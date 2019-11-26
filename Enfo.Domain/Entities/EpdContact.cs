@@ -22,11 +22,13 @@ namespace Enfo.Domain.Entities
         [Required(ErrorMessage = "Address is required")]
         public int? AddressId { get; set; }
 
-        [RegularExpression("^\\D?(\\d{3})\\D?\\D?(\\d{3})\\D?(\\d{4})$", ErrorMessage = "Please enter valid a phone number")]
+        [RegularExpression("^\\D?(\\d{3})\\D?\\D?(\\d{3})\\D?(\\d{4})$",
+            ErrorMessage = "Please enter valid a phone number")]
         [StringLength(50)]
         public string Telephone { get; set; }
 
-        [RegularExpression("^([a-zA-Z0-9_\\-\\.]+)@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.)|(([a-zA-Z0-9\\-]+\\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\\]?)$", ErrorMessage = "Please provide a valid email address")]
+        [RegularExpression("^([a-zA-Z0-9_\\-\\.]+)@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.)|(([a-zA-Z0-9\\-]+\\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\\]?)$",
+            ErrorMessage = "Please provide a valid email address")]
         [StringLength(100)]
         public string Email { get; set; }
     }

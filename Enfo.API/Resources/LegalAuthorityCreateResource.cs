@@ -9,7 +9,7 @@ namespace Enfo.API.Resources
         [DisplayName("Legal Authority")]
         [Required(ErrorMessage = "Legal Authority name is required")]
         public string AuthorityName { get; set; }
-        
+
         public LegalAuthority NewLegalAuthority()
         {
             return new LegalAuthority()

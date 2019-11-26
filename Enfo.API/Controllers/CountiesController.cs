@@ -1,12 +1,12 @@
 ﻿using Enfo.API.Resources;
 using Enfo.Domain.Entities;
-using Enfo.Domain.Pagination;
 using Enfo.Domain.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using static Enfo.API.ApiPagination;
 
 namespace Enfo.API.Controllers
 {
@@ -24,12 +24,13 @@ namespace Enfo.API.Controllers
         [ProducesResponseType(typeof(IEnumerable<CountyResource>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<IEnumerable<CountyResource>>> Get(
-            int pageSize = 0,
-            int page = 0) =>
-            Ok((await repository
-                .ListAsync(Pagination.FromPageSizeAndNumber(pageSize, page))
+            int pageSize = DefaultPageSize,
+            int page = 1)
+        {
+            return Ok((await repository.ListAsync(pagination: Paginate(pageSize, page))
                 .ConfigureAwait(false))
                 .Select(e => new CountyResource(e)));
+        }
 
         // GET: api/Counties/{id}
         [HttpGet("{id}")]
