@@ -2,141 +2,144 @@
 
 ## Address
 
-* GET: `api/Addresses/{?params}`
+### GET: `api/Addresses`
 
-    | parameter      | data type     |
-    |----------------|---------------|
-    | pageSize       | int           |
-    | page           | int           |
+| parameter       | data type |
+|-----------------|-----------|
+| pageSize        | int       |
+| page            | int       |
+| includeInactive | bool      |
 
-* GET: `api/Addresses/{int:id}`
+### GET: `api/Addresses/{int:id}`
 
-* *[Authorize]* POST: `api/Addresses/{?params}`
+### POST: `[Authorize] api/Addresses`
 
-    | parameter      | data type     |
-    |----------------|---------------|
-    | pageSize       | int           |
-    | page           | int           |
+| parameter | data type |
+|-----------|-----------|
+| pageSize  | int       |
+| page      | int       |
 
-* *[Authorize]* PUT: `api/Addresses/{int:id}`
+### PUT: `[Authorize] api/Addresses/{int:id}`
 
 ## County
 
-* GET: `api/Counties/{?params}`
+### GET: `api/Counties`
 
-    | parameter      | data type     |
-    |----------------|---------------|
-    | pageSize       | int           |
-    | page           | int           |
+| parameter | data type |
+|-----------|-----------|
+| pageSize  | int       |
+| page      | int       |
 
-* GET: `api/Counties/{int:id}`
+### GET: `api/Counties/{int:id}`
 
 ## Enforcement Order
 
-* GET: `api/EnforcementOrders/{?params}`
+### GET: `api/EnforcementOrders`
 
-    Only authorized users can request Orders with pubStatus other than "Published".
+Only authorized users can request Orders with PublicationStatus other than "Published".
 
-    | parameter      | data type        |
-    |----------------|------------------|
-    | facilityFilter | string           |
-    | county         | string           |
-    | legalAuth      | int              |
-    | fromDate       | DateTime?        |
-    | tillDate       | DateTime?        |
-    | status         | ActivityState    |
-    | pubStatus      | PublicationState |
-    | sortOrder      | SortOrder        |
-    | orderNumber    | string           |
-    | textContains   | string           |
-    | pageSize       | int              |
-    | page           | int              |
+| parameter         | data type         |
+|-------------------|-------------------|
+| facilityFilter    | string            |
+| county            | string            |
+| legalAuth         | int               |
+| fromDate          | DateTime?         |
+| tillDate          | DateTime?         |
+| status            | ActivityStatus    |
+| publicationStatus | PublicationStatus |
+| sortOrder         | SortOrder         |
+| orderNumber       | string            |
+| textContains      | string            |
+| pageSize          | int               |
+| page              | int               |
 
-* GET: `api/EnforcementOrders/{int:id}`
+### GET: `api/EnforcementOrders/{int:id}`
 
-* *[Authorize]* GET: `api/EnforcementOrders/Detailed/{int:id}`
+### GET: `[Authorize] api/EnforcementOrders/Details/{int:id}`
 
-* GET: `api/EnforcementOrders/Count/{?params}`
+### GET: `api/EnforcementOrders/Count`
 
-    Only authorized users can request Orders with pubStatus other than "Published".
+Only authorized users can request Orders with PublicationStatus other than "Published".
 
-    | parameter      | data type        |
-    |----------------|------------------|
-    | facilityFilter | string           |
-    | county         | string           |
-    | fromDate       | DateTime?        |
-    | tillDate       | DateTime?        |
-    | status         | ActivityState    |
-    | pubStatus      | PublicationState |
-    | sortOrder      | SortOrder        |
-    | orderNumber    | string           |
+| parameter         | data type         |
+|-------------------|-------------------|
+| facilityFilter    | string            |
+| county            | string            |
+| fromDate          | DateTime?         |
+| tillDate          | DateTime?         |
+| status            | ActivityStatus    |
+| publicationStatus | PublicationStatus |
+| sortOrder         | SortOrder         |
+| orderNumber       | string            |
 
-* GET: `api/EnforcementOrders/CurrentProposed/{?params}`
+### GET: `api/EnforcementOrders/CurrentProposed`
 
-    Current Proposed are public proposed orders with comment close date in the future and publication date in the past
+Current Proposed are public proposed orders with comment close date in the future and publication date in the past
 
-    | parameter      | data type     |
-    |----------------|---------------|
-    | pageSize       | int           |
-    | page           | int           |
+| parameter | data type |
+|-----------|-----------|
+| pageSize  | int       |
+| page      | int       |
 
-* GET: `api/EnforcementOrders/RecentlyExecuted/{?params}`
+### GET: `api/EnforcementOrders/RecentlyExecuted`
 
-    Recently Executed are public executed orders with publication date within current week
+Recently Executed are public executed orders with publication date within current week
 
-    | parameter      | data type     |
-    |----------------|---------------|
-    | pageSize       | int           |
-    | page           | int           |
+| parameter | data type |
+|-----------|-----------|
+| pageSize  | int       |
+| page      | int       |
 
-* *[Authorize]* GET: `api/EnforcementOrders/Draft/{?params}`
+### GET: `[Authorize] api/EnforcementOrders/Drafts`
 
-    Draft are orders with publication status set to Draft
+Drafts are orders with publication status set to Draft
 
-    | parameter      | data type     |
-    |----------------|---------------|
-    | pageSize       | int           |
-    | page           | int           |
+| parameter | data type |
+|-----------|-----------|
+| pageSize  | int       |
+| page      | int       |
 
-* *[Authorize]* GET: `api/EnforcementOrders/Pending/{?params}`
+### GET: `[Authorize] api/EnforcementOrders/Pending`
 
-    Pending are public proposed or executed orders with publication date after the current week
+Pending are public proposed or executed orders with publication date after the current week
 
-    | parameter      | data type     |
-    |----------------|---------------|
-    | pageSize       | int           |
-    | page           | int           |
+| parameter | data type |
+|-----------|-----------|
+| pageSize  | int       |
+| page      | int       |
 
-* *[Authorize]* POST: `api/EnforcementOrders`
+### POST: `[Authorize] api/EnforcementOrders`
 
-* *[Authorize]* PUT: `api/EnforcementOrders/{int:id}`
+### PUT: `[Authorize] api/EnforcementOrders/{int:id}`
 
 ## EPD Contact
 
-* GET: `api/EpdContacts/{?params}`
+### GET: `api/EpdContacts`
 
-    | parameter      | data type     |
-    |----------------|---------------|
-    | pageSize       | int           |
-    | page           | int           |
+| parameter       | data type |
+|-----------------|-----------|
+| pageSize        | int       |
+| page            | int       |
+| includeInactive | bool      |
 
-* GET: `api/EpdContacts/{int:id}`
+### GET: `api/EpdContacts/{int:id}`
 
-* *[Authorize]* POST: `api/EpdContacts`
+### POST: `[Authorize] api/EpdContacts`
 
-* *[Authorize]* PUT: `api/EpdContacts/{int:id}`
+### PUT: `[Authorize] api/EpdContacts/{int:id}`
 
 ## Legal Authority
 
-* GET: `api/LegalAuthorities/{?params}`
+### GET: `api/LegalAuthorities`
 
-    | parameter      | data type     |
-    |----------------|---------------|
-    | pageSize       | int           |
-    | page           | int           |
+| parameter       | data type |
+|-----------------|-----------|
+| pageSize        | int       |
+| page            | int       |
+| includeInactive | bool      |
 
-* GET: `api/LegalAuthorities/{int:id}`
+### GET: `api/LegalAuthorities/{int:id}`
 
-* *[Authorize]* POST: `api/LegalAuthorities`
+### POST: `[Authorize] api/LegalAuthorities`
 
-* *[Authorize]* PUT: `api/LegalAuthorities/{int:id}`
+### PUT: `[Authorize] api/LegalAuthorities/{int:id}`
