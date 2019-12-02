@@ -5,20 +5,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Enfo.Domain.Entities
 {
-    public class Order : BaseEntity
+    public class EnforcementOrder : BaseEntity
     {
-        #region enums
-
-        /// <summary>
-        /// ActivityState enum is used for searches, not stored as a field. 
-        /// It relates to the IsProposedOrder and IsExecutedOrder booleans.
-        /// </summary>
-        public enum ActivityState
-        {
-            Proposed,
-            Executed,
-            All
-        }
+        // enums
 
         public enum PublicationState
         {
@@ -26,9 +15,7 @@ namespace Enfo.Domain.Entities
             Published
         }
 
-        #endregion
-
-        #region Common data elements
+        // Common data elements
 
         [DisplayName("Facility")]
         [StringLength(205)]
@@ -87,15 +74,22 @@ namespace Enfo.Domain.Entities
             }
         }
 
-        #endregion
+        public bool IsPublic
+        {
+            get
+            {
+                return IsPublicExecutedOrder || IsPublicProposedOrder;
+            }
+        }
 
-        #region Proposed orders
+        // Proposed orders
 
         [DisplayName("Proposed Order Public Noticed")]
         public bool IsProposedOrder { get; set; } = false;
 
         [DisplayName("Date Comment Period Closes")]
-        [DataType(DataType.DateTime)]
+        [DataType(DataType.Date)]
+        [Column(TypeName = "Date")]
         [DisplayFormat(DataFormatString = "{0:d}", ApplyFormatInEditMode = true)]
         public DateTime? CommentPeriodClosesDate { get; set; }
 
@@ -104,7 +98,8 @@ namespace Enfo.Domain.Entities
         public int? CommentContactId { get; set; }
 
         [DisplayName("Publication Date For Proposed Order")]
-        [DataType(DataType.DateTime)]
+        [DataType(DataType.Date)]
+        [Column(TypeName = "Date")]
         [DisplayFormat(DataFormatString = "{0:d}", ApplyFormatInEditMode = true)]
         public DateTime? ProposedOrderPostedDate { get; set; }
 
@@ -114,6 +109,7 @@ namespace Enfo.Domain.Entities
             {
                 return (
                     !Deleted
+                    && Active
                     && PublicationStatus == PublicationState.Published
                     && IsProposedOrder
                     && ProposedOrderPostedDate.HasValue
@@ -122,20 +118,20 @@ namespace Enfo.Domain.Entities
             }
         }
 
-        #endregion
-
-        #region Executed orders
+        // Executed orders
 
         [DisplayName("Enforcement Order Executed")]
         public bool IsExecutedOrder { get; set; } = false;
 
         [DisplayName("Date Executed")]
-        [DataType(DataType.DateTime)]
+        [DataType(DataType.Date)]
+        [Column(TypeName = "Date")]
         [DisplayFormat(DataFormatString = "{0:d}", ApplyFormatInEditMode = true)]
         public DateTime? ExecutedDate { get; set; }
 
         [DisplayName("Publication Date For Executed Order")]
-        [DataType(DataType.DateTime)]
+        [DataType(DataType.Date)]
+        [Column(TypeName = "Date")]
         [DisplayFormat(DataFormatString = "{0:d}", ApplyFormatInEditMode = true)]
         public DateTime? ExecutedOrderPostedDate { get; set; }
 
@@ -145,6 +141,7 @@ namespace Enfo.Domain.Entities
             {
                 return (
                     !Deleted
+                    && Active
                     && PublicationStatus == PublicationState.Published
                     && IsExecutedOrder
                     && ExecutedOrderPostedDate.HasValue
@@ -153,15 +150,14 @@ namespace Enfo.Domain.Entities
             }
         }
 
-        #endregion
-
-        #region Hearing info
+        // Hearing info
 
         [DisplayName("Public Hearing Scheduled")]
         public bool IsHearingScheduled { get; set; } = false;
 
         [DisplayName("Hearing Date/Time")]
-        [DataType(DataType.DateTime)]
+        [DataType(DataType.Date)]
+        [Column(TypeName = "Date")]
         [DisplayFormat(DataFormatString = "{0:g}", ApplyFormatInEditMode = true)]
         public DateTime? HearingDate { get; set; }
 
@@ -171,15 +167,14 @@ namespace Enfo.Domain.Entities
         public string HearingLocation { get; set; }
 
         [DisplayName("Date Hearing Comment Period Closes")]
-        [DataType(DataType.DateTime)]
+        [DataType(DataType.Date)]
+        [Column(TypeName = "Date")]
         [DisplayFormat(DataFormatString = "{0:d}", ApplyFormatInEditMode = true)]
         public DateTime? HearingCommentPeriodClosesDate { get; set; }
 
         [DisplayName("Hearing Information Contact")]
         public virtual EpdContact HearingContact { get; set; }
         public int? HearingContactId { get; set; }
-
-        #endregion
 
     }
 }

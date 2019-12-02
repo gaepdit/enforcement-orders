@@ -33,6 +33,7 @@ namespace Enfo.API
             });
 
             services.AddDbContext<EnfoDbContext>(options => options.UseSqlite("Data Source=EnfoSqliteDatabase.db"));
+            //services.AddDbContext<EnfoDbContext>(options => options.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=Enfo;Trusted_Connection=True;"));
 
             services.AddScoped(typeof(IAsyncWritableRepository<>), typeof(WritableRepository<>));
             services.AddScoped(typeof(IAsyncReadableRepository<>), typeof(ReadableRepository<>));
@@ -49,6 +50,9 @@ namespace Enfo.API
                         Email = "douglas.waldron@dnr.ga.gov"
                     }
                 });
+                // DescribeAllEnumsAsStrings() is obsolete but cannot be removed until this Swashbuckle issue is fixed:
+                // https://github.com/domaindrivendev/Swashbuckle.AspNetCore/issues/1269#issuecomment-534298112
+                c.DescribeAllEnumsAsStrings();
             });
         }
 
@@ -88,8 +92,14 @@ namespace Enfo.API
             if (env.IsDevelopment())
             {
                 context.Database.EnsureDeleted();
+                context.Database.EnsureCreated();
+                Infrastructure.SeedData.DevSeedData.SeedTestData(context);
             }
-            context.Database.EnsureCreated();
+            else
+            {
+                context.Database.EnsureDeleted();
+                context.Database.EnsureCreated();
+            }
         }
     }
 }

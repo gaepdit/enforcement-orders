@@ -6,6 +6,7 @@ namespace Enfo.Infrastructure.SeedData
     {
         public static void SeedTestData(this EnfoDbContext context)
         {
+            context.EnforcementOrders.AddRange(GetEnforcementOrders());
             context.SaveChanges();
         }
     }

@@ -11,6 +11,7 @@ namespace Enfo.Domain.Querying
         public Expression<Func<T, object>> OrderByDescending { get; private set; }
         public Expression<Func<T, object>> GroupBy { get; private set; }
 
+        // TODO: Use an ordered list like to enable OrderBy().ThenBy().
         protected virtual void ApplyOrderBy(Expression<Func<T, object>> orderByExpression)
         {
             OrderBy = orderByExpression;
