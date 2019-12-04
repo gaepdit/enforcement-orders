@@ -1,5 +1,4 @@
-﻿
-using Enfo.API.Controllers;
+﻿using Enfo.API.Controllers;
 using Enfo.API.Resources;
 using Enfo.API.Tests.Helpers;
 using Enfo.Domain.Entities;
@@ -25,39 +24,27 @@ namespace Enfo.API.Tests.ControllerTests
         }
 
         [Fact]
-        public async Task GetReturnsOkAsync()
+        public async Task GetReturnsCorrectly()
         {
             var repository = this.GetRepository<EnforcementOrder>();
             var controller = new EnforcementOrdersController(repository);
 
-            var result = (await controller.Get().ConfigureAwait(false))
-                .Result;
+            var result = await controller.Get().ConfigureAwait(false);
 
-            result.Should().BeOfType<OkObjectResult>();
+            result.Result.Should().BeOfType<OkObjectResult>();
+            var actionResult = result.Result as OkObjectResult;
+            Assert.IsAssignableFrom<IEnumerable<EnforcementOrderResource>>(actionResult.Value);
+            actionResult.StatusCode.Should().Be(200);
         }
 
         [Fact]
-        public async Task GetReturnsCorrectTypeAsync()
+        public async Task GetReturnsAllItems()
         {
             var repository = this.GetRepository<EnforcementOrder>();
             var controller = new EnforcementOrdersController(repository);
 
-            var result = (await controller.Get().ConfigureAwait(false))
-                .Result as OkObjectResult;
-
-            Assert.IsAssignableFrom<IEnumerable<EnforcementOrderResource>>(result.Value);
-        }
-
-        [Fact]
-        public async Task GetReturnsAllItemsAsync()
-        {
-            var repository = this.GetRepository<EnforcementOrder>();
-            var controller = new EnforcementOrdersController(repository);
-
-            var result = (await controller.Get(pageSize: 0).ConfigureAwait(false))
-                .Result as OkObjectResult;
-
-            var items = result.Value as IEnumerable<EnforcementOrderResource>;
+            var items = ((await controller.Get(pageSize: 0)
+                .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
             var expected = _allOrders
                 .OrderBy(e => e.FacilityName)
@@ -67,11 +54,11 @@ namespace Enfo.API.Tests.ControllerTests
         }
 
         [Theory]
-        [InlineData(EnforcementOrderSorting.FacilityAsc, 2, 2)]
-        [InlineData(EnforcementOrderSorting.FacilityDesc, 2, 2)]
-        [InlineData(EnforcementOrderSorting.DateAsc, 2, 2)]
-        [InlineData(EnforcementOrderSorting.DateDesc, 2, 2)]
-        public async Task GetPaginatedAndSortedReturnsSomeItemsAsync(
+        [InlineData(EnforcementOrderSorting.FacilityAsc, 3, 2)]
+        [InlineData(EnforcementOrderSorting.FacilityDesc, 3, 2)]
+        [InlineData(EnforcementOrderSorting.DateAsc, 3, 2)]
+        [InlineData(EnforcementOrderSorting.DateDesc, 3, 2)]
+        public async Task GetPaginatedAndSortedReturnsSomeItems(
             EnforcementOrderSorting sortOrder,
             int pageSize,
             int pageNum)
@@ -79,16 +66,11 @@ namespace Enfo.API.Tests.ControllerTests
             var repository = this.GetRepository<EnforcementOrder>();
             var controller = new EnforcementOrdersController(repository);
 
-            int firstItemIndex = (pageNum - 1) * pageSize;
-
-            var result = (await controller.Get(
+            var items = ((await controller.Get(
                 sortOrder: sortOrder,
                 pageSize: pageSize,
                 page: pageNum)
-                .ConfigureAwait(false))
-                .Result as OkObjectResult;
-
-            var items = result.Value as IEnumerable<EnforcementOrderResource>;
+                .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
             var orderedOrders = sortOrder switch
             {
@@ -107,35 +89,31 @@ namespace Enfo.API.Tests.ControllerTests
         }
 
         [Fact]
-        public async Task InvalidPageSizeReturnsDefaultPaginationAsync()
+        public async Task InvalidPageSizeReturnsDefaultPagination()
         {
             var repository = this.GetRepository<EnforcementOrder>();
             var controller = new EnforcementOrdersController(repository);
 
             var result = (await controller.Get(pageSize: -1)
-                .ConfigureAwait(false))
-                .Result as OkObjectResult;
+                .ConfigureAwait(false)).Result as OkObjectResult;
 
             var expected = (await controller.Get()
-                .ConfigureAwait(false))
-                .Result as OkObjectResult;
+                .ConfigureAwait(false)).Result as OkObjectResult;
 
             result.Should().BeEquivalentTo(expected);
         }
 
         [Fact]
-        public async Task InvalidPageNumberReturnsDefaultPaginationAsync()
+        public async Task InvalidPageNumberReturnsDefaultPagination()
         {
             var repository = this.GetRepository<EnforcementOrder>();
             var controller = new EnforcementOrdersController(repository);
 
             var result = (await controller.Get(page: 0)
-                .ConfigureAwait(false))
-                .Result as OkObjectResult;
+                .ConfigureAwait(false)).Result as OkObjectResult;
 
             var expected = (await controller.Get()
-                .ConfigureAwait(false))
-                .Result as OkObjectResult;
+                .ConfigureAwait(false)).Result as OkObjectResult;
 
             result.Should().BeEquivalentTo(expected);
         }
@@ -143,7 +121,7 @@ namespace Enfo.API.Tests.ControllerTests
         [Theory]
         [InlineData("diam")]
         [InlineData("orci")]
-        public async Task FacilityFilterReturnsCorrectItemsAsync(string facilityFilter)
+        public async Task FacilityFilterReturnsCorrectItems(string facilityFilter)
         {
             var repository = this.GetRepository<EnforcementOrder>();
             var controller = new EnforcementOrdersController(repository);
@@ -155,7 +133,7 @@ namespace Enfo.API.Tests.ControllerTests
 
             var items = result.Value as IEnumerable<EnforcementOrderResource>;
 
-            var expected = Array.FindAll(_allOrders,
+            var expected = _allOrders.Where(
                 e => e.FacilityName.ToLower().Contains(facilityFilter.ToLower()))
                 .OrderBy(e => e.FacilityName)
                 .Select(e => new EnforcementOrderResource(e));
@@ -166,7 +144,7 @@ namespace Enfo.API.Tests.ControllerTests
         [Theory]
         [InlineData("Cherokee")]
         [InlineData("Stephens")]
-        public async Task CountyFilterReturnsCorrectItemsAsync(string county)
+        public async Task CountyFilterReturnsCorrectItems(string county)
         {
             var repository = this.GetRepository<EnforcementOrder>();
             var controller = new EnforcementOrdersController(repository);
@@ -178,7 +156,8 @@ namespace Enfo.API.Tests.ControllerTests
 
             var items = result.Value as IEnumerable<EnforcementOrderResource>;
 
-            var expected = Array.FindAll(_allOrders, e => e.County.Equals(county))
+            var expected = _allOrders.Where(
+                e => e.County.Equals(county))
                 .OrderBy(e => e.FacilityName)
                 .Select(e => new EnforcementOrderResource(e));
 
@@ -188,7 +167,7 @@ namespace Enfo.API.Tests.ControllerTests
         [Theory]
         [InlineData(8)]
         [InlineData(6)]
-        public async Task LegalFilterReturnsCorrectItemsAsync(int legalAuth)
+        public async Task LegalFilterReturnsCorrectItems(int legalAuth)
         {
             var repository = this.GetRepository<EnforcementOrder>();
             var controller = new EnforcementOrdersController(repository);
@@ -200,7 +179,7 @@ namespace Enfo.API.Tests.ControllerTests
 
             var items = result.Value as IEnumerable<EnforcementOrderResource>;
 
-            var expected = Array.FindAll(_allOrders,
+            var expected = _allOrders.Where(
                 e => e.LegalAuthorityId.Equals(legalAuth))
                 .OrderBy(e => e.FacilityName)
                 .Select(e => new EnforcementOrderResource(e));
@@ -222,7 +201,7 @@ namespace Enfo.API.Tests.ControllerTests
         }
 
         [Theory, MemberData(nameof(DateFilterData))]
-        public async Task DateFromFilterReturnsCorrectItemsAsync(
+        public async Task DateFromFilterReturnsCorrectItems(
             DateTime fromDate,
             ActivityStatus status)
         {
@@ -237,8 +216,8 @@ namespace Enfo.API.Tests.ControllerTests
 
             var items = result.Value as IEnumerable<EnforcementOrderResource>;
 
-            var expected = Array.FindAll(_allOrders, e =>
-                (status == ActivityStatus.All
+            var expected = _allOrders.Where(
+                e => (status == ActivityStatus.All
                 || (status == ActivityStatus.Executed && e.IsExecutedOrder)
                 || (status == ActivityStatus.Proposed && e.IsProposedOrder && !e.IsExecutedOrder))
                 && (status == ActivityStatus.All && (e.ProposedOrderPostedDate >= fromDate || e.ExecutedDate >= fromDate)
@@ -254,7 +233,7 @@ namespace Enfo.API.Tests.ControllerTests
         [InlineData(PublicationStatus.All)]
         [InlineData(PublicationStatus.Draft)]
         [InlineData(PublicationStatus.Published)]
-        public async Task PubStatusFilterReturnsCorrectItemsAsync(PublicationStatus publicationStatus)
+        public async Task PubStatusFilterReturnsCorrectItems(PublicationStatus publicationStatus)
         {
             var repository = this.GetRepository<EnforcementOrder>();
             var controller = new EnforcementOrdersController(repository);
@@ -266,7 +245,7 @@ namespace Enfo.API.Tests.ControllerTests
 
             var items = result.Value as IEnumerable<EnforcementOrderResource>;
 
-            var expected = Array.FindAll(_allOrders,
+            var expected = _allOrders.Where(
                 e => (publicationStatus == PublicationStatus.All
                 || (publicationStatus == PublicationStatus.Draft && e.PublicationStatus == EnforcementOrder.PublicationState.Draft)
                 || (publicationStatus == PublicationStatus.Published && e.PublicationStatus == EnforcementOrder.PublicationState.Published)))
@@ -277,7 +256,7 @@ namespace Enfo.API.Tests.ControllerTests
         }
 
         [Theory, MemberData(nameof(DateFilterData))]
-        public async Task DateTillFilterReturnsCorrectItemsAsync(
+        public async Task DateTillFilterReturnsCorrectItems(
             DateTime tillDate,
             ActivityStatus status = ActivityStatus.All)
         {
@@ -292,7 +271,7 @@ namespace Enfo.API.Tests.ControllerTests
 
             var items = result.Value as IEnumerable<EnforcementOrderResource>;
 
-            var expected = Array.FindAll(_allOrders,
+            var expected = _allOrders.Where(
                 e => (status == ActivityStatus.All
                 || (status == ActivityStatus.Executed && e.IsExecutedOrder)
                 || (status == ActivityStatus.Proposed && e.IsProposedOrder && !e.IsExecutedOrder))
@@ -308,7 +287,7 @@ namespace Enfo.API.Tests.ControllerTests
         [Theory]
         [InlineData("EPD-WP")]
         [InlineData("8")]
-        public async Task OrderNumberFilterReturnsCorrectItemsAsync(string orderNumber)
+        public async Task OrderNumberFilterReturnsCorrectItems(string orderNumber)
         {
             var repository = this.GetRepository<EnforcementOrder>();
             var controller = new EnforcementOrdersController(repository);
@@ -320,7 +299,7 @@ namespace Enfo.API.Tests.ControllerTests
 
             var items = result.Value as IEnumerable<EnforcementOrderResource>;
 
-            var expected = Array.FindAll(_allOrders,
+            var expected = _allOrders.Where(
                 e => e.OrderNumber.Contains(orderNumber))
                 .OrderBy(e => e.FacilityName)
                 .Select(e => new EnforcementOrderResource(e));
@@ -333,7 +312,7 @@ namespace Enfo.API.Tests.ControllerTests
         [InlineData("nulla")]
         [InlineData("fāċilisi")]
         [InlineData("👾🔙")]
-        public async Task TextFilterReturnsCorrectItemsAsync(string textContains)
+        public async Task TextFilterReturnsCorrectItems(string textContains)
         {
             var repository = this.GetRepository<EnforcementOrder>();
             var controller = new EnforcementOrdersController(repository);
@@ -346,7 +325,7 @@ namespace Enfo.API.Tests.ControllerTests
 
             var items = result.Value as IEnumerable<EnforcementOrderResource>;
 
-            var expected = Array.FindAll(_allOrders,
+            var expected = _allOrders.Where(
                 e => e.Cause.ToLower().Contains(textContains.ToLower())
                 || e.Requirements.ToLower().Contains(textContains.ToLower()))
                 .OrderBy(e => e.FacilityName)
@@ -355,20 +334,34 @@ namespace Enfo.API.Tests.ControllerTests
             items.Should().BeEquivalentTo(expected);
         }
 
-        [Theory]
-        [InlineData(140)]
-        [InlineData(27)]
-        [InlineData(71715)]
-        public async Task GetByIdReturnsCorrectItemAsync(int id)
+        [Fact]
+        public async Task GetByIdReturnsCorrectly()
         {
             var repository = this.GetRepository<EnforcementOrder>();
             var controller = new EnforcementOrdersController(repository);
 
-            var value = (await controller.Get(id).ConfigureAwait(false))
-                .Value;
+            var result = await controller.Get(140).ConfigureAwait(false);
 
-            var expected = new EnforcementOrderResource(Array.Find(_allOrders,
-                e => e.Id == id));
+            result.Result.Should().BeOfType<OkObjectResult>();
+            var actionResult = result.Result as OkObjectResult;
+            actionResult.Value.Should().BeOfType<EnforcementOrderResource>();
+            actionResult.StatusCode.Should().Be(200);
+        }
+
+        [Theory]
+        [InlineData(140)]
+        [InlineData(27)]
+        [InlineData(71715)]
+        public async Task GetByIdReturnsCorrectItem(int id)
+        {
+            var repository = this.GetRepository<EnforcementOrder>();
+            var controller = new EnforcementOrdersController(repository);
+
+            var value = ((await controller.Get(id).ConfigureAwait(false))
+                .Result as OkObjectResult).Value;
+
+            var expected = new EnforcementOrderResource(
+                _allOrders.Single(e => e.Id == id));
 
             value.Should().BeEquivalentTo(expected);
         }
@@ -376,15 +369,16 @@ namespace Enfo.API.Tests.ControllerTests
         [Theory]
         [InlineData(0)]
         [InlineData(-1)]
-        public async Task GetByMissingIdReturnsNotFoundAsync(int id)
+        public async Task GetByMissingIdReturnsNotFound(int id)
         {
             var repository = this.GetRepository<EnforcementOrder>();
             var controller = new EnforcementOrdersController(repository);
 
-            var result = (await controller.Get(id).ConfigureAwait(false))
-                .Value;
+            var result = await controller.Get(id).ConfigureAwait(false);
 
-            result.Should().BeNull();
+            result.Result.Should().BeOfType<NotFoundResult>();
+            result.Value.Should().BeNull();
+            (result.Result as NotFoundResult).StatusCode.Should().Be(404);
         }
     }
 }

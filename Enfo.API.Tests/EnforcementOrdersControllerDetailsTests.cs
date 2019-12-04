@@ -4,7 +4,8 @@ using Enfo.API.Tests.Helpers;
 using Enfo.Domain.Entities;
 using Enfo.Infrastructure.SeedData;
 using FluentAssertions;
-using System;
+using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -19,20 +20,34 @@ namespace Enfo.API.Tests.ControllerTests
             _allOrders = DevSeedData.GetEnforcementOrders();
         }
 
-        [Theory]
-        [InlineData(140)]
-        [InlineData(27)]
-        [InlineData(71715)]
-        public async Task GetDetailedByIdReturnsCorrectItemAsync(int id)
+        [Fact]
+        public async Task GetByIdReturnsCorrectly()
         {
             var repository = this.GetRepository<EnforcementOrder>();
             var controller = new EnforcementOrdersController(repository);
 
-            var value = (await controller.Details(id).ConfigureAwait(false))
-                .Value;
+            var result = await controller.Details(140).ConfigureAwait(false);
 
-            var expected = new EnforcementOrderDetailedResource(Array.Find(_allOrders,
-                e => e.Id == id));
+            result.Result.Should().BeOfType<OkObjectResult>();
+            var actionResult = result.Result as OkObjectResult;
+            actionResult.Value.Should().BeOfType<EnforcementOrderDetailedResource>();
+            actionResult.StatusCode.Should().Be(200);
+        }
+
+        [Theory]
+        [InlineData(140)]
+        [InlineData(27)]
+        [InlineData(71715)]
+        public async Task GetDetailedByIdReturnsCorrectItem(int id)
+        {
+            var repository = this.GetRepository<EnforcementOrder>();
+            var controller = new EnforcementOrdersController(repository);
+
+            var value = ((await controller.Details(id).ConfigureAwait(false))
+                .Result as OkObjectResult).Value;
+
+            var expected = new EnforcementOrderDetailedResource(
+                _allOrders.Single(e => e.Id == id));
 
             value.Should().BeEquivalentTo(expected);
         }
@@ -40,15 +55,16 @@ namespace Enfo.API.Tests.ControllerTests
         [Theory]
         [InlineData(0)]
         [InlineData(-1)]
-        public async Task GetDetailedByMissingIdReturnsNotFoundAsync(int id)
+        public async Task GetDetailedByMissingIdReturnsNotFound(int id)
         {
             var repository = this.GetRepository<EnforcementOrder>();
             var controller = new EnforcementOrdersController(repository);
 
-            var result = (await controller.Details(id).ConfigureAwait(false))
-                .Value;
+            var result = await controller.Get(id).ConfigureAwait(false);
 
-            result.Should().BeNull();
+            result.Result.Should().BeOfType<NotFoundResult>();
+            result.Value.Should().BeNull();
+            (result.Result as NotFoundResult).StatusCode.Should().Be(404);
         }
     }
 }

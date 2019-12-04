@@ -5,7 +5,6 @@ using Enfo.Domain.Entities;
 using Enfo.Infrastructure.SeedData;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,124 +22,132 @@ namespace Enfo.API.Tests.ControllerTests
         }
 
         [Fact]
-        public async Task GetReturnsOkAsync()
+        public async Task GetReturnsCorrectly()
         {
             var repository = this.GetRepository<County>();
             var controller = new CountiesController(repository);
 
-            var result = (await controller.Get().ConfigureAwait(false))
-                .Result;
+            var result = await controller.Get().ConfigureAwait(false);
 
-            result.Should().BeOfType<OkObjectResult>();
+            result.Result.Should().BeOfType<OkObjectResult>();
+            var actionResult = result.Result as OkObjectResult;
+            Assert.IsAssignableFrom<IEnumerable<CountyResource>>(actionResult.Value);
+            actionResult.StatusCode.Should().Be(200);
         }
 
         [Fact]
-        public async Task GetReturnsCorrectTypeAsync()
+        public async Task GetReturnsAllItems()
         {
             var repository = this.GetRepository<County>();
             var controller = new CountiesController(repository);
 
-            var result = (await controller.Get().ConfigureAwait(false))
-                .Result as OkObjectResult;
+            var items = ((await controller.Get(pageSize: 0)
+                .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
-            Assert.IsAssignableFrom<IEnumerable<CountyResource>>(result.Value);
+            var expected = _allCounties
+                .OrderBy(e => e.CountyName)
+                .Select(e => new CountyResource(e));
+
+            items.Should().BeEquivalentTo(expected);
         }
 
         [Fact]
-        public async Task GetReturnsAllItemsAsync()
+        public async Task GetPaginatedReturnsCorrectItems()
         {
             var repository = this.GetRepository<County>();
             var controller = new CountiesController(repository);
 
-            var result = (await controller.Get(pageSize: 0).ConfigureAwait(false))
-                .Result as OkObjectResult;
-
-            var items = result.Value as IEnumerable<CountyResource>;
-
-            var expected = new CountyResource(_allCounties[0]);
-
-            items.Should().HaveCount(_allCounties.Length);
-            items.ToList()[0].Should().BeEquivalentTo(expected);
-        }
-
-        [Fact]
-        public async Task GetPaginatedReturnsSomeItemsAsync()
-        {
-            var repository = this.GetRepository<County>();
-            var controller = new CountiesController(repository);
-
-            int pageSize = 10;
+            int pageSize = 3;
             int pageNum = 2;
             int firstItemIndex = (pageNum - 1) * pageSize;
 
-            var result = (await controller.Get(pageSize, pageNum).ConfigureAwait(false))
-                .Result as OkObjectResult;
+            var items = ((await controller.Get(pageSize, pageNum)
+                .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
-            var items = result.Value as IEnumerable<CountyResource>;
+            var expected = _allCounties
+                .OrderBy(e => e.CountyName)
+                .Where(e => e.Active)
+                .Skip((pageNum - 1) * pageSize).Take(pageSize)
+                .Select(e => new CountyResource(e));
 
-            var expected = new CountyResource(_allCounties[firstItemIndex]);
-
-            items.Should().HaveCount(pageSize);
-            items.ToList()[0].Should().BeEquivalentTo(expected);
+            items.Should().BeEquivalentTo(expected);
         }
 
         [Fact]
-        public async Task InvalidPageSizeReturnsDefaultPaginationAsync()
+        public async Task InvalidPageSizeReturnsDefaultPagination()
         {
             var repository = this.GetRepository<County>();
             var controller = new CountiesController(repository);
 
             var result = (await controller.Get(pageSize: -1)
-                .ConfigureAwait(false))
-                .Result as OkObjectResult;
+                .ConfigureAwait(false)).Result as OkObjectResult;
 
             var expected = (await controller.Get()
-                .ConfigureAwait(false))
-                .Result as OkObjectResult;
+                .ConfigureAwait(false)).Result as OkObjectResult;
 
             result.Should().BeEquivalentTo(expected);
         }
 
         [Fact]
-        public async Task GetByIdReturnsCorrectTypeAsync()
+        public async Task InvalidPageNumberReturnsDefaultPagination()
         {
             var repository = this.GetRepository<County>();
             var controller = new CountiesController(repository);
 
-            var value = (await controller.Get(1).ConfigureAwait(false))
-                .Value;
+            var result = (await controller.Get(page: 0)
+                .ConfigureAwait(false)).Result as OkObjectResult;
 
-            value.Should().BeOfType<CountyResource>();
+            var expected = (await controller.Get()
+                .ConfigureAwait(false)).Result as OkObjectResult;
+
+            result.Should().BeEquivalentTo(expected);
+        }
+
+        [Fact]
+        public async Task GetByIdReturnsCorrectly()
+        {
+            var repository = this.GetRepository<County>();
+            var controller = new CountiesController(repository);
+
+            var result = await controller.Get(1).ConfigureAwait(false);
+
+            result.Result.Should().BeOfType<OkObjectResult>();
+            var actionResult = result.Result as OkObjectResult;
+            actionResult.Value.Should().BeOfType<CountyResource>();
+            actionResult.StatusCode.Should().Be(200);
         }
 
         [Theory]
         [InlineData(1)]
         [InlineData(2)]
         [InlineData(3)]
-        public async Task GetByIdReturnsCorrectItemAsync(int id)
+        public async Task GetByIdReturnsCorrectItem(int id)
         {
             var repository = this.GetRepository<County>(id);
             var controller = new CountiesController(repository);
 
-            var value = (await controller.Get(id).ConfigureAwait(false))
-                .Value;
+            var value = ((await controller.Get(id).ConfigureAwait(false))
+                .Result as OkObjectResult).Value;
 
-            var expected = new CountyResource(Array.Find(_allCounties,
-                e => e.Id == id));
+            var expected = new CountyResource(_allCounties
+                .Single(e => e.Id == id));
 
             value.Should().BeEquivalentTo(expected);
         }
 
-        [Fact]
-        public async Task GetByMissingIdReturnsNotFoundAsync()
+        [Theory]
+        [InlineData(0)]
+        [InlineData(-1)]
+        public async Task GetByMissingIdReturnsNotFound(int id)
         {
             var repository = this.GetRepository<County>();
             var controller = new CountiesController(repository);
 
-            var result = (await controller.Get(0).ConfigureAwait(false))
-                .Value;
+            var result = await controller.Get(0).ConfigureAwait(false);
 
-            result.Should().BeNull();
+            result.Result.Should().BeOfType<NotFoundResult>();
+            result.Value.Should().BeNull();
+            (result.Result as NotFoundResult).StatusCode.Should().Be(404);
         }
     }
 }
