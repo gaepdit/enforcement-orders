@@ -1,11 +1,12 @@
 ﻿using Enfo.Domain.Entities;
+using Enfo.Domain.Utils;
 using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace Enfo.API.Resources
 {
-    public class EnforcementOrderResource
+    public class EnforcementOrderItemResource
     {
         public int Id { get; set; }
 
@@ -75,63 +76,66 @@ namespace Enfo.API.Resources
         [DisplayName("Hearing Information Contact")]
         public EpdContactResource HearingContact { get; set; }
 
-        // Constructors
+        // Constructor
 
-        public EnforcementOrderResource() { }
-
-        public EnforcementOrderResource(EnforcementOrder item)
+        public EnforcementOrderItemResource(EnforcementOrder item)
         {
-            if (item != null)
+            Check.NotNull(item, nameof(item));
+
+            Id = item.Id;
+
+            FacilityName = item.FacilityName;
+            County = item.County;
+            LegalAuthority = new LegalAuthorityResource(item.LegalAuthority);
+            Cause = item.Cause;
+            Requirements = item.Requirements;
+            SettlementAmount = item.SettlementAmount;
+            OrderNumber = item.OrderNumber;
+
+            IsPublicProposedOrder = item.IsPublicProposedOrder;
+            IsProposedOrder = item.IsProposedOrder;
+            CommentPeriodClosesDate = item.CommentPeriodClosesDate;
+            if (item.CommentContactId.HasValue)
             {
-                Id = item.Id;
-
-                FacilityName = item.FacilityName;
-                County = item.County;
-                LegalAuthority = new LegalAuthorityResource(item.LegalAuthority);
-                Cause = item.Cause;
-                Requirements = item.Requirements;
-                SettlementAmount = item.SettlementAmount;
-                OrderNumber = item.OrderNumber;
-
-                IsPublicProposedOrder = item.IsPublicProposedOrder;
-                IsProposedOrder = item.IsProposedOrder;
-                CommentPeriodClosesDate = item.CommentPeriodClosesDate;
                 CommentContact = new EpdContactResource(item.CommentContact);
-                ProposedOrderPostedDate = item.ProposedOrderPostedDate;
+            }
+            ProposedOrderPostedDate = item.ProposedOrderPostedDate;
 
-                IsPublicExecutedOrder = item.IsPublicExecutedOrder;
-                IsExecutedOrder = item.IsExecutedOrder;
-                ExecutedDate = item.ExecutedDate;
+            IsPublicExecutedOrder = item.IsPublicExecutedOrder;
+            IsExecutedOrder = item.IsExecutedOrder;
+            ExecutedDate = item.ExecutedDate;
 
-                IsHearingScheduled = item.IsHearingScheduled;
-                HearingDate = item.HearingDate;
-                HearingLocation = item.HearingLocation;
-                HearingCommentPeriodClosesDate = item.HearingCommentPeriodClosesDate;
+            IsHearingScheduled = item.IsHearingScheduled;
+            HearingDate = item.HearingDate;
+            HearingLocation = item.HearingLocation;
+            HearingCommentPeriodClosesDate = item.HearingCommentPeriodClosesDate;
+            if (item.HearingContactId.HasValue)
+            {
                 HearingContact = new EpdContactResource(item.HearingContact);
+            }
 
-                if (!IsPublicProposedOrder)
-                {
-                    IsProposedOrder = false;
-                    CommentPeriodClosesDate = null;
-                    CommentContact = null;
-                    ProposedOrderPostedDate = null;
-                }
+            if (!IsPublicProposedOrder)
+            {
+                IsProposedOrder = false;
+                CommentPeriodClosesDate = null;
+                CommentContact = null;
+                ProposedOrderPostedDate = null;
+            }
 
-                if (!IsPublicExecutedOrder)
-                {
-                    IsExecutedOrder = false;
-                    ExecutedDate = null;
-                }
+            if (!IsPublicExecutedOrder)
+            {
+                IsExecutedOrder = false;
+                ExecutedDate = null;
+            }
 
-                if (!CommentPeriodClosesDate.HasValue || CommentPeriodClosesDate < DateTime.Today)
-                {
-                    CommentContact = null;
-                }
+            if (!CommentPeriodClosesDate.HasValue || CommentPeriodClosesDate < DateTime.Today)
+            {
+                CommentContact = null;
+            }
 
-                if (!HearingCommentPeriodClosesDate.HasValue || HearingCommentPeriodClosesDate < DateTime.Today)
-                {
-                    HearingContact = null;
-                }
+            if (!HearingCommentPeriodClosesDate.HasValue || HearingCommentPeriodClosesDate < DateTime.Today)
+            {
+                HearingContact = null;
             }
         }
     }

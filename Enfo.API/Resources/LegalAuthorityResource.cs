@@ -1,4 +1,5 @@
 ﻿using Enfo.Domain.Entities;
+using Enfo.Domain.Utils;
 using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -17,12 +18,11 @@ namespace Enfo.API.Resources
         public LegalAuthorityResource() { }
         public LegalAuthorityResource(LegalAuthority item)
         {
-            if (item != null)
-            {
-                Id = item.Id;
-                Active = item.Active;
-                AuthorityName = item.AuthorityName;
-            }
+            Check.NotNull(item, nameof(item));
+
+            Id = item.Id;
+            Active = item.Active;
+            AuthorityName = item.AuthorityName;
         }
     }
 
@@ -30,12 +30,12 @@ namespace Enfo.API.Resources
     {
         public static void UpdateFrom(this LegalAuthority item, LegalAuthorityResource resource)
         {
-            if (resource != null)
-            {
-                item.Active = resource.Active;
-                item.AuthorityName = resource.AuthorityName;
-                item.UpdatedDate = DateTime.Now;
-            }
+            Check.NotNull(item, nameof(item));
+            Check.NotNull(resource, nameof(resource));
+
+            item.Active = resource.Active;
+            item.AuthorityName = resource.AuthorityName;
+            item.UpdatedDate = DateTime.Now;
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Enfo.Domain.Entities;
+using Enfo.Domain.Utils;
 using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -33,19 +34,17 @@ namespace Enfo.API.Resources
             ErrorMessage = "Valid US Postal Code is required")]
         public string PostalCode { get; set; }
 
-        public AddressResource() { }
         public AddressResource(Address item)
         {
-            if (item != null)
-            {
-                Id = item.Id;
-                Active = item.Active;
-                Street = item.Street;
-                Street2 = item.Street2;
-                City = item.City;
-                State = item.State;
-                PostalCode = item.PostalCode;
-            }
+            Check.NotNull(item, nameof(item));
+
+            Id = item.Id;
+            Active = item.Active;
+            Street = item.Street;
+            Street2 = item.Street2;
+            City = item.City;
+            State = item.State;
+            PostalCode = item.PostalCode;
         }
     }
 
@@ -53,16 +52,16 @@ namespace Enfo.API.Resources
     {
         public static void UpdateFrom(this Address item, AddressResource resource)
         {
-            if (resource != null)
-            {
-                item.Active = resource.Active;
-                item.City = resource.City;
-                item.PostalCode = resource.PostalCode;
-                item.State = resource.State;
-                item.Street = resource.Street;
-                item.Street2 = resource.Street2;
-                item.UpdatedDate = DateTime.Now;
-            }
+            Check.NotNull(item, nameof(item));
+            Check.NotNull(resource, nameof(resource));
+
+            item.Active = resource.Active;
+            item.City = resource.City;
+            item.PostalCode = resource.PostalCode;
+            item.State = resource.State;
+            item.Street = resource.Street;
+            item.Street2 = resource.Street2;
+            item.UpdatedDate = DateTime.Now;
         }
     }
 }

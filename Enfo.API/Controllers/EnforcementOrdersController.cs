@@ -19,16 +19,16 @@ namespace Enfo.API.Controllers
     [ApiController]
     public class EnforcementOrdersController : ControllerBase
     {
-        private readonly IAsyncWritableRepository<EnforcementOrder> repository;
+        private readonly IAsyncWritableRepository<EnforcementOrder> _repository;
 
-        public EnforcementOrdersController(IAsyncWritableRepository<EnforcementOrder> repository)
-            => this.repository = repository;
+        public EnforcementOrdersController(IAsyncWritableRepository<EnforcementOrder> repository) => 
+            _repository = repository;
 
         // GET: api/EnforcementOrders?params
         [HttpGet]
-        [ProducesResponseType(typeof(IEnumerable<EnforcementOrderResource>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IEnumerable<EnforcementOrderListResource>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<IEnumerable<EnforcementOrderResource>>> Get(
+        public async Task<ActionResult<IEnumerable<EnforcementOrderListResource>>> Get(
             string facilityFilter = null,
             string county = null,
             int? legalAuth = null,
@@ -50,7 +50,7 @@ namespace Enfo.API.Controllers
 
             // Specifications
             ISpecification<EnforcementOrder> spec = new TrueSpec<EnforcementOrder>();
-            
+
             // TODO: Only authorized users can request Orders that are not public.
             //if (!User.LoggedIn)
             //{
@@ -100,28 +100,40 @@ namespace Enfo.API.Controllers
             // BUG: Sorting by date currently broken
             var sorting = new SortEnforcementOrders(sortOrder);
 
-            return Ok((await repository.ListAsync(spec, paging, sorting)
+            // Including
+            var include = new EnforcementOrderIncludeLegalAuth();
+
+            return Ok((await _repository.ListAsync(spec, paging, sorting, include)
                 .ConfigureAwait(false))
-                .Select(e => new EnforcementOrderResource(e)));
+                .Select(e => new EnforcementOrderListResource(e)));
         }
 
         // GET: api/EnforcementOrders/5
         [HttpGet("{id}")]
-        [ProducesResponseType(typeof(EnforcementOrderResource), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(EnforcementOrderItemResource), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<EnforcementOrderResource>> Get(int id)
+        public async Task<ActionResult<EnforcementOrderItemResource>> Get(int id)
         {
-            // Ensure specification is set to exclude non-public data
-            ISpecification<EnforcementOrder> spec = new PublicOrdersSpec();
+            ISpecification<EnforcementOrder> spec = new TrueSpec<EnforcementOrder>();
 
-            var item = await repository.GetByIdAsync(id, spec).ConfigureAwait(false);
+            // TODO: Only authorized users can request Orders that are not public.
+            //if (!User.LoggedIn)
+            //{
+            //    spec = spec.And(new PublicOrdersSpec());
+            //}
+            // Ensure specification is set to exclude non-public data
+
+            var include = new EnforcementOrderIncludeAll();
+
+            var item = await _repository.GetByIdAsync(id, spec, include)
+                .ConfigureAwait(false);
 
             if (item == null)
             {
                 return NotFound();
             }
 
-            return new EnforcementOrderResource(item);
+            return Ok(new EnforcementOrderItemResource(item));
         }
 
         // GET: api/EnforcementOrders/Details/5
@@ -131,14 +143,18 @@ namespace Enfo.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<EnforcementOrderDetailedResource>> Details(int id)
         {
-            var item = await repository.GetByIdAsync(id).ConfigureAwait(false);
+            var include = new EnforcementOrderIncludeAll();
+
+            var item = await _repository
+                .GetByIdAsync(id, inclusion: include)
+                .ConfigureAwait(false);
 
             if (item == null)
             {
                 return NotFound();
             }
 
-            return new EnforcementOrderDetailedResource(item);
+            return Ok(new EnforcementOrderDetailedResource(item));
         }
 
         // GET: api/EnforcementOrders?params
@@ -167,9 +183,9 @@ namespace Enfo.API.Controllers
 
         // GET: api/EnforcementOrders/CurrentProposed
         [HttpGet("CurrentProposed")]
-        [ProducesResponseType(typeof(IEnumerable<EnforcementOrderResource>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IEnumerable<EnforcementOrderListResource>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<IEnumerable<EnforcementOrderResource>>> CurrentProposed(
+        public async Task<ActionResult<IEnumerable<EnforcementOrderListResource>>> CurrentProposed(
             int pageSize = DefaultPageSize,
             int page = 1)
         {
@@ -179,9 +195,9 @@ namespace Enfo.API.Controllers
 
         // GET: api/EnforcementOrders/RecentlyExecuted
         [HttpGet("RecentlyExecuted")]
-        [ProducesResponseType(typeof(IEnumerable<EnforcementOrderResource>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IEnumerable<EnforcementOrderListResource>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<IEnumerable<EnforcementOrderResource>>> RecentlyExecuted(
+        public async Task<ActionResult<IEnumerable<EnforcementOrderListResource>>> RecentlyExecuted(
             int pageSize = DefaultPageSize,
             int page = 1)
         {
@@ -192,9 +208,9 @@ namespace Enfo.API.Controllers
         // GET: api/EnforcementOrders/Draft
         //[Authorize]
         [HttpGet("Draft")]
-        [ProducesResponseType(typeof(IEnumerable<EnforcementOrderResource>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IEnumerable<EnforcementOrderListResource>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<IEnumerable<EnforcementOrderResource>>> Drafts(
+        public async Task<ActionResult<IEnumerable<EnforcementOrderListResource>>> Drafts(
             int pageSize = DefaultPageSize,
             int page = 1)
         {
@@ -205,9 +221,9 @@ namespace Enfo.API.Controllers
         // GET: api/EnforcementOrders/Pending
         //[Authorize]
         [HttpGet("Pending")]
-        [ProducesResponseType(typeof(IEnumerable<EnforcementOrderResource>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IEnumerable<EnforcementOrderListResource>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<IEnumerable<EnforcementOrderResource>>> Pending(
+        public async Task<ActionResult<IEnumerable<EnforcementOrderListResource>>> Pending(
             int pageSize = DefaultPageSize,
             int page = 1)
         {

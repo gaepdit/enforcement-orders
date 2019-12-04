@@ -103,7 +103,7 @@ namespace Enfo.API.Tests.ControllerTests
 
             result.Should().BeEquivalentTo(expected);
         }
-        
+
         [Fact]
         public async Task InvalidPageNumberReturnsDefaultPagination()
         {
@@ -210,7 +210,7 @@ namespace Enfo.API.Tests.ControllerTests
                 .ConfigureAwait(false));
 
             // Item gets added with next value in DB
-            var expected = new AddressResource(item.NewAddress())
+            var expected = new AddressResource(item.NewAddress)
             {
                 Id = _allAddresses.Max(e => e.Id) + 1
             };
@@ -247,14 +247,15 @@ namespace Enfo.API.Tests.ControllerTests
             var repository = this.GetRepository<Address>();
             var controller = new AddressesController(repository);
 
-            var target = new AddressResource()
-            {
-                Id = 2000,
-                City = "Atlanta",
-                PostalCode = "33333",
-                State = "GA",
-                Street = "123 Fake St"
-            };
+            var target = new AddressResource(
+                new Address()
+                {
+                    Id = 2000,
+                    City = "Atlanta",
+                    PostalCode = "33333",
+                    State = "GA",
+                    Street = "123 Fake St"
+                });
 
             var original = await repository.GetByIdAsync(target.Id)
                 .ConfigureAwait(false);
@@ -295,14 +296,15 @@ namespace Enfo.API.Tests.ControllerTests
             var repository = this.GetRepository<Address>();
             var controller = new AddressesController(repository);
 
-            var target = new AddressResource()
-            {
-                Id = 9999,
-                City = "Atlanta",
-                PostalCode = "33333",
-                State = "GA",
-                Street = "123 Fake St"
-            };
+            var target = new AddressResource(
+                new Address()
+                {
+                    Id = 9999,
+                    City = "Atlanta",
+                    PostalCode = "33333",
+                    State = "GA",
+                    Street = "123 Fake St"
+                });
 
             var original = await repository.GetByIdAsync(2000).ConfigureAwait(false);
 

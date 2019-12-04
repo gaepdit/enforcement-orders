@@ -2,6 +2,7 @@ using Enfo.API.Controllers;
 using Enfo.API.Resources;
 using Enfo.API.Tests.Helpers;
 using Enfo.Domain.Entities;
+using Enfo.Domain.Querying;
 using Enfo.Infrastructure.SeedData;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
@@ -217,14 +218,14 @@ namespace Enfo.API.Tests.ControllerTests
             var result = await controller.Post(item).ConfigureAwait(false);
 
             var id = (int)(result as CreatedAtActionResult).Value;
-            var addedItem = new EpdContactResource(await repository.GetByIdAsync(id)
-                .ConfigureAwait(false));
+            var addedItem = await repository
+                .GetByIdAsync(id, inclusion: new EpdContactIncludingAddress())
+                .ConfigureAwait(false);
 
             // Item gets added with next value in DB
-            var expected = new EpdContactResource(item.NewEpdContact())
-            {
-                Id = _allEpdContacts.Max(e => e.Id) + 1
-            };
+            var expected = item.NewEpdContact;
+            expected.Id = _allEpdContacts.Max(e => e.Id) + 1;
+            expected.Address = _allAddresses.Single(e => e.Id == item.AddressId);
 
             addedItem.Should().BeEquivalentTo(expected);
         }

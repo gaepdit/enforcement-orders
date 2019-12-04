@@ -10,7 +10,10 @@ namespace Enfo.API.Tests.Helpers
 {
     internal static class RepositoryHelpers
     {
-        public static IAsyncWritableRepository<T> GetRepository<T>(this object callingClass, int appendToName = 0, [CallerMemberName] string dbName = null)
+        public static IAsyncWritableRepository<T> GetRepository<T>(
+            this object callingClass,
+            int appendToName = 0,
+            [CallerMemberName] string dbName = null)
             where T : BaseEntity
         {
             var options = new DbContextOptionsBuilder<EnfoDbContext>()

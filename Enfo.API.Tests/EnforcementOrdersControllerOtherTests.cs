@@ -59,7 +59,7 @@ namespace Enfo.API.Tests.ControllerTests
             var expected = _allOrders.Where(
                 e => e.IsPublicProposedOrder
                 && e.CommentPeriodClosesDate >= DateTime.Today)
-                .Select(e => new EnforcementOrderResource(e));
+                .Select(e => new EnforcementOrderItemResource(e));
 
             items.Should().BeEquivalentTo(expected);
         }
@@ -84,7 +84,7 @@ namespace Enfo.API.Tests.ControllerTests
                 e => e.IsPublicExecutedOrder
                 && e.ExecutedOrderPostedDate >= fromDate
                 && e.ExecutedOrderPostedDate <= DateTime.Today)
-                .Select(e => new EnforcementOrderResource(e));
+                .Select(e => new EnforcementOrderItemResource(e));
 
             items.Should().BeEquivalentTo(expected);
         }
@@ -104,7 +104,7 @@ namespace Enfo.API.Tests.ControllerTests
 
             var expected = _allOrders.Where(
                 e => e.PublicationStatus == PublicationState.Draft)
-                .Select(e => new EnforcementOrderResource(e));
+                .Select(e => new EnforcementOrderItemResource(e));
 
             items.Should().BeEquivalentTo(expected);
         }
@@ -125,7 +125,7 @@ namespace Enfo.API.Tests.ControllerTests
             var expected = _allOrders.Where(
                 e => (e.IsPublicExecutedOrder || e.IsPublicProposedOrder)
                 && e.LastPostedDate > GetNextWeekday(DateTime.Today.AddDays(-6), DayOfWeek.Monday))
-                .Select(e => new EnforcementOrderResource(e));
+                .Select(e => new EnforcementOrderItemResource(e));
 
             items.Should().BeEquivalentTo(expected);
         }

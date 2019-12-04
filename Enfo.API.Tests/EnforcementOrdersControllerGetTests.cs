@@ -21,6 +21,22 @@ namespace Enfo.API.Tests.ControllerTests
         public EnforcementOrdersControllerGetTests()
         {
             _allOrders = DevSeedData.GetEnforcementOrders();
+
+            var epdContacts = ProdSeedData.GetEpdContacts();
+            var addresses = ProdSeedData.GetAddresses();
+            var legalAuthorities = ProdSeedData.GetLegalAuthorities();
+
+            foreach (var contact in epdContacts)
+            {
+                contact.Address = addresses.SingleOrDefault(e => e.Id == contact.AddressId);
+            }
+
+            foreach (var order in _allOrders)
+            {
+                order.LegalAuthority = legalAuthorities.SingleOrDefault(e => e.Id == order.LegalAuthorityId);
+                order.CommentContact = epdContacts.SingleOrDefault(e => e.Id == order.CommentContactId);
+                order.HearingContact = epdContacts.SingleOrDefault(e => e.Id == order.HearingContactId);
+            }
         }
 
         [Fact]
@@ -33,7 +49,7 @@ namespace Enfo.API.Tests.ControllerTests
 
             result.Result.Should().BeOfType<OkObjectResult>();
             var actionResult = result.Result as OkObjectResult;
-            Assert.IsAssignableFrom<IEnumerable<EnforcementOrderResource>>(actionResult.Value);
+            Assert.IsAssignableFrom<IEnumerable<EnforcementOrderListResource>>(actionResult.Value);
             actionResult.StatusCode.Should().Be(200);
         }
 
@@ -48,7 +64,7 @@ namespace Enfo.API.Tests.ControllerTests
 
             var expected = _allOrders
                 .OrderBy(e => e.FacilityName)
-                .Select(e => new EnforcementOrderResource(e));
+                .Select(e => new EnforcementOrderListResource(e));
 
             items.Should().BeEquivalentTo(expected);
         }
@@ -83,7 +99,7 @@ namespace Enfo.API.Tests.ControllerTests
 
             var expected = orderedOrders
                 .Skip((pageNum - 1) * pageSize).Take(pageSize)
-                .Select(e => new EnforcementOrderResource(e));
+                .Select(e => new EnforcementOrderListResource(e));
 
             items.Should().BeEquivalentTo(expected);
         }
@@ -131,12 +147,12 @@ namespace Enfo.API.Tests.ControllerTests
                 .ConfigureAwait(false))
                 .Result as OkObjectResult;
 
-            var items = result.Value as IEnumerable<EnforcementOrderResource>;
+            var items = result.Value as IEnumerable<EnforcementOrderListResource>;
 
             var expected = _allOrders.Where(
                 e => e.FacilityName.ToLower().Contains(facilityFilter.ToLower()))
                 .OrderBy(e => e.FacilityName)
-                .Select(e => new EnforcementOrderResource(e));
+                .Select(e => new EnforcementOrderListResource(e));
 
             items.Should().BeEquivalentTo(expected);
         }
@@ -154,12 +170,12 @@ namespace Enfo.API.Tests.ControllerTests
                 .ConfigureAwait(false))
                 .Result as OkObjectResult;
 
-            var items = result.Value as IEnumerable<EnforcementOrderResource>;
+            var items = result.Value as IEnumerable<EnforcementOrderListResource>;
 
             var expected = _allOrders.Where(
                 e => e.County.Equals(county))
                 .OrderBy(e => e.FacilityName)
-                .Select(e => new EnforcementOrderResource(e));
+                .Select(e => new EnforcementOrderListResource(e));
 
             items.Should().BeEquivalentTo(expected);
         }
@@ -177,12 +193,12 @@ namespace Enfo.API.Tests.ControllerTests
                 ).ConfigureAwait(false))
                 .Result as OkObjectResult;
 
-            var items = result.Value as IEnumerable<EnforcementOrderResource>;
+            var items = result.Value as IEnumerable<EnforcementOrderListResource>;
 
             var expected = _allOrders.Where(
                 e => e.LegalAuthorityId.Equals(legalAuth))
                 .OrderBy(e => e.FacilityName)
-                .Select(e => new EnforcementOrderResource(e));
+                .Select(e => new EnforcementOrderListResource(e));
 
             items.Should().BeEquivalentTo(expected);
         }
@@ -214,7 +230,7 @@ namespace Enfo.API.Tests.ControllerTests
                 ).ConfigureAwait(false))
                 .Result as OkObjectResult;
 
-            var items = result.Value as IEnumerable<EnforcementOrderResource>;
+            var items = result.Value as IEnumerable<EnforcementOrderListResource>;
 
             var expected = _allOrders.Where(
                 e => (status == ActivityStatus.All
@@ -224,7 +240,7 @@ namespace Enfo.API.Tests.ControllerTests
                 || (status == ActivityStatus.Executed && e.ExecutedDate >= fromDate)
                 || (status == ActivityStatus.Proposed && e.ProposedOrderPostedDate >= fromDate)))
                 .OrderBy(e => e.FacilityName)
-                .Select(e => new EnforcementOrderResource(e));
+                .Select(e => new EnforcementOrderListResource(e));
 
             items.Should().BeEquivalentTo(expected);
         }
@@ -243,14 +259,14 @@ namespace Enfo.API.Tests.ControllerTests
                 ).ConfigureAwait(false))
                 .Result as OkObjectResult;
 
-            var items = result.Value as IEnumerable<EnforcementOrderResource>;
+            var items = result.Value as IEnumerable<EnforcementOrderListResource>;
 
             var expected = _allOrders.Where(
                 e => (publicationStatus == PublicationStatus.All
                 || (publicationStatus == PublicationStatus.Draft && e.PublicationStatus == EnforcementOrder.PublicationState.Draft)
                 || (publicationStatus == PublicationStatus.Published && e.PublicationStatus == EnforcementOrder.PublicationState.Published)))
                 .OrderBy(e => e.FacilityName)
-                .Select(e => new EnforcementOrderResource(e));
+                .Select(e => new EnforcementOrderListResource(e));
 
             items.Should().BeEquivalentTo(expected);
         }
@@ -269,7 +285,7 @@ namespace Enfo.API.Tests.ControllerTests
                 ).ConfigureAwait(false))
                 .Result as OkObjectResult;
 
-            var items = result.Value as IEnumerable<EnforcementOrderResource>;
+            var items = result.Value as IEnumerable<EnforcementOrderListResource>;
 
             var expected = _allOrders.Where(
                 e => (status == ActivityStatus.All
@@ -279,7 +295,7 @@ namespace Enfo.API.Tests.ControllerTests
                 || (status == ActivityStatus.Executed && e.ExecutedDate <= tillDate)
                 || (status == ActivityStatus.Proposed && e.ProposedOrderPostedDate <= tillDate)))
                 .OrderBy(e => e.FacilityName)
-                .Select(e => new EnforcementOrderResource(e));
+                .Select(e => new EnforcementOrderListResource(e));
 
             items.Should().BeEquivalentTo(expected);
         }
@@ -297,12 +313,12 @@ namespace Enfo.API.Tests.ControllerTests
                 ).ConfigureAwait(false))
                 .Result as OkObjectResult;
 
-            var items = result.Value as IEnumerable<EnforcementOrderResource>;
+            var items = result.Value as IEnumerable<EnforcementOrderListResource>;
 
             var expected = _allOrders.Where(
                 e => e.OrderNumber.Contains(orderNumber))
                 .OrderBy(e => e.FacilityName)
-                .Select(e => new EnforcementOrderResource(e));
+                .Select(e => new EnforcementOrderListResource(e));
 
             items.Should().BeEquivalentTo(expected);
         }
@@ -323,13 +339,13 @@ namespace Enfo.API.Tests.ControllerTests
                 ).ConfigureAwait(false))
                 .Result as OkObjectResult;
 
-            var items = result.Value as IEnumerable<EnforcementOrderResource>;
+            var items = result.Value as IEnumerable<EnforcementOrderListResource>;
 
             var expected = _allOrders.Where(
                 e => e.Cause.ToLower().Contains(textContains.ToLower())
                 || e.Requirements.ToLower().Contains(textContains.ToLower()))
                 .OrderBy(e => e.FacilityName)
-                .Select(e => new EnforcementOrderResource(e));
+                .Select(e => new EnforcementOrderListResource(e));
 
             items.Should().BeEquivalentTo(expected);
         }
@@ -344,7 +360,7 @@ namespace Enfo.API.Tests.ControllerTests
 
             result.Result.Should().BeOfType<OkObjectResult>();
             var actionResult = result.Result as OkObjectResult;
-            actionResult.Value.Should().BeOfType<EnforcementOrderResource>();
+            actionResult.Value.Should().BeOfType<EnforcementOrderItemResource>();
             actionResult.StatusCode.Should().Be(200);
         }
 
@@ -360,7 +376,7 @@ namespace Enfo.API.Tests.ControllerTests
             var value = ((await controller.Get(id).ConfigureAwait(false))
                 .Result as OkObjectResult).Value;
 
-            var expected = new EnforcementOrderResource(
+            var expected = new EnforcementOrderItemResource(
                 _allOrders.Single(e => e.Id == id));
 
             value.Should().BeEquivalentTo(expected);

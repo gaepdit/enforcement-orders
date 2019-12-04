@@ -16,10 +16,10 @@ namespace Enfo.API.Controllers
     [ApiController]
     public class AddressesController : ControllerBase
     {
-        private readonly IAsyncWritableRepository<Address> repository;
+        private readonly IAsyncWritableRepository<Address> _repository;
 
         public AddressesController(IAsyncWritableRepository<Address> repository) =>
-            this.repository = repository;
+            _repository = repository;
 
         // GET: api/Addresses?pageSize&page
         [HttpGet]
@@ -32,7 +32,7 @@ namespace Enfo.API.Controllers
         {
             var spec = new ActiveItemsSpec<Address>(includeInactive);
 
-            return Ok((await repository.ListAsync(spec, Paginate(pageSize, page))
+            return Ok((await _repository.ListAsync(spec, Paginate(pageSize, page))
                 .ConfigureAwait(false))
                 .Select(e => new AddressResource(e)));
         }
@@ -43,14 +43,14 @@ namespace Enfo.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<AddressResource>> Get(int id)
         {
-            var item = await repository.GetByIdAsync(id).ConfigureAwait(false);
+            var item = await _repository.GetByIdAsync(id).ConfigureAwait(false);
 
             if (item == null)
             {
                 return NotFound();
             }
 
-            return new AddressResource(item);
+            return Ok(new AddressResource(item));
         }
 
         // POST: api/Addresses
@@ -60,9 +60,14 @@ namespace Enfo.API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Post([FromBody] AddressCreateResource resource)
         {
-            var item = resource.NewAddress();
-            repository.Add(item);
-            await repository.CompleteAsync().ConfigureAwait(false);
+            if (resource is null)
+            {
+                return BadRequest();
+            }
+
+            var item = resource.NewAddress;
+            _repository.Add(item);
+            await _repository.CompleteAsync().ConfigureAwait(false);
 
             return CreatedAtAction(nameof(Get), item.Id);
         }
@@ -77,14 +82,14 @@ namespace Enfo.API.Controllers
             int id,
             [FromBody] AddressResource resource)
         {
-            if (id != resource.Id)
+            if (resource is null || id != resource.Id)
             {
                 return BadRequest();
             }
 
-            var item = await repository.GetByIdAsync(id).ConfigureAwait(false);
+            var item = await _repository.GetByIdAsync(id).ConfigureAwait(false);
             item.UpdateFrom(resource);
-            await repository.CompleteAsync().ConfigureAwait(false);
+            await _repository.CompleteAsync().ConfigureAwait(false);
 
             return Ok(resource);
         }

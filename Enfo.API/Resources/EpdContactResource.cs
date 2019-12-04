@@ -1,4 +1,5 @@
 using Enfo.Domain.Entities;
+using Enfo.Domain.Utils;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
@@ -36,22 +37,19 @@ namespace Enfo.API.Resources
         [StringLength(100)]
         public string Email { get; set; }
 
-        public EpdContactResource() { }
-
         public EpdContactResource(EpdContact item)
         {
-            if (item != null)
-            {
-                Id = item.Id;
-                Active = item.Active;
-                ContactName = item.ContactName;
-                Title = item.Title;
-                Organization = item.Organization;
-                Address = new AddressResource(item.Address);
-                AddressId = item.AddressId;
-                Telephone = item.Telephone;
-                Email = item.Email;
-            }
+            Check.NotNull(item, nameof(item));
+
+            Id = item.Id;
+            Active = item.Active;
+            ContactName = item.ContactName;
+            Title = item.Title;
+            Organization = item.Organization;
+            Address = new AddressResource(item.Address);
+            AddressId = item.AddressId;
+            Telephone = item.Telephone;
+            Email = item.Email;
         }
     }
 }

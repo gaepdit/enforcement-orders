@@ -14,10 +14,10 @@ namespace Enfo.API.Controllers
     [ApiController]
     public class CountiesController : ControllerBase
     {
-        private readonly IAsyncReadableRepository<County> repository;
+        private readonly IAsyncReadableRepository<County> _repository;
 
         public CountiesController(IAsyncReadableRepository<County> repository) =>
-            this.repository = repository;
+            _repository = repository;
 
         // GET: api/Counties?pageSize&page
         [HttpGet]
@@ -27,7 +27,7 @@ namespace Enfo.API.Controllers
             int pageSize = DefaultPageSize,
             int page = 1)
         {
-            return Ok((await repository.ListAsync(pagination: Paginate(pageSize, page))
+            return Ok((await _repository.ListAsync(pagination: Paginate(pageSize, page))
                 .ConfigureAwait(false))
                 .Select(e => new CountyResource(e)));
         }
@@ -38,14 +38,14 @@ namespace Enfo.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<CountyResource>> Get(int id)
         {
-            var item = await repository.GetByIdAsync(id).ConfigureAwait(false);
+            var item = await _repository.GetByIdAsync(id).ConfigureAwait(false);
 
             if (item == null)
             {
                 return NotFound();
             }
 
-            return new CountyResource(item);
+            return Ok(new CountyResource(item));
         }
     }
 }

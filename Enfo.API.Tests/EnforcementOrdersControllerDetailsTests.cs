@@ -18,6 +18,22 @@ namespace Enfo.API.Tests.ControllerTests
         public EnforcementOrdersControllerDetailsTests()
         {
             _allOrders = DevSeedData.GetEnforcementOrders();
+
+            var epdContacts = ProdSeedData.GetEpdContacts();
+            var addresses = ProdSeedData.GetAddresses();
+            var legalAuthorities = ProdSeedData.GetLegalAuthorities();
+
+            foreach (var contact in epdContacts)
+            {
+                contact.Address = addresses.SingleOrDefault(e => e.Id == contact.AddressId);
+            }
+
+            foreach (var order in _allOrders)
+            {
+                order.LegalAuthority = legalAuthorities.SingleOrDefault(e => e.Id == order.LegalAuthorityId);
+                order.CommentContact = epdContacts.SingleOrDefault(e => e.Id == order.CommentContactId);
+                order.HearingContact = epdContacts.SingleOrDefault(e => e.Id == order.HearingContactId);
+            }
         }
 
         [Fact]

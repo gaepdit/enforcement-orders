@@ -143,7 +143,7 @@ namespace Enfo.API.Tests.ControllerTests
             var repository = this.GetRepository<County>();
             var controller = new CountiesController(repository);
 
-            var result = await controller.Get(0).ConfigureAwait(false);
+            var result = await controller.Get(id).ConfigureAwait(false);
 
             result.Result.Should().BeOfType<NotFoundResult>();
             result.Value.Should().BeNull();

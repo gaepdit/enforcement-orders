@@ -29,7 +29,7 @@ namespace Enfo.Domain.Entities
         [DisplayName("Legal Authority")]
         public virtual LegalAuthority LegalAuthority { get; set; }
         [Required(ErrorMessage = "Legal Authority is required")]
-        public int? LegalAuthorityId { get; set; }
+        public int LegalAuthorityId { get; set; }
 
         [DisplayName("Cause of Order")]
         [DataType(DataType.MultilineText)]

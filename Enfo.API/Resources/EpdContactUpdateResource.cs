@@ -1,4 +1,5 @@
 using Enfo.Domain.Entities;
+using Enfo.Domain.Utils;
 using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -41,17 +42,17 @@ namespace Enfo.API.Resources
     {
         public static void UpdateFrom(this EpdContact item, EpdContactUpdateResource resource)
         {
-            if (resource != null)
-            {
-                item.Active = resource.Active;
-                item.AddressId = resource.AddressId;
-                item.ContactName = resource.ContactName;
-                item.Email = resource.Email;
-                item.Organization = resource.Organization;
-                item.Telephone = resource.Telephone;
-                item.Title = resource.Title;
-                item.UpdatedDate = DateTime.Now;
-            }
+            Check.NotNull(item, nameof(item));
+            Check.NotNull(resource, nameof(resource));
+
+            item.Active = resource.Active;
+            item.AddressId = resource.AddressId;
+            item.ContactName = resource.ContactName;
+            item.Email = resource.Email;
+            item.Organization = resource.Organization;
+            item.Telephone = resource.Telephone;
+            item.Title = resource.Title;
+            item.UpdatedDate = DateTime.Now;
         }
     }
 }

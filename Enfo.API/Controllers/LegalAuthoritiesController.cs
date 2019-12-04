@@ -16,10 +16,10 @@ namespace Enfo.API.Controllers
     [ApiController]
     public class LegalAuthoritiesController : ControllerBase
     {
-        private readonly IAsyncWritableRepository<LegalAuthority> repository;
+        private readonly IAsyncWritableRepository<LegalAuthority> _repository;
 
         public LegalAuthoritiesController(IAsyncWritableRepository<LegalAuthority> repository) =>
-            this.repository = repository;
+            _repository = repository;
 
         // GET: api/LegalAuthorities?pageSize&page
         [HttpGet]
@@ -32,7 +32,7 @@ namespace Enfo.API.Controllers
         {
             var spec = new ActiveItemsSpec<LegalAuthority>(includeInactive);
 
-            return Ok((await repository.ListAsync(spec, Paginate(pageSize, page))
+            return Ok((await _repository.ListAsync(spec, Paginate(pageSize, page))
                 .ConfigureAwait(false))
                 .Select(e => new LegalAuthorityResource(e)));
         }
@@ -43,14 +43,14 @@ namespace Enfo.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<LegalAuthorityResource>> Get(int id)
         {
-            var item = await repository.GetByIdAsync(id).ConfigureAwait(false);
+            var item = await _repository.GetByIdAsync(id).ConfigureAwait(false);
 
             if (item == null)
             {
                 return NotFound();
             }
 
-            return new LegalAuthorityResource(item);
+            return Ok(new LegalAuthorityResource(item));
         }
 
         // POST: api/LegalAuthorities
@@ -60,9 +60,14 @@ namespace Enfo.API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Post([FromBody] LegalAuthorityCreateResource resource)
         {
-            var item = resource.NewLegalAuthority();
-            repository.Add(item);
-            await repository.CompleteAsync().ConfigureAwait(false);
+            if (resource is null)
+            {
+                return BadRequest();
+            }
+
+            var item = resource.NewLegalAuthority;
+            _repository.Add(item);
+            await _repository.CompleteAsync().ConfigureAwait(false);
 
             return CreatedAtAction(nameof(Get), item.Id);
         }
@@ -77,14 +82,14 @@ namespace Enfo.API.Controllers
             int id,
             [FromBody] LegalAuthorityResource resource)
         {
-            if (id != resource.Id)
+            if (resource is null || id != resource.Id)
             {
                 return BadRequest();
             }
 
-            var item = await repository.GetByIdAsync(id).ConfigureAwait(false);
+            var item = await _repository.GetByIdAsync(id).ConfigureAwait(false);
             item.UpdateFrom(resource);
-            await repository.CompleteAsync().ConfigureAwait(false);
+            await _repository.CompleteAsync().ConfigureAwait(false);
 
             return Ok(resource);
         }

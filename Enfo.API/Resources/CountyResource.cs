@@ -1,4 +1,5 @@
 using Enfo.Domain.Entities;
+using Enfo.Domain.Utils;
 using System.ComponentModel;
 
 namespace Enfo.API.Resources
@@ -11,15 +12,13 @@ namespace Enfo.API.Resources
         [DisplayName("County")]
         public string CountyName { get; set; }
 
-        public CountyResource() { }
         public CountyResource(County item)
         {
-            if (item != null)
-            {
-                Id = item.Id;
-                Active = item.Active;
-                CountyName = item.CountyName;
-            }
+            Check.NotNull(item, nameof(item));
+
+            Id = item.Id;
+            Active = item.Active;
+            CountyName = item.CountyName;
         }
     }
 }

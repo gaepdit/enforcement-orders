@@ -29,16 +29,13 @@ namespace Enfo.API.Resources
             ErrorMessage = "Valid US Postal Code is required")]
         public string PostalCode { get; set; }
 
-        public Address NewAddress()
+        public Address NewAddress => new Address
         {
-            return new Address
-            {
-                City = City,
-                PostalCode = PostalCode,
-                State = State,
-                Street = Street,
-                Street2 = Street2
-            };
-        }
+            City = City,
+            PostalCode = PostalCode,
+            State = State,
+            Street = Street,
+            Street2 = Street2
+        };
     }
 }

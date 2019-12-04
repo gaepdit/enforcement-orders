@@ -204,7 +204,7 @@ namespace Enfo.API.Tests.ControllerTests
                 .ConfigureAwait(false));
 
             // Item gets added with next value in DB
-            var expected = new LegalAuthorityResource(item.NewLegalAuthority())
+            var expected = new LegalAuthorityResource(item.NewLegalAuthority)
             {
                 Id = _allLegalAuthorities.Max(e => e.Id) + 1
             };
@@ -241,12 +241,13 @@ namespace Enfo.API.Tests.ControllerTests
             var repository = this.GetRepository<LegalAuthority>();
             var controller = new LegalAuthoritiesController(repository);
 
-            var target = new LegalAuthorityResource
-            {
-                Id = 1,
-                Active = false,
-                AuthorityName = "XYZ"
-            };
+            var target = new LegalAuthorityResource(
+                new LegalAuthority()
+                {
+                    Id = 1,
+                    Active = false,
+                    AuthorityName = "XYZ"
+                });
 
             var original = await repository.GetByIdAsync(target.Id)
                 .ConfigureAwait(false);
@@ -287,12 +288,13 @@ namespace Enfo.API.Tests.ControllerTests
             var repository = this.GetRepository<LegalAuthority>();
             var controller = new LegalAuthoritiesController(repository);
 
-            var target = new LegalAuthorityResource()
-            {
-                Id = 9999,
-                Active = false,
-                AuthorityName = "XYZ"
-            };
+            var target = new LegalAuthorityResource(
+                new LegalAuthority()
+                {
+                    Id = 9999,
+                    Active = false,
+                    AuthorityName = "XYZ"
+                });
 
             var original = await repository.GetByIdAsync(1).ConfigureAwait(false);
 

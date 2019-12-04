@@ -1,4 +1,5 @@
 ﻿using Enfo.Domain.Entities;
+using Enfo.Domain.Utils;
 using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -29,13 +30,14 @@ namespace Enfo.API.Resources
         [DataType(DataType.Currency)]
         public decimal? SettlementAmount { get; set; }
 
+        [DisplayName("Order Number")]
+        public string OrderNumber { get; set; }
+
+        // Only in Detailed Resource
         public bool Deleted { get; set; }
 
         [DisplayName("Progress")]
         public PublicationState PublicationStatus { get; set; }
-
-        [DisplayName("Order Number")]
-        public string OrderNumber { get; set; }
 
         [DisplayName("Last Posted Date")]
         public DateTime? LastPostedDate { get; set; }
@@ -83,41 +85,44 @@ namespace Enfo.API.Resources
         [DisplayName("Hearing Information Contact")]
         public EpdContactResource HearingContact { get; set; }
 
-        // Constructors
-
-        public EnforcementOrderDetailedResource() { }
+        // Constructor
 
         public EnforcementOrderDetailedResource(EnforcementOrder item)
         {
-            if (item != null)
+            Check.NotNull(item, nameof(item));
+
+            Id = item.Id;
+
+            FacilityName = item.FacilityName;
+            County = item.County;
+            LegalAuthority = new LegalAuthorityResource(item.LegalAuthority);
+            Cause = item.Cause;
+            Requirements = item.Requirements;
+            SettlementAmount = item.SettlementAmount;
+            Deleted = item.Deleted;
+            PublicationStatus = item.PublicationStatus;
+            OrderNumber = item.OrderNumber;
+            LastPostedDate = item.LastPostedDate;
+
+            IsPublicProposedOrder = item.IsPublicProposedOrder;
+            IsProposedOrder = item.IsProposedOrder;
+            CommentPeriodClosesDate = item.CommentPeriodClosesDate;
+            if (item.CommentContactId.HasValue)
             {
-                Id = item.Id;
-
-                FacilityName = item.FacilityName;
-                County = item.County;
-                LegalAuthority = new LegalAuthorityResource(item.LegalAuthority);
-                Cause = item.Cause;
-                Requirements = item.Requirements;
-                SettlementAmount = item.SettlementAmount;
-                Deleted = item.Deleted;
-                PublicationStatus = item.PublicationStatus;
-                OrderNumber = item.OrderNumber;
-                LastPostedDate = item.LastPostedDate;
-
-                IsPublicProposedOrder = item.IsPublicProposedOrder;
-                IsProposedOrder = item.IsProposedOrder;
-                CommentPeriodClosesDate = item.CommentPeriodClosesDate;
                 CommentContact = new EpdContactResource(item.CommentContact);
-                ProposedOrderPostedDate = item.ProposedOrderPostedDate;
+            }
+            ProposedOrderPostedDate = item.ProposedOrderPostedDate;
 
-                IsPublicExecutedOrder = item.IsPublicExecutedOrder;
-                IsExecutedOrder = item.IsExecutedOrder;
-                ExecutedDate = item.ExecutedDate;
+            IsPublicExecutedOrder = item.IsPublicExecutedOrder;
+            IsExecutedOrder = item.IsExecutedOrder;
+            ExecutedDate = item.ExecutedDate;
 
-                IsHearingScheduled = item.IsHearingScheduled;
-                HearingDate = item.HearingDate;
-                HearingLocation = item.HearingLocation;
-                HearingCommentPeriodClosesDate = item.HearingCommentPeriodClosesDate;
+            IsHearingScheduled = item.IsHearingScheduled;
+            HearingDate = item.HearingDate;
+            HearingLocation = item.HearingLocation;
+            HearingCommentPeriodClosesDate = item.HearingCommentPeriodClosesDate;
+            if (item.HearingContactId.HasValue)
+            {
                 HearingContact = new EpdContactResource(item.HearingContact);
             }
         }
