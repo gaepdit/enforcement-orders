@@ -1,4 +1,5 @@
-﻿using Enfo.API.Resources;
+﻿using Enfo.API.QueryStrings;
+using Enfo.API.Resources;
 using Enfo.Domain.Entities;
 using Enfo.Domain.Querying;
 using Enfo.Domain.Repositories;
@@ -8,7 +9,6 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using static Enfo.API.ApiPagination;
 
 namespace Enfo.API.Controllers
 {
@@ -26,15 +26,17 @@ namespace Enfo.API.Controllers
         [ProducesResponseType(typeof(IEnumerable<EpdContactResource>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<IEnumerable<EpdContactResource>>> Get(
-            int pageSize = DefaultPageSize,
-            int page = 1,
-            bool includeInactive = false)
+            [FromQuery] ActiveItemFilter filter = null,
+            [FromQuery] PaginationFilter paging = null)
         {
-            var spec = new ActiveItemsSpec<EpdContact>(includeInactive);
-            var paging = Paginate(pageSize, page);
+            filter ??= new ActiveItemFilter();
+            paging ??= new PaginationFilter();
+
+            var spec = new ActiveItemsSpec<EpdContact>(filter.IncludeInactive);
+            var pagination = paging.Pagination();
             var include = new EpdContactIncludingAddress();
 
-            return Ok((await _repository.ListAsync(spec, paging, inclusion: include)
+            return Ok((await _repository.ListAsync(spec, pagination, inclusion: include)
                 .ConfigureAwait(false))
                 .Select(e => new EpdContactResource(e)));
         }

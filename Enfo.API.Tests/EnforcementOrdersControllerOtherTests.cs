@@ -1,4 +1,5 @@
 ﻿using Enfo.API.Controllers;
+using Enfo.API.QueryStrings;
 using Enfo.API.Resources;
 using Enfo.API.Tests.Helpers;
 using Enfo.Domain.Entities;
@@ -53,7 +54,8 @@ namespace Enfo.API.Tests.ControllerTests
             var repository = this.GetRepository<EnforcementOrder>();
             var controller = new EnforcementOrdersController(repository);
 
-            var items = ((await controller.CurrentProposed(pageSize, pageNum)
+            var items = ((await controller.CurrentProposed(
+                filter: new PaginationFilter() { PageSize = pageSize, Page = pageNum })
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
             var expected = _allOrders.Where(
@@ -74,7 +76,8 @@ namespace Enfo.API.Tests.ControllerTests
             var repository = this.GetRepository<EnforcementOrder>();
             var controller = new EnforcementOrdersController(repository);
 
-            var items = ((await controller.RecentlyExecuted(pageSize, pageNum)
+            var items = ((await controller.RecentlyExecuted(
+                new PaginationFilter() { PageSize = pageSize, Page = pageNum })
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
             // fromDate is most recent Monday
@@ -99,7 +102,8 @@ namespace Enfo.API.Tests.ControllerTests
             var repository = this.GetRepository<EnforcementOrder>();
             var controller = new EnforcementOrdersController(repository);
 
-            var items = ((await controller.Drafts(pageSize, pageNum)
+            var items = ((await controller.Drafts(
+                new PaginationFilter() { PageSize = pageSize, Page = pageNum })
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
             var expected = _allOrders.Where(
@@ -119,7 +123,8 @@ namespace Enfo.API.Tests.ControllerTests
             var repository = this.GetRepository<EnforcementOrder>();
             var controller = new EnforcementOrdersController(repository);
 
-            var items = ((await controller.Pending(pageSize, pageNum)
+            var items = ((await controller.Pending(
+                new PaginationFilter() { PageSize = pageSize, Page = pageNum })
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
             var expected = _allOrders.Where(

@@ -1,4 +1,5 @@
 using Enfo.API.Controllers;
+using Enfo.API.QueryStrings;
 using Enfo.API.Resources;
 using Enfo.API.Tests.Helpers;
 using Enfo.Domain.Entities;
@@ -36,12 +37,31 @@ namespace Enfo.API.Tests.ControllerTests
         }
 
         [Fact]
+        public async Task GetDefaultReturnsOnePageOfActiveItems()
+        {
+            var repository = this.GetRepository<Address>();
+            var controller = new AddressesController(repository);
+
+            var items = ((await controller.Get()
+                .ConfigureAwait(false)).Result as OkObjectResult).Value;
+
+            var expected = _allAddresses
+                .OrderBy(e => e.Id)
+                .Where(e => e.Active)
+                .Take(PaginationFilter.DefaultPageSize)
+                .Select(e => new AddressResource(e));
+
+            items.Should().BeEquivalentTo(expected);
+        }
+
+        [Fact]
         public async Task GetReturnsAllActiveItems()
         {
             var repository = this.GetRepository<Address>();
             var controller = new AddressesController(repository);
 
-            var items = ((await controller.Get(pageSize: 0)
+            var items = ((await controller.Get(
+                paging: new PaginationFilter() { PageSize = 0 })
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
             var expected = _allAddresses
@@ -58,7 +78,9 @@ namespace Enfo.API.Tests.ControllerTests
             var repository = this.GetRepository<Address>();
             var controller = new AddressesController(repository);
 
-            var items = ((await controller.Get(includeInactive: true, pageSize: 0)
+            var items = ((await controller.Get(
+                new ActiveItemFilter() { IncludeInactive = true },
+                new PaginationFilter() { PageSize = 0 })
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
             var expected = _allAddresses
@@ -77,7 +99,8 @@ namespace Enfo.API.Tests.ControllerTests
             int pageSize = 3;
             int pageNum = 2;
 
-            var items = ((await controller.Get(pageSize, pageNum)
+            var items = ((await controller.Get(
+                paging: new PaginationFilter() { PageSize = pageSize, Page = pageNum })
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
             var expected = _allAddresses
@@ -95,7 +118,8 @@ namespace Enfo.API.Tests.ControllerTests
             var repository = this.GetRepository<Address>();
             var controller = new AddressesController(repository);
 
-            var result = (await controller.Get(pageSize: -1)
+            var result = (await controller.Get(
+                paging: new PaginationFilter() { PageSize = -1 })
                 .ConfigureAwait(false)).Result as OkObjectResult;
 
             var expected = (await controller.Get()
@@ -110,7 +134,8 @@ namespace Enfo.API.Tests.ControllerTests
             var repository = this.GetRepository<Address>();
             var controller = new AddressesController(repository);
 
-            var result = (await controller.Get(page: 0)
+            var result = (await controller.Get(
+                paging: new PaginationFilter() { PageSize = 0 })
                 .ConfigureAwait(false)).Result as OkObjectResult;
 
             var expected = (await controller.Get()
@@ -230,8 +255,10 @@ namespace Enfo.API.Tests.ControllerTests
             (result as BadRequestResult).StatusCode.Should().Be(400);
 
             // Verify repository not changed after attempting to Post null item.
-            var resultItems = ((await controller.Get(includeInactive: true,
-                pageSize: 0).ConfigureAwait(false))
+            var resultItems = ((await controller.Get(
+                new ActiveItemFilter() { IncludeInactive = true },
+                paging: new PaginationFilter() { PageSize = 0 })
+                .ConfigureAwait(false))
                 .Result as OkObjectResult).Value;
 
             var expected = _allAddresses

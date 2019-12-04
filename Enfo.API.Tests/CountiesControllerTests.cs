@@ -1,4 +1,5 @@
 ﻿using Enfo.API.Controllers;
+using Enfo.API.QueryStrings;
 using Enfo.API.Resources;
 using Enfo.API.Tests.Helpers;
 using Enfo.Domain.Entities;
@@ -36,12 +37,31 @@ namespace Enfo.API.Tests.ControllerTests
         }
 
         [Fact]
+        public async Task GetDefaultReturnsOnePageOfActiveItems()
+        {
+            var repository = this.GetRepository<County>();
+            var controller = new CountiesController(repository);
+
+            var items = ((await controller.Get()
+                .ConfigureAwait(false)).Result as OkObjectResult).Value;
+
+            var expected = _allCounties
+                .OrderBy(e => e.Id)
+                .Where(e => e.Active)
+                .Take(PaginationFilter.DefaultPageSize)
+                .Select(e => new CountyResource(e));
+
+            items.Should().BeEquivalentTo(expected);
+        }
+
+        [Fact]
         public async Task GetReturnsAllItems()
         {
             var repository = this.GetRepository<County>();
             var controller = new CountiesController(repository);
 
-            var items = ((await controller.Get(pageSize: 0)
+            var items = ((await controller.Get(
+                new PaginationFilter() { PageSize = 0 })
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
             var expected = _allCounties
@@ -61,7 +81,8 @@ namespace Enfo.API.Tests.ControllerTests
             int pageNum = 2;
             int firstItemIndex = (pageNum - 1) * pageSize;
 
-            var items = ((await controller.Get(pageSize, pageNum)
+            var items = ((await controller.Get(
+                new PaginationFilter() { PageSize = pageSize, Page = pageNum })
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
             var expected = _allCounties
@@ -79,7 +100,8 @@ namespace Enfo.API.Tests.ControllerTests
             var repository = this.GetRepository<County>();
             var controller = new CountiesController(repository);
 
-            var result = (await controller.Get(pageSize: -1)
+            var result = (await controller.Get(
+                new PaginationFilter() { PageSize = -1 })
                 .ConfigureAwait(false)).Result as OkObjectResult;
 
             var expected = (await controller.Get()
@@ -94,7 +116,8 @@ namespace Enfo.API.Tests.ControllerTests
             var repository = this.GetRepository<County>();
             var controller = new CountiesController(repository);
 
-            var result = (await controller.Get(page: 0)
+            var result = (await controller.Get(
+                paging: new PaginationFilter() { Page = 0 })
                 .ConfigureAwait(false)).Result as OkObjectResult;
 
             var expected = (await controller.Get()

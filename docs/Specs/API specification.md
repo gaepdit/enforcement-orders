@@ -6,18 +6,13 @@
 
 | parameter       | data type |
 |-----------------|-----------|
-| pageSize        | int       |
-| page            | int       |
-| includeInactive | bool      |
+| PageSize        | int       |
+| Page            | int       |
+| IncludeInactive | bool      |
 
 ### GET: `api/Addresses/{int:id}`
 
 ### POST: `[Authorize] api/Addresses`
-
-| parameter | data type |
-|-----------|-----------|
-| pageSize  | int       |
-| page      | int       |
 
 ### PUT: `[Authorize] api/Addresses/{int:id}`
 
@@ -27,8 +22,8 @@
 
 | parameter | data type |
 |-----------|-----------|
-| pageSize  | int       |
-| page      | int       |
+| PageSize  | int       |
+| Page      | int       |
 
 ### GET: `api/Counties/{int:id}`
 
@@ -78,8 +73,8 @@ Current Proposed are public proposed orders with comment close date in the futur
 
 | parameter | data type |
 |-----------|-----------|
-| pageSize  | int       |
-| page      | int       |
+| PageSize  | int       |
+| Page      | int       |
 
 ### GET: `api/EnforcementOrders/RecentlyExecuted`
 
@@ -87,8 +82,8 @@ Recently Executed are public executed orders with publication date within curren
 
 | parameter | data type |
 |-----------|-----------|
-| pageSize  | int       |
-| page      | int       |
+| PageSize  | int       |
+| Page      | int       |
 
 ### GET: `[Authorize] api/EnforcementOrders/Drafts`
 
@@ -96,8 +91,8 @@ Drafts are orders with publication status set to Draft
 
 | parameter | data type |
 |-----------|-----------|
-| pageSize  | int       |
-| page      | int       |
+| PageSize  | int       |
+| Page      | int       |
 
 ### GET: `[Authorize] api/EnforcementOrders/Pending`
 
@@ -105,8 +100,8 @@ Pending are public proposed or executed orders with publication date after the c
 
 | parameter | data type |
 |-----------|-----------|
-| pageSize  | int       |
-| page      | int       |
+| PageSize  | int       |
+| Page      | int       |
 
 ### POST: `[Authorize] api/EnforcementOrders`
 
@@ -118,9 +113,9 @@ Pending are public proposed or executed orders with publication date after the c
 
 | parameter       | data type |
 |-----------------|-----------|
-| pageSize        | int       |
-| page            | int       |
-| includeInactive | bool      |
+| PageSize        | int       |
+| Page            | int       |
+| IncludeInactive | bool      |
 
 ### GET: `api/EpdContacts/{int:id}`
 
@@ -134,9 +129,9 @@ Pending are public proposed or executed orders with publication date after the c
 
 | parameter       | data type |
 |-----------------|-----------|
-| pageSize        | int       |
-| page            | int       |
-| includeInactive | bool      |
+| PageSize        | int       |
+| Page            | int       |
+| IncludeInactive | bool      |
 
 ### GET: `api/LegalAuthorities/{int:id}`
 

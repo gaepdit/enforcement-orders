@@ -1,4 +1,5 @@
-﻿using Enfo.API.Resources;
+using Enfo.API.QueryStrings;
+using Enfo.API.Resources;
 using Enfo.Domain.Entities;
 using Enfo.Domain.Querying;
 using Enfo.Domain.Repositories;
@@ -10,7 +11,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using static Enfo.API.ApiPagination;
 using static Enfo.Domain.Entities.Enums;
 
 namespace Enfo.API.Controllers
@@ -21,7 +21,7 @@ namespace Enfo.API.Controllers
     {
         private readonly IAsyncWritableRepository<EnforcementOrder> _repository;
 
-        public EnforcementOrdersController(IAsyncWritableRepository<EnforcementOrder> repository) => 
+        public EnforcementOrdersController(IAsyncWritableRepository<EnforcementOrder> repository) =>
             _repository = repository;
 
         // GET: api/EnforcementOrders?params
@@ -39,7 +39,7 @@ namespace Enfo.API.Controllers
             string orderNumber = null,
             string textContains = null,
             EnforcementOrderSorting sortOrder = EnforcementOrderSorting.FacilityAsc,
-            int pageSize = DefaultPageSize,
+            int pageSize = PaginationFilter.DefaultPageSize,
             int page = 1)
         {
             // TODO: Only authorized users can request Orders with PublicationStatus other than "Published".
@@ -94,7 +94,9 @@ namespace Enfo.API.Controllers
             }
 
             // Paging
-            var paging = Paginate(pageSize, page);
+            var paging = Pagination.FromPageSizeAndNumber(
+                pageSize: pageSize < 0 ? PaginationFilter.DefaultPageSize : pageSize,
+                pageNum: Math.Max(page, 1));
 
             // Sorting
             // BUG: Sorting by date currently broken
@@ -186,9 +188,10 @@ namespace Enfo.API.Controllers
         [ProducesResponseType(typeof(IEnumerable<EnforcementOrderListResource>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<IEnumerable<EnforcementOrderListResource>>> CurrentProposed(
-            int pageSize = DefaultPageSize,
-            int page = 1)
+            [FromQuery] PaginationFilter filter = null)
         {
+            filter ??= new PaginationFilter();
+
             // Current Proposed are public proposed orders with comment close date in the future and publication date in the past
             throw new NotImplementedException();
         }
@@ -198,9 +201,10 @@ namespace Enfo.API.Controllers
         [ProducesResponseType(typeof(IEnumerable<EnforcementOrderListResource>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<IEnumerable<EnforcementOrderListResource>>> RecentlyExecuted(
-            int pageSize = DefaultPageSize,
-            int page = 1)
+            [FromQuery] PaginationFilter filter = null)
         {
+            filter ??= new PaginationFilter();
+
             // Recently Executed are public executed orders with publication date within current week
             throw new NotImplementedException();
         }
@@ -211,9 +215,10 @@ namespace Enfo.API.Controllers
         [ProducesResponseType(typeof(IEnumerable<EnforcementOrderListResource>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<IEnumerable<EnforcementOrderListResource>>> Drafts(
-            int pageSize = DefaultPageSize,
-            int page = 1)
+            [FromQuery] PaginationFilter filter = null)
         {
+            filter ??= new PaginationFilter();
+
             // Draft are orders with publication status set to Draft
             throw new NotImplementedException();
         }
@@ -224,9 +229,10 @@ namespace Enfo.API.Controllers
         [ProducesResponseType(typeof(IEnumerable<EnforcementOrderListResource>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<IEnumerable<EnforcementOrderListResource>>> Pending(
-            int pageSize = DefaultPageSize,
-            int page = 1)
+            [FromQuery] PaginationFilter filter = null)
         {
+            filter ??= new PaginationFilter();
+
             // Pending are public proposed or executed orders with publication date after the current week
             throw new NotImplementedException();
         }
