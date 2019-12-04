@@ -33,8 +33,8 @@ namespace Enfo.API.Tests.ControllerTests
             var controller = new EnforcementOrdersController(repository);
 
             var value = ((await controller.Count(
-                facilityFilter: facilityFilter
-                ).ConfigureAwait(false))
+                new EnforcementOrderFilter() { FacilityFilter = facilityFilter })
+                .ConfigureAwait(false))
                 .Result as OkObjectResult).Value;
 
             var expected = _allOrders.Where(

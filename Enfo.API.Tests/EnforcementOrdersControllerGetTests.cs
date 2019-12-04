@@ -1,4 +1,5 @@
 ﻿using Enfo.API.Controllers;
+using Enfo.API.QueryStrings;
 using Enfo.API.Resources;
 using Enfo.API.Tests.Helpers;
 using Enfo.Domain.Entities;
@@ -54,12 +55,31 @@ namespace Enfo.API.Tests.ControllerTests
         }
 
         [Fact]
+        public async Task GetDefaultReturnsOnePageOfActiveItems()
+        {
+            var repository = this.GetRepository<EnforcementOrder>();
+            var controller = new EnforcementOrdersController(repository);
+
+            var items = ((await controller.Get()
+                .ConfigureAwait(false)).Result as OkObjectResult).Value;
+
+            var expected = _allOrders
+                .OrderBy(e => e.Id)
+                .Where(e => e.Active)
+                .Take(PaginationFilter.DefaultPageSize)
+                .Select(e => new EnforcementOrderListResource(e));
+
+            items.Should().BeEquivalentTo(expected);
+        }
+
+        [Fact]
         public async Task GetReturnsAllItems()
         {
             var repository = this.GetRepository<EnforcementOrder>();
             var controller = new EnforcementOrdersController(repository);
 
-            var items = ((await controller.Get(pageSize: 0)
+            var items = ((await controller.Get(
+                paging: new PaginationFilter() { PageSize = 0 })
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
             var expected = _allOrders
@@ -83,9 +103,8 @@ namespace Enfo.API.Tests.ControllerTests
             var controller = new EnforcementOrdersController(repository);
 
             var items = ((await controller.Get(
-                sortOrder: sortOrder,
-                pageSize: pageSize,
-                page: pageNum)
+                new EnforcementOrderFilter() { SortOrder = sortOrder },
+                new PaginationFilter() { PageSize = pageSize, Page = pageNum })
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
             var orderedOrders = sortOrder switch
@@ -110,7 +129,8 @@ namespace Enfo.API.Tests.ControllerTests
             var repository = this.GetRepository<EnforcementOrder>();
             var controller = new EnforcementOrdersController(repository);
 
-            var result = (await controller.Get(pageSize: -1)
+            var result = (await controller.Get(
+                paging: new PaginationFilter() { PageSize = -1 })
                 .ConfigureAwait(false)).Result as OkObjectResult;
 
             var expected = (await controller.Get()
@@ -125,7 +145,8 @@ namespace Enfo.API.Tests.ControllerTests
             var repository = this.GetRepository<EnforcementOrder>();
             var controller = new EnforcementOrdersController(repository);
 
-            var result = (await controller.Get(page: 0)
+            var result = (await controller.Get(
+                paging: new PaginationFilter() { PageSize = 0 })
                 .ConfigureAwait(false)).Result as OkObjectResult;
 
             var expected = (await controller.Get()
@@ -142,8 +163,9 @@ namespace Enfo.API.Tests.ControllerTests
             var repository = this.GetRepository<EnforcementOrder>();
             var controller = new EnforcementOrdersController(repository);
 
-            var result = (await controller.Get(pageSize: 0,
-                facilityFilter: facilityFilter)
+            var result = (await controller.Get(
+                new EnforcementOrderFilter() { FacilityFilter = facilityFilter },
+                new PaginationFilter() { PageSize = 0 })
                 .ConfigureAwait(false))
                 .Result as OkObjectResult;
 
@@ -165,8 +187,9 @@ namespace Enfo.API.Tests.ControllerTests
             var repository = this.GetRepository<EnforcementOrder>();
             var controller = new EnforcementOrdersController(repository);
 
-            var result = (await controller.Get(pageSize: 0,
-                county: county)
+            var result = (await controller.Get(
+                new EnforcementOrderFilter() { County = county },
+                new PaginationFilter() { PageSize = 0 })
                 .ConfigureAwait(false))
                 .Result as OkObjectResult;
 
@@ -188,9 +211,10 @@ namespace Enfo.API.Tests.ControllerTests
             var repository = this.GetRepository<EnforcementOrder>();
             var controller = new EnforcementOrdersController(repository);
 
-            var result = (await controller.Get(pageSize: 0,
-                legalAuth: legalAuth
-                ).ConfigureAwait(false))
+            var result = (await controller.Get(
+                new EnforcementOrderFilter() { LegalAuth = legalAuth },
+                new PaginationFilter() { PageSize = 0 })
+                .ConfigureAwait(false))
                 .Result as OkObjectResult;
 
             var items = result.Value as IEnumerable<EnforcementOrderListResource>;
@@ -224,10 +248,10 @@ namespace Enfo.API.Tests.ControllerTests
             var repository = this.GetRepository<EnforcementOrder>();
             var controller = new EnforcementOrdersController(repository);
 
-            var result = (await controller.Get(pageSize: 0,
-                fromDate: fromDate,
-                status: status
-                ).ConfigureAwait(false))
+            var result = (await controller.Get(
+                new EnforcementOrderFilter() { FromDate = fromDate, Status = status },
+                new PaginationFilter() { PageSize = 0 })
+                .ConfigureAwait(false))
                 .Result as OkObjectResult;
 
             var items = result.Value as IEnumerable<EnforcementOrderListResource>;
@@ -236,7 +260,8 @@ namespace Enfo.API.Tests.ControllerTests
                 e => (status == ActivityStatus.All
                 || (status == ActivityStatus.Executed && e.IsExecutedOrder)
                 || (status == ActivityStatus.Proposed && e.IsProposedOrder && !e.IsExecutedOrder))
-                && (status == ActivityStatus.All && (e.ProposedOrderPostedDate >= fromDate || e.ExecutedDate >= fromDate)
+                && (status == ActivityStatus.All
+                    && (e.ProposedOrderPostedDate >= fromDate || e.ExecutedDate >= fromDate)
                 || (status == ActivityStatus.Executed && e.ExecutedDate >= fromDate)
                 || (status == ActivityStatus.Proposed && e.ProposedOrderPostedDate >= fromDate)))
                 .OrderBy(e => e.FacilityName)
@@ -254,17 +279,20 @@ namespace Enfo.API.Tests.ControllerTests
             var repository = this.GetRepository<EnforcementOrder>();
             var controller = new EnforcementOrdersController(repository);
 
-            var result = (await controller.Get(pageSize: 0,
-                publicationStatus: publicationStatus
-                ).ConfigureAwait(false))
+            var result = (await controller.Get(
+                new EnforcementOrderFilter() { PublicationStatus = publicationStatus },
+                new PaginationFilter() { PageSize = 0 })
+                .ConfigureAwait(false))
                 .Result as OkObjectResult;
 
             var items = result.Value as IEnumerable<EnforcementOrderListResource>;
 
             var expected = _allOrders.Where(
                 e => (publicationStatus == PublicationStatus.All
-                || (publicationStatus == PublicationStatus.Draft && e.PublicationStatus == EnforcementOrder.PublicationState.Draft)
-                || (publicationStatus == PublicationStatus.Published && e.PublicationStatus == EnforcementOrder.PublicationState.Published)))
+                || (publicationStatus == PublicationStatus.Draft
+                    && e.PublicationStatus == EnforcementOrder.PublicationState.Draft)
+                || (publicationStatus == PublicationStatus.Published
+                    && e.PublicationStatus == EnforcementOrder.PublicationState.Published)))
                 .OrderBy(e => e.FacilityName)
                 .Select(e => new EnforcementOrderListResource(e));
 
@@ -279,10 +307,10 @@ namespace Enfo.API.Tests.ControllerTests
             var repository = this.GetRepository<EnforcementOrder>();
             var controller = new EnforcementOrdersController(repository);
 
-            var result = (await controller.Get(pageSize: 0,
-                tillDate: tillDate,
-                status: status
-                ).ConfigureAwait(false))
+            var result = (await controller.Get(
+                new EnforcementOrderFilter() { TillDate = tillDate, Status = status },
+                new PaginationFilter() { PageSize = 0 })
+                .ConfigureAwait(false))
                 .Result as OkObjectResult;
 
             var items = result.Value as IEnumerable<EnforcementOrderListResource>;
@@ -291,7 +319,8 @@ namespace Enfo.API.Tests.ControllerTests
                 e => (status == ActivityStatus.All
                 || (status == ActivityStatus.Executed && e.IsExecutedOrder)
                 || (status == ActivityStatus.Proposed && e.IsProposedOrder && !e.IsExecutedOrder))
-                && (status == ActivityStatus.All && (e.ProposedOrderPostedDate <= tillDate || e.ExecutedDate <= tillDate)
+                && (status == ActivityStatus.All
+                    && (e.ProposedOrderPostedDate <= tillDate || e.ExecutedDate <= tillDate)
                 || (status == ActivityStatus.Executed && e.ExecutedDate <= tillDate)
                 || (status == ActivityStatus.Proposed && e.ProposedOrderPostedDate <= tillDate)))
                 .OrderBy(e => e.FacilityName)
@@ -308,9 +337,10 @@ namespace Enfo.API.Tests.ControllerTests
             var repository = this.GetRepository<EnforcementOrder>();
             var controller = new EnforcementOrdersController(repository);
 
-            var result = (await controller.Get(pageSize: 0,
-                orderNumber: orderNumber
-                ).ConfigureAwait(false))
+            var result = (await controller.Get(
+                new EnforcementOrderFilter() { OrderNumber = orderNumber },
+                new PaginationFilter() { PageSize = 0 })
+                .ConfigureAwait(false))
                 .Result as OkObjectResult;
 
             var items = result.Value as IEnumerable<EnforcementOrderListResource>;
@@ -333,10 +363,11 @@ namespace Enfo.API.Tests.ControllerTests
             var repository = this.GetRepository<EnforcementOrder>();
             var controller = new EnforcementOrdersController(repository);
 
-            var result = (await controller.Get(pageSize: 0,
-                textContains: textContains,
-                publicationStatus: PublicationStatus.All
-                ).ConfigureAwait(false))
+            var result = (await controller.Get(
+                new EnforcementOrderFilter() { TextContains = textContains, 
+                    PublicationStatus = PublicationStatus.All },
+                new PaginationFilter() { PageSize = 0 })
+                .ConfigureAwait(false))
                 .Result as OkObjectResult;
 
             var items = result.Value as IEnumerable<EnforcementOrderListResource>;

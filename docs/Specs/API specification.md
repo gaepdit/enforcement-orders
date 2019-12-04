@@ -35,18 +35,18 @@ Only authorized users can request Orders with PublicationStatus other than "Publ
 
 | parameter         | data type         |
 |-------------------|-------------------|
-| facilityFilter    | string            |
-| county            | string            |
-| legalAuth         | int               |
-| fromDate          | DateTime?         |
-| tillDate          | DateTime?         |
-| status            | ActivityStatus    |
-| publicationStatus | PublicationStatus |
-| sortOrder         | SortOrder         |
-| orderNumber       | string            |
-| textContains      | string            |
-| pageSize          | int               |
-| page              | int               |
+| FacilityFilter    | string            |
+| County            | string            |
+| LegalAuth         | int               |
+| FromDate          | DateTime?         |
+| TillDate          | DateTime?         |
+| Status            | ActivityStatus    |
+| PublicationStatus | PublicationStatus |
+| SortOrder         | SortOrder         |
+| OrderNumber       | string            |
+| TextContains      | string            |
+| PageSize          | int               |
+| Page              | int               |
 
 ### GET: `api/EnforcementOrders/{int:id}`
 
@@ -58,14 +58,13 @@ Only authorized users can request Orders with PublicationStatus other than "Publ
 
 | parameter         | data type         |
 |-------------------|-------------------|
-| facilityFilter    | string            |
-| county            | string            |
-| fromDate          | DateTime?         |
-| tillDate          | DateTime?         |
-| status            | ActivityStatus    |
-| publicationStatus | PublicationStatus |
-| sortOrder         | SortOrder         |
-| orderNumber       | string            |
+| FacilityFilter    | string            |
+| County            | string            |
+| FromDate          | DateTime?         |
+| TillDate          | DateTime?         |
+| Status            | ActivityStatus    |
+| PublicationStatus | PublicationStatus |
+| OrderNumber       | string            |
 
 ### GET: `api/EnforcementOrders/CurrentProposed`
 

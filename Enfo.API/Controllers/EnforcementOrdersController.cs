@@ -29,83 +29,62 @@ namespace Enfo.API.Controllers
         [ProducesResponseType(typeof(IEnumerable<EnforcementOrderListResource>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<IEnumerable<EnforcementOrderListResource>>> Get(
-            string facilityFilter = null,
-            string county = null,
-            int? legalAuth = null,
-            DateTime? fromDate = null,
-            DateTime? tillDate = null,
-            ActivityStatus status = ActivityStatus.All,
-            PublicationStatus publicationStatus = PublicationStatus.Published,
-            string orderNumber = null,
-            string textContains = null,
-            EnforcementOrderSorting sortOrder = EnforcementOrderSorting.FacilityAsc,
-            int pageSize = PaginationFilter.DefaultPageSize,
-            int page = 1)
+            [FromQuery] EnforcementOrderFilter filter = null,
+            [FromQuery] PaginationFilter paging = null)
         {
+            filter ??= new EnforcementOrderFilter();
+            paging ??= new PaginationFilter();
+
             // TODO: Only authorized users can request Orders with PublicationStatus other than "Published".
             //if (!User.LoggedIn)
-            //{
             //    publicationStatus = PublicationStatus.Published;
-            //}
 
             // Specifications
             ISpecification<EnforcementOrder> spec = new TrueSpec<EnforcementOrder>();
 
             // TODO: Only authorized users can request Orders that are not public.
             //if (!User.LoggedIn)
-            //{
             //    spec = spec.And(new PublicOrdersSpec());
-            //}
-            if (!facilityFilter.IsNullOrWhiteSpace())
-            {
-                spec = spec.And(new FilterOrdersByName(facilityFilter));
-            }
-            if (!county.IsNullOrWhiteSpace())
-            {
-                spec = spec.And(new FilterOrdersByCounty(county));
-            }
-            if (legalAuth.HasValue)
-            {
-                spec = spec.And(new FilterOrdersByLegalAuth(legalAuth.Value));
-            }
-            if (fromDate.HasValue)
-            {
-                spec = spec.And(new FilterOrdersByStartDate(fromDate.Value, status));
-            }
-            if (tillDate.HasValue)
-            {
-                spec = spec.And(new FilterOrdersByEndDate(tillDate.Value, status));
-            }
-            if (status != ActivityStatus.All)
-            {
-                spec = spec.And(new FilterOrdersByActivityStatus(status));
-            }
-            if (publicationStatus != PublicationStatus.All)
-            {
-                spec = spec.And(new FilterOrdersByPublicationStatus(publicationStatus));
-            }
-            if (!orderNumber.IsNullOrWhiteSpace())
-            {
-                spec = spec.And(new FilterOrdersByOrderNumber(orderNumber));
-            }
-            if (!textContains.IsNullOrWhiteSpace())
-            {
-                spec = spec.And(new FilterOrdersByText(textContains));
-            }
+
+            if (!filter.FacilityFilter.IsNullOrWhiteSpace())
+                spec = spec.And(new FilterOrdersByName(filter.FacilityFilter));
+
+            if (!filter.County.IsNullOrWhiteSpace())
+                spec = spec.And(new FilterOrdersByCounty(filter.County));
+
+            if (filter.LegalAuth.HasValue)
+                spec = spec.And(new FilterOrdersByLegalAuth(filter.LegalAuth.Value));
+
+            if (filter.FromDate.HasValue)
+                spec = spec.And(new FilterOrdersByStartDate(filter.FromDate.Value, filter.Status));
+
+            if (filter.TillDate.HasValue)
+                spec = spec.And(new FilterOrdersByEndDate(filter.TillDate.Value, filter.Status));
+
+            if (filter.Status != ActivityStatus.All)
+                spec = spec.And(new FilterOrdersByActivityStatus(filter.Status));
+
+            if (filter.PublicationStatus != PublicationStatus.All)
+                spec = spec.And(new FilterOrdersByPublicationStatus(filter.PublicationStatus));
+
+            if (!filter.OrderNumber.IsNullOrWhiteSpace())
+                spec = spec.And(new FilterOrdersByOrderNumber(filter.OrderNumber));
+
+            if (!filter.TextContains.IsNullOrWhiteSpace())
+                spec = spec.And(new FilterOrdersByText(filter.TextContains));
 
             // Paging
-            var paging = Pagination.FromPageSizeAndNumber(
-                pageSize: pageSize < 0 ? PaginationFilter.DefaultPageSize : pageSize,
-                pageNum: Math.Max(page, 1));
+            var pagination = paging.Pagination();
 
             // Sorting
             // BUG: Sorting by date currently broken
-            var sorting = new SortEnforcementOrders(sortOrder);
+            var sorting = new SortEnforcementOrders(filter.SortOrder);
 
             // Including
             var include = new EnforcementOrderIncludeLegalAuth();
 
-            return Ok((await _repository.ListAsync(spec, paging, sorting, include)
+            return Ok((await _repository
+                .ListAsync(spec, pagination, sorting, include)
                 .ConfigureAwait(false))
                 .Select(e => new EnforcementOrderListResource(e)));
         }
@@ -127,13 +106,11 @@ namespace Enfo.API.Controllers
 
             var include = new EnforcementOrderIncludeAll();
 
-            var item = await _repository.GetByIdAsync(id, spec, include)
+            var item = await _repository
+                .GetByIdAsync(id, spec, include)
                 .ConfigureAwait(false);
 
-            if (item == null)
-            {
-                return NotFound();
-            }
+            if (item == null) return NotFound();
 
             return Ok(new EnforcementOrderItemResource(item));
         }
@@ -151,10 +128,7 @@ namespace Enfo.API.Controllers
                 .GetByIdAsync(id, inclusion: include)
                 .ConfigureAwait(false);
 
-            if (item == null)
-            {
-                return NotFound();
-            }
+            if (item == null) return NotFound();
 
             return Ok(new EnforcementOrderDetailedResource(item));
         }
@@ -164,16 +138,10 @@ namespace Enfo.API.Controllers
         [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<int>> Count(
-            string facilityFilter = "",
-            string county = "",
-            int? legalAuth = null,
-            DateTime? fromDate = null,
-            DateTime? tillDate = null,
-            ActivityStatus status = ActivityStatus.All,
-            PublicationStatus publicationStatus = PublicationStatus.Published,
-            string orderNumber = "",
-            string textContains = "")
+            [FromQuery] EnforcementOrderFilter filter = null)
         {
+            filter ??= new EnforcementOrderFilter();
+
             throw new NotImplementedException();
 
             // TODO: Only authorized users can request Orders with PublicationStatus other than "Published".
