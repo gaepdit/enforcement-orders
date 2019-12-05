@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Enfo.Domain.Entities
 {
-    public class EpdContact : BaseEntity
+    public class EpdContact : BaseActiveEntity
     {
         [DisplayName("Contact Name")]
         [StringLength(50)]

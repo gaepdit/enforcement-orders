@@ -17,7 +17,6 @@ namespace Enfo.API.Resources
             Check.NotNull(item, nameof(item));
 
             Id = item.Id;
-            Active = item.Active;
             CountyName = item.CountyName;
         }
     }

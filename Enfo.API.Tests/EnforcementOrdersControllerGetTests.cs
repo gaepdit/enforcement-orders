@@ -65,7 +65,6 @@ namespace Enfo.API.Tests.ControllerTests
 
             var expected = _allOrders
                 .OrderBy(e => e.Id)
-                .Where(e => e.Active)
                 .Take(PaginationFilter.DefaultPageSize)
                 .Select(e => new EnforcementOrderListResource(e));
 

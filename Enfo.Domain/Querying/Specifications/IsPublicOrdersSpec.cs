@@ -10,7 +10,7 @@ namespace Enfo.Domain.Querying
         {
             // e.IsPublic spelled out for Entity Framework
             ApplyCriteria(e =>
-                !e.Deleted && e.Active
+                !e.Deleted
                 && e.PublicationStatus == PublicationState.Published
                 && ((e.IsExecutedOrder && e.ExecutedOrderPostedDate.HasValue && e.ExecutedOrderPostedDate.Value <= DateTime.Today)
                 || (e.IsProposedOrder && e.ProposedOrderPostedDate.HasValue && e.ProposedOrderPostedDate.Value <= DateTime.Today)));

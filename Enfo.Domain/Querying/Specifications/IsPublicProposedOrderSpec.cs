@@ -11,7 +11,6 @@ namespace Enfo.Domain.Querying
             // e.IsPublicProposedOrder spelled out for Entity Framework
             ApplyCriteria(
                 e => !e.Deleted
-                && e.Active
                 && e.PublicationStatus == PublicationState.Published
                 && e.IsProposedOrder
                 && e.ProposedOrderPostedDate.HasValue

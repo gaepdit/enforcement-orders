@@ -2,7 +2,7 @@
 
 namespace Enfo.Domain.Entities
 {
-    public class LegalAuthority : BaseEntity
+    public class LegalAuthority : BaseActiveEntity
     {
         [Required]
         [StringLength(100)]

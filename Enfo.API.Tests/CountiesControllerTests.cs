@@ -47,7 +47,6 @@ namespace Enfo.API.Tests.ControllerTests
 
             var expected = _allCounties
                 .OrderBy(e => e.Id)
-                .Where(e => e.Active)
                 .Take(PaginationFilter.DefaultPageSize)
                 .Select(e => new CountyResource(e));
 
@@ -87,7 +86,6 @@ namespace Enfo.API.Tests.ControllerTests
 
             var expected = _allCounties
                 .OrderBy(e => e.CountyName)
-                .Where(e => e.Active)
                 .Skip((pageNum - 1) * pageSize).Take(pageSize)
                 .Select(e => new CountyResource(e));
 

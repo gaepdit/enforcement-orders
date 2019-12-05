@@ -49,7 +49,7 @@ namespace Enfo.API.Tests.ControllerTests
             var items = ((await controller.Count()
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
-            var expected = _allOrders.Where(e => e.Active).Count();
+            var expected = _allOrders.Count();
 
             items.Should().BeEquivalentTo(expected);
         }

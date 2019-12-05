@@ -99,7 +99,6 @@ namespace Enfo.Domain.Entities
             {
                 return (
                     !Deleted
-                    && Active
                     && PublicationStatus == PublicationState.Published
                     && IsProposedOrder
                     && ProposedOrderPostedDate.HasValue
@@ -131,7 +130,6 @@ namespace Enfo.Domain.Entities
             {
                 return (
                     !Deleted
-                    && Active
                     && PublicationStatus == PublicationState.Published
                     && IsExecutedOrder
                     && ExecutedOrderPostedDate.HasValue

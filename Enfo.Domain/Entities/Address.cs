@@ -4,7 +4,7 @@ using static Enfo.Domain.Utils.StringUtils;
 
 namespace Enfo.Domain.Entities
 {
-    public class Address : BaseEntity
+    public class Address : BaseActiveEntity
     {
         // Postal (mailable) addresses only
 
