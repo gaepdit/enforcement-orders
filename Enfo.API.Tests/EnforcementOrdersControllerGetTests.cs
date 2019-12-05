@@ -1,4 +1,4 @@
-using Enfo.API.Controllers;
+﻿using Enfo.API.Controllers;
 using Enfo.API.QueryStrings;
 using Enfo.API.Resources;
 using Enfo.API.Tests.Helpers;
@@ -184,7 +184,7 @@ namespace Enfo.API.Tests.ControllerTests
 
         [Theory]
         [InlineData("Cherokee")]
-        [InlineData("Stephens")]
+        [InlineData("stephens")]
         public async Task CountyFilterReturnsCorrectItems(string county)
         {
             var repository = this.GetRepository<EnforcementOrder>();
@@ -199,7 +199,7 @@ namespace Enfo.API.Tests.ControllerTests
             var items = result.Value as IEnumerable<EnforcementOrderListResource>;
 
             var expected = _allOrders
-                .Where(e => e.County.Equals(county))
+                .Where(e => e.County.ToLower().Contains(county.ToLower()))
                 .Where(e => !e.Deleted)
                 .OrderBy(e => e.FacilityName)
                 .Select(e => new EnforcementOrderListResource(e));
@@ -329,6 +329,7 @@ namespace Enfo.API.Tests.ControllerTests
 
         [Theory]
         [InlineData("EPD-WP")]
+        [InlineData("aq")]
         [InlineData("8")]
         public async Task OrderNumberFilterReturnsCorrectItems(string orderNumber)
         {
@@ -344,7 +345,7 @@ namespace Enfo.API.Tests.ControllerTests
             var items = result.Value as IEnumerable<EnforcementOrderListResource>;
 
             var expected = _allOrders
-                .Where(e => e.OrderNumber.Contains(orderNumber))
+                .Where(e => e.OrderNumber.ToLower().Contains(orderNumber.ToLower()))
                 .Where(e => !e.Deleted)
                 .OrderBy(e => e.FacilityName)
                 .Select(e => new EnforcementOrderListResource(e));
@@ -420,7 +421,7 @@ namespace Enfo.API.Tests.ControllerTests
             var items = result.Value as IEnumerable<EnforcementOrderListResource>;
 
             var expected = _allOrders
-                .Where(e => e.County.Equals(county))
+                .Where(e => e.County.ToLower().Equals(county.ToLower()))
                 .Where(e => e.Deleted)
                 .OrderBy(e => e.FacilityName)
                 .Select(e => new EnforcementOrderListResource(e));
