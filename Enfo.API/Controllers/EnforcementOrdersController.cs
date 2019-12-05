@@ -52,7 +52,7 @@ namespace Enfo.API.Controllers
             //    spec = spec.And(new IsPublicOrdersSpec());
 
             if (!filter.FacilityFilter.IsNullOrWhiteSpace())
-                spec = spec.And(new FilterOrdersByName(filter.FacilityFilter));
+                spec = spec.And(new FilterOrdersByFacilityName(filter.FacilityFilter));
 
             if (!filter.County.IsNullOrWhiteSpace())
                 spec = spec.And(new FilterOrdersByCounty(filter.County));
@@ -164,7 +164,7 @@ namespace Enfo.API.Controllers
             //    spec = spec.And(new IsPublicOrdersSpec());
 
             if (!filter.FacilityFilter.IsNullOrWhiteSpace())
-                spec = spec.And(new FilterOrdersByName(filter.FacilityFilter));
+                spec = spec.And(new FilterOrdersByFacilityName(filter.FacilityFilter));
 
             if (!filter.County.IsNullOrWhiteSpace())
                 spec = spec.And(new FilterOrdersByCounty(filter.County));
