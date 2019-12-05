@@ -7,74 +7,32 @@ namespace Enfo.Domain.Utils
     [DebuggerStepThrough]
     public static class Check
     {
-        public static T NotNull<T>(T value, string parameterName)
-        {
-            if (value == null)
-            {
+        public static T NotNull<T>(T value, string parameterName) =>
+            value ??
                 throw new ArgumentNullException(parameterName);
-            }
 
-            return value;
-        }
-
-        public static string NotNullOrEmpty(string value, string parameterName)
-        {
-            if (value.IsNullOrEmpty())
-            {
+        public static string NotNullOrEmpty(string value, string parameterName) =>
+            !value.IsNullOrEmpty() ? value :
                 throw new ArgumentException($"{parameterName} can not be null or empty.", parameterName);
-            }
 
-            return value;
-        }
-
-        public static string NotNullOrWhiteSpace(string value, string parameterName)
-        {
-            if (value.IsNullOrWhiteSpace())
-            {
+        public static string NotNullOrWhiteSpace(string value, string parameterName) =>
+            !value.IsNullOrWhiteSpace() ? value :
                 throw new ArgumentException($"{parameterName} can not be null, empty, or white space.", parameterName);
-            }
 
-            return value;
-        }
-
-        public static ICollection<T> NotNullOrEmpty<T>(ICollection<T> value, string parameterName)
-        {
-            if (value.IsNullOrEmpty())
-            {
+        public static ICollection<T> NotNullOrEmpty<T>(ICollection<T> value, string parameterName) =>
+            !value.IsNullOrEmpty() ? value :
                 throw new ArgumentException($"{parameterName} can not be null or empty.", parameterName);
-            }
 
-            return value;
-        }
-
-        public static int NotNegative(int value, string parameterName)
-        {
-            if (value < 0)
-            {
+        public static int NotNegative(int value, string parameterName) =>
+            value >= 0 ? value :
                 throw new ArgumentException($"{parameterName} can not be negative.", parameterName);
-            }
 
-            return value;
-        }
-
-        public static int Positive(int value, string parameterName)
-        {
-            if (value <= 0)
-            {
+        public static int Positive(int value, string parameterName) =>
+            value > 0 ? value :
                 throw new ArgumentException($"{parameterName} must be positive (greater than zero).", parameterName);
-            }
 
-            return value;
-        }
-
-        //public static int AtLeast(int value, int atLeast, string parameterName)
-        //{
-        //    if (value < atLeast)
-        //    {
+        //public static int AtLeast(int value, int atLeast, string parameterName) =>
+        //    value >= atLeast ? value :
         //        throw new ArgumentException($"{parameterName} must be at least {atLeast}.", parameterName);
-        //    }
-
-        //    return value;
-        //}
     }
 }
