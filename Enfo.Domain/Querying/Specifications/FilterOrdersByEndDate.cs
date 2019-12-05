@@ -21,10 +21,6 @@ namespace Enfo.Domain.Querying
                 case ActivityStatus.All:
                     ApplyCriteria(e => e.ProposedOrderPostedDate <= tillDate || e.ExecutedDate <= tillDate);
                     break;
-
-                default:
-                    ApplyCriteria(e => true);
-                    break;
             }
         }
     }

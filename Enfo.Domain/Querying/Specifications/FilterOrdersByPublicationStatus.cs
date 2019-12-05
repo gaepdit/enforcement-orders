@@ -18,7 +18,7 @@ namespace Enfo.Domain.Querying
                     ApplyCriteria(e => e.PublicationStatus == PublicationState.Draft);
                     break;
 
-                default:
+                case PublicationStatus.All:
                     ApplyCriteria(e => true);
                     break;
             }

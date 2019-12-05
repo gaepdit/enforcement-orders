@@ -9,7 +9,6 @@ namespace Enfo.Domain.Querying
         {
             switch (EnforcementOrderSorting)
             {
-                default:
                 case EnforcementOrderSorting.FacilityAsc:
                     ApplyOrderBy(e => e.FacilityName.Trim().Trim(new char[] { '\n', '\r', '\t' }));
                     break;

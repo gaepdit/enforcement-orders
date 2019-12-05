@@ -17,7 +17,7 @@ namespace Enfo.Domain.Querying
                     ApplyCriteria(e => e.IsExecutedOrder);
                     break;
 
-                default:
+                case ActivityStatus.All:
                     ApplyCriteria(e => true);
                     break;
             }
