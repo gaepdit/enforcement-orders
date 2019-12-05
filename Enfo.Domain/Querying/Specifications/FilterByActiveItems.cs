@@ -7,7 +7,7 @@ namespace Enfo.Domain.Querying
     {
         public FilterByActiveItems(bool includeInactive = false)
         {
-            ApplyCriteria(e => e.Active || includeInactive);
+            ApplyCriteria(e => includeInactive || e.Active);
         }
     }
 }

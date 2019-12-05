@@ -33,18 +33,23 @@ namespace Enfo.API.Controllers
             [FromQuery] EnforcementOrderFilter filter = null,
             [FromQuery] PaginationFilter paging = null)
         {
+            // Specifications
             filter ??= new EnforcementOrderFilter();
 
-            // TODO: Only authorized users can request Orders with PublicationStatus other than "Published".
+            // TODO: Only authorized users can request Orders with PublicationStatus other than "Published"
+            // or deleted Orders
             //if (!User.LoggedIn)
-            //    publicationStatus = PublicationStatus.Published;
+            //{
+            //    filter.PublicationStatus = PublicationStatus.Published;
+            //    filter.IncludeDeleted = false;
+            //}
 
-            // Specifications
-            ISpecification<EnforcementOrder> spec = new TrueSpec<EnforcementOrder>();
+            // Either deleted or active items are returned; not both.
+            ISpecification<EnforcementOrder> spec = new FilterOrdersByDeletedStatus(filter.Deleted);
 
             // TODO: Only authorized users can request Orders that are not public.
             //if (!User.LoggedIn)
-            //    spec = spec.And(new PublicOrdersSpec());
+            //    spec = spec.And(new IsPublicOrdersSpec());
 
             if (!filter.FacilityFilter.IsNullOrWhiteSpace())
                 spec = spec.And(new FilterOrdersByName(filter.FacilityFilter));
@@ -100,7 +105,7 @@ namespace Enfo.API.Controllers
             // TODO: Only authorized users can request Orders that are not public.
             //if (!User.LoggedIn)
             //{
-            //    spec = spec.And(new PublicOrdersSpec());
+            //    spec = spec.And(new IsPublicOrdersSpec());
             //}
             // Ensure specification is set to exclude non-public data
 
@@ -140,18 +145,23 @@ namespace Enfo.API.Controllers
         public async Task<ActionResult<int>> Count(
             [FromQuery] EnforcementOrderFilter filter = null)
         {
+            // Specifications
             filter ??= new EnforcementOrderFilter();
 
-            // TODO: Only authorized users can request Orders with PublicationStatus other than "Published".
+            // TODO: Only authorized users can request Orders with PublicationStatus other than "Published"
+            // or deleted Orders
             //if (!User.LoggedIn)
-            //    publicationStatus = PublicationStatus.Published;
+            //{
+            //    filter.PublicationStatus = PublicationStatus.Published;
+            //    filter.IncludeDeleted = false;
+            //}
 
-            // Specifications
-            ISpecification<EnforcementOrder> spec = new TrueSpec<EnforcementOrder>();
+            // Either deleted or active items are counted; not both.
+            ISpecification<EnforcementOrder> spec = new FilterOrdersByDeletedStatus(filter.Deleted);
 
             // TODO: Only authorized users can request Orders that are not public.
             //if (!User.LoggedIn)
-            //    spec = spec.And(new PublicOrdersSpec());
+            //    spec = spec.And(new IsPublicOrdersSpec());
 
             if (!filter.FacilityFilter.IsNullOrWhiteSpace())
                 spec = spec.And(new FilterOrdersByName(filter.FacilityFilter));

@@ -15,5 +15,6 @@ namespace Enfo.API.QueryStrings
         public string OrderNumber { get; set; } = null;
         public string TextContains { get; set; } = null;
         public EnforcementOrderSorting SortOrder { get; set; } = EnforcementOrderSorting.FacilityAsc;
+        public bool Deleted { get; set; } = false;
     }
 }

@@ -53,6 +53,7 @@ namespace Enfo.API.Tests.ControllerTests
         [Theory]
         [InlineData(140)]
         [InlineData(27)]
+        [InlineData(70789)]
         [InlineData(71715)]
         public async Task GetDetailedByIdReturnsCorrectItem(int id)
         {

@@ -1,4 +1,4 @@
-﻿using Enfo.API.Controllers;
+using Enfo.API.Controllers;
 using Enfo.API.QueryStrings;
 using Enfo.API.Resources;
 using Enfo.API.Tests.Helpers;
@@ -64,6 +64,7 @@ namespace Enfo.API.Tests.ControllerTests
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
             var expected = _allOrders
+                .Where(e => !e.Deleted)
                 .OrderBy(e => e.Id)
                 .Take(PaginationFilter.DefaultPageSize)
                 .Select(e => new EnforcementOrderListResource(e));
@@ -72,7 +73,7 @@ namespace Enfo.API.Tests.ControllerTests
         }
 
         [Fact]
-        public async Task GetReturnsAllItems()
+        public async Task GetAllReturnsAllActiveItems()
         {
             var repository = this.GetRepository<EnforcementOrder>();
             var controller = new EnforcementOrdersController(repository);
@@ -82,6 +83,7 @@ namespace Enfo.API.Tests.ControllerTests
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
             var expected = _allOrders
+                .Where(e => !e.Deleted)
                 .OrderBy(e => e.FacilityName)
                 .Select(e => new EnforcementOrderListResource(e));
 
@@ -93,7 +95,7 @@ namespace Enfo.API.Tests.ControllerTests
         [InlineData(EnforcementOrderSorting.FacilityDesc, 3, 2)]
         [InlineData(EnforcementOrderSorting.DateAsc, 3, 2)]
         [InlineData(EnforcementOrderSorting.DateDesc, 3, 2)]
-        public async Task GetPaginatedAndSortedReturnsSomeItems(
+        public async Task GetPaginatedAndSortedReturnsCorrectItems(
             EnforcementOrderSorting sortOrder,
             int pageSize,
             int pageNum)
@@ -116,6 +118,7 @@ namespace Enfo.API.Tests.ControllerTests
             };
 
             var expected = orderedOrders
+                .Where(e => !e.Deleted)
                 .Skip((pageNum - 1) * pageSize).Take(pageSize)
                 .Select(e => new EnforcementOrderListResource(e));
 
@@ -170,8 +173,9 @@ namespace Enfo.API.Tests.ControllerTests
 
             var items = result.Value as IEnumerable<EnforcementOrderListResource>;
 
-            var expected = _allOrders.Where(
-                e => e.FacilityName.ToLower().Contains(facilityFilter.ToLower()))
+            var expected = _allOrders
+                .Where(e => e.FacilityName.ToLower().Contains(facilityFilter.ToLower()))
+                .Where(e => !e.Deleted)
                 .OrderBy(e => e.FacilityName)
                 .Select(e => new EnforcementOrderListResource(e));
 
@@ -194,8 +198,9 @@ namespace Enfo.API.Tests.ControllerTests
 
             var items = result.Value as IEnumerable<EnforcementOrderListResource>;
 
-            var expected = _allOrders.Where(
-                e => e.County.Equals(county))
+            var expected = _allOrders
+                .Where(e => e.County.Equals(county))
+                .Where(e => !e.Deleted)
                 .OrderBy(e => e.FacilityName)
                 .Select(e => new EnforcementOrderListResource(e));
 
@@ -218,8 +223,9 @@ namespace Enfo.API.Tests.ControllerTests
 
             var items = result.Value as IEnumerable<EnforcementOrderListResource>;
 
-            var expected = _allOrders.Where(
-                e => e.LegalAuthorityId.Equals(legalAuth))
+            var expected = _allOrders
+                .Where(e => e.LegalAuthorityId.Equals(legalAuth))
+                .Where(e => !e.Deleted)
                 .OrderBy(e => e.FacilityName)
                 .Select(e => new EnforcementOrderListResource(e));
 
@@ -255,14 +261,11 @@ namespace Enfo.API.Tests.ControllerTests
 
             var items = result.Value as IEnumerable<EnforcementOrderListResource>;
 
-            var expected = _allOrders.Where(
-                e => (status == ActivityStatus.All
-                || (status == ActivityStatus.Executed && e.IsExecutedOrder)
-                || (status == ActivityStatus.Proposed && e.IsProposedOrder && !e.IsExecutedOrder))
-                && (status == ActivityStatus.All
-                    && (e.ProposedOrderPostedDate >= fromDate || e.ExecutedDate >= fromDate)
-                || (status == ActivityStatus.Executed && e.ExecutedDate >= fromDate)
-                || (status == ActivityStatus.Proposed && e.ProposedOrderPostedDate >= fromDate)))
+            var expected = _allOrders
+                .Where(e => (status == ActivityStatus.All && (e.ProposedOrderPostedDate >= fromDate || e.ExecutedDate >= fromDate))
+                    || (status == ActivityStatus.Executed && e.IsExecutedOrder && e.ExecutedDate >= fromDate)
+                    || (status == ActivityStatus.Proposed && e.IsProposedOrder && !e.IsExecutedOrder && e.ProposedOrderPostedDate >= fromDate))
+                .Where(e => !e.Deleted)
                 .OrderBy(e => e.FacilityName)
                 .Select(e => new EnforcementOrderListResource(e));
 
@@ -286,12 +289,11 @@ namespace Enfo.API.Tests.ControllerTests
 
             var items = result.Value as IEnumerable<EnforcementOrderListResource>;
 
-            var expected = _allOrders.Where(
-                e => (publicationStatus == PublicationStatus.All
-                || (publicationStatus == PublicationStatus.Draft
-                    && e.PublicationStatus == EnforcementOrder.PublicationState.Draft)
-                || (publicationStatus == PublicationStatus.Published
-                    && e.PublicationStatus == EnforcementOrder.PublicationState.Published)))
+            var expected = _allOrders
+                .Where(e => publicationStatus == PublicationStatus.All
+                    || (publicationStatus == PublicationStatus.Draft && e.PublicationStatus == EnforcementOrder.PublicationState.Draft)
+                    || (publicationStatus == PublicationStatus.Published && e.PublicationStatus == EnforcementOrder.PublicationState.Published))
+                .Where(e => !e.Deleted)
                 .OrderBy(e => e.FacilityName)
                 .Select(e => new EnforcementOrderListResource(e));
 
@@ -314,14 +316,11 @@ namespace Enfo.API.Tests.ControllerTests
 
             var items = result.Value as IEnumerable<EnforcementOrderListResource>;
 
-            var expected = _allOrders.Where(
-                e => (status == ActivityStatus.All
-                || (status == ActivityStatus.Executed && e.IsExecutedOrder)
-                || (status == ActivityStatus.Proposed && e.IsProposedOrder && !e.IsExecutedOrder))
-                && (status == ActivityStatus.All
-                    && (e.ProposedOrderPostedDate <= tillDate || e.ExecutedDate <= tillDate)
-                || (status == ActivityStatus.Executed && e.ExecutedDate <= tillDate)
-                || (status == ActivityStatus.Proposed && e.ProposedOrderPostedDate <= tillDate)))
+            var expected = _allOrders
+                .Where(e => (status == ActivityStatus.All && (e.ProposedOrderPostedDate <= tillDate || e.ExecutedDate <= tillDate))
+                    || (status == ActivityStatus.Executed && e.IsExecutedOrder && e.ExecutedDate <= tillDate)
+                    || (status == ActivityStatus.Proposed && e.IsProposedOrder && !e.IsExecutedOrder && e.ProposedOrderPostedDate <= tillDate))
+                .Where(e => !e.Deleted)
                 .OrderBy(e => e.FacilityName)
                 .Select(e => new EnforcementOrderListResource(e));
 
@@ -344,8 +343,9 @@ namespace Enfo.API.Tests.ControllerTests
 
             var items = result.Value as IEnumerable<EnforcementOrderListResource>;
 
-            var expected = _allOrders.Where(
-                e => e.OrderNumber.Contains(orderNumber))
+            var expected = _allOrders
+                .Where(e => e.OrderNumber.Contains(orderNumber))
+                .Where(e => !e.Deleted)
                 .OrderBy(e => e.FacilityName)
                 .Select(e => new EnforcementOrderListResource(e));
 
@@ -363,17 +363,65 @@ namespace Enfo.API.Tests.ControllerTests
             var controller = new EnforcementOrdersController(repository);
 
             var result = (await controller.Get(
-                new EnforcementOrderFilter() { TextContains = textContains, 
-                    PublicationStatus = PublicationStatus.All },
+                new EnforcementOrderFilter()
+                {
+                    TextContains = textContains,
+                    PublicationStatus = PublicationStatus.All
+                },
                 new PaginationFilter() { PageSize = 0 })
                 .ConfigureAwait(false))
                 .Result as OkObjectResult;
 
             var items = result.Value as IEnumerable<EnforcementOrderListResource>;
 
-            var expected = _allOrders.Where(
-                e => e.Cause.ToLower().Contains(textContains.ToLower())
-                || e.Requirements.ToLower().Contains(textContains.ToLower()))
+            var expected = _allOrders
+                .Where(e => e.Cause.ToLower().Contains(textContains.ToLower())
+                    || e.Requirements.ToLower().Contains(textContains.ToLower()))
+                .Where(e => !e.Deleted)
+                .OrderBy(e => e.FacilityName)
+                .Select(e => new EnforcementOrderListResource(e));
+
+            items.Should().BeEquivalentTo(expected);
+        }
+
+        [Fact]
+        public async Task GetDeletedReturnsAllDeletedItems()
+        {
+            var repository = this.GetRepository<EnforcementOrder>();
+            var controller = new EnforcementOrdersController(repository);
+
+            var items = ((await controller.Get(
+                new EnforcementOrderFilter() { Deleted = true },
+                new PaginationFilter() { PageSize = 0 })
+                .ConfigureAwait(false)).Result as OkObjectResult).Value;
+
+            var expected = _allOrders
+                .Where(e => e.Deleted)
+                .OrderBy(e => e.FacilityName)
+                .Select(e => new EnforcementOrderListResource(e));
+
+            items.Should().BeEquivalentTo(expected);
+        }
+
+        [Theory]
+        [InlineData("Cherokee")]
+        [InlineData("stephens")]
+        public async Task GetFilteredDeletedReturnsCorrectDeletedItems(string county)
+        {
+            var repository = this.GetRepository<EnforcementOrder>();
+            var controller = new EnforcementOrdersController(repository);
+
+            var result = (await controller.Get(
+                new EnforcementOrderFilter() { County = county, Deleted = true },
+                new PaginationFilter() { PageSize = 0 })
+                .ConfigureAwait(false))
+                .Result as OkObjectResult;
+
+            var items = result.Value as IEnumerable<EnforcementOrderListResource>;
+
+            var expected = _allOrders
+                .Where(e => e.County.Equals(county))
+                .Where(e => e.Deleted)
                 .OrderBy(e => e.FacilityName)
                 .Select(e => new EnforcementOrderListResource(e));
 
@@ -397,6 +445,7 @@ namespace Enfo.API.Tests.ControllerTests
         [Theory]
         [InlineData(140)]
         [InlineData(27)]
+        [InlineData(70789)]
         [InlineData(71715)]
         public async Task GetByIdReturnsCorrectItem(int id)
         {
