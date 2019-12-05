@@ -12,10 +12,7 @@ namespace Enfo.Infrastructure.QueryingEvaluators
             where T : BaseEntity
         {
             // Apply pagination
-            if (pagination == null || !pagination.IsPagingEnabled)
-            {
-                return query;
-            }
+            if (pagination is null || !pagination.IsPagingEnabled) return query;
 
             return query.Skip(pagination.Skip).Take(pagination.Take);
         }

@@ -10,10 +10,8 @@ namespace Enfo.Domain.Utils
         /// <summary>
         /// Checks whatever given collection object is null or has no item.
         /// </summary>
-        public static bool IsNullOrEmpty<T>(this ICollection<T> source)
-        {
-            return source == null || source.Count <= 0;
-        }
+        public static bool IsNullOrEmpty<T>(this ICollection<T> source) => 
+            source is null || source.Count <= 0;
 
         /// <summary>
         /// Adds an item to the collection if it's not already in the collection.
@@ -24,7 +22,7 @@ namespace Enfo.Domain.Utils
         /// <returns>Returns True if added, returns False if not.</returns>
         public static bool AddIfNotContains<T>(this ICollection<T> source, T item)
         {
-            if (source == null)
+            if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }

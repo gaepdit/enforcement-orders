@@ -47,10 +47,7 @@ namespace Enfo.API.Controllers
         {
             var item = await _repository.GetByIdAsync(id).ConfigureAwait(false);
 
-            if (item == null)
-            {
-                return NotFound();
-            }
+            if (item is null) return NotFound();
 
             return Ok(new LegalAuthorityResource(item));
         }
@@ -62,10 +59,7 @@ namespace Enfo.API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Post([FromBody] LegalAuthorityCreateResource resource)
         {
-            if (resource is null)
-            {
-                return BadRequest();
-            }
+            if (resource is null) return BadRequest();
 
             var item = resource.NewLegalAuthority;
             _repository.Add(item);
@@ -84,10 +78,7 @@ namespace Enfo.API.Controllers
             int id,
             [FromBody] LegalAuthorityResource resource)
         {
-            if (resource is null || id != resource.Id)
-            {
-                return BadRequest();
-            }
+            if (resource is null || id != resource.Id) return BadRequest();
 
             var item = await _repository.GetByIdAsync(id).ConfigureAwait(false);
             item.UpdateFrom(resource);

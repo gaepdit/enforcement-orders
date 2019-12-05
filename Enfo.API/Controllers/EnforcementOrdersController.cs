@@ -115,7 +115,7 @@ namespace Enfo.API.Controllers
                 .GetByIdAsync(id, spec, include)
                 .ConfigureAwait(false);
 
-            if (item == null) return NotFound();
+            if (item is null) return NotFound();
 
             return Ok(new EnforcementOrderItemResource(item));
         }
@@ -133,7 +133,7 @@ namespace Enfo.API.Controllers
                 .GetByIdAsync(id, inclusion: include)
                 .ConfigureAwait(false);
 
-            if (item == null) return NotFound();
+            if (item is null) return NotFound();
 
             return Ok(new EnforcementOrderDetailedResource(item));
         }

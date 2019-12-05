@@ -12,10 +12,7 @@ namespace Enfo.Infrastructure.QueryingEvaluators
             IInclusion<T> inclusion)
             where T : BaseEntity
         {
-            if (inclusion == null)
-            {
-                return query;
-            }
+            if (inclusion is null) return query;
 
             // Includes all expression-based includes
             query = inclusion.Includes.Aggregate(query, (current, include) =>

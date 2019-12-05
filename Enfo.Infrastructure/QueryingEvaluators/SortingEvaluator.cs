@@ -9,10 +9,7 @@ namespace Enfo.Infrastructure.QueryingEvaluators
         internal static IQueryable<T> Apply<T>(this IQueryable<T> query, ISorting<T> sorting)
             where T : BaseEntity
         {
-            if (sorting == null)
-            {
-                return query;
-            }
+            if (sorting is null) return query;
 
             // Apply sorting if expressions are set
             if (sorting.OrderBy != null)
