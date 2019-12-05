@@ -2,10 +2,10 @@
 
 namespace Enfo.Domain.Querying
 {
-    public class ActiveItemsSpec<T> : Specification<T>
+    public class FilterByActiveItems<T> : Specification<T>
         where T : IActive
     {
-        public ActiveItemsSpec(bool includeInactive = false)
+        public FilterByActiveItems(bool includeInactive = false)
         {
             ApplyCriteria(e => e.Active || includeInactive);
         }

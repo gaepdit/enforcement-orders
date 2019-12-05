@@ -22,12 +22,42 @@ namespace Enfo.API.Tests.ControllerTests
         public EnforcementOrdersControllerOtherTests()
         {
             _allOrders = DevSeedData.GetEnforcementOrders();
+
+            var epdContacts = ProdSeedData.GetEpdContacts();
+            var addresses = ProdSeedData.GetAddresses();
+            var legalAuthorities = ProdSeedData.GetLegalAuthorities();
+
+            foreach (var contact in epdContacts)
+            {
+                contact.Address = addresses.SingleOrDefault(e => e.Id == contact.AddressId);
+            }
+
+            foreach (var order in _allOrders)
+            {
+                order.LegalAuthority = legalAuthorities.SingleOrDefault(e => e.Id == order.LegalAuthorityId);
+                order.CommentContact = epdContacts.SingleOrDefault(e => e.Id == order.CommentContactId);
+                order.HearingContact = epdContacts.SingleOrDefault(e => e.Id == order.HearingContactId);
+            }
+        }
+
+        [Fact]
+        public async Task GetDefaultCountReturnsCorrectCount()
+        {
+            var repository = this.GetRepository<EnforcementOrder>();
+            var controller = new EnforcementOrdersController(repository);
+
+            var items = ((await controller.Count()
+                .ConfigureAwait(false)).Result as OkObjectResult).Value;
+
+            var expected = _allOrders.Where(e => e.Active).Count();
+
+            items.Should().BeEquivalentTo(expected);
         }
 
         [Theory]
         [InlineData("diam")]
         [InlineData("orci")]
-        public async Task GetCountReturnsCorrectCount(string facilityFilter)
+        public async Task GetFilteredCountReturnsCorrectCount(string facilityFilter)
         {
             var repository = this.GetRepository<EnforcementOrder>();
             var controller = new EnforcementOrdersController(repository);
@@ -38,16 +68,32 @@ namespace Enfo.API.Tests.ControllerTests
                 .Result as OkObjectResult).Value;
 
             var expected = _allOrders.Where(
-                e => e.FacilityName.Contains(facilityFilter))
+                e => e.FacilityName.ToLower().Contains(facilityFilter.ToLower()))
                 .Count();
 
             value.Should().Be(expected);
         }
 
+        [Fact]
+        public async Task GetCurrentProposedReturnsCorrectItems()
+        {
+            var repository = this.GetRepository<EnforcementOrder>();
+            var controller = new EnforcementOrdersController(repository);
+
+            var items = ((await controller.CurrentProposed()
+                .ConfigureAwait(false)).Result as OkObjectResult).Value;
+
+            var expected = _allOrders.Where(
+                e => e.IsPublicProposedOrder
+                && e.CommentPeriodClosesDate >= DateTime.Today)
+                .Select(e => new EnforcementOrderListResource(e));
+
+            items.Should().BeEquivalentTo(expected);
+        }
+
         [Theory]
-        [InlineData(0, 0)]
         [InlineData(2, 2)]
-        public async Task GetCurrentProposedReturnsCorrectItems(
+        public async Task GetCurrentProposedPaginatedReturnsCorrectItems(
             int pageSize,
             int pageNum)
         {
@@ -55,21 +101,42 @@ namespace Enfo.API.Tests.ControllerTests
             var controller = new EnforcementOrdersController(repository);
 
             var items = ((await controller.CurrentProposed(
-                filter: new PaginationFilter() { PageSize = pageSize, Page = pageNum })
+                new PaginationFilter() { PageSize = pageSize, Page = pageNum })
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
             var expected = _allOrders.Where(
                 e => e.IsPublicProposedOrder
                 && e.CommentPeriodClosesDate >= DateTime.Today)
-                .Select(e => new EnforcementOrderItemResource(e));
+                .Skip((pageNum - 1) * pageSize).Take(pageSize)
+                .Select(e => new EnforcementOrderListResource(e));
+
+            items.Should().BeEquivalentTo(expected);
+        }
+
+        [Fact]
+        public async Task GetRecentlyExecutedReturnsCorrectItems()
+        {
+            var repository = this.GetRepository<EnforcementOrder>();
+            var controller = new EnforcementOrdersController(repository);
+
+            var items = ((await controller.RecentlyExecuted()
+                .ConfigureAwait(false)).Result as OkObjectResult).Value;
+
+            // fromDate is most recent Monday
+            var fromDate = GetNextWeekday(DateTime.Today.AddDays(-6), DayOfWeek.Monday);
+
+            var expected = _allOrders.Where(
+                e => e.IsPublicExecutedOrder
+                && e.ExecutedOrderPostedDate >= fromDate
+                && e.ExecutedOrderPostedDate <= DateTime.Today)
+                .Select(e => new EnforcementOrderListResource(e));
 
             items.Should().BeEquivalentTo(expected);
         }
 
         [Theory]
-        [InlineData(0, 0)]
         [InlineData(2, 2)]
-        public async Task GetRecentlyExecutedReturnsCorrectItems(
+        public async Task GetRecentlyExecutedPaginatedReturnsCorrectItems(
             int pageSize,
             int pageNum)
         {
@@ -87,15 +154,31 @@ namespace Enfo.API.Tests.ControllerTests
                 e => e.IsPublicExecutedOrder
                 && e.ExecutedOrderPostedDate >= fromDate
                 && e.ExecutedOrderPostedDate <= DateTime.Today)
-                .Select(e => new EnforcementOrderItemResource(e));
+                .Skip((pageNum - 1) * pageSize).Take(pageSize)
+                .Select(e => new EnforcementOrderListResource(e));
+
+            items.Should().BeEquivalentTo(expected);
+        }
+
+        [Fact]
+        public async Task GetDraftsReturnsCorrectItems()
+        {
+            var repository = this.GetRepository<EnforcementOrder>();
+            var controller = new EnforcementOrdersController(repository);
+
+            var items = ((await controller.Drafts()
+                .ConfigureAwait(false)).Result as OkObjectResult).Value;
+
+            var expected = _allOrders.Where(
+                e => e.PublicationStatus == PublicationState.Draft)
+                .Select(e => new EnforcementOrderListResource(e));
 
             items.Should().BeEquivalentTo(expected);
         }
 
         [Theory]
-        [InlineData(0, 0)]
         [InlineData(2, 2)]
-        public async Task GetDraftsReturnsCorrectItems(
+        public async Task GetDraftsPaginatedReturnsCorrectItems(
             int pageSize,
             int pageNum)
         {
@@ -108,15 +191,32 @@ namespace Enfo.API.Tests.ControllerTests
 
             var expected = _allOrders.Where(
                 e => e.PublicationStatus == PublicationState.Draft)
-                .Select(e => new EnforcementOrderItemResource(e));
+                .Skip((pageNum - 1) * pageSize).Take(pageSize)
+                .Select(e => new EnforcementOrderListResource(e));
+
+            items.Should().BeEquivalentTo(expected);
+        }
+
+        [Fact]
+        public async Task GetPendingReturnsCorrectItems()
+        {
+            var repository = this.GetRepository<EnforcementOrder>();
+            var controller = new EnforcementOrdersController(repository);
+
+            var items = ((await controller.Pending()
+                .ConfigureAwait(false)).Result as OkObjectResult).Value;
+
+            var expected = _allOrders.Where(
+                e => (e.IsPublic)
+                && e.LastPostedDate > GetNextWeekday(DateTime.Today.AddDays(-6), DayOfWeek.Monday))
+                .Select(e => new EnforcementOrderListResource(e));
 
             items.Should().BeEquivalentTo(expected);
         }
 
         [Theory]
-        [InlineData(0, 0)]
         [InlineData(2, 2)]
-        public async Task GetPendingReturnsCorrectItems(
+        public async Task GetPendingPaginatedReturnsCorrectItems(
             int pageSize,
             int pageNum)
         {
@@ -128,9 +228,10 @@ namespace Enfo.API.Tests.ControllerTests
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
             var expected = _allOrders.Where(
-                e => (e.IsPublicExecutedOrder || e.IsPublicProposedOrder)
+                e => (e.IsPublic)
                 && e.LastPostedDate > GetNextWeekday(DateTime.Today.AddDays(-6), DayOfWeek.Monday))
-                .Select(e => new EnforcementOrderItemResource(e));
+                .Skip((pageNum - 1) * pageSize).Take(pageSize)
+                .Select(e => new EnforcementOrderListResource(e));
 
             items.Should().BeEquivalentTo(expected);
         }

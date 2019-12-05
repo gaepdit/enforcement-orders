@@ -172,7 +172,7 @@ namespace Enfo.Infrastructure.Tests.RepositoryTests
         {
             using (IAsyncReadableRepository<Address> repository = this.GetRepository<Address>())
             {
-                var items = await repository.ListAsync(specification: new ActiveItemsSpec<Address>(includeInactive)).ConfigureAwait(false);
+                var items = await repository.ListAsync(specification: new FilterByActiveItems<Address>(includeInactive)).ConfigureAwait(false);
 
                 items.Should().HaveCount(_addresses.Count(e => e.Active || includeInactive));
                 items.Any(e => !e.Active).Should().Equals(includeInactive);
@@ -186,7 +186,7 @@ namespace Enfo.Infrastructure.Tests.RepositoryTests
         {
             using (IAsyncReadableRepository<Address> repository = this.GetRepository<Address>())
             {
-                var item = await repository.GetByIdAsync(id, new ActiveItemsSpec<Address>()).ConfigureAwait(false);
+                var item = await repository.GetByIdAsync(id, new FilterByActiveItems<Address>()).ConfigureAwait(false);
 
                 if (_addresses.Single(e => e.Id == id).Active)
                 {

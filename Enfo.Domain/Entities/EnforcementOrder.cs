@@ -60,17 +60,7 @@ namespace Enfo.Domain.Entities
         {
             get
             {
-                if (ExecutedDate.HasValue)
-                {
-                    return ExecutedDate.Value;
-                }
-
-                if (ProposedOrderPostedDate.HasValue)
-                {
-                    return ProposedOrderPostedDate.Value;
-                }
-
-                return null;
+                return ExecutedDate ?? ProposedOrderPostedDate;
             }
         }
 

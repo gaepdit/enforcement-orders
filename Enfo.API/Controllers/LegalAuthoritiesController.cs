@@ -32,7 +32,7 @@ namespace Enfo.API.Controllers
             filter ??= new ActiveItemFilter();
             paging ??= new PaginationFilter();
 
-            var spec = new ActiveItemsSpec<LegalAuthority>(filter.IncludeInactive);
+            var spec = new FilterByActiveItems<LegalAuthority>(filter.IncludeInactive);
 
             return Ok((await _repository.ListAsync(spec, paging.Pagination())
                 .ConfigureAwait(false))

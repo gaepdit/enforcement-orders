@@ -32,7 +32,7 @@ namespace Enfo.API.Controllers
             filter ??= new ActiveItemFilter();
             paging ??= new PaginationFilter();
 
-            var spec = new ActiveItemsSpec<EpdContact>(filter.IncludeInactive);
+            var spec = new FilterByActiveItems<EpdContact>(filter.IncludeInactive);
             var pagination = paging.Pagination();
             var include = new EpdContactIncludingAddress();
 
@@ -48,7 +48,7 @@ namespace Enfo.API.Controllers
         public async Task<ActionResult<EpdContactResource>> Get(int id)
         {
             var item = await _repository.GetByIdAsync(id,
-                new ActiveItemsSpec<EpdContact>(true),
+                new FilterByActiveItems<EpdContact>(true),
                 new EpdContactIncludingAddress()
             ).ConfigureAwait(false);
 

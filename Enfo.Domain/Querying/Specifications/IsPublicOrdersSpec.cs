@@ -4,9 +4,9 @@ using static Enfo.Domain.Entities.EnforcementOrder;
 
 namespace Enfo.Domain.Querying
 {
-    public class PublicOrdersSpec : Specification<EnforcementOrder>
+    public class IsPublicOrdersSpec : Specification<EnforcementOrder>
     {
-        public PublicOrdersSpec()
+        public IsPublicOrdersSpec()
         {
             // e.IsPublic spelled out for Entity Framework
             ApplyCriteria(e =>

@@ -187,7 +187,7 @@ namespace Enfo.Infrastructure.SeedData
                     Id = 71689,
                     Cause = "Netus et malesuada fames ac.",
                     CommentContactId = 2013,
-                    CommentPeriodClosesDate = new DateTime(2019,05,15),
+                    CommentPeriodClosesDate = DateTime.Today.AddDays(7),
                     County = "Walker",
                     Deleted = false,
                     ExecutedDate = null,
