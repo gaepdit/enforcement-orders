@@ -71,7 +71,7 @@ namespace Enfo.API.Controllers
         // PUT: api/Addresses/5
         //[Authorize]
         [HttpPut("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Put(
@@ -81,10 +81,13 @@ namespace Enfo.API.Controllers
             if (resource is null || id != resource.Id) return BadRequest();
 
             var item = await _repository.GetByIdAsync(id).ConfigureAwait(false);
+
+            if (item is null) return NotFound();
+
             item.UpdateFrom(resource);
             await _repository.CompleteAsync().ConfigureAwait(false);
 
-            return Ok(resource);
+            return NoContent();
         }
     }
 }

@@ -279,8 +279,8 @@ namespace Enfo.API.Tests.ControllerTests
             var result = await controller.Put(original.Id, target)
                 .ConfigureAwait(false);
 
-            result.Should().BeOfType<OkObjectResult>();
-            (result as OkObjectResult).StatusCode.Should().Be(200);
+            result.Should().BeOfType<NoContentResult>();
+            (result as NoContentResult).StatusCode.Should().Be(204);
 
             var updated = await repository.GetByIdAsync(target.Id)
                 .ConfigureAwait(false);
@@ -330,6 +330,26 @@ namespace Enfo.API.Tests.ControllerTests
             var updated = await repository.GetByIdAsync(original.Id).ConfigureAwait(false);
 
             updated.Should().BeEquivalentTo(original);
+        }
+
+        [Fact]
+        public async Task UpdateWithMissingIdFails()
+        {
+            var repository = this.GetRepository<LegalAuthority>();
+            var controller = new LegalAuthoritiesController(repository);
+
+            var target = new LegalAuthorityResource(
+                new LegalAuthority()
+                {
+                    Id = 9999,
+                    Active = false,
+                    AuthorityName = "XYZ"
+                });
+
+            IActionResult result = await controller.Put(9999, target).ConfigureAwait(false);
+
+            result.Should().BeOfType<NotFoundResult>();
+            (result as NotFoundResult).StatusCode.Should().Be(404);
         }
     }
 }

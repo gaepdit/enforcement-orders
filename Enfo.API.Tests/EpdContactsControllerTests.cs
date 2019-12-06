@@ -300,8 +300,8 @@ namespace Enfo.API.Tests.ControllerTests
             var result = await controller.Put(original.Id, target)
                 .ConfigureAwait(false);
 
-            result.Should().BeOfType<OkObjectResult>();
-            (result as OkObjectResult).StatusCode.Should().Be(200);
+            result.Should().BeOfType<NoContentResult>();
+            (result as NoContentResult).StatusCode.Should().Be(204);
 
             var updated = await repository.GetByIdAsync(target.Id)
                 .ConfigureAwait(false);
@@ -354,6 +354,29 @@ namespace Enfo.API.Tests.ControllerTests
             var updated = await repository.GetByIdAsync(original.Id).ConfigureAwait(false);
 
             updated.Should().BeEquivalentTo(original);
+        }
+
+        [Fact]
+        public async Task UpdateWithMissingIdFails()
+        {
+            var repository = this.GetRepository<EpdContact>();
+            var controller = new EpdContactsController(repository);
+
+            var target = new EpdContactUpdateResource
+            {
+                Id = 9999,
+                AddressId = 2002,
+                ContactName = "Name Update",
+                Email = "email@example.com",
+                Organization = "Com",
+                Telephone = "555-1212",
+                Title = "Title"
+            };
+
+            IActionResult result = await controller.Put(9999, target).ConfigureAwait(false);
+
+            result.Should().BeOfType<NotFoundResult>();
+            (result as NotFoundResult).StatusCode.Should().Be(404);
         }
     }
 }
