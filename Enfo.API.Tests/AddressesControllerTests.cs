@@ -65,7 +65,6 @@ namespace Enfo.API.Tests.ControllerTests
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
             var expected = _allAddresses
-                .OrderBy(e => e.Id)
                 .Where(e => e.Active)
                 .Select(e => new AddressResource(e));
 
@@ -84,7 +83,6 @@ namespace Enfo.API.Tests.ControllerTests
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
             var expected = _allAddresses
-                .OrderBy(e => e.Id)
                 .Select(e => new AddressResource(e));
 
             items.Should().BeEquivalentTo(expected);
@@ -262,7 +260,6 @@ namespace Enfo.API.Tests.ControllerTests
                 .Result as OkObjectResult).Value;
 
             var expected = _allAddresses
-                .OrderBy(e => e.Id)
                 .Select(e => new AddressResource(e));
 
             resultItems.Should().BeEquivalentTo(expected);

@@ -46,7 +46,7 @@ namespace Enfo.API.Tests.ControllerTests
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
             var expected = _allCounties
-                .OrderBy(e => e.Id)
+                .OrderBy(e => e.CountyName)
                 .Take(PaginationFilter.DefaultPageSize)
                 .Select(e => new CountyResource(e));
 
@@ -64,7 +64,6 @@ namespace Enfo.API.Tests.ControllerTests
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
             var expected = _allCounties
-                .OrderBy(e => e.CountyName)
                 .Select(e => new CountyResource(e));
 
             items.Should().BeEquivalentTo(expected);

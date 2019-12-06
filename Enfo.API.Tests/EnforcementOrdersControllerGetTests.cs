@@ -84,7 +84,6 @@ namespace Enfo.API.Tests.ControllerTests
 
             var expected = _allOrders
                 .Where(e => !e.Deleted)
-                .OrderBy(e => e.FacilityName)
                 .Select(e => new EnforcementOrderListResource(e));
 
             items.Should().BeEquivalentTo(expected);
@@ -208,7 +207,6 @@ namespace Enfo.API.Tests.ControllerTests
             var expected = _allOrders
                 .Where(e => e.FacilityName.ToLower().Contains(facilityFilter.ToLower()))
                 .Where(e => !e.Deleted)
-                .OrderBy(e => e.FacilityName)
                 .Select(e => new EnforcementOrderListResource(e));
 
             items.Should().BeEquivalentTo(expected);
@@ -233,7 +231,6 @@ namespace Enfo.API.Tests.ControllerTests
             var expected = _allOrders
                 .Where(e => e.County.ToLower().Contains(county.ToLower()))
                 .Where(e => !e.Deleted)
-                .OrderBy(e => e.FacilityName)
                 .Select(e => new EnforcementOrderListResource(e));
 
             items.Should().BeEquivalentTo(expected);
@@ -258,7 +255,6 @@ namespace Enfo.API.Tests.ControllerTests
             var expected = _allOrders
                 .Where(e => e.LegalAuthorityId.Equals(legalAuth))
                 .Where(e => !e.Deleted)
-                .OrderBy(e => e.FacilityName)
                 .Select(e => new EnforcementOrderListResource(e));
 
             items.Should().BeEquivalentTo(expected);
@@ -298,7 +294,6 @@ namespace Enfo.API.Tests.ControllerTests
                     || (status == ActivityStatus.Executed && e.IsExecutedOrder && e.ExecutedDate >= fromDate)
                     || (status == ActivityStatus.Proposed && e.IsProposedOrder && !e.IsExecutedOrder && e.ProposedOrderPostedDate >= fromDate))
                 .Where(e => !e.Deleted)
-                .OrderBy(e => e.FacilityName)
                 .Select(e => new EnforcementOrderListResource(e));
 
             items.Should().BeEquivalentTo(expected);
@@ -326,7 +321,6 @@ namespace Enfo.API.Tests.ControllerTests
                     || (publicationStatus == PublicationStatus.Draft && e.PublicationStatus == EnforcementOrder.PublicationState.Draft)
                     || (publicationStatus == PublicationStatus.Published && e.PublicationStatus == EnforcementOrder.PublicationState.Published))
                 .Where(e => !e.Deleted)
-                .OrderBy(e => e.FacilityName)
                 .Select(e => new EnforcementOrderListResource(e));
 
             items.Should().BeEquivalentTo(expected);
@@ -353,7 +347,6 @@ namespace Enfo.API.Tests.ControllerTests
                     || (status == ActivityStatus.Executed && e.IsExecutedOrder && e.ExecutedDate <= tillDate)
                     || (status == ActivityStatus.Proposed && e.IsProposedOrder && !e.IsExecutedOrder && e.ProposedOrderPostedDate <= tillDate))
                 .Where(e => !e.Deleted)
-                .OrderBy(e => e.FacilityName)
                 .Select(e => new EnforcementOrderListResource(e));
 
             items.Should().BeEquivalentTo(expected);
@@ -379,7 +372,6 @@ namespace Enfo.API.Tests.ControllerTests
             var expected = _allOrders
                 .Where(e => e.OrderNumber.ToLower().Contains(orderNumber.ToLower()))
                 .Where(e => !e.Deleted)
-                .OrderBy(e => e.FacilityName)
                 .Select(e => new EnforcementOrderListResource(e));
 
             items.Should().BeEquivalentTo(expected);
@@ -411,7 +403,6 @@ namespace Enfo.API.Tests.ControllerTests
                 .Where(e => e.Cause.ToLower().Contains(textContains.ToLower())
                     || e.Requirements.ToLower().Contains(textContains.ToLower()))
                 .Where(e => !e.Deleted)
-                .OrderBy(e => e.FacilityName)
                 .Select(e => new EnforcementOrderListResource(e));
 
             items.Should().BeEquivalentTo(expected);
@@ -430,7 +421,6 @@ namespace Enfo.API.Tests.ControllerTests
 
             var expected = _allOrders
                 .Where(e => e.Deleted)
-                .OrderBy(e => e.FacilityName)
                 .Select(e => new EnforcementOrderListResource(e));
 
             items.Should().BeEquivalentTo(expected);
@@ -455,7 +445,6 @@ namespace Enfo.API.Tests.ControllerTests
             var expected = _allOrders
                 .Where(e => e.County.ToLower().Equals(county.ToLower()))
                 .Where(e => e.Deleted)
-                .OrderBy(e => e.FacilityName)
                 .Select(e => new EnforcementOrderListResource(e));
 
             items.Should().BeEquivalentTo(expected);
