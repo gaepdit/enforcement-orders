@@ -106,8 +106,8 @@ namespace Enfo.API.Tests.ControllerTests
                 .Result as OkObjectResult).Value;
 
             var expected = _allOrders
-                .Where(e => e.County.Equals(county))
-                .Where(e => !e.Deleted)
+                .Where(e => e.County.ToLower().Contains(county.ToLower()))
+                .Where(e => e.Deleted)
                 .Count();
 
             value.Should().Be(expected);

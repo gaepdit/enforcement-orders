@@ -1,4 +1,4 @@
-using Enfo.Domain.Entities;
+﻿using Enfo.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using static Enfo.Domain.Entities.EnforcementOrder;
@@ -85,6 +85,30 @@ namespace Enfo.Infrastructure.SeedData
                     PublicationStatus = PublicationState.Published,
                     Requirements = "Ið velit meƿÞitum qui. Ei nām quaƿdo fāċilisi? Homerō nomiƿati id sit, sea tibique lūpÞǣtum āð. Ei porro nulla soleat mei, vīx oȝlīque ūrbǣnitas id, pro te commune scrīptorem? Fæcilis quǣēstiō has eǽ, id tinċiduƿÞ perseqūeris prō! Nam āccumsǣn forensibus cotidīēqūe cu.",
                     SettlementAmount = 5000
+                },
+
+                new EnforcementOrder {
+                    Id = 58310,
+                    Cause = "Mollis nunc sed id semper.",
+                    CommentContactId = 2004,
+                    CommentPeriodClosesDate = new DateTime(2012,11,15),
+                    County = "Stephens",
+                    Deleted = true,
+                    ExecutedDate = null,
+                    ExecutedOrderPostedDate = null,
+                    FacilityName = "Tempor orci dapibus",
+                    HearingCommentPeriodClosesDate = new DateTime(2012,11,21),
+                    HearingDate = new DateTime(2012,11,15),
+                    HearingLocation = "venenatis urna cursus eget nunc scelerisque viverra mauris in aliquam sem",
+                    IsExecutedOrder = false,
+                    IsHearingScheduled = true,
+                    IsProposedOrder = true,
+                    LegalAuthorityId = 8,
+                    OrderNumber = "EPD-SW-WQ-111",
+                    ProposedOrderPostedDate = new DateTime(2012,10,16),
+                    PublicationStatus = PublicationState.Published,
+                    Requirements = "Suspendisse potenti nullam ac tortor vitae purus faucibus ornare suspendisse. Magna fermentum iaculis eu non diam phasellus vestibulum. Imperdiet proin fermentum leo vel. Et ligula ullamcorper malesuada proin libero nunc consequat interdum varius. Neque gravida in fermentum et sollicitudin ac orci phasellus. Nunc sed blandit libero volutpat. Nisl rhoncus mattis rhoncus urna. Varius sit amet mattis vulputate enim nulla aliquet porttitor. Consectetur adipiscing elit pellentesque habitant morbi tristique. Ante metus dictum at tempor commodo ullamcorper a. Morbi tristique senectus et netus et malesuada fames ac turpis. Velit ut tortor pretium viverra suspendisse potenti. In arcu cursus euismod quis. Nulla malesuada pellentesque elit eget gravida cum sociis natoque penatibus. Mattis rhoncus urna neque viverra justo nec ultrices dui.",
+                    SettlementAmount = 25000
                 },
 
                 new EnforcementOrder {
