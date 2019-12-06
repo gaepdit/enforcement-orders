@@ -1,5 +1,6 @@
 ﻿using Enfo.Domain.Querying;
 using System;
+using System.ComponentModel;
 
 namespace Enfo.API.QueryStrings
 {
@@ -7,7 +8,10 @@ namespace Enfo.API.QueryStrings
     {
         public const int DefaultPageSize = 20;
 
+        [DefaultValue(DefaultPageSize)]
         public int PageSize { get; set; } = DefaultPageSize;
+        
+        [DefaultValue(1)]
         public int Page { get; set; } = 1;
 
         public Pagination Pagination() =>
