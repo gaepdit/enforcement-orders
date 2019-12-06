@@ -1,30 +1,29 @@
-using Enfo.Domain.Entities;
 using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 
 namespace Enfo.Domain.Querying
 {
     public abstract class Sorting<T> : ISorting<T>
-        where T : BaseEntity
+        where T : class
     {
-        public Expression<Func<T, object>> OrderBy { get; private set; }
-        public Expression<Func<T, object>> OrderByDescending { get; private set; }
-        public Expression<Func<T, object>> GroupBy { get; private set; }
+        public virtual List<Ordering<T>> OrderBy { get; private set; }
+            = new List<Ordering<T>>();
 
-        // TODO: Use an ordered list like to enable OrderBy().ThenBy().
-        protected virtual void ApplyOrderBy(Expression<Func<T, object>> orderByExpression)
-        {
-            OrderBy = orderByExpression;
-            OrderByDescending = null;
-        }
+        protected virtual void ApplyOrderBy(
+            Expression<Func<T, object>> orderByExpression) =>
+            OrderBy.Add(new Ordering<T>
+            {
+                OrderByExpression = orderByExpression,
+                SortDirection = SortDirection.Ascending
+            });
 
-        protected virtual void ApplyOrderByDescending(Expression<Func<T, object>> orderByDescendingExpression)
-        {
-            OrderByDescending = orderByDescendingExpression;
-            OrderBy = null;
-        }
-
-        protected virtual void ApplyGroupBy(Expression<Func<T, object>> groupByExpression) =>
-            GroupBy = groupByExpression;
+        protected virtual void ApplyOrderByDescending(
+            Expression<Func<T, object>> orderByExpression) =>
+            OrderBy.Add(new Ordering<T>
+            {
+                OrderByExpression = orderByExpression,
+                SortDirection = SortDirection.Descending
+            });
     }
 }

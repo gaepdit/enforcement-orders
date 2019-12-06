@@ -1,5 +1,4 @@
-﻿using Enfo.Domain.Entities;
-using Enfo.Domain.Querying;
+﻿using Enfo.Domain.Querying;
 using System.Linq;
 
 namespace Enfo.Infrastructure.QueryingEvaluators
@@ -9,12 +8,14 @@ namespace Enfo.Infrastructure.QueryingEvaluators
         internal static IQueryable<T> Apply<T>(
             this IQueryable<T> query,
             IPagination pagination)
-            where T : BaseEntity
         {
             // Apply pagination
-            if (pagination is null || !pagination.IsPagingEnabled) return query;
+            if (pagination != null && pagination.IsPagingEnabled)
+            {
+                query = query.Skip(pagination.Skip).Take(pagination.Take);
+            }
 
-            return query.Skip(pagination.Skip).Take(pagination.Take);
+            return query;
         }
     }
 }

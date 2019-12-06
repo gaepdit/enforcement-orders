@@ -1,4 +1,4 @@
-﻿using Enfo.Domain.Entities;
+using Enfo.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using static Enfo.Domain.Entities.EnforcementOrder;
@@ -20,6 +20,32 @@ namespace Enfo.Infrastructure.SeedData
                     Deleted = false,
                     ExecutedDate = new DateTime(1998,06,29),
                     ExecutedOrderPostedDate = new DateTime(1998,07,06),
+                    FacilityName = "A diam maecenas",
+                    HearingCommentPeriodClosesDate = null,
+                    HearingDate = null,
+                    HearingLocation = "",
+                    IsExecutedOrder = true,
+                    IsHearingScheduled = false,
+                    IsProposedOrder = false,
+                    LegalAuthorityId = 7,
+                    OrderNumber = "EPD-ACQ-7936",
+                    ProposedOrderPostedDate = null,
+                    PublicationStatus = PublicationState.Published,
+                    Requirements = "Duis ut diam quam nulla porttitor massa id neque. A lacus vestibulum sed arcu non. Amet massa vitae tortor condimentum. Magnis dis parturient montes nascetur ridiculus mus mauris. Arcu risus quis varius quam quisque id diam. Pellentesque massa placerat duis ultricies lacus sed. Tellus in hac habitasse platea dictumst vestibulum. Justo nec ultrices dui sapien eget. Ac odio tempor orci dapibus ultrices in. Lacus sed viverra tellus in hac habitasse platea dictumst vestibulum. Donec et odio pellentesque diam volutpat. Nunc faucibus a pellentesque sit amet porttitor eget dolor morbi. Neque ornare aenean euismod elementum nisi quis eleifend quam. Praesent elementum facilisis leo vel fringilla est ullamcorper eget. Et netus et malesuada fames. Urna et pharetra pharetra massa massa ultricies mi quis. Sit amet consectetur adipiscing elit. Felis donec et odio pellentesque diam volutpat commodo sed egestas. Adipiscing elit pellentesque habitant morbi."
+                    + Environment.NewLine
+                    + "Duis ut diam quam nulla porttitor massa id neque. A lacus vestibulum sed arcu non. Amet massa vitae tortor condimentum. Magnis dis parturient montes nascetur ridiculus mus mauris. Arcu risus quis varius quam quisque id diam. Pellentesque massa placerat duis ultricies lacus sed. Tellus in hac habitasse platea dictumst vestibulum. Justo nec ultrices dui sapien eget. Ac odio tempor orci dapibus ultrices in. Lacus sed viverra tellus in hac habitasse platea dictumst vestibulum. Donec et odio pellentesque diam volutpat. Nunc faucibus a pellentesque sit amet porttitor eget dolor morbi. Neque ornare aenean euismod elementum nisi quis eleifend quam. Praesent elementum facilisis leo vel fringilla est ullamcorper eget. Et netus et malesuada fames. Urna et pharetra pharetra massa massa ultricies mi quis. Sit amet consectetur adipiscing elit. Felis donec et odio pellentesque diam volutpat commodo sed egestas. Adipiscing elit pellentesque habitant morbi.",
+                    SettlementAmount = 2000
+                },
+
+                new EnforcementOrder {
+                    Id = 141,
+                    Cause = "Integer feugiat scelerisque varius morbi enim nunc faucibus a.",
+                    CommentContactId = null,
+                    CommentPeriodClosesDate = null,
+                    County = "Liberty",
+                    Deleted = false,
+                    ExecutedDate = new DateTime(1999,06,29),
+                    ExecutedOrderPostedDate = new DateTime(1999,07,06),
                     FacilityName = "A diam maecenas",
                     HearingCommentPeriodClosesDate = null,
                     HearingDate = null,
@@ -80,6 +106,30 @@ namespace Enfo.Infrastructure.SeedData
                     LegalAuthorityId = 8,
                     OrderNumber = "EPD-SW-WQ-111",
                     ProposedOrderPostedDate = new DateTime(2012,10,16),
+                    PublicationStatus = PublicationState.Published,
+                    Requirements = "Suspendisse potenti nullam ac tortor vitae purus faucibus ornare suspendisse. Magna fermentum iaculis eu non diam phasellus vestibulum. Imperdiet proin fermentum leo vel. Et ligula ullamcorper malesuada proin libero nunc consequat interdum varius. Neque gravida in fermentum et sollicitudin ac orci phasellus. Nunc sed blandit libero volutpat. Nisl rhoncus mattis rhoncus urna. Varius sit amet mattis vulputate enim nulla aliquet porttitor. Consectetur adipiscing elit pellentesque habitant morbi tristique. Ante metus dictum at tempor commodo ullamcorper a. Morbi tristique senectus et netus et malesuada fames ac turpis. Velit ut tortor pretium viverra suspendisse potenti. In arcu cursus euismod quis. Nulla malesuada pellentesque elit eget gravida cum sociis natoque penatibus. Mattis rhoncus urna neque viverra justo nec ultrices dui.",
+                    SettlementAmount = 25000
+                },
+
+                new EnforcementOrder {
+                    Id = 58313,
+                    Cause = "Mollis nunc sed id semper.",
+                    CommentContactId = 2004,
+                    CommentPeriodClosesDate = new DateTime(2013,11,15),
+                    County = "Stephens",
+                    Deleted = false,
+                    ExecutedDate = null,
+                    ExecutedOrderPostedDate = null,
+                    FacilityName = "Tempor orci dapibus",
+                    HearingCommentPeriodClosesDate = new DateTime(2013,11,21),
+                    HearingDate = new DateTime(2013,11,15),
+                    HearingLocation = "venenatis urna cursus eget nunc scelerisque viverra mauris in aliquam sem",
+                    IsExecutedOrder = false,
+                    IsHearingScheduled = true,
+                    IsProposedOrder = true,
+                    LegalAuthorityId = 8,
+                    OrderNumber = "EPD-SW-WQ-111",
+                    ProposedOrderPostedDate = new DateTime(2013,10,16),
                     PublicationStatus = PublicationState.Published,
                     Requirements = "Suspendisse potenti nullam ac tortor vitae purus faucibus ornare suspendisse. Magna fermentum iaculis eu non diam phasellus vestibulum. Imperdiet proin fermentum leo vel. Et ligula ullamcorper malesuada proin libero nunc consequat interdum varius. Neque gravida in fermentum et sollicitudin ac orci phasellus. Nunc sed blandit libero volutpat. Nisl rhoncus mattis rhoncus urna. Varius sit amet mattis vulputate enim nulla aliquet porttitor. Consectetur adipiscing elit pellentesque habitant morbi tristique. Ante metus dictum at tempor commodo ullamcorper a. Morbi tristique senectus et netus et malesuada fames ac turpis. Velit ut tortor pretium viverra suspendisse potenti. In arcu cursus euismod quis. Nulla malesuada pellentesque elit eget gravida cum sociis natoque penatibus. Mattis rhoncus urna neque viverra justo nec ultrices dui.",
                     SettlementAmount = 25000

@@ -11,15 +11,22 @@ namespace Enfo.Domain.Querying
             {
                 case EnforcementOrderSorting.FacilityAsc:
                     ApplyOrderBy(e => e.FacilityName.Trim().Trim(new char[] { '\n', '\r', '\t' }));
+                    ApplyOrderBy(e => e.ExecutedDate ?? e.ProposedOrderPostedDate);
                     break;
+
                 case EnforcementOrderSorting.FacilityDesc:
                     ApplyOrderByDescending(e => e.FacilityName.Trim().Trim(new char[] { '\n', '\r', '\t' }));
+                    ApplyOrderBy(e => e.ExecutedDate ?? e.ProposedOrderPostedDate);
                     break;
+
                 case EnforcementOrderSorting.DateAsc:
-                    ApplyOrderBy(e => e.LastPostedDate);
+                    ApplyOrderBy(e => e.ExecutedDate ?? e.ProposedOrderPostedDate);
+                    ApplyOrderBy(e => e.FacilityName.Trim().Trim(new char[] { '\n', '\r', '\t' }));
                     break;
+
                 case EnforcementOrderSorting.DateDesc:
-                    ApplyOrderByDescending(e => e.LastPostedDate);
+                    ApplyOrderByDescending(e => e.ExecutedDate ?? e.ProposedOrderPostedDate);
+                    ApplyOrderBy(e => e.FacilityName.Trim().Trim(new char[] { '\n', '\r', '\t' }));
                     break;
             }
         }

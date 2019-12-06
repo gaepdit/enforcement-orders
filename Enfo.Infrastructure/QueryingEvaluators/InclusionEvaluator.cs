@@ -1,5 +1,4 @@
-﻿using Enfo.Domain.Entities;
-using Enfo.Domain.Querying;
+﻿using Enfo.Domain.Querying;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 
@@ -10,17 +9,18 @@ namespace Enfo.Infrastructure.QueryingEvaluators
         internal static IQueryable<T> Apply<T>(
             this IQueryable<T> query,
             IInclusion<T> inclusion)
-            where T : BaseEntity
+            where T : class
         {
-            if (inclusion is null) return query;
+            if (inclusion != null)
+            {
+                // Includes all expression-based includes
+                query = inclusion.Includes.Aggregate(query, (current, include) =>
+                    current.Include(include));
 
-            // Includes all expression-based includes
-            query = inclusion.Includes.Aggregate(query, (current, include) =>
-                current.Include(include));
-
-            // Include any string-based include statements
-            query = inclusion.IncludeStrings.Aggregate(query, (current, include) =>
-                current.Include(include));
+                // Include any string-based include statements
+                query = inclusion.IncludeStrings.Aggregate(query, (current, include) =>
+                    current.Include(include));
+            }
 
             return query;
         }

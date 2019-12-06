@@ -82,7 +82,6 @@ namespace Enfo.API.Controllers
             var pagination = (paging ??= new PaginationFilter()).Pagination();
 
             // Sorting
-            // BUG: Sorting by date currently broken
             var sorting = new SortEnforcementOrders(filter.SortOrder);
 
             // Including

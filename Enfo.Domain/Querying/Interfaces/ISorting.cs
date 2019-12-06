@@ -1,14 +1,26 @@
-﻿using Enfo.Domain.Entities;
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 
 namespace Enfo.Domain.Querying
 {
     public interface ISorting<T>
-        where T : BaseEntity
+        where T : class
     {
-        Expression<Func<T, object>> OrderBy { get; }
-        Expression<Func<T, object>> OrderByDescending { get; }
-        Expression<Func<T, object>> GroupBy { get; }
+        List<Ordering<T>> OrderBy { get; }
+
+        //Expression<Func<T, object>> GroupBy { get; }
+    }
+
+    public class Ordering<T>
+    {
+        public Expression<Func<T, object>> OrderByExpression { get; set; }
+        public SortDirection SortDirection { get; set; }
+    }
+
+    public enum SortDirection
+    {
+        Ascending,
+        Descending
     }
 }

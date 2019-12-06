@@ -91,6 +91,37 @@ namespace Enfo.API.Tests.ControllerTests
         }
 
         [Theory]
+        [InlineData(EnforcementOrderSorting.FacilityAsc)]
+        [InlineData(EnforcementOrderSorting.FacilityDesc)]
+        [InlineData(EnforcementOrderSorting.DateAsc)]
+        [InlineData(EnforcementOrderSorting.DateDesc)]
+        public async Task GetSortedReturnsCorrectItems(EnforcementOrderSorting sortOrder)
+        {
+            var repository = this.GetRepository<EnforcementOrder>();
+            var controller = new EnforcementOrdersController(repository);
+
+            var items = ((await controller.Get(
+                new EnforcementOrderFilter() { SortOrder = sortOrder })
+                .ConfigureAwait(false)).Result as OkObjectResult).Value;
+
+            var orderedOrders = sortOrder switch
+            {
+                EnforcementOrderSorting.DateAsc => _allOrders.OrderBy(e => e.LastPostedDate),
+                EnforcementOrderSorting.DateDesc => _allOrders.OrderByDescending(e => e.LastPostedDate),
+                EnforcementOrderSorting.FacilityAsc => _allOrders.OrderBy(e => e.FacilityName),
+                EnforcementOrderSorting.FacilityDesc => _allOrders.OrderByDescending(e => e.FacilityName),
+                _ => throw new ArgumentException()
+            };
+
+            var expected = orderedOrders
+                .ThenBy(e => e.FacilityName)
+                .Where(e => !e.Deleted)
+                .Select(e => new EnforcementOrderListResource(e));
+
+            items.Should().BeEquivalentTo(expected, o => o.WithStrictOrdering());
+        }
+
+        [Theory]
         [InlineData(EnforcementOrderSorting.FacilityAsc, 3, 2)]
         [InlineData(EnforcementOrderSorting.FacilityDesc, 3, 2)]
         [InlineData(EnforcementOrderSorting.DateAsc, 3, 2)]
@@ -118,11 +149,12 @@ namespace Enfo.API.Tests.ControllerTests
             };
 
             var expected = orderedOrders
+                .ThenBy(e => e.FacilityName)
                 .Where(e => !e.Deleted)
                 .Skip((pageNum - 1) * pageSize).Take(pageSize)
                 .Select(e => new EnforcementOrderListResource(e));
 
-            items.Should().BeEquivalentTo(expected);
+            items.Should().BeEquivalentTo(expected, o => o.WithStrictOrdering());
         }
 
         [Fact]

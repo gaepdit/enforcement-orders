@@ -1,32 +1,34 @@
-﻿using Enfo.Domain.Entities;
-using Enfo.Domain.Querying;
+﻿using Enfo.Domain.Querying;
 using System.Linq;
 
 namespace Enfo.Infrastructure.QueryingEvaluators
 {
     public static class SortingEvaluator
     {
-        internal static IQueryable<T> Apply<T>(this IQueryable<T> query, ISorting<T> sorting)
-            where T : BaseEntity
+        internal static IOrderedQueryable<T> Apply<T>(
+            this IQueryable<T> query,
+            ISorting<T> sorting)
+            where T : class
         {
-            if (sorting is null) return query;
+            var orderedQuery = query.OrderBy(e => 1);
 
             // Apply sorting if expressions are set
-            if (sorting.OrderBy != null)
+            if (sorting?.OrderBy?.Count > 0)
             {
-                query = query.OrderBy(sorting.OrderBy);
-            }
-            else if (sorting.OrderByDescending != null)
-            {
-                query = query.OrderByDescending(sorting.OrderByDescending);
-            }
-
-            if (sorting.GroupBy != null)
-            {
-                query = query.GroupBy(sorting.GroupBy).SelectMany(x => x);
+                foreach (var ordering in sorting.OrderBy)
+                {
+                    orderedQuery = orderedQuery.ApplyOrdering(ordering);
+                }
             }
 
-            return query;
+            return orderedQuery;
         }
+
+        private static IOrderedQueryable<T> ApplyOrdering<T>(
+            this IOrderedQueryable<T> orderedQuery,
+            Ordering<T> ordering) =>
+            ordering.SortDirection == SortDirection.Ascending
+                ? orderedQuery.ThenBy(ordering.OrderByExpression)
+                : orderedQuery.ThenByDescending(ordering.OrderByExpression);
     }
 }
