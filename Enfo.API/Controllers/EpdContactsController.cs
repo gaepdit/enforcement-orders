@@ -1,4 +1,4 @@
-using Enfo.API.QueryStrings;
+﻿using Enfo.API.QueryStrings;
 using Enfo.API.Resources;
 using Enfo.Domain.Entities;
 using Enfo.Domain.Querying;
@@ -48,11 +48,13 @@ namespace Enfo.API.Controllers
         public async Task<ActionResult<EpdContactResource>> Get(int id)
         {
             var item = await _repository.GetByIdAsync(id,
-                new FilterByActiveItems<EpdContact>(true),
-                new EpdContactIncludingAddress()
+                inclusion: new EpdContactIncludingAddress()
             ).ConfigureAwait(false);
 
-            if (item is null) return NotFound();
+            if (item is null)
+            {
+                return NotFound(id);
+            }
 
             return Ok(new EpdContactResource(item));
         }
@@ -64,7 +66,10 @@ namespace Enfo.API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Post([FromBody] EpdContactCreateResource resource)
         {
-            if (resource is null) return BadRequest();
+            if (resource is null || !ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
             var item = resource.NewEpdContact();
             _repository.Add(item);
@@ -83,11 +88,17 @@ namespace Enfo.API.Controllers
             int id,
             [FromBody] EpdContactUpdateResource resource)
         {
-            if (resource is null || id != resource.Id) return BadRequest();
+            if (resource is null || id != resource.Id || !ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
             var item = await _repository.GetByIdAsync(id).ConfigureAwait(false);
 
-            if (item is null) return NotFound();
+            if (item is null)
+            {
+                return NotFound(id);
+            }
 
             item.UpdateFrom(resource);
             await _repository.CompleteAsync().ConfigureAwait(false);

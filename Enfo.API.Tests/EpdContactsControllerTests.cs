@@ -194,9 +194,10 @@ namespace Enfo.API.Tests.ControllerTests
 
             var result = await controller.Get(id).ConfigureAwait(false);
 
-            result.Result.Should().BeOfType<NotFoundResult>();
+            result.Result.Should().BeOfType<NotFoundObjectResult>();
             result.Value.Should().BeNull();
-            (result.Result as NotFoundResult).StatusCode.Should().Be(404);
+            (result.Result as NotFoundObjectResult).StatusCode.Should().Be(404);
+            (result.Result as NotFoundObjectResult).Value.Should().Be(id);
         }
 
         [Fact]
@@ -261,8 +262,8 @@ namespace Enfo.API.Tests.ControllerTests
 
             var result = await controller.Post(null).ConfigureAwait(false);
 
-            result.Should().BeOfType<BadRequestResult>();
-            (result as BadRequestResult).StatusCode.Should().Be(400);
+            result.Should().BeOfType<BadRequestObjectResult>();
+            (result as BadRequestObjectResult).StatusCode.Should().Be(400);
 
             // Verify repository not changed after attempting to Post null item.
             var resultItems = ((await controller.Get(
@@ -319,15 +320,15 @@ namespace Enfo.API.Tests.ControllerTests
 
             var result = await controller.Put(original.Id, null).ConfigureAwait(false);
 
-            result.Should().BeOfType<BadRequestResult>();
-            (result as BadRequestResult).StatusCode.Should().Be(400);
+            result.Should().BeOfType<BadRequestObjectResult>();
+            (result as BadRequestObjectResult).StatusCode.Should().Be(400);
 
             var updated = await repository.GetByIdAsync(2000).ConfigureAwait(false);
 
             updated.Should().BeEquivalentTo(original);
         }
 
-        [Fact]
+       [Fact]
         public async Task UpdateWithWrongIdFails()
         {
             var repository = this.GetRepository<EpdContact>();
@@ -348,8 +349,8 @@ namespace Enfo.API.Tests.ControllerTests
 
             var result = await controller.Put(original.Id, target).ConfigureAwait(false);
 
-            result.Should().BeOfType<BadRequestResult>();
-            (result as BadRequestResult).StatusCode.Should().Be(400);
+            result.Should().BeOfType<BadRequestObjectResult>();
+            (result as BadRequestObjectResult).StatusCode.Should().Be(400);
 
             var updated = await repository.GetByIdAsync(original.Id).ConfigureAwait(false);
 
@@ -375,8 +376,9 @@ namespace Enfo.API.Tests.ControllerTests
 
             IActionResult result = await controller.Put(9999, target).ConfigureAwait(false);
 
-            result.Should().BeOfType<NotFoundResult>();
-            (result as NotFoundResult).StatusCode.Should().Be(404);
+            result.Should().BeOfType<NotFoundObjectResult>();
+            (result as NotFoundObjectResult).StatusCode.Should().Be(404);
+            (result as NotFoundObjectResult).Value.Should().Be(9999);
         }
     }
 }

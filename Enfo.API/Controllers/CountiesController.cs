@@ -40,7 +40,10 @@ namespace Enfo.API.Controllers
         {
             var item = await _repository.GetByIdAsync(id).ConfigureAwait(false);
 
-            if (item is null) return NotFound();
+            if (item is null)
+            {
+                return NotFound(id);
+            }
 
             return Ok(new CountyResource(item));
         }

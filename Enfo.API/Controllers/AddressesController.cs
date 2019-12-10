@@ -47,7 +47,10 @@ namespace Enfo.API.Controllers
         {
             var item = await _repository.GetByIdAsync(id).ConfigureAwait(false);
 
-            if (item is null) return NotFound();
+            if (item is null)
+            {
+                return NotFound(id);
+            }
 
             return Ok(new AddressResource(item));
         }
@@ -59,7 +62,10 @@ namespace Enfo.API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Post([FromBody] AddressCreateResource resource)
         {
-            if (resource is null) return BadRequest();
+            if (resource is null || !ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
             var item = resource.NewAddress();
             _repository.Add(item);
@@ -78,11 +84,17 @@ namespace Enfo.API.Controllers
             int id,
             [FromBody] AddressResource resource)
         {
-            if (resource is null || id != resource.Id) return BadRequest();
+            if (resource is null || id != resource.Id || !ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
             var item = await _repository.GetByIdAsync(id).ConfigureAwait(false);
 
-            if (item is null) return NotFound();
+            if (item is null)
+            {
+                return NotFound(id);
+            }
 
             item.UpdateFrom(resource);
             await _repository.CompleteAsync().ConfigureAwait(false);

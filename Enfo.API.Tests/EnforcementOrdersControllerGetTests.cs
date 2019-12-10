@@ -493,9 +493,10 @@ namespace Enfo.API.Tests.ControllerTests
 
             var result = await controller.Get(id).ConfigureAwait(false);
 
-            result.Result.Should().BeOfType<NotFoundResult>();
+            result.Result.Should().BeOfType<NotFoundObjectResult>();
             result.Value.Should().BeNull();
-            (result.Result as NotFoundResult).StatusCode.Should().Be(404);
+            (result.Result as NotFoundObjectResult).StatusCode.Should().Be(404);
+            (result.Result as NotFoundObjectResult).Value.Should().Be(id);
         }
     }
 }

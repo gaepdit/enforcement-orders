@@ -184,9 +184,10 @@ namespace Enfo.API.Tests.ControllerTests
 
             var result = await controller.Get(id).ConfigureAwait(false);
 
-            result.Result.Should().BeOfType<NotFoundResult>();
+            result.Result.Should().BeOfType<NotFoundObjectResult>();
             result.Value.Should().BeNull();
-            (result.Result as NotFoundResult).StatusCode.Should().Be(404);
+            (result.Result as NotFoundObjectResult).StatusCode.Should().Be(404);
+            (result.Result as NotFoundObjectResult).Value.Should().Be(id);
         }
 
         [Fact]
@@ -249,10 +250,49 @@ namespace Enfo.API.Tests.ControllerTests
 
             var result = await controller.Post(null).ConfigureAwait(false);
 
-            result.Should().BeOfType<BadRequestResult>();
-            (result as BadRequestResult).StatusCode.Should().Be(400);
+            result.Should().BeOfType<BadRequestObjectResult>();
+            (result as BadRequestObjectResult).StatusCode.Should().Be(400);
 
             // Verify repository not changed after attempting to Post null item.
+            var resultItems = ((await controller.Get(
+                new ActiveItemFilter() { IncludeInactive = true },
+                paging: new PaginationFilter() { PageSize = 0 })
+                .ConfigureAwait(false))
+                .Result as OkObjectResult).Value;
+
+            var expected = _allAddresses
+                .Select(e => new AddressResource(e));
+
+            resultItems.Should().BeEquivalentTo(expected);
+        }
+
+        [Fact]
+        public async Task AddInvalidItemFails()
+        {
+            var repository = this.GetRepository<Address>();
+            var controller = new AddressesController(repository);
+
+            var item = new AddressCreateResource()
+            {
+                City = null,
+                PostalCode = "abc",
+                State = "GA",
+                Street = "123 Fake St"
+            };
+
+            controller.ModelState.AddModelError(nameof(item.City), "City is required");
+            controller.ModelState.AddModelError(nameof(item.PostalCode), "Valid US Postal Code is required");
+
+            var result = await controller.Post(item).ConfigureAwait(false);
+
+            result.Should().BeOfType<BadRequestObjectResult>();
+            var objectResult = (result as BadRequestObjectResult);
+            objectResult.StatusCode.Should().Be(400);
+            var objectResultValue = (objectResult.Value as Microsoft.AspNetCore.Mvc.SerializableError);
+            objectResultValue.Count.Should().Be(2);
+            objectResultValue.Keys.Should().BeEquivalentTo(new List<string>() { "City", "PostalCode" });
+
+            // Verify repository not changed after attempting to Post invalid item.
             var resultItems = ((await controller.Get(
                 new ActiveItemFilter() { IncludeInactive = true },
                 paging: new PaginationFilter() { PageSize = 0 })
@@ -306,8 +346,8 @@ namespace Enfo.API.Tests.ControllerTests
 
             var result = await controller.Put(original.Id, null).ConfigureAwait(false);
 
-            result.Should().BeOfType<BadRequestResult>();
-            (result as BadRequestResult).StatusCode.Should().Be(400);
+            result.Should().BeOfType<BadRequestObjectResult>();
+            (result as BadRequestObjectResult).StatusCode.Should().Be(400);
 
             var updated = await repository.GetByIdAsync(2000).ConfigureAwait(false);
 
@@ -334,8 +374,8 @@ namespace Enfo.API.Tests.ControllerTests
 
             var result = await controller.Put(original.Id, target).ConfigureAwait(false);
 
-            result.Should().BeOfType<BadRequestResult>();
-            (result as BadRequestResult).StatusCode.Should().Be(400);
+            result.Should().BeOfType<BadRequestObjectResult>();
+            (result as BadRequestObjectResult).StatusCode.Should().Be(400);
 
             var updated = await repository.GetByIdAsync(original.Id).ConfigureAwait(false);
 
@@ -360,8 +400,9 @@ namespace Enfo.API.Tests.ControllerTests
 
             IActionResult result = await controller.Put(9999, target).ConfigureAwait(false);
 
-            result.Should().BeOfType<NotFoundResult>();
-            (result as NotFoundResult).StatusCode.Should().Be(404);
+            result.Should().BeOfType<NotFoundObjectResult>();
+            (result as NotFoundObjectResult).StatusCode.Should().Be(404);
+            (result as NotFoundObjectResult).Value.Should().Be(9999);
         }
     }
 }
