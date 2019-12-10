@@ -82,9 +82,9 @@ namespace Enfo.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Put(
             int id,
-            [FromBody] LegalAuthorityResource resource)
+            [FromBody] LegalAuthorityUpdateResource resource)
         {
-            if (resource is null || id != resource.Id || !ModelState.IsValid)
+            if (resource is null || !ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }

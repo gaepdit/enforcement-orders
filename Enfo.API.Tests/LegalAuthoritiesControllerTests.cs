@@ -266,15 +266,14 @@ namespace Enfo.API.Tests.ControllerTests
             var repository = this.GetRepository<LegalAuthority>();
             var controller = new LegalAuthoritiesController(repository);
 
-            var target = new LegalAuthorityResource(
-                new LegalAuthority()
-                {
-                    Id = 1,
-                    Active = false,
-                    AuthorityName = "XYZ"
-                });
+            var id = 1;
+            var target = new LegalAuthorityUpdateResource
+            {
+                Active = false,
+                AuthorityName = "XYZ"
+            };
 
-            var original = await repository.GetByIdAsync(target.Id)
+            var original = await repository.GetByIdAsync(id)
                 .ConfigureAwait(false);
 
             var result = await controller.Put(original.Id, target)
@@ -283,7 +282,7 @@ namespace Enfo.API.Tests.ControllerTests
             result.Should().BeOfType<NoContentResult>();
             (result as NoContentResult).StatusCode.Should().Be(204);
 
-            var updated = await repository.GetByIdAsync(target.Id)
+            var updated = await repository.GetByIdAsync(id)
                 .ConfigureAwait(false);
 
             updated.Should().BeEquivalentTo(target);
@@ -308,44 +307,16 @@ namespace Enfo.API.Tests.ControllerTests
         }
 
         [Fact]
-        public async Task UpdateWithWrongIdFails()
-        {
-            var repository = this.GetRepository<LegalAuthority>();
-            var controller = new LegalAuthoritiesController(repository);
-
-            var target = new LegalAuthorityResource(
-                new LegalAuthority()
-                {
-                    Id = 9999,
-                    Active = false,
-                    AuthorityName = "XYZ"
-                });
-
-            var original = await repository.GetByIdAsync(1).ConfigureAwait(false);
-
-            IActionResult result = await controller.Put(original.Id, target).ConfigureAwait(false);
-
-            result.Should().BeOfType<BadRequestObjectResult>();
-            (result as BadRequestObjectResult).StatusCode.Should().Be(400);
-
-            var updated = await repository.GetByIdAsync(original.Id).ConfigureAwait(false);
-
-            updated.Should().BeEquivalentTo(original);
-        }
-
-        [Fact]
         public async Task UpdateWithMissingIdFails()
         {
             var repository = this.GetRepository<LegalAuthority>();
             var controller = new LegalAuthoritiesController(repository);
 
-            var target = new LegalAuthorityResource(
-                new LegalAuthority()
-                {
-                    Id = 9999,
-                    Active = false,
-                    AuthorityName = "XYZ"
-                });
+            var target = new LegalAuthorityUpdateResource
+            {
+                Active = false,
+                AuthorityName = "XYZ"
+            };
 
             IActionResult result = await controller.Put(9999, target).ConfigureAwait(false);
 

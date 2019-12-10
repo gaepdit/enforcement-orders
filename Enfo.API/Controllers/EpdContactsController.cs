@@ -88,7 +88,7 @@ namespace Enfo.API.Controllers
             int id,
             [FromBody] EpdContactUpdateResource resource)
         {
-            if (resource is null || id != resource.Id || !ModelState.IsValid)
+            if (resource is null || !ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }

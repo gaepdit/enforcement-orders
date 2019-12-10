@@ -8,7 +8,6 @@ namespace Enfo.API.Resources
 {
     public class EpdContactUpdateResource
     {
-        public int Id { get; set; }
         public bool Active { get; set; }
 
         [DisplayName("Contact Name")]

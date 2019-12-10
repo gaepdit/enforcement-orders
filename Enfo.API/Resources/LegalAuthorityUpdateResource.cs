@@ -6,23 +6,25 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Enfo.API.Resources
 {
-    public class LegalAuthorityResource
+    public class LegalAuthorityUpdateResource
     {
-        public int Id { get; set; }
         public bool Active { get; set; } = true;
 
         [DisplayName("Legal Authority")]
         [Required(ErrorMessage = "Legal Authority name is required")]
         public string AuthorityName { get; set; }
+    }
 
-        public LegalAuthorityResource() { }
-        public LegalAuthorityResource(LegalAuthority item)
+    public static class LegalAuthorityExtension
+    {
+        public static void UpdateFrom(this LegalAuthority item, LegalAuthorityUpdateResource resource)
         {
             Check.NotNull(item, nameof(item));
+            Check.NotNull(resource, nameof(resource));
 
-            Id = item.Id;
-            Active = item.Active;
-            AuthorityName = item.AuthorityName;
+            item.Active = resource.Active;
+            item.AuthorityName = resource.AuthorityName;
+            item.UpdatedDate = DateTime.Now;
         }
     }
 }

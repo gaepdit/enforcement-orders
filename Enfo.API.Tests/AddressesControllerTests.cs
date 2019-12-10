@@ -311,26 +311,22 @@ namespace Enfo.API.Tests.ControllerTests
             var repository = this.GetRepository<Address>();
             var controller = new AddressesController(repository);
 
-            var target = new AddressResource(
-                new Address()
-                {
-                    Id = 2000,
-                    City = "Atlanta",
-                    PostalCode = "33333",
-                    State = "GA",
-                    Street = "123 Fake St"
-                });
+            var id = 2000;
+            var target = new AddressUpdateResource
+            {
+                City = "Atlanta",
+                PostalCode = "33333",
+                State = "GA",
+                Street = "123 Fake St"
+            };
 
-            var original = await repository.GetByIdAsync(target.Id)
-                .ConfigureAwait(false);
-
-            var result = await controller.Put(original.Id, target)
+            var result = await controller.Put(id, target)
                 .ConfigureAwait(false);
 
             result.Should().BeOfType<NoContentResult>();
             (result as NoContentResult).StatusCode.Should().Be(204);
 
-            var updated = await repository.GetByIdAsync(target.Id)
+            var updated = await repository.GetByIdAsync(id)
                 .ConfigureAwait(false);
 
             updated.Should().BeEquivalentTo(target);
@@ -355,48 +351,18 @@ namespace Enfo.API.Tests.ControllerTests
         }
 
         [Fact]
-        public async Task UpdateWithWrongIdFails()
-        {
-            var repository = this.GetRepository<Address>();
-            var controller = new AddressesController(repository);
-
-            var target = new AddressResource(
-                new Address()
-                {
-                    Id = 9999,
-                    City = "Atlanta",
-                    PostalCode = "33333",
-                    State = "GA",
-                    Street = "123 Fake St"
-                });
-
-            var original = await repository.GetByIdAsync(2000).ConfigureAwait(false);
-
-            var result = await controller.Put(original.Id, target).ConfigureAwait(false);
-
-            result.Should().BeOfType<BadRequestObjectResult>();
-            (result as BadRequestObjectResult).StatusCode.Should().Be(400);
-
-            var updated = await repository.GetByIdAsync(original.Id).ConfigureAwait(false);
-
-            updated.Should().BeEquivalentTo(original);
-        }
-
-        [Fact]
         public async Task UpdateWithMissingIdFails()
         {
             var repository = this.GetRepository<Address>();
             var controller = new AddressesController(repository);
 
-            var target = new AddressResource(
-                new Address()
-                {
-                    Id = 9999,
-                    City = "Atlanta",
-                    PostalCode = "33333",
-                    State = "GA",
-                    Street = "123 Fake St"
-                });
+            var target = new AddressUpdateResource
+            {
+                City = "Atlanta",
+                PostalCode = "33333",
+                State = "GA",
+                Street = "123 Fake St"
+            };
 
             IActionResult result = await controller.Put(9999, target).ConfigureAwait(false);
 

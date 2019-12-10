@@ -1,4 +1,4 @@
-using Enfo.Domain.Entities;
+﻿using Enfo.Domain.Entities;
 using Enfo.Domain.Utils;
 using System;
 using System.ComponentModel;
@@ -6,9 +6,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Enfo.API.Resources
 {
-    public class AddressResource
+    public class AddressUpdateResource
     {
-        public int Id { get; set; }
         public bool Active { get; set; }
 
         [DisplayName("Street Address")]
@@ -33,18 +32,22 @@ namespace Enfo.API.Resources
         [RegularExpression("^\\d{5}(-\\d{4})?$",
             ErrorMessage = "Valid US Postal Code is required")]
         public string PostalCode { get; set; }
+    }
 
-        public AddressResource(Address item)
+    public static class AddressExtension
+    {
+        public static void UpdateFrom(this Address item, AddressUpdateResource resource)
         {
             Check.NotNull(item, nameof(item));
+            Check.NotNull(resource, nameof(resource));
 
-            Id = item.Id;
-            Active = item.Active;
-            Street = item.Street;
-            Street2 = item.Street2;
-            City = item.City;
-            State = item.State;
-            PostalCode = item.PostalCode;
+            item.Active = resource.Active;
+            item.City = resource.City;
+            item.PostalCode = resource.PostalCode;
+            item.State = resource.State;
+            item.Street = resource.Street;
+            item.Street2 = resource.Street2;
+            item.UpdatedDate = DateTime.Now;
         }
     }
 }

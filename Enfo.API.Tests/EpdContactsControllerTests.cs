@@ -284,9 +284,9 @@ namespace Enfo.API.Tests.ControllerTests
             var repository = this.GetRepository<EpdContact>();
             var controller = new EpdContactsController(repository);
 
+            var id = 2000;
             var target = new EpdContactUpdateResource
             {
-                Id = 2000,
                 AddressId = 2002,
                 ContactName = "Name Update",
                 Email = "email@example.com",
@@ -295,16 +295,13 @@ namespace Enfo.API.Tests.ControllerTests
                 Title = "Title"
             };
 
-            var original = await repository.GetByIdAsync(target.Id)
-                .ConfigureAwait(false);
-
-            var result = await controller.Put(original.Id, target)
+            var result = await controller.Put(id, target)
                 .ConfigureAwait(false);
 
             result.Should().BeOfType<NoContentResult>();
             (result as NoContentResult).StatusCode.Should().Be(204);
 
-            var updated = await repository.GetByIdAsync(target.Id)
+            var updated = await repository.GetByIdAsync(id)
                 .ConfigureAwait(false);
 
             updated.Should().BeEquivalentTo(target);
@@ -328,35 +325,6 @@ namespace Enfo.API.Tests.ControllerTests
             updated.Should().BeEquivalentTo(original);
         }
 
-       [Fact]
-        public async Task UpdateWithWrongIdFails()
-        {
-            var repository = this.GetRepository<EpdContact>();
-            var controller = new EpdContactsController(repository);
-
-            var target = new EpdContactUpdateResource
-            {
-                Id = 9999,
-                AddressId = 2002,
-                ContactName = "Name Update",
-                Email = "email@example.com",
-                Organization = "Com",
-                Telephone = "555-1212",
-                Title = "Title"
-            };
-
-            var original = await repository.GetByIdAsync(2000).ConfigureAwait(false);
-
-            var result = await controller.Put(original.Id, target).ConfigureAwait(false);
-
-            result.Should().BeOfType<BadRequestObjectResult>();
-            (result as BadRequestObjectResult).StatusCode.Should().Be(400);
-
-            var updated = await repository.GetByIdAsync(original.Id).ConfigureAwait(false);
-
-            updated.Should().BeEquivalentTo(original);
-        }
-
         [Fact]
         public async Task UpdateWithMissingIdFails()
         {
@@ -365,7 +333,6 @@ namespace Enfo.API.Tests.ControllerTests
 
             var target = new EpdContactUpdateResource
             {
-                Id = 9999,
                 AddressId = 2002,
                 ContactName = "Name Update",
                 Email = "email@example.com",
