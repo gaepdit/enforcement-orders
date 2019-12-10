@@ -10,7 +10,7 @@
              "request": "launch",
              "preLaunchTask": "build-api",
              // If you have changed target frameworks, make sure to update the program path.
-             "program": "${workspaceFolder}/Enfo.API/bin/Debug/netcoreapp2.2/Enfo.API.dll",
+             "program": "${workspaceFolder}/Enfo.API/bin/Debug/netcoreapp3.1/Enfo.API.dll",
              "args": [],
              "cwd": "${workspaceFolder}/Enfo.API",
              "stopAtEntry": false,
@@ -26,12 +26,34 @@
              }
          },
          {
+            "name": "API - Firefox Dev",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build-api",
+            // If you have changed target frameworks, make sure to update the program path.
+            "program": "${workspaceFolder}/Enfo.API/bin/Debug/netcoreapp3.1/Enfo.API.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/Enfo.API",
+            "stopAtEntry": false,
+            "launchBrowser": {
+                "enabled": true,
+                "osx": {
+                    "command": "/Applications/Firefox Developer Edition.app/Contents/MacOS/firefox",
+                    "args": "${auto-detect-url}/api-docs/"
+                }
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development",
+                "ASPNETCORE_URLS": "https://localhost:4001;http://localhost:4000"
+            }
+        },
+        {
              "name": "UI",
              "type": "coreclr",
              "request": "launch",
              "preLaunchTask": "build-ui",
              // If you have changed target frameworks, make sure to update the program path.
-             "program": "${workspaceFolder}/Enfo.UI/bin/Debug/netcoreapp2.2/Enfo.UI.dll",
+             "program": "${workspaceFolder}/Enfo.UI/bin/Debug/netcoreapp3.1/Enfo.UI.dll",
              "args": [],
              "cwd": "${workspaceFolder}/Enfo.UI",
              "stopAtEntry": false,
