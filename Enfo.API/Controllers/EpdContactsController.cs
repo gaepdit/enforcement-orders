@@ -1,4 +1,4 @@
-﻿using Enfo.API.QueryStrings;
+using Enfo.API.QueryStrings;
 using Enfo.API.Resources;
 using Enfo.Domain.Entities;
 using Enfo.Domain.Querying;
@@ -66,7 +66,7 @@ namespace Enfo.API.Controllers
         {
             if (resource is null) return BadRequest();
 
-            var item = resource.NewEpdContact;
+            var item = resource.NewEpdContact();
             _repository.Add(item);
             await _repository.CompleteAsync().ConfigureAwait(false);
 

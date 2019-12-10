@@ -233,7 +233,7 @@ namespace Enfo.API.Tests.ControllerTests
                 .ConfigureAwait(false));
 
             // Item gets added with next value in DB
-            var expected = new AddressResource(item.NewAddress)
+            var expected = new AddressResource(item.NewAddress())
             {
                 Id = _allAddresses.Max(e => e.Id) + 1
             };

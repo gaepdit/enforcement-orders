@@ -61,7 +61,7 @@ namespace Enfo.API.Controllers
         {
             if (resource is null) return BadRequest();
 
-            var item = resource.NewAddress;
+            var item = resource.NewAddress();
             _repository.Add(item);
             await _repository.CompleteAsync().ConfigureAwait(false);
 

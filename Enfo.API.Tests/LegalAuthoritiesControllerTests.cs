@@ -227,7 +227,7 @@ namespace Enfo.API.Tests.ControllerTests
                 .ConfigureAwait(false));
 
             // Item gets added with next value in DB
-            var expected = new LegalAuthorityResource(item.NewLegalAuthority)
+            var expected = new LegalAuthorityResource(item.NewLegalAuthority())
             {
                 Id = _allLegalAuthorities.Max(e => e.Id) + 1
             };

@@ -246,7 +246,7 @@ namespace Enfo.API.Tests.ControllerTests
                 .ConfigureAwait(false);
 
             // Item gets added with next value in DB
-            var expected = item.NewEpdContact;
+            var expected = item.NewEpdContact();
             expected.Id = _allEpdContacts.Max(e => e.Id) + 1;
             expected.Address = _allAddresses.Single(e => e.Id == item.AddressId);
 

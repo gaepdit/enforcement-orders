@@ -32,7 +32,7 @@ namespace Enfo.API.Resources
         [StringLength(100)]
         public string Email { get; set; }
 
-        public EpdContact NewEpdContact => new EpdContact()
+        public EpdContact NewEpdContact() => new EpdContact()
         {
             AddressId = AddressId,
             ContactName = ContactName,
