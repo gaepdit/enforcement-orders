@@ -1,6 +1,7 @@
 ﻿using Enfo.Domain.Entities;
 using Enfo.Infrastructure.SeedData;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace Enfo.Infrastructure.Contexts
 {
@@ -16,12 +17,15 @@ namespace Enfo.Infrastructure.Contexts
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            base.OnModelCreating(builder);
+            base.OnModelCreating(builder ?? throw new ArgumentNullException(nameof(builder)));
 
             builder.Entity<County>().HasData(ProdSeedData.GetCounties());
             builder.Entity<LegalAuthority>().HasData(ProdSeedData.GetLegalAuthorities());
             builder.Entity<Address>().HasData(ProdSeedData.GetAddresses());
             builder.Entity<EpdContact>().HasData(ProdSeedData.GetEpdContacts());
+
+            builder.Entity<EnforcementOrder>()
+                .HasIndex(b => b.OrderNumber).IsUnique();
         }
     }
 }
