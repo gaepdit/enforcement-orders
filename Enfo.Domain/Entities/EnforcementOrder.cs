@@ -1,3 +1,4 @@
+﻿using Enfo.Domain.Validation;
 using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -44,6 +45,7 @@ namespace Enfo.Domain.Entities
         [DisplayName("Settlement Amount")]
         [DataType(DataType.Currency)]
         [Column(TypeName = "money")]
+        [NonNegative]
         public decimal? SettlementAmount { get; set; }
 
         public bool Deleted { get; set; } = false;
