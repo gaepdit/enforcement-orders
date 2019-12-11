@@ -224,16 +224,18 @@ namespace Enfo.API.Tests.ControllerTests
             var result = await controller.Post(item).ConfigureAwait(false);
 
             var id = (int)(result as CreatedAtActionResult).Value;
-            var addedItem = new LegalAuthorityResource(await repository.GetByIdAsync(id)
-                .ConfigureAwait(false));
+            var addedItem = await repository.GetByIdAsync(id).ConfigureAwait(false);
 
             // Item gets added with next value in DB
-            var expected = new LegalAuthorityResource(item.NewLegalAuthority())
-            {
-                Id = _allLegalAuthorities.Max(e => e.Id) + 1
-            };
+            var expected = item.NewLegalAuthority();
+            expected.Id = _allLegalAuthorities.Max(e => e.Id) + 1;
 
             addedItem.Should().BeEquivalentTo(expected);
+
+            // Verify repository has changed.
+            var resultItems = await repository.ListAsync().ConfigureAwait(false);
+
+            resultItems.Count.Should().Be(_allLegalAuthorities.Count() + 1);
         }
 
         [Fact]

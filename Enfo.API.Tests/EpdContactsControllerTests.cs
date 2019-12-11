@@ -252,6 +252,11 @@ namespace Enfo.API.Tests.ControllerTests
             expected.Address = _allAddresses.Single(e => e.Id == item.AddressId);
 
             addedItem.Should().BeEquivalentTo(expected);
+
+            // Verify repository has changed.
+            var resultItems = await repository.ListAsync().ConfigureAwait(false);
+
+            resultItems.Count.Should().Be(_allEpdContacts.Count() + 1);
         }
 
         [Fact]

@@ -3,6 +3,7 @@ using Enfo.API.QueryStrings;
 using Enfo.API.Resources;
 using Enfo.API.Tests.Helpers;
 using Enfo.Domain.Entities;
+using Enfo.Domain.Querying;
 using Enfo.Infrastructure.SeedData;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
@@ -234,12 +235,15 @@ namespace Enfo.API.Tests.ControllerTests
                 .ConfigureAwait(false));
 
             // Item gets added with next value in DB
-            var expected = new AddressResource(item.NewAddress())
-            {
-                Id = _allAddresses.Max(e => e.Id) + 1
-            };
+            var expected = item.NewAddress();
+            expected.Id = _allAddresses.Max(e => e.Id) + 1;
 
             addedItem.Should().BeEquivalentTo(expected);
+
+            // Verify repository has changed.
+            var resultItems = await repository.ListAsync().ConfigureAwait(false);
+
+            resultItems.Count.Should().Be(_allAddresses.Count() + 1);
         }
 
         [Fact]
