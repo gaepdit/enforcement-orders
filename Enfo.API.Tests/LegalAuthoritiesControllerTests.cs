@@ -15,11 +15,11 @@ namespace Enfo.API.Tests.ControllerTests
 {
     public class LegalAuthoritiesControllerTests
     {
-        private readonly LegalAuthority[] _allLegalAuthorities;
+        private readonly LegalAuthority[] _legalAuthorities;
 
         public LegalAuthoritiesControllerTests()
         {
-            _allLegalAuthorities = ProdSeedData.GetLegalAuthorities();
+            _legalAuthorities = ProdSeedData.GetLegalAuthorities();
         }
 
         [Fact]
@@ -45,7 +45,7 @@ namespace Enfo.API.Tests.ControllerTests
             var items = ((await controller.Get()
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
-            var expected = _allLegalAuthorities
+            var expected = _legalAuthorities
                 .OrderBy(e => e.Id)
                 .Where(e => e.Active)
                 .Take(PaginationFilter.DefaultPageSize)
@@ -64,7 +64,7 @@ namespace Enfo.API.Tests.ControllerTests
                 paging: new PaginationFilter() { PageSize = 0 })
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
-            var expected = _allLegalAuthorities
+            var expected = _legalAuthorities
                 .Where(e => e.Active)
                 .Select(e => new LegalAuthorityResource(e));
 
@@ -82,7 +82,7 @@ namespace Enfo.API.Tests.ControllerTests
                 new PaginationFilter() { PageSize = 0 })
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
-            var expected = _allLegalAuthorities
+            var expected = _legalAuthorities
                 .Select(e => new LegalAuthorityResource(e));
 
             items.Should().BeEquivalentTo(expected);
@@ -101,7 +101,7 @@ namespace Enfo.API.Tests.ControllerTests
                 paging: new PaginationFilter() { PageSize = pageSize, Page = pageNum })
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
-            var expected = _allLegalAuthorities
+            var expected = _legalAuthorities
                 .OrderBy(e => e.Id)
                 .Where(e => e.Active)
                 .Skip((pageNum - 1) * pageSize).Take(pageSize)
@@ -168,7 +168,7 @@ namespace Enfo.API.Tests.ControllerTests
             var value = ((await controller.Get(id).ConfigureAwait(false))
                 .Result as OkObjectResult).Value;
 
-            var expected = new LegalAuthorityResource(_allLegalAuthorities
+            var expected = new LegalAuthorityResource(_legalAuthorities
                 .Single(e => e.Id == id));
 
             value.Should().BeEquivalentTo(expected);
@@ -228,14 +228,14 @@ namespace Enfo.API.Tests.ControllerTests
 
             // Item gets added with next value in DB
             var expected = item.NewLegalAuthority();
-            expected.Id = _allLegalAuthorities.Max(e => e.Id) + 1;
+            expected.Id = _legalAuthorities.Max(e => e.Id) + 1;
 
             addedItem.Should().BeEquivalentTo(expected);
 
             // Verify repository has changed.
             var resultItems = await repository.ListAsync().ConfigureAwait(false);
 
-            resultItems.Count.Should().Be(_allLegalAuthorities.Count() + 1);
+            resultItems.Count.Should().Be(_legalAuthorities.Count() + 1);
         }
 
         [Fact]
@@ -256,7 +256,7 @@ namespace Enfo.API.Tests.ControllerTests
                 .ConfigureAwait(false))
                 .Result as OkObjectResult).Value;
 
-            var expected = _allLegalAuthorities
+            var expected = _legalAuthorities
                 .Select(e => new LegalAuthorityResource(e));
 
             resultItems.Should().BeEquivalentTo(expected);

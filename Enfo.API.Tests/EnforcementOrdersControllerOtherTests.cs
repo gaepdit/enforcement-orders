@@ -17,11 +17,11 @@ namespace Enfo.API.Tests.ControllerTests
 {
     public class EnforcementOrdersControllerOtherTests
     {
-        private readonly EnforcementOrder[] _allOrders;
+        private readonly EnforcementOrder[] _orders;
 
         public EnforcementOrdersControllerOtherTests()
         {
-            _allOrders = DevSeedData.GetEnforcementOrders();
+            _orders = DevSeedData.GetEnforcementOrders();
 
             var epdContacts = ProdSeedData.GetEpdContacts();
             var addresses = ProdSeedData.GetAddresses();
@@ -32,7 +32,7 @@ namespace Enfo.API.Tests.ControllerTests
                 contact.Address = addresses.SingleOrDefault(e => e.Id == contact.AddressId);
             }
 
-            foreach (var order in _allOrders)
+            foreach (var order in _orders)
             {
                 order.LegalAuthority = legalAuthorities.SingleOrDefault(e => e.Id == order.LegalAuthorityId);
                 order.CommentContact = epdContacts.SingleOrDefault(e => e.Id == order.CommentContactId);
@@ -49,7 +49,7 @@ namespace Enfo.API.Tests.ControllerTests
             var items = ((await controller.Count()
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
-            var expected = _allOrders.Where(e => !e.Deleted).Count();
+            var expected = _orders.Where(e => !e.Deleted).Count();
 
             items.Should().BeEquivalentTo(expected);
         }
@@ -67,7 +67,7 @@ namespace Enfo.API.Tests.ControllerTests
                 .ConfigureAwait(false))
                 .Result as OkObjectResult).Value;
 
-            var expected = _allOrders
+            var expected = _orders
                 .Where(e => e.FacilityName.ToLower().Contains(facilityFilter.ToLower()))
                 .Where(e => !e.Deleted)
                 .Count();
@@ -85,7 +85,7 @@ namespace Enfo.API.Tests.ControllerTests
                 new EnforcementOrderFilter() { Deleted = true })
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
-            var expected = _allOrders
+            var expected = _orders
                 .Where(e => e.Deleted)
                 .Count();
 
@@ -105,7 +105,7 @@ namespace Enfo.API.Tests.ControllerTests
                 .ConfigureAwait(false))
                 .Result as OkObjectResult).Value;
 
-            var expected = _allOrders
+            var expected = _orders
                 .Where(e => e.County.ToLower().Contains(county.ToLower()))
                 .Where(e => e.Deleted)
                 .Count();
@@ -122,7 +122,7 @@ namespace Enfo.API.Tests.ControllerTests
             var items = ((await controller.CurrentProposed()
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
-            var expected = _allOrders
+            var expected = _orders
                 .Where(e => e.GetIsPublicProposedOrder() && e.CommentPeriodClosesDate >= DateTime.Today)
                 .Where(e => !e.Deleted)
                 .Select(e => new EnforcementOrderListResource(e));
@@ -143,7 +143,7 @@ namespace Enfo.API.Tests.ControllerTests
                 new PaginationFilter() { PageSize = pageSize, Page = pageNum })
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
-            var expected = _allOrders
+            var expected = _orders
                 .Where(e => e.GetIsPublicProposedOrder() && e.CommentPeriodClosesDate >= DateTime.Today)
                 .Where(e => !e.Deleted)
                 .Skip((pageNum - 1) * pageSize).Take(pageSize)
@@ -164,7 +164,7 @@ namespace Enfo.API.Tests.ControllerTests
             // fromDate is most recent Monday
             var fromDate = GetNextWeekday(DateTime.Today.AddDays(-6), DayOfWeek.Monday);
 
-            var expected = _allOrders
+            var expected = _orders
                 .Where(e => e.GetIsPublicExecutedOrder()
                     && e.ExecutedOrderPostedDate >= fromDate
                     && e.ExecutedOrderPostedDate <= DateTime.Today)
@@ -190,7 +190,7 @@ namespace Enfo.API.Tests.ControllerTests
             // fromDate is most recent Monday
             var fromDate = GetNextWeekday(DateTime.Today.AddDays(-6), DayOfWeek.Monday);
 
-            var expected = _allOrders
+            var expected = _orders
                 .Where(e => e.GetIsPublicExecutedOrder()
                     && e.ExecutedOrderPostedDate >= fromDate
                     && e.ExecutedOrderPostedDate <= DateTime.Today)
@@ -210,7 +210,7 @@ namespace Enfo.API.Tests.ControllerTests
             var items = ((await controller.Drafts()
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
-            var expected = _allOrders
+            var expected = _orders
                 .Where(e => e.PublicationStatus == PublicationState.Draft)
                 .Where(e => !e.Deleted)
                 .Select(e => new EnforcementOrderListResource(e));
@@ -231,7 +231,7 @@ namespace Enfo.API.Tests.ControllerTests
                 new PaginationFilter() { PageSize = pageSize, Page = pageNum })
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
-            var expected = _allOrders
+            var expected = _orders
                 .Where(e => e.PublicationStatus == PublicationState.Draft)
                 .Where(e => !e.Deleted)
                 .Skip((pageNum - 1) * pageSize).Take(pageSize)
@@ -249,7 +249,7 @@ namespace Enfo.API.Tests.ControllerTests
             var items = ((await controller.Pending()
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
-            var expected = _allOrders
+            var expected = _orders
                 .Where(e => e.GetIsPublic()
                     && e.GetLastPostedDate() > GetNextWeekday(DateTime.Today.AddDays(-6), DayOfWeek.Monday))
                 .Where(e => !e.Deleted)
@@ -271,7 +271,7 @@ namespace Enfo.API.Tests.ControllerTests
                 new PaginationFilter() { PageSize = pageSize, Page = pageNum })
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
-            var expected = _allOrders
+            var expected = _orders
                 .Where(e => (e.GetIsPublic())
                     && e.GetLastPostedDate() > GetNextWeekday(DateTime.Today.AddDays(-6), DayOfWeek.Monday))
                 .Where(e => !e.Deleted)

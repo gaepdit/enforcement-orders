@@ -13,11 +13,11 @@ namespace Enfo.API.Tests.ControllerTests
 {
     public class EnforcementOrdersControllerDetailsTests
     {
-        private readonly EnforcementOrder[] _allOrders;
+        private readonly EnforcementOrder[] _orders;
 
         public EnforcementOrdersControllerDetailsTests()
         {
-            _allOrders = DevSeedData.GetEnforcementOrders();
+            _orders = DevSeedData.GetEnforcementOrders();
 
             var epdContacts = ProdSeedData.GetEpdContacts();
             var addresses = ProdSeedData.GetAddresses();
@@ -28,7 +28,7 @@ namespace Enfo.API.Tests.ControllerTests
                 contact.Address = addresses.SingleOrDefault(e => e.Id == contact.AddressId);
             }
 
-            foreach (var order in _allOrders)
+            foreach (var order in _orders)
             {
                 order.LegalAuthority = legalAuthorities.SingleOrDefault(e => e.Id == order.LegalAuthorityId);
                 order.CommentContact = epdContacts.SingleOrDefault(e => e.Id == order.CommentContactId);
@@ -64,7 +64,7 @@ namespace Enfo.API.Tests.ControllerTests
                 .Result as OkObjectResult).Value;
 
             var expected = new EnforcementOrderDetailedResource(
-                _allOrders.Single(e => e.Id == id));
+                _orders.Single(e => e.Id == id));
 
             value.Should().BeEquivalentTo(expected);
         }

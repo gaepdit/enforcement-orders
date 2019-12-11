@@ -13,16 +13,16 @@ namespace Enfo.Infrastructure.Repositories
     public class ReadableRepository<T> : IAsyncReadableRepository<T>
         where T : BaseEntity
     {
-        internal readonly EnfoDbContext context;
+        internal readonly EnfoDbContext _context;
 
         public ReadableRepository(EnfoDbContext context) =>
-            this.context = context;
+            _context = context;
 
         public async Task<T> GetByIdAsync(
             int id,
             ISpecification<T> specification = null,
             IInclusion<T> inclusion = null) =>
-            await context.Set<T>()
+            await _context.Set<T>()
                 .Apply(specification)
                 .Apply(inclusion)
             .SingleOrDefaultAsync(e => e.Id == id).ConfigureAwait(false);
@@ -32,7 +32,7 @@ namespace Enfo.Infrastructure.Repositories
             IPagination pagination = null,
             ISorting<T> sorting = null,
             IInclusion<T> inclusion = null) =>
-            await context.Set<T>()
+            await _context.Set<T>()
                 .Apply(specification)
                 .Apply(sorting)
                 .Apply(pagination)
@@ -41,24 +41,24 @@ namespace Enfo.Infrastructure.Repositories
 
         public async Task<int> CountAsync(
             ISpecification<T> specification) =>
-            await context.Set<T>()
+            await _context.Set<T>()
                 .Apply(specification)
             .CountAsync().ConfigureAwait(false);
 
         // IDisposable Support
-        private bool disposedValue = false; // To detect redundant calls
+        private bool _disposedValue = false; // To detect redundant calls
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposedValue)
+            if (!_disposedValue)
             {
                 if (disposing)
                 {
                     // dispose managed state (managed objects).
-                    context.Dispose();
+                    _context.Dispose();
                 }
 
-                disposedValue = true;
+                _disposedValue = true;
             }
         }
 

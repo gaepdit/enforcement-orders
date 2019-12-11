@@ -17,11 +17,11 @@ namespace Enfo.API.Tests.ControllerTests
 {
     public class EnforcementOrdersControllerGetTests
     {
-        private readonly EnforcementOrder[] _allOrders;
+        private readonly EnforcementOrder[] _orders;
 
         public EnforcementOrdersControllerGetTests()
         {
-            _allOrders = DevSeedData.GetEnforcementOrders();
+            _orders = DevSeedData.GetEnforcementOrders();
 
             var epdContacts = ProdSeedData.GetEpdContacts();
             var addresses = ProdSeedData.GetAddresses();
@@ -32,7 +32,7 @@ namespace Enfo.API.Tests.ControllerTests
                 contact.Address = addresses.SingleOrDefault(e => e.Id == contact.AddressId);
             }
 
-            foreach (var order in _allOrders)
+            foreach (var order in _orders)
             {
                 order.LegalAuthority = legalAuthorities.SingleOrDefault(e => e.Id == order.LegalAuthorityId);
                 order.CommentContact = epdContacts.SingleOrDefault(e => e.Id == order.CommentContactId);
@@ -63,7 +63,7 @@ namespace Enfo.API.Tests.ControllerTests
             var items = ((await controller.Get()
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
-            var expected = _allOrders
+            var expected = _orders
                 .Where(e => !e.Deleted)
                 .OrderBy(e => e.Id)
                 .Take(PaginationFilter.DefaultPageSize)
@@ -82,7 +82,7 @@ namespace Enfo.API.Tests.ControllerTests
                 paging: new PaginationFilter() { PageSize = 0 })
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
-            var expected = _allOrders
+            var expected = _orders
                 .Where(e => !e.Deleted)
                 .Select(e => new EnforcementOrderListResource(e));
 
@@ -105,10 +105,10 @@ namespace Enfo.API.Tests.ControllerTests
 
             var orderedOrders = sortOrder switch
             {
-                EnforcementOrderSorting.DateAsc => _allOrders.OrderBy(e => e.GetLastPostedDate()),
-                EnforcementOrderSorting.DateDesc => _allOrders.OrderByDescending(e => e.GetLastPostedDate()),
-                EnforcementOrderSorting.FacilityAsc => _allOrders.OrderBy(e => e.FacilityName),
-                EnforcementOrderSorting.FacilityDesc => _allOrders.OrderByDescending(e => e.FacilityName),
+                EnforcementOrderSorting.DateAsc => _orders.OrderBy(e => e.GetLastPostedDate()),
+                EnforcementOrderSorting.DateDesc => _orders.OrderByDescending(e => e.GetLastPostedDate()),
+                EnforcementOrderSorting.FacilityAsc => _orders.OrderBy(e => e.FacilityName),
+                EnforcementOrderSorting.FacilityDesc => _orders.OrderByDescending(e => e.FacilityName),
                 _ => throw new ArgumentException()
             };
 
@@ -140,10 +140,10 @@ namespace Enfo.API.Tests.ControllerTests
 
             var orderedOrders = sortOrder switch
             {
-                EnforcementOrderSorting.DateAsc => _allOrders.OrderBy(e => e.GetLastPostedDate()),
-                EnforcementOrderSorting.DateDesc => _allOrders.OrderByDescending(e => e.GetLastPostedDate()),
-                EnforcementOrderSorting.FacilityAsc => _allOrders.OrderBy(e => e.FacilityName),
-                EnforcementOrderSorting.FacilityDesc => _allOrders.OrderByDescending(e => e.FacilityName),
+                EnforcementOrderSorting.DateAsc => _orders.OrderBy(e => e.GetLastPostedDate()),
+                EnforcementOrderSorting.DateDesc => _orders.OrderByDescending(e => e.GetLastPostedDate()),
+                EnforcementOrderSorting.FacilityAsc => _orders.OrderBy(e => e.FacilityName),
+                EnforcementOrderSorting.FacilityDesc => _orders.OrderByDescending(e => e.FacilityName),
                 _ => throw new ArgumentException()
             };
 
@@ -204,7 +204,7 @@ namespace Enfo.API.Tests.ControllerTests
 
             var items = result.Value as IEnumerable<EnforcementOrderListResource>;
 
-            var expected = _allOrders
+            var expected = _orders
                 .Where(e => e.FacilityName.ToLower().Contains(facilityFilter.ToLower()))
                 .Where(e => !e.Deleted)
                 .Select(e => new EnforcementOrderListResource(e));
@@ -228,7 +228,7 @@ namespace Enfo.API.Tests.ControllerTests
 
             var items = result.Value as IEnumerable<EnforcementOrderListResource>;
 
-            var expected = _allOrders
+            var expected = _orders
                 .Where(e => e.County.ToLower().Contains(county.ToLower()))
                 .Where(e => !e.Deleted)
                 .Select(e => new EnforcementOrderListResource(e));
@@ -252,7 +252,7 @@ namespace Enfo.API.Tests.ControllerTests
 
             var items = result.Value as IEnumerable<EnforcementOrderListResource>;
 
-            var expected = _allOrders
+            var expected = _orders
                 .Where(e => e.LegalAuthorityId.Equals(legalAuth))
                 .Where(e => !e.Deleted)
                 .Select(e => new EnforcementOrderListResource(e));
@@ -289,7 +289,7 @@ namespace Enfo.API.Tests.ControllerTests
 
             var items = result.Value as IEnumerable<EnforcementOrderListResource>;
 
-            var expected = _allOrders
+            var expected = _orders
                 .Where(e => (status == ActivityStatus.All && (e.ProposedOrderPostedDate >= fromDate || e.ExecutedDate >= fromDate))
                     || (status == ActivityStatus.Executed && e.IsExecutedOrder && e.ExecutedDate >= fromDate)
                     || (status == ActivityStatus.Proposed && e.IsProposedOrder && !e.IsExecutedOrder && e.ProposedOrderPostedDate >= fromDate))
@@ -316,7 +316,7 @@ namespace Enfo.API.Tests.ControllerTests
 
             var items = result.Value as IEnumerable<EnforcementOrderListResource>;
 
-            var expected = _allOrders
+            var expected = _orders
                 .Where(e => publicationStatus == PublicationStatus.All
                     || (publicationStatus == PublicationStatus.Draft && e.PublicationStatus == EnforcementOrder.PublicationState.Draft)
                     || (publicationStatus == PublicationStatus.Published && e.PublicationStatus == EnforcementOrder.PublicationState.Published))
@@ -342,7 +342,7 @@ namespace Enfo.API.Tests.ControllerTests
 
             var items = result.Value as IEnumerable<EnforcementOrderListResource>;
 
-            var expected = _allOrders
+            var expected = _orders
                 .Where(e => (status == ActivityStatus.All && (e.ProposedOrderPostedDate <= tillDate || e.ExecutedDate <= tillDate))
                     || (status == ActivityStatus.Executed && e.IsExecutedOrder && e.ExecutedDate <= tillDate)
                     || (status == ActivityStatus.Proposed && e.IsProposedOrder && !e.IsExecutedOrder && e.ProposedOrderPostedDate <= tillDate))
@@ -369,7 +369,7 @@ namespace Enfo.API.Tests.ControllerTests
 
             var items = result.Value as IEnumerable<EnforcementOrderListResource>;
 
-            var expected = _allOrders
+            var expected = _orders
                 .Where(e => e.OrderNumber.ToLower().Contains(orderNumber.ToLower()))
                 .Where(e => !e.Deleted)
                 .Select(e => new EnforcementOrderListResource(e));
@@ -399,7 +399,7 @@ namespace Enfo.API.Tests.ControllerTests
 
             var items = result.Value as IEnumerable<EnforcementOrderListResource>;
 
-            var expected = _allOrders
+            var expected = _orders
                 .Where(e => e.Cause.ToLower().Contains(textContains.ToLower())
                     || e.Requirements.ToLower().Contains(textContains.ToLower()))
                 .Where(e => !e.Deleted)
@@ -419,7 +419,7 @@ namespace Enfo.API.Tests.ControllerTests
                 new PaginationFilter() { PageSize = 0 })
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
-            var expected = _allOrders
+            var expected = _orders
                 .Where(e => e.Deleted)
                 .Select(e => new EnforcementOrderListResource(e));
 
@@ -442,7 +442,7 @@ namespace Enfo.API.Tests.ControllerTests
 
             var items = result.Value as IEnumerable<EnforcementOrderListResource>;
 
-            var expected = _allOrders
+            var expected = _orders
                 .Where(e => e.County.ToLower().Equals(county.ToLower()))
                 .Where(e => e.Deleted)
                 .Select(e => new EnforcementOrderListResource(e));
@@ -478,7 +478,7 @@ namespace Enfo.API.Tests.ControllerTests
                 .Result as OkObjectResult).Value;
 
             var expected = new EnforcementOrderItemResource(
-                _allOrders.Single(e => e.Id == id));
+                _orders.Single(e => e.Id == id));
 
             value.Should().BeEquivalentTo(expected);
         }

@@ -16,11 +16,11 @@ namespace Enfo.API.Tests.ControllerTests
 {
     public class AddressesControllerTests
     {
-        private readonly Address[] _allAddresses;
+        private readonly Address[] _addresses;
 
         public AddressesControllerTests()
         {
-            _allAddresses = ProdSeedData.GetAddresses();
+            _addresses = ProdSeedData.GetAddresses();
         }
 
         [Fact]
@@ -46,7 +46,7 @@ namespace Enfo.API.Tests.ControllerTests
             var items = ((await controller.Get()
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
-            var expected = _allAddresses
+            var expected = _addresses
                 .OrderBy(e => e.Id)
                 .Where(e => e.Active)
                 .Take(PaginationFilter.DefaultPageSize)
@@ -65,7 +65,7 @@ namespace Enfo.API.Tests.ControllerTests
                 paging: new PaginationFilter() { PageSize = 0 })
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
-            var expected = _allAddresses
+            var expected = _addresses
                 .Where(e => e.Active)
                 .Select(e => new AddressResource(e));
 
@@ -83,7 +83,7 @@ namespace Enfo.API.Tests.ControllerTests
                 new PaginationFilter() { PageSize = 0 })
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
-            var expected = _allAddresses
+            var expected = _addresses
                 .Select(e => new AddressResource(e));
 
             items.Should().BeEquivalentTo(expected);
@@ -102,7 +102,7 @@ namespace Enfo.API.Tests.ControllerTests
                 paging: new PaginationFilter() { PageSize = pageSize, Page = pageNum })
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
-            var expected = _allAddresses
+            var expected = _addresses
                 .OrderBy(e => e.Id)
                 .Where(e => e.Active)
                 .Skip((pageNum - 1) * pageSize).Take(pageSize)
@@ -169,7 +169,7 @@ namespace Enfo.API.Tests.ControllerTests
             var value = ((await controller.Get(id).ConfigureAwait(false))
                 .Result as OkObjectResult).Value;
 
-            var expected = new AddressResource(_allAddresses
+            var expected = new AddressResource(_addresses
                 .Single(e => e.Id == id));
 
             value.Should().BeEquivalentTo(expected);
@@ -236,14 +236,14 @@ namespace Enfo.API.Tests.ControllerTests
 
             // Item gets added with next value in DB
             var expected = item.NewAddress();
-            expected.Id = _allAddresses.Max(e => e.Id) + 1;
+            expected.Id = _addresses.Max(e => e.Id) + 1;
 
             addedItem.Should().BeEquivalentTo(expected);
 
             // Verify repository has changed.
             var resultItems = await repository.ListAsync().ConfigureAwait(false);
 
-            resultItems.Count.Should().Be(_allAddresses.Count() + 1);
+            resultItems.Count.Should().Be(_addresses.Count() + 1);
         }
 
         [Fact]
@@ -264,7 +264,7 @@ namespace Enfo.API.Tests.ControllerTests
                 .ConfigureAwait(false))
                 .Result as OkObjectResult).Value;
 
-            var expected = _allAddresses
+            var expected = _addresses
                 .Select(e => new AddressResource(e));
 
             resultItems.Should().BeEquivalentTo(expected);
@@ -303,7 +303,7 @@ namespace Enfo.API.Tests.ControllerTests
                 .ConfigureAwait(false))
                 .Result as OkObjectResult).Value;
 
-            var expected = _allAddresses
+            var expected = _addresses
                 .Select(e => new AddressResource(e));
 
             resultItems.Should().BeEquivalentTo(expected);

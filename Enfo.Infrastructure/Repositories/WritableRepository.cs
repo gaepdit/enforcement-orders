@@ -12,12 +12,12 @@ namespace Enfo.Infrastructure.Repositories
 
         public void Add(T entity)
         {
-            context.Set<T>().Add(entity);
+            _context.Set<T>().Add(entity);
         }
 
         public Task<int> CompleteAsync()
         {
-            return context.SaveChangesAsync();
+            return _context.SaveChangesAsync();
         }
     }
 }

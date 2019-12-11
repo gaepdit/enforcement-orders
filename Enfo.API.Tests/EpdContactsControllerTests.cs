@@ -16,17 +16,17 @@ namespace Enfo.API.Tests.ControllerTests
 {
     public class EpdContactsControllerTests
     {
-        private readonly EpdContact[] _allEpdContacts;
-        private readonly Address[] _allAddresses;
+        private readonly EpdContact[] _epdContacts;
+        private readonly Address[] _addresses;
 
         public EpdContactsControllerTests()
         {
-            _allAddresses = ProdSeedData.GetAddresses();
-            _allEpdContacts = ProdSeedData.GetEpdContacts();
+            _addresses = ProdSeedData.GetAddresses();
+            _epdContacts = ProdSeedData.GetEpdContacts();
 
-            foreach (var contact in _allEpdContacts)
+            foreach (var contact in _epdContacts)
             {
-                contact.Address = _allAddresses
+                contact.Address = _addresses
                     .SingleOrDefault(e => e.Id == contact.AddressId);
             }
         }
@@ -54,7 +54,7 @@ namespace Enfo.API.Tests.ControllerTests
             var items = ((await controller.Get()
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
-            var expected = _allEpdContacts
+            var expected = _epdContacts
                 .OrderBy(e => e.Id)
                 .Where(e => e.Active)
                 .Take(PaginationFilter.DefaultPageSize)
@@ -73,7 +73,7 @@ namespace Enfo.API.Tests.ControllerTests
                 paging: new PaginationFilter() { PageSize = 0 })
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
-            var expected = _allEpdContacts
+            var expected = _epdContacts
                 .Where(e => e.Active)
                 .Select(e => new EpdContactResource(e));
 
@@ -91,7 +91,7 @@ namespace Enfo.API.Tests.ControllerTests
                 new PaginationFilter() { PageSize = 0 })
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
-            var expected = _allEpdContacts
+            var expected = _epdContacts
                 .Select(e => new EpdContactResource(e));
 
             items.Should().BeEquivalentTo(expected);
@@ -110,7 +110,7 @@ namespace Enfo.API.Tests.ControllerTests
                 paging: new PaginationFilter() { PageSize = pageSize, Page = pageNum })
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
-            var expected = _allEpdContacts
+            var expected = _epdContacts
                 .OrderBy(e => e.Id)
                 .Where(e => e.Active)
                 .Skip((pageNum - 1) * pageSize).Take(pageSize)
@@ -177,7 +177,7 @@ namespace Enfo.API.Tests.ControllerTests
             var value = ((await controller.Get(id).ConfigureAwait(false))
                 .Result as OkObjectResult).Value as EpdContactResource;
 
-            var expected = new EpdContactResource(_allEpdContacts
+            var expected = new EpdContactResource(_epdContacts
                 .Single(e => e.Id == id));
 
             value.Should().BeEquivalentTo(expected);
@@ -248,15 +248,15 @@ namespace Enfo.API.Tests.ControllerTests
 
             // Item gets added with next value in DB
             var expected = item.NewEpdContact();
-            expected.Id = _allEpdContacts.Max(e => e.Id) + 1;
-            expected.Address = _allAddresses.Single(e => e.Id == item.AddressId);
+            expected.Id = _epdContacts.Max(e => e.Id) + 1;
+            expected.Address = _addresses.Single(e => e.Id == item.AddressId);
 
             addedItem.Should().BeEquivalentTo(expected);
 
             // Verify repository has changed.
             var resultItems = await repository.ListAsync().ConfigureAwait(false);
 
-            resultItems.Count.Should().Be(_allEpdContacts.Count() + 1);
+            resultItems.Count.Should().Be(_epdContacts.Count() + 1);
         }
 
         [Fact]
@@ -277,7 +277,7 @@ namespace Enfo.API.Tests.ControllerTests
                 .ConfigureAwait(false))
                 .Result as OkObjectResult).Value;
 
-            var expected = _allEpdContacts
+            var expected = _epdContacts
                 .Select(e => new EpdContactResource(e));
 
             resultItems.Should().BeEquivalentTo(expected);

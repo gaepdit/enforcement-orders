@@ -15,11 +15,11 @@ namespace Enfo.API.Tests.ControllerTests
 {
     public class CountiesControllerTests
     {
-        private readonly County[] _allCounties;
+        private readonly County[] _counties;
 
         public CountiesControllerTests()
         {
-            _allCounties = ProdSeedData.GetCounties();
+            _counties = ProdSeedData.GetCounties();
         }
 
         [Fact]
@@ -45,7 +45,7 @@ namespace Enfo.API.Tests.ControllerTests
             var items = ((await controller.Get()
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
-            var expected = _allCounties
+            var expected = _counties
                 .OrderBy(e => e.CountyName)
                 .Take(PaginationFilter.DefaultPageSize)
                 .Select(e => new CountyResource(e));
@@ -63,7 +63,7 @@ namespace Enfo.API.Tests.ControllerTests
                 new PaginationFilter() { PageSize = 0 })
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
-            var expected = _allCounties
+            var expected = _counties
                 .Select(e => new CountyResource(e));
 
             items.Should().BeEquivalentTo(expected);
@@ -83,7 +83,7 @@ namespace Enfo.API.Tests.ControllerTests
                 new PaginationFilter() { PageSize = pageSize, Page = pageNum })
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
-            var expected = _allCounties
+            var expected = _counties
                 .OrderBy(e => e.CountyName)
                 .Skip((pageNum - 1) * pageSize).Take(pageSize)
                 .Select(e => new CountyResource(e));
@@ -149,7 +149,7 @@ namespace Enfo.API.Tests.ControllerTests
             var value = ((await controller.Get(id).ConfigureAwait(false))
                 .Result as OkObjectResult).Value;
 
-            var expected = new CountyResource(_allCounties
+            var expected = new CountyResource(_counties
                 .Single(e => e.Id == id));
 
             value.Should().BeEquivalentTo(expected);

@@ -1,4 +1,4 @@
-﻿using Enfo.Domain.Entities;
+using Enfo.Domain.Entities;
 using Enfo.Domain.Repositories;
 using Enfo.Infrastructure.SeedData;
 using Enfo.Infrastructure.Tests.Helpers;
@@ -13,13 +13,13 @@ namespace Enfo.Infrastructure.Tests.RepositoryTests
 {
     public class WritableRepositoryTests
     {
-        private readonly County[] counties;
-        private readonly EpdContact[] epdContacts;
+        private readonly County[] _counties;
+        private readonly EpdContact[] _epdContacts;
 
         public WritableRepositoryTests()
         {
-            counties = ProdSeedData.GetCounties();
-            epdContacts = ProdSeedData.GetEpdContacts();
+            _counties = ProdSeedData.GetCounties();
+            _epdContacts = ProdSeedData.GetEpdContacts();
         }
 
         [Fact]
@@ -33,7 +33,7 @@ namespace Enfo.Infrastructure.Tests.RepositoryTests
 
                 int postCount = await repository.CountAsync().ConfigureAwait(false);
 
-                postCount.Should().Be(counties.Length + 1);
+                postCount.Should().Be(_counties.Length + 1);
             }
         }
 
@@ -80,7 +80,7 @@ namespace Enfo.Infrastructure.Tests.RepositoryTests
 
                 var itemList = await repository.ListAsync().ConfigureAwait(false);
 
-                itemList.Count.Should().Be(epdContacts.Length + 1);
+                itemList.Count.Should().Be(_epdContacts.Length + 1);
                 itemList.Single(e => e.Id == newContact.Id).Should().BeEquivalentTo(newContact);
             }
         }
