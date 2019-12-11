@@ -1,6 +1,5 @@
 using Enfo.Domain.Entities;
 using Enfo.Domain.Querying;
-using Enfo.Domain.Repositories;
 using Enfo.Infrastructure.SeedData;
 using Enfo.Infrastructure.Tests.Helpers;
 using FluentAssertions;
@@ -28,12 +27,10 @@ namespace Enfo.Infrastructure.Tests.RepositoryTests
         [Fact]
         public async Task GetAllReturnsListAsync()
         {
-            using (IAsyncReadableRepository<County> repository = this.GetRepository<County>())
-            {
-                var items = await repository.ListAsync().ConfigureAwait(false);
-                items.Should().HaveCount(_counties.Length);
-                items[0].Should().BeEquivalentTo(_counties[0]);
-            }
+            using var repository = this.GetRepository<County>();
+            var items = await repository.ListAsync().ConfigureAwait(false);
+            items.Should().HaveCount(_counties.Length);
+            items[0].Should().BeEquivalentTo(_counties[0]);
         }
 
         [Theory]
@@ -43,17 +40,15 @@ namespace Enfo.Infrastructure.Tests.RepositoryTests
         [InlineData("bA")]
         public async Task GetWithSpecReturnsPartialListAsync(string startsWith)
         {
-            using (IAsyncReadableRepository<County> repository = this.GetRepository<County>())
-            {
-                var items = await repository
-                    .ListAsync(new CountyNameStartsWithSpecification(startsWith))
-                    .ConfigureAwait(false);
-                items.Should().HaveCount(_counties
-                    .Where(e => e.CountyName.StartsWith(startsWith, StringComparison.InvariantCultureIgnoreCase))
-                    .Count());
-                items[0].Should().BeEquivalentTo(_counties
-                    .First(e => e.CountyName.StartsWith(startsWith, StringComparison.InvariantCultureIgnoreCase)));
-            }
+            using var repository = this.GetRepository<County>();
+            var items = await repository
+                .ListAsync(new CountyNameStartsWithSpecification(startsWith))
+                .ConfigureAwait(false);
+            items.Should().HaveCount(_counties
+                .Where(e => e.CountyName.StartsWith(startsWith, StringComparison.InvariantCultureIgnoreCase))
+                .Count());
+            items[0].Should().BeEquivalentTo(_counties
+                .First(e => e.CountyName.StartsWith(startsWith, StringComparison.InvariantCultureIgnoreCase)));
         }
 
         [Theory]
@@ -61,21 +56,20 @@ namespace Enfo.Infrastructure.Tests.RepositoryTests
         [InlineData("B", "y")]
         public async Task GetWithCompositeAndSpecReturnsPartialListAsync(string startsWith, string endsWith)
         {
-            using (IAsyncReadableRepository<County> repository = this.GetRepository<County>())
-            {
-                ISpecification<County> spec = new CountyNameStartsWithSpecification(startsWith)
-                    .And(new CountyNameEndsWithSpecification(endsWith));
+            using var repository = this.GetRepository<County>();
 
-                var items = await repository
-                    .ListAsync(spec)
-                    .ConfigureAwait(false);
-                var expected = _counties
-                    .Where(e => e.CountyName.StartsWith(startsWith)
-                        && e.CountyName.EndsWith(endsWith));
+            var spec = new CountyNameStartsWithSpecification(startsWith)
+                .And(new CountyNameEndsWithSpecification(endsWith));
 
-                items.Should().HaveCount(expected.Count());
-                items[0].Should().BeEquivalentTo(expected.First());
-            }
+            var items = await repository
+                .ListAsync(spec)
+                .ConfigureAwait(false);
+            var expected = _counties
+                .Where(e => e.CountyName.StartsWith(startsWith)
+                    && e.CountyName.EndsWith(endsWith));
+
+            items.Should().HaveCount(expected.Count());
+            items[0].Should().BeEquivalentTo(expected.First());
         }
 
         [Theory]
@@ -83,21 +77,17 @@ namespace Enfo.Infrastructure.Tests.RepositoryTests
         [InlineData(2)]
         public async Task GetByIdReturnsItemAsync(int id)
         {
-            using (IAsyncReadableRepository<County> repository = this.GetRepository<County>())
-            {
-                var item = await repository.GetByIdAsync(id).ConfigureAwait(false);
-                item.Should().BeEquivalentTo(_counties.Single(e => e.Id == id));
-            }
+            using var repository = this.GetRepository<County>();
+            var item = await repository.GetByIdAsync(id).ConfigureAwait(false);
+            item.Should().BeEquivalentTo(_counties.Single(e => e.Id == id));
         }
 
         [Fact]
         public async Task GetByMissingIdReturnsNullAsync()
         {
-            using (IAsyncReadableRepository<County> repository = this.GetRepository<County>())
-            {
-                var item = await repository.GetByIdAsync(-1).ConfigureAwait(false);
-                item.Should().BeNull();
-            }
+            using var repository = this.GetRepository<County>();
+            var item = await repository.GetByIdAsync(-1).ConfigureAwait(false);
+            item.Should().BeNull();
         }
 
         [Theory]
@@ -107,16 +97,14 @@ namespace Enfo.Infrastructure.Tests.RepositoryTests
         [InlineData("bA")]
         public async Task CountWithSpecification(string startsWith)
         {
-            using (IAsyncReadableRepository<County> repository = this.GetRepository<County>())
-            {
-                var count = await repository
-                    .CountAsync(new CountyNameStartsWithSpecification(startsWith))
-                    .ConfigureAwait(false);
-                count.Should().Be(_counties
-                    .Count(e => e.CountyName.StartsWith(
-                        startsWith,
-                        StringComparison.InvariantCultureIgnoreCase)));
-            }
+            using var repository = this.GetRepository<County>();
+            var count = await repository
+                .CountAsync(new CountyNameStartsWithSpecification(startsWith))
+                .ConfigureAwait(false);
+            count.Should().Be(_counties
+                .Count(e => e.CountyName.StartsWith(
+                    startsWith,
+                    StringComparison.InvariantCultureIgnoreCase)));
         }
 
         [Theory]
@@ -126,25 +114,21 @@ namespace Enfo.Infrastructure.Tests.RepositoryTests
         [InlineData("bA")]
         public async Task CountWithSpecificationCaseSensitive(string startsWith)
         {
-            using (IAsyncReadableRepository<County> repository = this.GetRepository<County>())
-            {
-                var count = await repository
-                    .CountAsync(new CountyNameStartsWithSpecificationCaseSensitive(startsWith))
-                    .ConfigureAwait(false);
-                count.Should().Be(_counties
-                    .Count(e => e.CountyName.StartsWith(
-                        startsWith)));
-            }
+            using var repository = this.GetRepository<County>();
+            var count = await repository
+                .CountAsync(new CountyNameStartsWithSpecificationCaseSensitive(startsWith))
+                .ConfigureAwait(false);
+            count.Should().Be(_counties
+                .Count(e => e.CountyName.StartsWith(
+                    startsWith)));
         }
 
         [Fact]
         public async Task CountAll()
         {
-            using (var repository = this.GetRepository<EpdContact>())
-            {
-                var count = await repository.CountAsync().ConfigureAwait(false);
-                count.Should().Be(_epdContacts.Length);
-            }
+            using var repository = this.GetRepository<EpdContact>();
+            var count = await repository.CountAsync().ConfigureAwait(false);
+            count.Should().Be(_epdContacts.Length);
         }
 
         [Theory]
@@ -152,17 +136,16 @@ namespace Enfo.Infrastructure.Tests.RepositoryTests
         [InlineData(2001)]
         public async Task GetByIdReturnsItemWithRelatedEntityAsync(int id)
         {
-            using (var repository = this.GetRepository<EpdContact>())
-            {
-                var item = await repository.GetByIdAsync(
-                    id, inclusion: new EpdContactIncludingAddress())
-                    .ConfigureAwait(false);
+            using var repository = this.GetRepository<EpdContact>();
 
-                var expectedContact = _epdContacts.Single(e => e.Id == id);
-                expectedContact.Address = _addresses.Single(e => e.Id == expectedContact.AddressId);
+            var item = await repository.GetByIdAsync(
+                id, inclusion: new EpdContactIncludingAddress())
+                .ConfigureAwait(false);
 
-                item.Should().BeEquivalentTo(expectedContact);
-            }
+            var expectedContact = _epdContacts.Single(e => e.Id == id);
+            expectedContact.Address = _addresses.Single(e => e.Id == expectedContact.AddressId);
+
+            item.Should().BeEquivalentTo(expectedContact);
         }
 
         [Theory]
@@ -170,13 +153,13 @@ namespace Enfo.Infrastructure.Tests.RepositoryTests
         [InlineData(true)]
         public async Task GetAllWithSpecificationReturnsCorrectListAsync(bool includeInactive)
         {
-            using (IAsyncReadableRepository<Address> repository = this.GetRepository<Address>())
-            {
-                var items = await repository.ListAsync(specification: new FilterByActiveItems<Address>(includeInactive)).ConfigureAwait(false);
+            using var repository = this.GetRepository<Address>();
+            var items = await repository
+                .ListAsync(specification: new FilterByActiveItems<Address>(includeInactive))
+                .ConfigureAwait(false);
 
-                items.Should().HaveCount(_addresses.Count(e => e.Active || includeInactive));
-                items.Any(e => !e.Active).Should().Equals(includeInactive);
-            }
+            items.Should().HaveCount(_addresses.Count(e => e.Active || includeInactive));
+            items.Any(e => !e.Active).Should().Equals(includeInactive);
         }
 
         [Theory]
@@ -184,18 +167,16 @@ namespace Enfo.Infrastructure.Tests.RepositoryTests
         [InlineData(2001)]
         public async Task GetByIdIncludedWithSpecificationReturnsItemAsync(int id)
         {
-            using (IAsyncReadableRepository<Address> repository = this.GetRepository<Address>())
-            {
-                var item = await repository.GetByIdAsync(id, new FilterByActiveItems<Address>()).ConfigureAwait(false);
+            using var repository = this.GetRepository<Address>();
+            var item = await repository.GetByIdAsync(id, new FilterByActiveItems<Address>()).ConfigureAwait(false);
 
-                if (_addresses.Single(e => e.Id == id).Active)
-                {
-                    item.Should().NotBeNull();
-                }
-                else
-                {
-                    item.Should().BeNull();
-                }
+            if (_addresses.Single(e => e.Id == id).Active)
+            {
+                item.Should().NotBeNull();
+            }
+            else
+            {
+                item.Should().BeNull();
             }
         }
 
@@ -224,15 +205,14 @@ namespace Enfo.Infrastructure.Tests.RepositoryTests
             int pageNum = 2;
             int itemIndex = (pageNum - 1) * pageSize;
 
-            using (IAsyncReadableRepository<County> repository = this.GetRepository<County>())
-            {
-                var pagination = Pagination.FromPageSizeAndNumber(pageSize, pageNum);
+            using var repository = this.GetRepository<County>();
 
-                var items = await repository.ListAsync(pagination: pagination).ConfigureAwait(false);
+            var pagination = Pagination.FromPageSizeAndNumber(pageSize, pageNum);
 
-                items.Should().HaveCount(pageSize);
-                items[0].Should().BeEquivalentTo(_counties[itemIndex]);
-            }
+            var items = await repository.ListAsync(pagination: pagination).ConfigureAwait(false);
+
+            items.Should().HaveCount(pageSize);
+            items[0].Should().BeEquivalentTo(_counties[itemIndex]);
         }
 
         [Theory]
@@ -245,23 +225,22 @@ namespace Enfo.Infrastructure.Tests.RepositoryTests
             int pageNum = 1;
             int itemIndex = (pageNum - 1) * pageSize;
 
-            using (IAsyncReadableRepository<County> repository = this.GetRepository<County>())
-            {
-                var spec = new CountyNameStartsWithSpecification(startsWith);
-                var pagination = Pagination.FromPageSizeAndNumber(pageSize, pageNum);
+            using var repository = this.GetRepository<County>();
 
-                IReadOnlyList<County> items = await repository.ListAsync(spec, pagination).ConfigureAwait(false);
+            var spec = new CountyNameStartsWithSpecification(startsWith);
+            var pagination = Pagination.FromPageSizeAndNumber(pageSize, pageNum);
 
-                items.Should().HaveCount(Math.Min(
-                    pageSize,
-                    _counties.Count(e => e.CountyName.StartsWith(
-                        startsWith,
-                        StringComparison.InvariantCultureIgnoreCase))));
-                items[0].Should().BeEquivalentTo(
-                    _counties.First(e => e.CountyName.StartsWith(
-                        startsWith,
-                        StringComparison.InvariantCultureIgnoreCase)));
-            }
+            IReadOnlyList<County> items = await repository.ListAsync(spec, pagination).ConfigureAwait(false);
+
+            items.Should().HaveCount(Math.Min(
+                pageSize,
+                _counties.Count(e => e.CountyName.StartsWith(
+                    startsWith,
+                    StringComparison.InvariantCultureIgnoreCase))));
+            items[0].Should().BeEquivalentTo(
+                _counties.First(e => e.CountyName.StartsWith(
+                    startsWith,
+                    StringComparison.InvariantCultureIgnoreCase)));
         }
     }
 }
