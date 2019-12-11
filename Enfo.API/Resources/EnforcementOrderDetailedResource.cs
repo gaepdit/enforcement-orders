@@ -102,9 +102,9 @@ namespace Enfo.API.Resources
             Deleted = item.Deleted;
             PublicationStatus = item.PublicationStatus;
             OrderNumber = item.OrderNumber;
-            LastPostedDate = item.LastPostedDate;
+            LastPostedDate = item.GetLastPostedDate();
 
-            IsPublicProposedOrder = item.IsPublicProposedOrder;
+            IsPublicProposedOrder = item.GetIsPublicProposedOrder();
             IsProposedOrder = item.IsProposedOrder;
             CommentPeriodClosesDate = item.CommentPeriodClosesDate;
             if (item.CommentContactId.HasValue)
@@ -113,7 +113,7 @@ namespace Enfo.API.Resources
             }
             ProposedOrderPostedDate = item.ProposedOrderPostedDate;
 
-            IsPublicExecutedOrder = item.IsPublicExecutedOrder;
+            IsPublicExecutedOrder = item.GetIsPublicExecutedOrder();
             IsExecutedOrder = item.IsExecutedOrder;
             ExecutedDate = item.ExecutedDate;
 

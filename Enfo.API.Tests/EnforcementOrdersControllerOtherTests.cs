@@ -123,7 +123,7 @@ namespace Enfo.API.Tests.ControllerTests
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
             var expected = _allOrders
-                .Where(e => e.IsPublicProposedOrder && e.CommentPeriodClosesDate >= DateTime.Today)
+                .Where(e => e.GetIsPublicProposedOrder() && e.CommentPeriodClosesDate >= DateTime.Today)
                 .Where(e => !e.Deleted)
                 .Select(e => new EnforcementOrderListResource(e));
 
@@ -144,7 +144,7 @@ namespace Enfo.API.Tests.ControllerTests
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
             var expected = _allOrders
-                .Where(e => e.IsPublicProposedOrder && e.CommentPeriodClosesDate >= DateTime.Today)
+                .Where(e => e.GetIsPublicProposedOrder() && e.CommentPeriodClosesDate >= DateTime.Today)
                 .Where(e => !e.Deleted)
                 .Skip((pageNum - 1) * pageSize).Take(pageSize)
                 .Select(e => new EnforcementOrderListResource(e));
@@ -165,7 +165,7 @@ namespace Enfo.API.Tests.ControllerTests
             var fromDate = GetNextWeekday(DateTime.Today.AddDays(-6), DayOfWeek.Monday);
 
             var expected = _allOrders
-                .Where(e => e.IsPublicExecutedOrder
+                .Where(e => e.GetIsPublicExecutedOrder()
                     && e.ExecutedOrderPostedDate >= fromDate
                     && e.ExecutedOrderPostedDate <= DateTime.Today)
                 .Where(e => !e.Deleted)
@@ -191,7 +191,7 @@ namespace Enfo.API.Tests.ControllerTests
             var fromDate = GetNextWeekday(DateTime.Today.AddDays(-6), DayOfWeek.Monday);
 
             var expected = _allOrders
-                .Where(e => e.IsPublicExecutedOrder
+                .Where(e => e.GetIsPublicExecutedOrder()
                     && e.ExecutedOrderPostedDate >= fromDate
                     && e.ExecutedOrderPostedDate <= DateTime.Today)
                 .Where(e => !e.Deleted)
@@ -250,8 +250,8 @@ namespace Enfo.API.Tests.ControllerTests
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
             var expected = _allOrders
-                .Where(e => e.IsPublic
-                    && e.LastPostedDate > GetNextWeekday(DateTime.Today.AddDays(-6), DayOfWeek.Monday))
+                .Where(e => e.GetIsPublic()
+                    && e.GetLastPostedDate() > GetNextWeekday(DateTime.Today.AddDays(-6), DayOfWeek.Monday))
                 .Where(e => !e.Deleted)
                 .Select(e => new EnforcementOrderListResource(e));
 
@@ -272,8 +272,8 @@ namespace Enfo.API.Tests.ControllerTests
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
             var expected = _allOrders
-                .Where(e => (e.IsPublic)
-                    && e.LastPostedDate > GetNextWeekday(DateTime.Today.AddDays(-6), DayOfWeek.Monday))
+                .Where(e => (e.GetIsPublic())
+                    && e.GetLastPostedDate() > GetNextWeekday(DateTime.Today.AddDays(-6), DayOfWeek.Monday))
                 .Where(e => !e.Deleted)
                 .Skip((pageNum - 1) * pageSize).Take(pageSize)
                 .Select(e => new EnforcementOrderListResource(e));

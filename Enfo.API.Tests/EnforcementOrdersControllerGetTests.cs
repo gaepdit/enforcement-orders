@@ -105,8 +105,8 @@ namespace Enfo.API.Tests.ControllerTests
 
             var orderedOrders = sortOrder switch
             {
-                EnforcementOrderSorting.DateAsc => _allOrders.OrderBy(e => e.LastPostedDate),
-                EnforcementOrderSorting.DateDesc => _allOrders.OrderByDescending(e => e.LastPostedDate),
+                EnforcementOrderSorting.DateAsc => _allOrders.OrderBy(e => e.GetLastPostedDate()),
+                EnforcementOrderSorting.DateDesc => _allOrders.OrderByDescending(e => e.GetLastPostedDate()),
                 EnforcementOrderSorting.FacilityAsc => _allOrders.OrderBy(e => e.FacilityName),
                 EnforcementOrderSorting.FacilityDesc => _allOrders.OrderByDescending(e => e.FacilityName),
                 _ => throw new ArgumentException()
@@ -140,8 +140,8 @@ namespace Enfo.API.Tests.ControllerTests
 
             var orderedOrders = sortOrder switch
             {
-                EnforcementOrderSorting.DateAsc => _allOrders.OrderBy(e => e.LastPostedDate),
-                EnforcementOrderSorting.DateDesc => _allOrders.OrderByDescending(e => e.LastPostedDate),
+                EnforcementOrderSorting.DateAsc => _allOrders.OrderBy(e => e.GetLastPostedDate()),
+                EnforcementOrderSorting.DateDesc => _allOrders.OrderByDescending(e => e.GetLastPostedDate()),
                 EnforcementOrderSorting.FacilityAsc => _allOrders.OrderBy(e => e.FacilityName),
                 EnforcementOrderSorting.FacilityDesc => _allOrders.OrderByDescending(e => e.FacilityName),
                 _ => throw new ArgumentException()

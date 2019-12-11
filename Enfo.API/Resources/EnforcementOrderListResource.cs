@@ -58,12 +58,12 @@ namespace Enfo.API.Resources
             LegalAuthority = new LegalAuthorityResource(item.LegalAuthority);
             OrderNumber = item.OrderNumber;
 
-            IsPublicProposedOrder = item.IsPublicProposedOrder;
+            IsPublicProposedOrder = item.GetIsPublicProposedOrder();
             IsProposedOrder = item.IsProposedOrder;
             CommentPeriodClosesDate = item.CommentPeriodClosesDate;
             ProposedOrderPostedDate = item.ProposedOrderPostedDate;
 
-            IsPublicExecutedOrder = item.IsPublicExecutedOrder;
+            IsPublicExecutedOrder = item.GetIsPublicExecutedOrder();
             IsExecutedOrder = item.IsExecutedOrder;
             ExecutedDate = item.ExecutedDate;
 

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -56,20 +56,14 @@ namespace Enfo.Domain.Entities
         [StringLength(50)]
         public string OrderNumber { get; set; }
 
-        public DateTime? LastPostedDate
+        public DateTime? GetLastPostedDate()
         {
-            get
-            {
-                return ExecutedDate ?? ProposedOrderPostedDate;
-            }
+            return ExecutedDate ?? ProposedOrderPostedDate;
         }
 
-        public bool IsPublic
+        public bool GetIsPublic()
         {
-            get
-            {
-                return IsPublicExecutedOrder || IsPublicProposedOrder;
-            }
+            return GetIsPublicExecutedOrder() || GetIsPublicProposedOrder();
         }
 
         // Proposed orders
@@ -93,18 +87,15 @@ namespace Enfo.Domain.Entities
         [DisplayFormat(DataFormatString = "{0:d}", ApplyFormatInEditMode = true)]
         public DateTime? ProposedOrderPostedDate { get; set; }
 
-        public bool IsPublicProposedOrder
+        public bool GetIsPublicProposedOrder()
         {
-            get
-            {
-                return (
-                    !Deleted
-                    && PublicationStatus == PublicationState.Published
-                    && IsProposedOrder
-                    && ProposedOrderPostedDate.HasValue
-                    && ProposedOrderPostedDate.Value <= DateTime.Today
-                    );
-            }
+            return (
+                !Deleted
+                && PublicationStatus == PublicationState.Published
+                && IsProposedOrder
+                && ProposedOrderPostedDate.HasValue
+                && ProposedOrderPostedDate.Value <= DateTime.Today
+                );
         }
 
         // Executed orders
@@ -124,18 +115,15 @@ namespace Enfo.Domain.Entities
         [DisplayFormat(DataFormatString = "{0:d}", ApplyFormatInEditMode = true)]
         public DateTime? ExecutedOrderPostedDate { get; set; }
 
-        public bool IsPublicExecutedOrder
+        public bool GetIsPublicExecutedOrder()
         {
-            get
-            {
-                return (
-                    !Deleted
-                    && PublicationStatus == PublicationState.Published
-                    && IsExecutedOrder
-                    && ExecutedOrderPostedDate.HasValue
-                    && ExecutedOrderPostedDate.Value <= DateTime.Today
-                    );
-            }
+            return (
+                !Deleted
+                && PublicationStatus == PublicationState.Published
+                && IsExecutedOrder
+                && ExecutedOrderPostedDate.HasValue
+                && ExecutedOrderPostedDate.Value <= DateTime.Today
+                );
         }
 
         // Hearing info
