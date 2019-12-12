@@ -231,8 +231,7 @@ namespace Enfo.API.Tests.ControllerTests
             var result = await controller.Post(item).ConfigureAwait(false);
 
             var id = (int)(result as CreatedAtActionResult).Value;
-            var addedItem = new AddressResource(await repository.GetByIdAsync(id)
-                .ConfigureAwait(false));
+            var addedItem = await repository.GetByIdAsync(id).ConfigureAwait(false);
 
             // Item gets added with next value in DB
             var expected = item.NewAddress();
