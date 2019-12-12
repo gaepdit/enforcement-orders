@@ -21,5 +21,9 @@ namespace Enfo.Domain.Repositories
             IInclusion<T> inclusion = null);
 
         Task<int> CountAsync(ISpecification<T> specification = null);
+
+        Task<bool> IdExists(
+            int id, 
+            ISpecification<T> specification = null);
     }
 }

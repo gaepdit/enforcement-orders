@@ -45,6 +45,14 @@ namespace Enfo.Infrastructure.Repositories
                 .Apply(specification)
             .CountAsync().ConfigureAwait(false);
 
+        public async Task<bool> IdExists(
+            int id, 
+            ISpecification<T> specification = null) =>
+            await _context.Set<T>()
+                .Apply(specification)
+                .AnyAsync(e => e.Id == id)
+                .ConfigureAwait(false);
+
         // IDisposable Support
         private bool _disposedValue = false; // To detect redundant calls
 
