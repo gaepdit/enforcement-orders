@@ -55,7 +55,7 @@ namespace Enfo.Domain.Tests
         [Fact]
         public void NullSpecificationCriteriaThrowsException()
         {
-            Assert.Throws<ArgumentException>(() => new NullCriteriaSpecification())
+            Assert.Throws<ArgumentNullException>(() => new NullCriteriaSpecification())
                 .ParamName.Should().Be("criteria");
         }
 

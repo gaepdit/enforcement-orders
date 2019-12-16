@@ -8,20 +8,52 @@ namespace Enfo.Domain.Utils
     public static class Check
     {
         public static T NotNull<T>(T value, string parameterName) =>
-            value ??
+            value ?? throw new ArgumentNullException(parameterName);
+
+        public static string NotNullOrEmpty(string value, string parameterName)
+        {
+            if (value is null)
+            {
                 throw new ArgumentNullException(parameterName);
+            }
 
-        public static string NotNullOrEmpty(string value, string parameterName) =>
-            !value.IsNullOrEmpty() ? value :
+            if (value.IsNullOrEmpty())
+            {
                 throw new ArgumentException($"{parameterName} can not be null or empty.", parameterName);
+            }
 
-        public static string NotNullOrWhiteSpace(string value, string parameterName) =>
-            !value.IsNullOrWhiteSpace() ? value :
+            return value;
+        }
+
+        public static string NotNullOrWhiteSpace(string value, string parameterName)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(parameterName);
+            }
+
+            if (value.IsNullOrWhiteSpace())
+            {
                 throw new ArgumentException($"{parameterName} can not be null, empty, or white space.", parameterName);
+            }
 
-        public static ICollection<T> NotNullOrEmpty<T>(ICollection<T> value, string parameterName) =>
-            !value.IsNullOrEmpty() ? value :
+            return value;
+        }
+
+        public static ICollection<T> NotNullOrEmpty<T>(ICollection<T> value, string parameterName)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(parameterName);
+            }
+
+            if (value.IsNullOrEmpty())
+            {
                 throw new ArgumentException($"{parameterName} can not be null or empty.", parameterName);
+            }
+
+            return value;
+        }
 
         public static int NotNegative(int value, string parameterName) =>
             value >= 0 ? value :
