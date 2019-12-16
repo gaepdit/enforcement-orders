@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Enfo.API.QueryStrings;
@@ -224,6 +224,70 @@ namespace Enfo.API.Controllers
             }
 
             return BadRequest(ModelState);
+        }
+
+        // DELETE: api/EnforcementOrders/5
+        // [Authorize]
+        [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> Delete(int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var item = await _repository.GetByIdAsync(id).ConfigureAwait(false);
+
+            if (item is null)
+            {
+                return NotFound(id);
+            }
+
+            if (item.Deleted)
+            {
+                ModelState.AddModelError(nameof(id), "Enforcement order is already deleted.");
+                return BadRequest(ModelState);
+            }
+
+            item.Deleted = true;
+            await _repository.CompleteAsync().ConfigureAwait(false);
+
+            return NoContent();
+        }
+
+        // PUT: api/EnforcementOrders/Undelete/5
+        // [Authorize]
+        [HttpPut("Undelete/{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> Undelete(int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var item = await _repository.GetByIdAsync(id).ConfigureAwait(false);
+
+            if (item is null)
+            {
+                return NotFound(id);
+            }
+
+            if (!item.Deleted)
+            {
+                ModelState.AddModelError(nameof(id), "Enforcement order is not deleted.");
+                return BadRequest(ModelState);
+            }
+
+            item.Deleted = false;
+            await _repository.CompleteAsync().ConfigureAwait(false);
+
+            return NoContent();
         }
     }
 }

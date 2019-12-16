@@ -106,6 +106,10 @@ Pending are public proposed or executed orders with publication date after the c
 
 ### PUT: `[Authorize] api/EnforcementOrders/{int:id}`
 
+### DELETE: `[Authorize] api/EnforcementOrders/{int:id}`
+
+### PUT: `[Authorize] api/EnforcementOrders/Undelete/{int:id}`
+
 ## EPD Contact
 
 ### GET: `api/EpdContacts`

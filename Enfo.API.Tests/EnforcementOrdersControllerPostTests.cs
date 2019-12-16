@@ -210,5 +210,157 @@ namespace Enfo.API.Tests.ControllerTests
 
             resultItems.Should().BeEquivalentTo(expected);
         }
+
+        [Fact]
+        public async Task DeleteItemReturnsCorrectly()
+        {
+            var repository = this.GetEnforcementOrderRepository();
+            var controller = new EnforcementOrdersController(repository);
+
+            var result = await controller.Delete(140).ConfigureAwait(false);
+
+            result.Should().BeOfType<NoContentResult>();
+            var actionResult = result as NoContentResult;
+            actionResult.StatusCode.Should().Be(204);
+        }
+
+        [Fact]
+        public async Task UnDeleteItemReturnsCorrectly()
+        {
+            var repository = this.GetEnforcementOrderRepository();
+            var controller = new EnforcementOrdersController(repository);
+
+            var result = await controller.Undelete(58310).ConfigureAwait(false);
+
+            result.Should().BeOfType<NoContentResult>();
+            var actionResult = result as NoContentResult;
+            actionResult.StatusCode.Should().Be(204);
+        }
+
+        [Fact]
+        public async Task DeleteItemCorrectlyDeletes()
+        {
+            int id = 140;
+
+            var repository = this.GetEnforcementOrderRepository();
+            var controller = new EnforcementOrdersController(repository);
+
+            var result = await controller.Delete(id).ConfigureAwait(false);
+
+            // Verify item marked as deleted
+            var updatedItem = await repository.GetByIdAsync(id).ConfigureAwait(false);
+            updatedItem.Deleted.Should().BeTrue();
+
+            // Verify removed from repository
+            var originalExtantCount = _enforcementOrders.Where(e => !e.Deleted).Count();
+            var newExtantCount = await repository.CountAsync(new FilterOrdersByDeletedStatus())
+                .ConfigureAwait(false);
+
+            newExtantCount.Should().Be(originalExtantCount - 1);
+        }
+
+        [Fact]
+        public async Task UndeleteItemCorrectlyUndeletes()
+        {
+            int id = 58310;
+
+            var repository = this.GetEnforcementOrderRepository();
+            var controller = new EnforcementOrdersController(repository);
+
+            var result = await controller.Undelete(id).ConfigureAwait(false);
+
+            // Verify item unmarked as deleted
+            var updatedItem = await repository.GetByIdAsync(id).ConfigureAwait(false);
+            updatedItem.Deleted.Should().BeFalse();
+
+            // Verify added back to repository
+            var originalExtantCount = _enforcementOrders.Where(e => !e.Deleted).Count();
+            var newExtantCount = await repository.CountAsync(new FilterOrdersByDeletedStatus())
+                .ConfigureAwait(false);
+
+            newExtantCount.Should().Be(originalExtantCount + 1);
+        }
+
+        [Fact]
+        public async Task DeleteOfAlreadyDeletedOrderFails()
+        {
+            var repository = this.GetEnforcementOrderRepository();
+            var controller = new EnforcementOrdersController(repository);
+
+            var result = await controller.Delete(58310).ConfigureAwait(false);
+
+            result.Should().BeOfType<BadRequestObjectResult>();
+            var actionResult = result as BadRequestObjectResult;
+            actionResult.StatusCode.Should().Be(400);
+
+            // Verify repository unchanged
+            var originalExtantCount = _enforcementOrders.Where(e => !e.Deleted).Count();
+            var newExtantCount = await repository.CountAsync(new FilterOrdersByDeletedStatus())
+                .ConfigureAwait(false);
+
+            newExtantCount.Should().Be(originalExtantCount);
+        }
+
+        [Fact]
+        public async Task UndeleteOfNonDeletedOrderFails()
+        {
+            var repository = this.GetEnforcementOrderRepository();
+            var controller = new EnforcementOrdersController(repository);
+
+            var result = await controller.Undelete(140).ConfigureAwait(false);
+
+            result.Should().BeOfType<BadRequestObjectResult>();
+            var actionResult = result as BadRequestObjectResult;
+            actionResult.StatusCode.Should().Be(400);
+
+            // Verify repository unchanged
+            var originalExtantCount = _enforcementOrders.Where(e => !e.Deleted).Count();
+            var newExtantCount = await repository.CountAsync(new FilterOrdersByDeletedStatus())
+                .ConfigureAwait(false);
+
+            newExtantCount.Should().Be(originalExtantCount);
+        }
+
+        [Fact]
+        public async Task DeleteWithNonexistantIdFails()
+        {
+            var repository = this.GetEnforcementOrderRepository();
+            var controller = new EnforcementOrdersController(repository);
+
+            int id = -1;
+
+            var result = await controller.Delete(id).ConfigureAwait(false);
+
+            result.Should().BeOfType<NotFoundObjectResult>();
+            (result as NotFoundObjectResult).StatusCode.Should().Be(404);
+
+            // Verify repository unchanged
+            var originalExtantCount = _enforcementOrders.Where(e => !e.Deleted).Count();
+            var newExtantCount = await repository.CountAsync(new FilterOrdersByDeletedStatus())
+                .ConfigureAwait(false);
+
+            newExtantCount.Should().Be(originalExtantCount);
+        }
+
+        [Fact]
+        public async Task UndeleteWithNonexistantIdFails()
+        {
+            var repository = this.GetEnforcementOrderRepository();
+            var controller = new EnforcementOrdersController(repository);
+
+            int id = -1;
+
+            var result = await controller.Undelete(id).ConfigureAwait(false);
+
+            result.Should().BeOfType<NotFoundObjectResult>();
+            (result as NotFoundObjectResult).StatusCode.Should().Be(404);
+
+            // Verify repository unchanged
+            var originalExtantCount = _enforcementOrders.Where(e => !e.Deleted).Count();
+            var newExtantCount = await repository.CountAsync(new FilterOrdersByDeletedStatus())
+                .ConfigureAwait(false);
+
+            newExtantCount.Should().Be(originalExtantCount);
+        }
     }
 }
