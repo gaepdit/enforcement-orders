@@ -1,18 +1,12 @@
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Enfo.API.QueryStrings;
 using Enfo.API.Resources;
-using Enfo.Domain.Entities;
-using Enfo.Domain.Querying;
 using Enfo.Domain.Repositories;
-using Enfo.Domain.Utils;
 // using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using static Enfo.Domain.Entities.Enums;
-using static Enfo.Domain.Utils.DateUtils;
 
 namespace Enfo.API.Controllers
 {
@@ -20,9 +14,9 @@ namespace Enfo.API.Controllers
     [ApiController]
     public class EnforcementOrdersController : ControllerBase
     {
-        private readonly IAsyncWritableRepository<EnforcementOrder> _repository;
+        private readonly IEnforcementOrderRepository _repository;
 
-        public EnforcementOrdersController(IAsyncWritableRepository<EnforcementOrder> repository) =>
+        public EnforcementOrdersController(IEnforcementOrderRepository repository) =>
             _repository = repository;
 
         // GET: api/EnforcementOrders?params
@@ -36,6 +30,10 @@ namespace Enfo.API.Controllers
             // Specifications
             filter ??= new EnforcementOrderFilter();
 
+            bool onlyIfPublic = false;
+            // TODO: Only authorized users can request Orders that are not public.
+            // bool onlyIfPublic = !User.LoggedIn;
+
             // TODO: Only authorized users can request Orders with PublicationStatus other than "Published"
             // or deleted Orders
             //if (!User.LoggedIn)
@@ -44,51 +42,14 @@ namespace Enfo.API.Controllers
             //    filter.IncludeDeleted = false;
             //}
 
-            // Either deleted or active items are returned; not both.
-            ISpecification<EnforcementOrder> spec = new FilterOrdersByDeletedStatus(filter.Deleted);
-
-            // TODO: Only authorized users can request Orders that are not public.
-            //if (!User.LoggedIn)
-            //    spec = spec.And(new IsPublicOrdersSpec());
-
-            if (!filter.FacilityFilter.IsNullOrWhiteSpace())
-                spec = spec.And(new FilterOrdersByFacilityName(filter.FacilityFilter));
-
-            if (!filter.County.IsNullOrWhiteSpace())
-                spec = spec.And(new FilterOrdersByCounty(filter.County));
-
-            if (filter.LegalAuth.HasValue)
-                spec = spec.And(new FilterOrdersByLegalAuth(filter.LegalAuth.Value));
-
-            if (filter.FromDate.HasValue)
-                spec = spec.And(new FilterOrdersByStartDate(filter.FromDate.Value, filter.Status));
-
-            if (filter.TillDate.HasValue)
-                spec = spec.And(new FilterOrdersByEndDate(filter.TillDate.Value, filter.Status));
-
-            if (filter.Status != ActivityStatus.All)
-                spec = spec.And(new FilterOrdersByActivityStatus(filter.Status));
-
-            if (filter.PublicationStatus != PublicationStatus.All)
-                spec = spec.And(new FilterOrdersByPublicationStatus(filter.PublicationStatus));
-
-            if (!filter.OrderNumber.IsNullOrWhiteSpace())
-                spec = spec.And(new FilterOrdersByOrderNumber(filter.OrderNumber));
-
-            if (!filter.TextContains.IsNullOrWhiteSpace())
-                spec = spec.And(new FilterOrdersByText(filter.TextContains));
-
             // Paging
             var pagination = (paging ??= new PaginationFilter()).Pagination();
 
-            // Sorting
-            var sorting = new SortEnforcementOrders(filter.SortOrder);
-
-            // Including
-            var include = new EnforcementOrderIncludeLegalAuth();
-
             return Ok((await _repository
-                .ListAsync(spec, pagination, sorting, include)
+                .FindEnforcementOrdersAsync(filter.FacilityFilter, filter.County,
+                    filter.LegalAuth, filter.FromDate, filter.TillDate, filter.Status,
+                    filter.PublicationStatus, filter.OrderNumber, filter.TextContains,
+                    onlyIfPublic, filter.Deleted, filter.SortOrder, pagination)
                 .ConfigureAwait(false))
                 .Select(e => new EnforcementOrderListResource(e)));
         }
@@ -99,19 +60,12 @@ namespace Enfo.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<EnforcementOrderItemResource>> Get(int id)
         {
-            ISpecification<EnforcementOrder> spec = new TrueSpec<EnforcementOrder>();
-
+            bool onlyIfPublic = false;
             // TODO: Only authorized users can request Orders that are not public.
-            //if (!User.LoggedIn)
-            //{
-            //    spec = spec.And(new IsPublicOrdersSpec());
-            //}
-            // Ensure specification is set to exclude non-public data
-
-            var include = new EnforcementOrderIncludeAll();
+            // bool onlyIfPublic = !User.LoggedIn;
 
             var item = await _repository
-                .GetByIdAsync(id, spec, include)
+                .GetEnforcementOrder(id, onlyIfPublic)
                 .ConfigureAwait(false);
 
             if (item is null)
@@ -129,10 +83,12 @@ namespace Enfo.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<EnforcementOrderDetailedResource>> Details(int id)
         {
-            var include = new EnforcementOrderIncludeAll();
+            bool onlyIfPublic = false;
+            // TODO: Only authorized users can request Orders that are not public.
+            // bool onlyIfPublic = !User.LoggedIn;
 
             var item = await _repository
-                .GetByIdAsync(id, inclusion: include)
+                .GetEnforcementOrder(id, onlyIfPublic)
                 .ConfigureAwait(false);
 
             if (item is null)
@@ -153,6 +109,10 @@ namespace Enfo.API.Controllers
             // Specifications
             filter ??= new EnforcementOrderFilter();
 
+            bool onlyIfPublic = false;
+            // TODO: Only authorized users can request Orders that are not public.
+            // bool onlyIfPublic = !User.LoggedIn;
+
             // TODO: Only authorized users can request Orders with PublicationStatus other than "Published"
             // or deleted Orders
             //if (!User.LoggedIn)
@@ -161,41 +121,12 @@ namespace Enfo.API.Controllers
             //    filter.IncludeDeleted = false;
             //}
 
-            // Either deleted or active items are counted; not both.
-            ISpecification<EnforcementOrder> spec = new FilterOrdersByDeletedStatus(filter.Deleted);
-
-            // TODO: Only authorized users can request Orders that are not public.
-            //if (!User.LoggedIn)
-            //    spec = spec.And(new IsPublicOrdersSpec());
-
-            if (!filter.FacilityFilter.IsNullOrWhiteSpace())
-                spec = spec.And(new FilterOrdersByFacilityName(filter.FacilityFilter));
-
-            if (!filter.County.IsNullOrWhiteSpace())
-                spec = spec.And(new FilterOrdersByCounty(filter.County));
-
-            if (filter.LegalAuth.HasValue)
-                spec = spec.And(new FilterOrdersByLegalAuth(filter.LegalAuth.Value));
-
-            if (filter.FromDate.HasValue)
-                spec = spec.And(new FilterOrdersByStartDate(filter.FromDate.Value, filter.Status));
-
-            if (filter.TillDate.HasValue)
-                spec = spec.And(new FilterOrdersByEndDate(filter.TillDate.Value, filter.Status));
-
-            if (filter.Status != ActivityStatus.All)
-                spec = spec.And(new FilterOrdersByActivityStatus(filter.Status));
-
-            if (filter.PublicationStatus != PublicationStatus.All)
-                spec = spec.And(new FilterOrdersByPublicationStatus(filter.PublicationStatus));
-
-            if (!filter.OrderNumber.IsNullOrWhiteSpace())
-                spec = spec.And(new FilterOrdersByOrderNumber(filter.OrderNumber));
-
-            if (!filter.TextContains.IsNullOrWhiteSpace())
-                spec = spec.And(new FilterOrdersByText(filter.TextContains));
-
-            return Ok(await _repository.CountAsync(spec).ConfigureAwait(false));
+            return Ok(await _repository
+                .CountEnforcementOrdersAsync(filter.FacilityFilter, filter.County,
+                    filter.LegalAuth, filter.FromDate, filter.TillDate, filter.Status,
+                    filter.PublicationStatus, filter.OrderNumber, filter.TextContains,
+                    onlyIfPublic, filter.Deleted)
+                .ConfigureAwait(false));
         }
 
         // GET: api/EnforcementOrders/CurrentProposed
@@ -205,18 +136,10 @@ namespace Enfo.API.Controllers
         public async Task<ActionResult<IEnumerable<EnforcementOrderListResource>>> CurrentProposed(
             [FromQuery] PaginationFilter paging = null)
         {
-            // Current Proposed are public proposed orders 
-            // (publication date in the past)
-            // with comment close date in the future
-            var spec = new IsPublicProposedOrderSpec()
-                .And(new FilterOrdersByCommentPeriod(DateTime.Today));
-
             var pagination = (paging ??= new PaginationFilter()).Pagination();
 
-            var include = new EnforcementOrderIncludeLegalAuth();
-
             return Ok((await _repository
-                .ListAsync(spec, pagination, inclusion: include)
+                .FindCurrentProposedEnforcementOrders(pagination)
                 .ConfigureAwait(false))
                 .Select(e => new EnforcementOrderListResource(e)));
         }
@@ -228,21 +151,10 @@ namespace Enfo.API.Controllers
         public async Task<ActionResult<IEnumerable<EnforcementOrderListResource>>> RecentlyExecuted(
             [FromQuery] PaginationFilter paging = null)
         {
-            // Recently Executed are public executed orders with 
-            // publication date within current week
-
-            // fromDate is most recent Monday
-            var fromDate = GetNextWeekday(DateTime.Today.AddDays(-6), DayOfWeek.Monday);
-
-            var spec = new IsPublicExecutedOrderSpec()
-                .And(new FilterOrdersByExecutedOrderPostedDate(fromDate, DateTime.Today));
-
             var pagination = (paging ??= new PaginationFilter()).Pagination();
 
-            var include = new EnforcementOrderIncludeLegalAuth();
-
             return Ok((await _repository
-                .ListAsync(spec, pagination, inclusion: include)
+                .FindRecentlyExecutedEnforcementOrders(pagination)
                 .ConfigureAwait(false))
                 .Select(e => new EnforcementOrderListResource(e)));
         }
@@ -255,15 +167,10 @@ namespace Enfo.API.Controllers
         public async Task<ActionResult<IEnumerable<EnforcementOrderListResource>>> Drafts(
             [FromQuery] PaginationFilter paging = null)
         {
-            // Draft are orders with publication status set to Draft
-            var spec = new FilterOrdersByPublicationStatus(PublicationStatus.Draft);
-
             var pagination = (paging ??= new PaginationFilter()).Pagination();
 
-            var include = new EnforcementOrderIncludeLegalAuth();
-
             return Ok((await _repository
-                .ListAsync(spec, pagination, inclusion: include)
+                .FindDraftEnforcementOrders(pagination)
                 .ConfigureAwait(false))
                 .Select(e => new EnforcementOrderListResource(e)));
         }
@@ -276,42 +183,47 @@ namespace Enfo.API.Controllers
         public async Task<ActionResult<IEnumerable<EnforcementOrderListResource>>> Pending(
             [FromQuery] PaginationFilter paging = null)
         {
-            // Pending are public proposed or executed orders with 
-            // publication date after the current week
-            var lastPostedAfter = GetNextWeekday(DateTime.Today.AddDays(-6), DayOfWeek.Monday);
-
-            var spec = new IsPublicOrdersSpec()
-                .And(new FilterOrdersByLastPostedDate(lastPostedAfter));
-
             var pagination = (paging ??= new PaginationFilter()).Pagination();
 
-            var include = new EnforcementOrderIncludeLegalAuth();
-
             return Ok((await _repository
-                .ListAsync(spec, pagination, inclusion: include)
+                .FindPendingEnforcementOrders(pagination)
                 .ConfigureAwait(false))
                 .Select(e => new EnforcementOrderListResource(e)));
         }
 
-        //// POST: api/EnforcementOrders
-        ////[Authorize]
-        //[HttpPost]
-        //[ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
-        //public async Task<IActionResult> Post(EnforcementOrderCreateResource resource)
-        //{
-        //    throw new NotImplementedException();
-        //}
+        // POST: api/EnforcementOrders
+        //[Authorize]
+        [HttpPost]
+        [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> Post([FromBody] EnforcementOrderCreateResource resource)
+        {
+            if (resource is null || !ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
-        //// PUT: api/Orders/5
-        ////[Authorize]
-        //[HttpPut("{id}")]
-        //[ProducesResponseType(typeof(EnforcementOrderUpdateResource), StatusCodes.Status200OK)]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
-        //[ProducesResponseType(StatusCodes.Status404NotFound)]
-        //public async Task<IActionResult> Put(int id, EnforcementOrderUpdateResource resource)
-        //{
-        //    throw new NotImplementedException();
-        //}
+            var result = await _repository
+                .CreateEnforcementOrderAsync(
+                    resource.CreateAs, resource.Cause, resource.CommentContactId, resource.CommentPeriodClosesDate,
+                    resource.County, resource.FacilityName, resource.ExecutedDate, resource.ExecutedOrderPostedDate,
+                    resource.HearingCommentPeriodClosesDate, resource.HearingContactId, resource.HearingDate,
+                    resource.HearingLocation, resource.IsHearingScheduled, resource.LegalAuthorityId, resource.OrderNumber,
+                    resource.ProposedOrderPostedDate, resource.PublicationStatus, resource.Requirements,
+                    resource.SettlementAmount)
+                .ConfigureAwait(false);
+
+            if (result.Success)
+            {
+                return CreatedAtAction(nameof(Get), result.NewItem.Id);
+            }
+
+            foreach (var item in result.ErrorMessages)
+            {
+                ModelState.TryAddModelError(item.Key, item.Value);
+            }
+
+            return BadRequest(ModelState);
+        }
     }
 }

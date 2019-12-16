@@ -12,6 +12,7 @@ namespace Enfo.API.Resources
         public int Id { get; set; }
 
         // Common data elements
+
         [DisplayName("Facility")]
         public string FacilityName { get; set; }
 

@@ -43,7 +43,7 @@ namespace Enfo.API.Tests.ControllerTests
         [Fact]
         public async Task GetReturnsCorrectly()
         {
-            var repository = this.GetRepository<EnforcementOrder>();
+            var repository = this.GetEnforcementOrderRepository();
             var controller = new EnforcementOrdersController(repository);
 
             var result = await controller.Get().ConfigureAwait(false);
@@ -57,7 +57,7 @@ namespace Enfo.API.Tests.ControllerTests
         [Fact]
         public async Task GetDefaultReturnsOnePageOfActiveItems()
         {
-            var repository = this.GetRepository<EnforcementOrder>();
+            var repository = this.GetEnforcementOrderRepository();
             var controller = new EnforcementOrdersController(repository);
 
             var items = ((await controller.Get()
@@ -75,7 +75,7 @@ namespace Enfo.API.Tests.ControllerTests
         [Fact]
         public async Task GetAllReturnsAllActiveItems()
         {
-            var repository = this.GetRepository<EnforcementOrder>();
+            var repository = this.GetEnforcementOrderRepository();
             var controller = new EnforcementOrdersController(repository);
 
             var items = ((await controller.Get(
@@ -96,7 +96,7 @@ namespace Enfo.API.Tests.ControllerTests
         [InlineData(EnforcementOrderSorting.DateDesc)]
         public async Task GetSortedReturnsCorrectItems(EnforcementOrderSorting sortOrder)
         {
-            var repository = this.GetRepository<EnforcementOrder>();
+            var repository = this.GetEnforcementOrderRepository();
             var controller = new EnforcementOrdersController(repository);
 
             var items = ((await controller.Get(
@@ -130,7 +130,7 @@ namespace Enfo.API.Tests.ControllerTests
             int pageSize,
             int pageNum)
         {
-            var repository = this.GetRepository<EnforcementOrder>();
+            var repository = this.GetEnforcementOrderRepository();
             var controller = new EnforcementOrdersController(repository);
 
             var items = ((await controller.Get(
@@ -159,7 +159,7 @@ namespace Enfo.API.Tests.ControllerTests
         [Fact]
         public async Task InvalidPageSizeReturnsDefaultPagination()
         {
-            var repository = this.GetRepository<EnforcementOrder>();
+            var repository = this.GetEnforcementOrderRepository();
             var controller = new EnforcementOrdersController(repository);
 
             var result = (await controller.Get(
@@ -175,7 +175,7 @@ namespace Enfo.API.Tests.ControllerTests
         [Fact]
         public async Task InvalidPageNumberReturnsDefaultPagination()
         {
-            var repository = this.GetRepository<EnforcementOrder>();
+            var repository = this.GetEnforcementOrderRepository();
             var controller = new EnforcementOrdersController(repository);
 
             var result = (await controller.Get(
@@ -193,7 +193,7 @@ namespace Enfo.API.Tests.ControllerTests
         [InlineData("orci")]
         public async Task FacilityFilterReturnsCorrectItems(string facilityFilter)
         {
-            var repository = this.GetRepository<EnforcementOrder>();
+            var repository = this.GetEnforcementOrderRepository();
             var controller = new EnforcementOrdersController(repository);
 
             var result = (await controller.Get(
@@ -217,7 +217,7 @@ namespace Enfo.API.Tests.ControllerTests
         [InlineData("stephens")]
         public async Task CountyFilterReturnsCorrectItems(string county)
         {
-            var repository = this.GetRepository<EnforcementOrder>();
+            var repository = this.GetEnforcementOrderRepository();
             var controller = new EnforcementOrdersController(repository);
 
             var result = (await controller.Get(
@@ -241,7 +241,7 @@ namespace Enfo.API.Tests.ControllerTests
         [InlineData(6)]
         public async Task LegalFilterReturnsCorrectItems(int legalAuth)
         {
-            var repository = this.GetRepository<EnforcementOrder>();
+            var repository = this.GetEnforcementOrderRepository();
             var controller = new EnforcementOrdersController(repository);
 
             var result = (await controller.Get(
@@ -278,7 +278,7 @@ namespace Enfo.API.Tests.ControllerTests
             DateTime fromDate,
             ActivityStatus status)
         {
-            var repository = this.GetRepository<EnforcementOrder>();
+            var repository = this.GetEnforcementOrderRepository();
             var controller = new EnforcementOrdersController(repository);
 
             var result = (await controller.Get(
@@ -305,7 +305,7 @@ namespace Enfo.API.Tests.ControllerTests
         [InlineData(PublicationStatus.Published)]
         public async Task PubStatusFilterReturnsCorrectItems(PublicationStatus publicationStatus)
         {
-            var repository = this.GetRepository<EnforcementOrder>();
+            var repository = this.GetEnforcementOrderRepository();
             var controller = new EnforcementOrdersController(repository);
 
             var result = (await controller.Get(
@@ -331,7 +331,7 @@ namespace Enfo.API.Tests.ControllerTests
             DateTime tillDate,
             ActivityStatus status = ActivityStatus.All)
         {
-            var repository = this.GetRepository<EnforcementOrder>();
+            var repository = this.GetEnforcementOrderRepository();
             var controller = new EnforcementOrdersController(repository);
 
             var result = (await controller.Get(
@@ -358,7 +358,7 @@ namespace Enfo.API.Tests.ControllerTests
         [InlineData("8")]
         public async Task OrderNumberFilterReturnsCorrectItems(string orderNumber)
         {
-            var repository = this.GetRepository<EnforcementOrder>();
+            var repository = this.GetEnforcementOrderRepository();
             var controller = new EnforcementOrdersController(repository);
 
             var result = (await controller.Get(
@@ -384,7 +384,7 @@ namespace Enfo.API.Tests.ControllerTests
         [InlineData("👾🔙")]
         public async Task TextFilterReturnsCorrectItems(string textContains)
         {
-            var repository = this.GetRepository<EnforcementOrder>();
+            var repository = this.GetEnforcementOrderRepository();
             var controller = new EnforcementOrdersController(repository);
 
             var result = (await controller.Get(
@@ -411,7 +411,7 @@ namespace Enfo.API.Tests.ControllerTests
         [Fact]
         public async Task GetDeletedReturnsAllDeletedItems()
         {
-            var repository = this.GetRepository<EnforcementOrder>();
+            var repository = this.GetEnforcementOrderRepository();
             var controller = new EnforcementOrdersController(repository);
 
             var items = ((await controller.Get(
@@ -431,7 +431,7 @@ namespace Enfo.API.Tests.ControllerTests
         [InlineData("stephens")]
         public async Task GetFilteredDeletedReturnsCorrectDeletedItems(string county)
         {
-            var repository = this.GetRepository<EnforcementOrder>();
+            var repository = this.GetEnforcementOrderRepository();
             var controller = new EnforcementOrdersController(repository);
 
             var result = (await controller.Get(
@@ -453,7 +453,7 @@ namespace Enfo.API.Tests.ControllerTests
         [Fact]
         public async Task GetByIdReturnsCorrectly()
         {
-            var repository = this.GetRepository<EnforcementOrder>();
+            var repository = this.GetEnforcementOrderRepository();
             var controller = new EnforcementOrdersController(repository);
 
             var result = await controller.Get(140).ConfigureAwait(false);
@@ -471,7 +471,7 @@ namespace Enfo.API.Tests.ControllerTests
         [InlineData(71715)]
         public async Task GetByIdReturnsCorrectItem(int id)
         {
-            var repository = this.GetRepository<EnforcementOrder>();
+            var repository = this.GetEnforcementOrderRepository();
             var controller = new EnforcementOrdersController(repository);
 
             var value = ((await controller.Get(id).ConfigureAwait(false))
@@ -488,7 +488,7 @@ namespace Enfo.API.Tests.ControllerTests
         [InlineData(-1)]
         public async Task GetByMissingIdReturnsNotFound(int id)
         {
-            var repository = this.GetRepository<EnforcementOrder>();
+            var repository = this.GetEnforcementOrderRepository();
             var controller = new EnforcementOrdersController(repository);
 
             var result = await controller.Get(id).ConfigureAwait(false);

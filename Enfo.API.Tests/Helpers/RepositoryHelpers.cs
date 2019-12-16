@@ -28,5 +28,23 @@ namespace Enfo.API.Tests.Helpers
 
             return new WritableRepository<T>(context);
         }
+
+        public static IEnforcementOrderRepository GetEnforcementOrderRepository(
+            this object callingClass,
+            int appendToName = 0,
+            [CallerMemberName] string dbName = null)
+        {
+            var options = new DbContextOptionsBuilder<EnfoDbContext>()
+                .UseSqlite($"Data Source={callingClass}_{dbName}_{appendToName}_Test.db")
+                .Options;
+
+            var context = new EnfoDbContext(options);
+
+            context.Database.EnsureDeleted();
+            context.Database.EnsureCreated();
+            context.SeedTestData();
+
+            return new EnforcementOrderRepository(context);
+        }
     }
 }

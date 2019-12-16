@@ -46,7 +46,7 @@ namespace Enfo.Infrastructure.Repositories
             .CountAsync().ConfigureAwait(false);
 
         public async Task<bool> IdExists(
-            int id, 
+            int id,
             ISpecification<T> specification = null) =>
             await _context.Set<T>()
                 .Apply(specification)

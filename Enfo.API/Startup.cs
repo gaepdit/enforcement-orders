@@ -34,6 +34,7 @@ namespace Enfo.API
 
             services.AddScoped(typeof(IAsyncWritableRepository<>), typeof(WritableRepository<>));
             services.AddScoped(typeof(IAsyncReadableRepository<>), typeof(ReadableRepository<>));
+            services.AddScoped(typeof(IEnforcementOrderRepository), typeof(EnforcementOrderRepository));
 
             services.AddSwaggerGen(c =>
             {

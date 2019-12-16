@@ -1,8 +1,9 @@
-﻿using Enfo.Domain.Validation;
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Enfo.Domain.Repositories;
+using Enfo.Domain.Validation;
 
 namespace Enfo.Domain.Entities
 {
@@ -154,5 +155,105 @@ namespace Enfo.Domain.Entities
         public virtual EpdContact HearingContact { get; set; }
         public int? HearingContactId { get; set; }
 
+        // Create/Update methods
+
+        public enum NewEnforcementOrderType
+        {
+            Proposed,
+            Executed
+        }
+
+        public static CreateEntityResult<EnforcementOrder> CreateNewEnforcementOrderEntity(
+            NewEnforcementOrderType createAs,
+            string cause,
+            int? commentContactId,
+            DateTime? commentPeriodClosesDate,
+            string county,
+            string facilityName,
+            DateTime? executedDate,
+            DateTime? executedOrderPostedDate,
+            DateTime? hearingCommentPeriodClosesDate,
+            int? hearingContactId,
+            DateTime? hearingDate,
+            string hearingLocation,
+            bool isHearingScheduled,
+            int legalAuthorityId,
+            string orderNumber,
+            DateTime? proposedOrderPostedDate,
+            PublicationState publicationStatus,
+            string requirements,
+            decimal? settlementAmount)
+        {
+            var result = new CreateEntityResult<EnforcementOrder>();
+
+            if (publicationStatus == PublicationState.Published)
+            {
+                if (createAs == NewEnforcementOrderType.Proposed)
+                {
+                    if (commentContactId is null)
+                        result.AddErrorMessage("CommentContact", "A contact is required for comments for proposed orders.");
+
+                    if (!commentPeriodClosesDate.HasValue)
+                        result.AddErrorMessage("CommentPeriodClosesDate", "A closing date is required for comments for proposed orders.");
+
+                    if (!proposedOrderPostedDate.HasValue)
+                        result.AddErrorMessage("ProposedOrderPostedDate", "A publication date is required for proposed orders.");
+                }
+
+                if (createAs == NewEnforcementOrderType.Executed)
+                {
+                    if (!executedDate.HasValue)
+                        result.AddErrorMessage("ExecutedDate", "An execution date is required for executed orders.");
+
+                    if (!executedOrderPostedDate.HasValue)
+                        result.AddErrorMessage("ExecutedOrderPostedDate", "A publication date is required for executed orders.");
+
+                }
+
+                if (isHearingScheduled)
+                {
+                    if (!hearingDate.HasValue)
+                        result.AddErrorMessage("HearingDate", "A hearing date is required if a hearing is scheduled.");
+
+                    if (string.IsNullOrWhiteSpace(hearingLocation))
+                        result.AddErrorMessage("HearingLocation", "A hearing location is required if a hearing is scheduled.");
+
+                    if (!hearingCommentPeriodClosesDate.HasValue)
+                        result.AddErrorMessage("HearingCommentPeriodClosesDate", "A closing date is required for hearing comments if a hearing is scheduled.");
+
+                    if (hearingContactId is null)
+                        result.AddErrorMessage("HearingContact", "A contact is required for hearings if a hearing is scheduled.");
+                }
+            }
+
+            if (result.Success)
+            {
+                result.NewItem = new EnforcementOrder()
+                {
+                    Cause = cause,
+                    CommentContactId = (createAs == NewEnforcementOrderType.Proposed) ? commentContactId : null,
+                    CommentPeriodClosesDate = (createAs == NewEnforcementOrderType.Proposed) ? commentPeriodClosesDate : null,
+                    County = county,
+                    ExecutedDate = (createAs == NewEnforcementOrderType.Executed) ? executedDate : null,
+                    ExecutedOrderPostedDate = (createAs == NewEnforcementOrderType.Executed) ? executedOrderPostedDate : null,
+                    FacilityName = facilityName,
+                    HearingCommentPeriodClosesDate = isHearingScheduled ? hearingCommentPeriodClosesDate : null,
+                    HearingContactId = isHearingScheduled ? hearingContactId : null,
+                    HearingDate = isHearingScheduled ? hearingDate : null,
+                    HearingLocation = isHearingScheduled ? hearingLocation : null,
+                    IsExecutedOrder = createAs == NewEnforcementOrderType.Executed,
+                    IsHearingScheduled = isHearingScheduled,
+                    IsProposedOrder = createAs == NewEnforcementOrderType.Proposed,
+                    LegalAuthorityId = legalAuthorityId,
+                    OrderNumber = orderNumber,
+                    ProposedOrderPostedDate = (createAs == NewEnforcementOrderType.Proposed) ? proposedOrderPostedDate : null,
+                    PublicationStatus = publicationStatus,
+                    Requirements = requirements,
+                    SettlementAmount = settlementAmount
+                };
+            }
+
+            return result;
+        }
     }
 }

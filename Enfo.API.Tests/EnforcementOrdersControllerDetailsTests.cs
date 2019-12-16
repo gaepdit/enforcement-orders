@@ -39,7 +39,7 @@ namespace Enfo.API.Tests.ControllerTests
         [Fact]
         public async Task GetByIdReturnsCorrectly()
         {
-            var repository = this.GetRepository<EnforcementOrder>();
+            var repository = this.GetEnforcementOrderRepository();
             var controller = new EnforcementOrdersController(repository);
 
             var result = await controller.Details(140).ConfigureAwait(false);
@@ -57,7 +57,7 @@ namespace Enfo.API.Tests.ControllerTests
         [InlineData(71715)]
         public async Task GetDetailedByIdReturnsCorrectItem(int id)
         {
-            var repository = this.GetRepository<EnforcementOrder>();
+            var repository = this.GetEnforcementOrderRepository();
             var controller = new EnforcementOrdersController(repository);
 
             var value = ((await controller.Details(id).ConfigureAwait(false))
@@ -74,7 +74,7 @@ namespace Enfo.API.Tests.ControllerTests
         [InlineData(-1)]
         public async Task GetDetailedByMissingIdReturnsNotFound(int id)
         {
-            var repository = this.GetRepository<EnforcementOrder>();
+            var repository = this.GetEnforcementOrderRepository();
             var controller = new EnforcementOrdersController(repository);
 
             var result = await controller.Get(id).ConfigureAwait(false);
