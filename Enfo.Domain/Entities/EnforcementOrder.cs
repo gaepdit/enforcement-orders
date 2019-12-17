@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -207,7 +207,6 @@ namespace Enfo.Domain.Entities
 
                     if (!executedOrderPostedDate.HasValue)
                         result.AddErrorMessage("ExecutedOrderPostedDate", "A publication date is required for executed orders.");
-
                 }
 
                 if (isHearingScheduled)

@@ -180,24 +180,6 @@ namespace Enfo.Infrastructure.Tests.RepositoryTests
             }
         }
 
-        // [Fact]
-        // public async Task GetPaginatedReturnsPartialListAsync()
-        // {
-        //     int skip = 10;
-        //     int take = 2;
-        //     int firstItemIndex = skip;
-
-        //     using (IAsyncReadableRepository<County> repository = this.GetRepository<County>())
-        //     {
-        //         var pagination = Pagination.FromPageSkipAndTake(skip, take);
-
-        //         var items = await repository.ListAsync(pagination: pagination).ConfigureAwait(false);
-
-        //         items.Should().HaveCount(take);
-        //         items[0].Should().BeEquivalentTo(_counties[firstItemIndex]);
-        //     }
-        // }
-
         [Fact]
         public async Task GetPaginatedByPageSizeReturnsPartialListAsync()
         {

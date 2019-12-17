@@ -296,14 +296,15 @@ namespace Enfo.API.Tests.ControllerTests
             var repository = this.GetRepository<LegalAuthority>();
             var controller = new LegalAuthoritiesController(repository);
 
-            var original = await repository.GetByIdAsync(1).ConfigureAwait(false);
+            var id = 1;
+            var original = await repository.GetByIdAsync(id).ConfigureAwait(false);
 
-            var result = await controller.Put(original.Id, null).ConfigureAwait(false);
+            var result = await controller.Put(id, null).ConfigureAwait(false);
 
             result.Should().BeOfType<BadRequestObjectResult>();
             (result as BadRequestObjectResult).StatusCode.Should().Be(400);
 
-            var updated = await repository.GetByIdAsync(1).ConfigureAwait(false);
+            var updated = await repository.GetByIdAsync(id).ConfigureAwait(false);
 
             updated.Should().BeEquivalentTo(original);
         }
@@ -314,17 +315,18 @@ namespace Enfo.API.Tests.ControllerTests
             var repository = this.GetRepository<LegalAuthority>();
             var controller = new LegalAuthoritiesController(repository);
 
+            var id = 9999;
             var target = new LegalAuthorityUpdateResource
             {
                 Active = false,
                 AuthorityName = "XYZ"
             };
 
-            IActionResult result = await controller.Put(9999, target).ConfigureAwait(false);
+            var result = await controller.Put(id, target).ConfigureAwait(false);
 
             result.Should().BeOfType<NotFoundObjectResult>();
             (result as NotFoundObjectResult).StatusCode.Should().Be(404);
-            (result as NotFoundObjectResult).Value.Should().Be(9999);
+            (result as NotFoundObjectResult).Value.Should().Be(id);
         }
     }
 }

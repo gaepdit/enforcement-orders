@@ -367,7 +367,7 @@ namespace Enfo.API.Tests.ControllerTests
                 Street = "123 Fake St"
             };
 
-            IActionResult result = await controller.Put(9999, target).ConfigureAwait(false);
+            var result = await controller.Put(9999, target).ConfigureAwait(false);
 
             result.Should().BeOfType<NotFoundObjectResult>();
             (result as NotFoundObjectResult).StatusCode.Should().Be(404);

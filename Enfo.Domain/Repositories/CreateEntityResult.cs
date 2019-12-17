@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
+using Enfo.Domain.Entities;
 
 namespace Enfo.Domain.Repositories
 {
-    public class CreateEntityResult<T>
+    public class CreateEntityResult<T> where T : BaseEntity
     {
         public bool Success { get; private set; } = true;
         public T NewItem { get; set; }
@@ -21,7 +22,6 @@ namespace Enfo.Domain.Repositories
         public CreateEntityResult(string key, string message)
         {
             Success = false;
-
             ErrorMessages = new Dictionary<string, string>
             {
                 { key, message }
@@ -32,6 +32,7 @@ namespace Enfo.Domain.Repositories
         {
             Success = false;
             ErrorMessages.Add(key, message);
+            NewItem = null;
         }
     }
 }
