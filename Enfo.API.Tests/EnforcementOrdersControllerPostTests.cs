@@ -7,6 +7,7 @@ using Enfo.Domain.Querying;
 using Enfo.Infrastructure.SeedData;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
@@ -209,6 +210,150 @@ namespace Enfo.API.Tests.ControllerTests
                 .Select(e => new EnforcementOrderListResource(e));
 
             resultItems.Should().BeEquivalentTo(expected);
+        }
+
+        [Fact]
+        public async Task UpdateOrderSucceeds()
+        {
+            var repository = this.GetEnforcementOrderRepository();
+            var controller = new EnforcementOrdersController(repository);
+
+            var id = 140;
+            var target = new EnforcementOrderUpdateResource()
+            {
+                Cause = "Integer feugiat scelerisque varius morbi enim nunc faucibus a.",
+                CommentContactId = null,
+                CommentPeriodClosesDate = null,
+                County = "Liberty",
+                ExecutedDate = new DateTime(1998, 06, 29),
+                ExecutedOrderPostedDate = new DateTime(1998, 07, 06),
+                FacilityName = "A diam maecenas",
+                HearingCommentPeriodClosesDate = null,
+                HearingDate = null,
+                HearingLocation = null,
+                IsExecutedOrder = true,
+                IsHearingScheduled = false,
+                LegalAuthorityId = 7,
+                OrderNumber = "EPD-ACQ-7936",
+                ProposedOrderPostedDate = null,
+                PublicationStatus = PublicationState.Published,
+                Requirements = "Duis ut diam quam nulla porttitor massa id neque. A lacus vestibulum sed arcu non. Amet massa vitae tortor condimentum. Magnis dis parturient montes nascetur ridiculus mus mauris. Arcu risus quis varius quam quisque id diam. Pellentesque massa placerat duis ultricies lacus sed. Tellus in hac habitasse platea dictumst vestibulum. Justo nec ultrices dui sapien eget. Ac odio tempor orci dapibus ultrices in. Lacus sed viverra tellus in hac habitasse platea dictumst vestibulum. Donec et odio pellentesque diam volutpat. Nunc faucibus a pellentesque sit amet porttitor eget dolor morbi. Neque ornare aenean euismod elementum nisi quis eleifend quam. Praesent elementum facilisis leo vel fringilla est ullamcorper eget. Et netus et malesuada fames. Urna et pharetra pharetra massa massa ultricies mi quis. Sit amet consectetur adipiscing elit. Felis donec et odio pellentesque diam volutpat commodo sed egestas. Adipiscing elit pellentesque habitant morbi."
+                + Environment.NewLine
+                + "Duis ut diam quam nulla porttitor massa id neque. A lacus vestibulum sed arcu non. Amet massa vitae tortor condimentum. Magnis dis parturient montes nascetur ridiculus mus mauris. Arcu risus quis varius quam quisque id diam. Pellentesque massa placerat duis ultricies lacus sed. Tellus in hac habitasse platea dictumst vestibulum. Justo nec ultrices dui sapien eget. Ac odio tempor orci dapibus ultrices in. Lacus sed viverra tellus in hac habitasse platea dictumst vestibulum. Donec et odio pellentesque diam volutpat. Nunc faucibus a pellentesque sit amet porttitor eget dolor morbi. Neque ornare aenean euismod elementum nisi quis eleifend quam. Praesent elementum facilisis leo vel fringilla est ullamcorper eget. Et netus et malesuada fames. Urna et pharetra pharetra massa massa ultricies mi quis. Sit amet consectetur adipiscing elit. Felis donec et odio pellentesque diam volutpat commodo sed egestas. Adipiscing elit pellentesque habitant morbi.",
+                SettlementAmount = 2000
+            };
+
+            var result = await controller.Put(id, target);
+
+            result.Should().BeOfType<NoContentResult>();
+            (result as NoContentResult).StatusCode.Should().Be(204);
+
+            var updated = await repository.GetByIdAsync(id)
+                .ConfigureAwait(false);
+
+            updated.Should().BeEquivalentTo(target);
+        }
+
+        [Fact]
+        public async Task UpdateWithNullFails()
+        {
+            var repository = this.GetEnforcementOrderRepository();
+            var controller = new EnforcementOrdersController(repository);
+
+            var id = 140;
+            var original = await repository.GetByIdAsync(id).ConfigureAwait(false);
+
+            var result = await controller.Put(id, null).ConfigureAwait(false);
+
+            result.Should().BeOfType<BadRequestObjectResult>();
+            (result as BadRequestObjectResult).StatusCode.Should().Be(400);
+
+            var updated = await repository.GetByIdAsync(id).ConfigureAwait(false);
+
+            updated.Should().BeEquivalentTo(original);
+        }
+
+        [Fact]
+        public async Task UpdateWithMissingIdFails()
+        {
+            var repository = this.GetEnforcementOrderRepository();
+            var controller = new EnforcementOrdersController(repository);
+
+            var id = 9999;
+            var target = new EnforcementOrderUpdateResource()
+            {
+                Cause = "Integer feugiat scelerisque varius morbi enim nunc faucibus a.",
+                CommentContactId = null,
+                CommentPeriodClosesDate = null,
+                County = "Liberty",
+                ExecutedDate = new DateTime(1998, 06, 29),
+                ExecutedOrderPostedDate = new DateTime(1998, 07, 06),
+                FacilityName = "A diam maecenas",
+                HearingCommentPeriodClosesDate = null,
+                HearingDate = null,
+                HearingLocation = "",
+                IsExecutedOrder = true,
+                IsHearingScheduled = false,
+                LegalAuthorityId = 7,
+                OrderNumber = "EPD-ACQ-7936",
+                ProposedOrderPostedDate = null,
+                PublicationStatus = PublicationState.Published,
+                Requirements = "Duis ut diam quam nulla porttitor massa id neque. A lacus vestibulum sed arcu non. Amet massa vitae tortor condimentum. Magnis dis parturient montes nascetur ridiculus mus mauris. Arcu risus quis varius quam quisque id diam. Pellentesque massa placerat duis ultricies lacus sed. Tellus in hac habitasse platea dictumst vestibulum. Justo nec ultrices dui sapien eget. Ac odio tempor orci dapibus ultrices in. Lacus sed viverra tellus in hac habitasse platea dictumst vestibulum. Donec et odio pellentesque diam volutpat. Nunc faucibus a pellentesque sit amet porttitor eget dolor morbi. Neque ornare aenean euismod elementum nisi quis eleifend quam. Praesent elementum facilisis leo vel fringilla est ullamcorper eget. Et netus et malesuada fames. Urna et pharetra pharetra massa massa ultricies mi quis. Sit amet consectetur adipiscing elit. Felis donec et odio pellentesque diam volutpat commodo sed egestas. Adipiscing elit pellentesque habitant morbi."
+                + Environment.NewLine
+                + "Duis ut diam quam nulla porttitor massa id neque. A lacus vestibulum sed arcu non. Amet massa vitae tortor condimentum. Magnis dis parturient montes nascetur ridiculus mus mauris. Arcu risus quis varius quam quisque id diam. Pellentesque massa placerat duis ultricies lacus sed. Tellus in hac habitasse platea dictumst vestibulum. Justo nec ultrices dui sapien eget. Ac odio tempor orci dapibus ultrices in. Lacus sed viverra tellus in hac habitasse platea dictumst vestibulum. Donec et odio pellentesque diam volutpat. Nunc faucibus a pellentesque sit amet porttitor eget dolor morbi. Neque ornare aenean euismod elementum nisi quis eleifend quam. Praesent elementum facilisis leo vel fringilla est ullamcorper eget. Et netus et malesuada fames. Urna et pharetra pharetra massa massa ultricies mi quis. Sit amet consectetur adipiscing elit. Felis donec et odio pellentesque diam volutpat commodo sed egestas. Adipiscing elit pellentesque habitant morbi.",
+                SettlementAmount = 2000
+            };
+
+            var result = await controller.Put(id, target).ConfigureAwait(false);
+
+            result.Should().BeOfType<NotFoundObjectResult>();
+            (result as NotFoundObjectResult).StatusCode.Should().Be(404);
+            (result as NotFoundObjectResult).Value.Should().Be(id);
+        }
+
+        [Fact]
+        public async Task UpdateWithDuplicateOrderNumberFails()
+        {
+            var repository = this.GetEnforcementOrderRepository();
+            var controller = new EnforcementOrdersController(repository);
+
+            var id = 140;
+            var original = await repository.GetByIdAsync(id).ConfigureAwait(false);
+
+            var target = new EnforcementOrderUpdateResource()
+            {
+                Cause = "Integer feugiat scelerisque varius morbi enim nunc faucibus a.",
+                CommentContactId = null,
+                CommentPeriodClosesDate = null,
+                County = "Liberty",
+                ExecutedDate = new DateTime(1998, 06, 29),
+                ExecutedOrderPostedDate = new DateTime(1998, 07, 06),
+                FacilityName = "A diam maecenas",
+                HearingCommentPeriodClosesDate = null,
+                HearingDate = null,
+                HearingLocation = "",
+                IsExecutedOrder = true,
+                IsHearingScheduled = false,
+                LegalAuthorityId = 7,
+                OrderNumber = "EPD-AQ-17310",
+                ProposedOrderPostedDate = null,
+                PublicationStatus = PublicationState.Published,
+                Requirements = "Duis ut diam quam nulla porttitor massa id neque. A lacus vestibulum sed arcu non. Amet massa vitae tortor condimentum. Magnis dis parturient montes nascetur ridiculus mus mauris. Arcu risus quis varius quam quisque id diam. Pellentesque massa placerat duis ultricies lacus sed. Tellus in hac habitasse platea dictumst vestibulum. Justo nec ultrices dui sapien eget. Ac odio tempor orci dapibus ultrices in. Lacus sed viverra tellus in hac habitasse platea dictumst vestibulum. Donec et odio pellentesque diam volutpat. Nunc faucibus a pellentesque sit amet porttitor eget dolor morbi. Neque ornare aenean euismod elementum nisi quis eleifend quam. Praesent elementum facilisis leo vel fringilla est ullamcorper eget. Et netus et malesuada fames. Urna et pharetra pharetra massa massa ultricies mi quis. Sit amet consectetur adipiscing elit. Felis donec et odio pellentesque diam volutpat commodo sed egestas. Adipiscing elit pellentesque habitant morbi."
+                + Environment.NewLine
+                + "Duis ut diam quam nulla porttitor massa id neque. A lacus vestibulum sed arcu non. Amet massa vitae tortor condimentum. Magnis dis parturient montes nascetur ridiculus mus mauris. Arcu risus quis varius quam quisque id diam. Pellentesque massa placerat duis ultricies lacus sed. Tellus in hac habitasse platea dictumst vestibulum. Justo nec ultrices dui sapien eget. Ac odio tempor orci dapibus ultrices in. Lacus sed viverra tellus in hac habitasse platea dictumst vestibulum. Donec et odio pellentesque diam volutpat. Nunc faucibus a pellentesque sit amet porttitor eget dolor morbi. Neque ornare aenean euismod elementum nisi quis eleifend quam. Praesent elementum facilisis leo vel fringilla est ullamcorper eget. Et netus et malesuada fames. Urna et pharetra pharetra massa massa ultricies mi quis. Sit amet consectetur adipiscing elit. Felis donec et odio pellentesque diam volutpat commodo sed egestas. Adipiscing elit pellentesque habitant morbi.",
+                SettlementAmount = 2000
+            };
+
+            var result = await controller.Put(id, target).ConfigureAwait(false);
+
+            result.Should().BeOfType<BadRequestObjectResult>();
+            (result as BadRequestObjectResult).StatusCode.Should().Be(400);
+            ((result as BadRequestObjectResult).Value as SerializableError)
+            .Should().HaveCount(1);
+
+            var updated = await repository.GetByIdAsync(id).ConfigureAwait(false);
+
+            updated.Should().BeEquivalentTo(original);
         }
 
         [Fact]

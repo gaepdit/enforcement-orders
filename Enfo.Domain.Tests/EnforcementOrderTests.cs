@@ -267,5 +267,329 @@ namespace Enfo.Domain.Tests
                 });
         }
 
+        [Fact]
+        public void UpdateOrderSucceeds()
+        {
+            var thisOrder = new EnforcementOrder()
+            {
+                Cause = _order.Cause,
+                CommentContactId = _order.CommentContactId,
+                IsProposedOrder = _order.IsProposedOrder,
+                CommentPeriodClosesDate = _order.CommentPeriodClosesDate,
+                County = _order.County,
+                Deleted = _order.Deleted,
+                ExecutedDate = _order.ExecutedDate,
+                ExecutedOrderPostedDate = _order.ExecutedOrderPostedDate,
+                FacilityName = _order.FacilityName,
+                HearingCommentPeriodClosesDate = _order.HearingCommentPeriodClosesDate,
+                HearingContactId = _order.HearingContactId,
+                HearingDate = _order.HearingDate,
+                HearingLocation = _order.HearingLocation,
+                Id = _order.Id,
+                IsExecutedOrder = _order.IsExecutedOrder,
+                IsHearingScheduled = _order.IsHearingScheduled,
+                LegalAuthorityId = _order.LegalAuthorityId,
+                OrderNumber = _order.OrderNumber,
+                ProposedOrderPostedDate = _order.ProposedOrderPostedDate,
+                PublicationStatus = _order.PublicationStatus,
+                Requirements = _order.Requirements,
+                SettlementAmount = _order.SettlementAmount
+            };
+
+            var result = thisOrder.Update(
+                _order.Cause, _order.CommentContactId, _order.CommentPeriodClosesDate, _order.County,
+                _order.FacilityName, _order.ExecutedDate, _order.ExecutedOrderPostedDate,
+                _order.HearingCommentPeriodClosesDate, _order.HearingContactId, _order.HearingDate,
+                _order.HearingLocation, _order.IsExecutedOrder, _order.IsHearingScheduled, _order.LegalAuthorityId,
+                _order.OrderNumber, _order.ProposedOrderPostedDate, _order.PublicationStatus, _order.Requirements,
+                _order.SettlementAmount);
+
+            result.Success.Should().BeTrue();
+            thisOrder.Should().BeEquivalentTo(_order);
+        }
+
+        [Fact]
+        public void UpdateDeletedOrderFails()
+        {
+            var thisOrder = new EnforcementOrder()
+            {
+                Cause = _order.Cause,
+                CommentContactId = _order.CommentContactId,
+                IsProposedOrder = _order.IsProposedOrder,
+                CommentPeriodClosesDate = _order.CommentPeriodClosesDate,
+                County = _order.County,
+                Deleted = true,
+                ExecutedDate = _order.ExecutedDate,
+                ExecutedOrderPostedDate = _order.ExecutedOrderPostedDate,
+                FacilityName = _order.FacilityName,
+                HearingCommentPeriodClosesDate = _order.HearingCommentPeriodClosesDate,
+                HearingContactId = _order.HearingContactId,
+                HearingDate = _order.HearingDate,
+                HearingLocation = _order.HearingLocation,
+                Id = _order.Id,
+                IsExecutedOrder = _order.IsExecutedOrder,
+                IsHearingScheduled = _order.IsHearingScheduled,
+                LegalAuthorityId = _order.LegalAuthorityId,
+                OrderNumber = _order.OrderNumber,
+                ProposedOrderPostedDate = _order.ProposedOrderPostedDate,
+                PublicationStatus = _order.PublicationStatus,
+                Requirements = _order.Requirements,
+                SettlementAmount = _order.SettlementAmount
+            };
+
+            var result = thisOrder.Update(
+                _order.Cause, _order.CommentContactId, _order.CommentPeriodClosesDate, _order.County,
+                _order.FacilityName, _order.ExecutedDate, _order.ExecutedOrderPostedDate,
+                _order.HearingCommentPeriodClosesDate, _order.HearingContactId, _order.HearingDate,
+                _order.HearingLocation, _order.IsExecutedOrder, _order.IsHearingScheduled, _order.LegalAuthorityId,
+                _order.OrderNumber, _order.ProposedOrderPostedDate, _order.PublicationStatus, _order.Requirements,
+                _order.SettlementAmount);
+
+            result.Success.Should().BeFalse();
+            result.ErrorMessages.Should().NotBeEmpty()
+                .And.HaveCount(1)
+                .And.ContainKey("Id");
+        }
+
+        [Fact]
+        public void RemovingExecutedOrderSucceedsIfProposedOrder()
+        {
+            var thisOrder = new EnforcementOrder()
+            {
+                Cause = _order.Cause,
+                CommentContactId = _order.CommentContactId,
+                CommentPeriodClosesDate = _order.CommentPeriodClosesDate,
+                County = _order.County,
+                Deleted = _order.Deleted,
+                ExecutedDate = _order.ExecutedDate,
+                ExecutedOrderPostedDate = _order.ExecutedOrderPostedDate,
+                FacilityName = _order.FacilityName,
+                HearingCommentPeriodClosesDate = _order.HearingCommentPeriodClosesDate,
+                HearingContactId = _order.HearingContactId,
+                HearingDate = _order.HearingDate,
+                HearingLocation = _order.HearingLocation,
+                Id = _order.Id,
+                IsExecutedOrder = _order.IsExecutedOrder,
+                IsHearingScheduled = _order.IsHearingScheduled,
+                IsProposedOrder = _order.IsProposedOrder,
+                LegalAuthorityId = _order.LegalAuthorityId,
+                OrderNumber = _order.OrderNumber,
+                ProposedOrderPostedDate = _order.ProposedOrderPostedDate,
+                PublicationStatus = _order.PublicationStatus,
+                Requirements = _order.Requirements,
+                SettlementAmount = _order.SettlementAmount
+            };
+
+            var result = thisOrder.Update(
+                _order.Cause, _order.CommentContactId, _order.CommentPeriodClosesDate, _order.County,
+                _order.FacilityName, null, null, _order.HearingCommentPeriodClosesDate, _order.HearingContactId,
+                _order.HearingDate, _order.HearingLocation, false, _order.IsHearingScheduled, _order.LegalAuthorityId,
+                _order.OrderNumber, _order.ProposedOrderPostedDate, _order.PublicationStatus, _order.Requirements,
+                _order.SettlementAmount);
+
+            result.Success.Should().BeTrue();
+            result.ErrorMessages.Should().BeEmpty();
+            thisOrder.IsExecutedOrder.Should().BeFalse();
+            thisOrder.IsProposedOrder.Should().BeTrue();
+        }
+
+        [Fact]
+        public void RemovingExecutedOrderFailsIfNoProposedOrder()
+        {
+            var thisOrder = new EnforcementOrder()
+            {
+                Cause = _order.Cause,
+                CommentContactId = null,
+                CommentPeriodClosesDate = null,
+                County = _order.County,
+                Deleted = _order.Deleted,
+                ExecutedDate = _order.ExecutedDate,
+                ExecutedOrderPostedDate = _order.ExecutedOrderPostedDate,
+                FacilityName = _order.FacilityName,
+                HearingCommentPeriodClosesDate = _order.HearingCommentPeriodClosesDate,
+                HearingContactId = _order.HearingContactId,
+                HearingDate = _order.HearingDate,
+                HearingLocation = _order.HearingLocation,
+                Id = _order.Id,
+                IsExecutedOrder = _order.IsExecutedOrder,
+                IsHearingScheduled = _order.IsHearingScheduled,
+                IsProposedOrder = false,
+                LegalAuthorityId = _order.LegalAuthorityId,
+                OrderNumber = _order.OrderNumber,
+                ProposedOrderPostedDate = null,
+                PublicationStatus = _order.PublicationStatus,
+                Requirements = _order.Requirements,
+                SettlementAmount = _order.SettlementAmount
+            };
+
+            var result = thisOrder.Update(
+                _order.Cause, _order.CommentContactId, _order.CommentPeriodClosesDate, _order.County,
+                _order.FacilityName, null, null, _order.HearingCommentPeriodClosesDate, _order.HearingContactId,
+                _order.HearingDate, _order.HearingLocation, false, _order.IsHearingScheduled, _order.LegalAuthorityId,
+                _order.OrderNumber, _order.ProposedOrderPostedDate, _order.PublicationStatus, _order.Requirements,
+                _order.SettlementAmount);
+
+            result.Success.Should().BeFalse();
+            result.ErrorMessages.Should().NotBeEmpty()
+                .And.HaveCount(1)
+                .And.ContainKey("IsExecutedOrder");
+        }
+
+        [Fact]
+        public void RemovingExecutedOrderDetailsFails()
+        {
+            var thisOrder = new EnforcementOrder()
+            {
+                Cause = _order.Cause,
+                CommentContactId = _order.CommentContactId,
+                CommentPeriodClosesDate = _order.CommentPeriodClosesDate,
+                County = _order.County,
+                Deleted = _order.Deleted,
+                ExecutedDate = _order.ExecutedDate,
+                ExecutedOrderPostedDate = _order.ExecutedOrderPostedDate,
+                FacilityName = _order.FacilityName,
+                HearingCommentPeriodClosesDate = _order.HearingCommentPeriodClosesDate,
+                HearingContactId = _order.HearingContactId,
+                HearingDate = _order.HearingDate,
+                HearingLocation = _order.HearingLocation,
+                Id = _order.Id,
+                IsExecutedOrder = _order.IsExecutedOrder,
+                IsHearingScheduled = _order.IsHearingScheduled,
+                IsProposedOrder = _order.IsProposedOrder,
+                LegalAuthorityId = _order.LegalAuthorityId,
+                OrderNumber = _order.OrderNumber,
+                ProposedOrderPostedDate = _order.ProposedOrderPostedDate,
+                PublicationStatus = _order.PublicationStatus,
+                Requirements = _order.Requirements,
+                SettlementAmount = _order.SettlementAmount
+            };
+
+            var result = thisOrder.Update(
+                _order.Cause, _order.CommentContactId, _order.CommentPeriodClosesDate, _order.County,
+                _order.FacilityName, null, null, _order.HearingCommentPeriodClosesDate, _order.HearingContactId,
+                _order.HearingDate, _order.HearingLocation, _order.IsExecutedOrder, _order.IsHearingScheduled,
+                _order.LegalAuthorityId, _order.OrderNumber, _order.ProposedOrderPostedDate, _order.PublicationStatus,
+                _order.Requirements, _order.SettlementAmount);
+
+            result.Success.Should().BeFalse();
+            result.ErrorMessages.Should().NotBeEmpty()
+                .And.HaveCount(2)
+                .And.ContainKeys(new string[] {
+                    "ExecutedDate",
+                    "ExecutedOrderPostedDate"
+                });
+        }
+
+        [Fact]
+        public void RemovingHearingRemovesHearingDetails()
+        {
+            var thisOrder = new EnforcementOrder()
+            {
+                Cause = _order.Cause,
+                CommentContactId = _order.CommentContactId,
+                IsProposedOrder = _order.IsProposedOrder,
+                CommentPeriodClosesDate = _order.CommentPeriodClosesDate,
+                County = _order.County,
+                Deleted = _order.Deleted,
+                ExecutedDate = _order.ExecutedDate,
+                ExecutedOrderPostedDate = _order.ExecutedOrderPostedDate,
+                FacilityName = _order.FacilityName,
+                HearingCommentPeriodClosesDate = _order.HearingCommentPeriodClosesDate,
+                HearingContactId = _order.HearingContactId,
+                HearingDate = _order.HearingDate,
+                HearingLocation = _order.HearingLocation,
+                Id = _order.Id,
+                IsExecutedOrder = _order.IsExecutedOrder,
+                IsHearingScheduled = _order.IsHearingScheduled,
+                LegalAuthorityId = _order.LegalAuthorityId,
+                OrderNumber = _order.OrderNumber,
+                ProposedOrderPostedDate = _order.ProposedOrderPostedDate,
+                PublicationStatus = _order.PublicationStatus,
+                Requirements = _order.Requirements,
+                SettlementAmount = _order.SettlementAmount
+            };
+
+            var expectedOrder = new EnforcementOrder
+            {
+                Cause = _order.Cause,
+                CommentContactId = _order.CommentContactId,
+                CommentPeriodClosesDate = _order.CommentPeriodClosesDate,
+                County = _order.County,
+                Deleted = _order.Deleted,
+                ExecutedDate = _order.ExecutedDate,
+                ExecutedOrderPostedDate = _order.ExecutedOrderPostedDate,
+                FacilityName = _order.FacilityName,
+                HearingCommentPeriodClosesDate = null,
+                HearingContactId = null,
+                HearingDate = null,
+                HearingLocation = null,
+                IsExecutedOrder = _order.IsExecutedOrder,
+                IsHearingScheduled = false,
+                IsProposedOrder = _order.IsProposedOrder,
+                LegalAuthorityId = _order.LegalAuthorityId,
+                OrderNumber = _order.OrderNumber,
+                ProposedOrderPostedDate = _order.ProposedOrderPostedDate,
+                PublicationStatus = _order.PublicationStatus,
+                Requirements = _order.Requirements,
+                SettlementAmount = _order.SettlementAmount,
+            };
+
+            var result = thisOrder.Update(
+                _order.Cause, _order.CommentContactId, _order.CommentPeriodClosesDate, _order.County,
+                _order.FacilityName, _order.ExecutedDate, _order.ExecutedOrderPostedDate,
+                _order.HearingCommentPeriodClosesDate, _order.HearingContactId, _order.HearingDate,
+                _order.HearingLocation, _order.IsExecutedOrder, false, _order.LegalAuthorityId, _order.OrderNumber,
+                _order.ProposedOrderPostedDate, _order.PublicationStatus, _order.Requirements, _order.SettlementAmount);
+
+            result.Success.Should().BeTrue();
+            result.ErrorMessages.Should().BeEmpty();
+            thisOrder.Should().BeEquivalentTo(expectedOrder);
+        }
+
+        [Fact]
+        public void RemovingHearingDetailsFails()
+        {
+            var thisOrder = new EnforcementOrder()
+            {
+                Cause = _order.Cause,
+                CommentContactId = _order.CommentContactId,
+                CommentPeriodClosesDate = _order.CommentPeriodClosesDate,
+                County = _order.County,
+                Deleted = _order.Deleted,
+                ExecutedDate = _order.ExecutedDate,
+                ExecutedOrderPostedDate = _order.ExecutedOrderPostedDate,
+                FacilityName = _order.FacilityName,
+                HearingCommentPeriodClosesDate = _order.HearingCommentPeriodClosesDate,
+                HearingContactId = _order.HearingContactId,
+                HearingDate = _order.HearingDate,
+                HearingLocation = _order.HearingLocation,
+                Id = _order.Id,
+                IsExecutedOrder = _order.IsExecutedOrder,
+                IsHearingScheduled = _order.IsHearingScheduled,
+                IsProposedOrder = _order.IsProposedOrder,
+                LegalAuthorityId = _order.LegalAuthorityId,
+                OrderNumber = _order.OrderNumber,
+                ProposedOrderPostedDate = _order.ProposedOrderPostedDate,
+                PublicationStatus = _order.PublicationStatus,
+                Requirements = _order.Requirements,
+                SettlementAmount = _order.SettlementAmount
+            };
+
+            var result = thisOrder.Update(
+                _order.Cause, _order.CommentContactId, _order.CommentPeriodClosesDate, _order.County,
+                _order.FacilityName, _order.ExecutedDate, _order.ExecutedOrderPostedDate, null, null, null, null,
+                _order.IsExecutedOrder, _order.IsHearingScheduled, _order.LegalAuthorityId, _order.OrderNumber,
+                _order.ProposedOrderPostedDate, _order.PublicationStatus, _order.Requirements, _order.SettlementAmount);
+
+            result.Success.Should().BeFalse();
+            result.ErrorMessages.Should().NotBeEmpty()
+                .And.HaveCount(4)
+                .And.ContainKeys(new string[] {
+                    "HearingDate",
+                    "HearingLocation",
+                    "HearingCommentPeriodClosesDate",
+                    "HearingContact"
+                });
+        }
     }
 }

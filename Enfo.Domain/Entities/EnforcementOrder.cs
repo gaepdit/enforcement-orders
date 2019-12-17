@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -250,6 +250,93 @@ namespace Enfo.Domain.Entities
                     Requirements = requirements,
                     SettlementAmount = settlementAmount
                 };
+            }
+
+            return result;
+        }
+
+        public UpdateEntityResult Update(
+            string cause, int? commentContactId, DateTime? commentPeriodClosesDate, string county, string facilityName,
+            DateTime? executedDate, DateTime? executedOrderPostedDate, DateTime? hearingCommentPeriodClosesDate,
+            int? hearingContactId, DateTime? hearingDate, string hearingLocation, bool isExecutedOrder,
+            bool isHearingScheduled, int legalAuthorityId, string orderNumber, DateTime? proposedOrderPostedDate,
+            PublicationState publicationStatus, string requirements, decimal? settlementAmount)
+        {
+            var result = new UpdateEntityResult();
+
+            if (Deleted)
+            {
+                result.AddErrorMessage("Id", "A deleted Enforcement Order cannot be modified");
+                return result;
+            }
+
+            // Executed order info can only be removed if proposed order info exists.
+            if (!isExecutedOrder && IsExecutedOrder && !IsProposedOrder)
+            {
+                result.AddErrorMessage("IsExecutedOrder", "Executed Order details are required for this Enforcement Order.");
+            }
+
+            if (publicationStatus == PublicationState.Published)
+            {
+                // Proposed order info cannot be removed from an existing order.
+                if (IsProposedOrder)
+                {
+                    if (commentContactId is null)
+                        result.AddErrorMessage("CommentContact", "A contact is required for comments for proposed orders.");
+
+                    if (!commentPeriodClosesDate.HasValue)
+                        result.AddErrorMessage("CommentPeriodClosesDate", "A closing date is required for comments for proposed orders.");
+
+                    if (!proposedOrderPostedDate.HasValue)
+                        result.AddErrorMessage("ProposedOrderPostedDate", "A publication date is required for proposed orders.");
+                }
+
+                if (isExecutedOrder)
+                {
+                    if (!executedDate.HasValue)
+                        result.AddErrorMessage("ExecutedDate", "An execution date is required for executed orders.");
+
+                    if (!executedOrderPostedDate.HasValue)
+                        result.AddErrorMessage("ExecutedOrderPostedDate", "A publication date is required for executed orders.");
+                }
+
+                if (isHearingScheduled)
+                {
+                    if (!hearingDate.HasValue)
+                        result.AddErrorMessage("HearingDate", "A hearing date is required if a hearing is scheduled.");
+
+                    if (string.IsNullOrWhiteSpace(hearingLocation))
+                        result.AddErrorMessage("HearingLocation", "A hearing location is required if a hearing is scheduled.");
+
+                    if (!hearingCommentPeriodClosesDate.HasValue)
+                        result.AddErrorMessage("HearingCommentPeriodClosesDate", "A closing date is required for hearing comments if a hearing is scheduled.");
+
+                    if (hearingContactId is null)
+                        result.AddErrorMessage("HearingContact", "A contact is required for hearings if a hearing is scheduled.");
+                }
+            }
+
+            if (result.Success)
+            {
+                Cause = cause;
+                CommentContactId = IsProposedOrder ? commentContactId : null;
+                CommentPeriodClosesDate = IsProposedOrder ? commentPeriodClosesDate : null;
+                County = county;
+                ExecutedDate = isExecutedOrder ? executedDate : null;
+                ExecutedOrderPostedDate = isExecutedOrder ? executedOrderPostedDate : null;
+                FacilityName = facilityName;
+                HearingCommentPeriodClosesDate = isHearingScheduled ? hearingCommentPeriodClosesDate : null;
+                HearingContactId = isHearingScheduled ? hearingContactId : null;
+                HearingDate = isHearingScheduled ? hearingDate : null;
+                HearingLocation = isHearingScheduled ? hearingLocation : null;
+                IsExecutedOrder = isExecutedOrder;
+                IsHearingScheduled = isHearingScheduled;
+                LegalAuthorityId = legalAuthorityId;
+                OrderNumber = orderNumber;
+                ProposedOrderPostedDate = IsProposedOrder ? proposedOrderPostedDate : null;
+                PublicationStatus = publicationStatus;
+                Requirements = requirements;
+                SettlementAmount = settlementAmount;
             }
 
             return result;

@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Enfo.API.QueryStrings;
@@ -218,9 +218,53 @@ namespace Enfo.API.Controllers
                 return CreatedAtAction(nameof(Get), result.NewItem.Id);
             }
 
-            foreach (var item in result.ErrorMessages)
+            foreach (var message in result.ErrorMessages)
             {
-                ModelState.TryAddModelError(item.Key, item.Value);
+                ModelState.TryAddModelError(message.Key, message.Value);
+            }
+
+            return BadRequest(ModelState);
+        }
+
+        // PUT: api/EnforcementOrders/5
+        //[Authorize]
+        [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> Put(
+            int id,
+            [FromBody] EnforcementOrderUpdateResource resource)
+        {
+            if (resource is null || !ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var itemExists = await _repository.IdExists(id).ConfigureAwait(false);
+
+            if (!itemExists)
+            {
+                return NotFound(id);
+            }
+
+            var result = await _repository.UpdateEnforcementOrderAsync(
+                id, resource.Cause, resource.CommentContactId, resource.CommentPeriodClosesDate,
+                resource.County, resource.FacilityName, resource.ExecutedDate, resource.ExecutedOrderPostedDate,
+                resource.HearingCommentPeriodClosesDate, resource.HearingContactId, resource.HearingDate,
+                resource.HearingLocation, resource.IsExecutedOrder, resource.IsHearingScheduled,
+                resource.LegalAuthorityId, resource.OrderNumber, resource.ProposedOrderPostedDate,
+                resource.PublicationStatus, resource.Requirements, resource.SettlementAmount)
+                .ConfigureAwait(false);
+
+            if (result.Success)
+            {
+                return NoContent();
+            }
+
+            foreach (var message in result.ErrorMessages)
+            {
+                ModelState.TryAddModelError(message.Key, message.Value);
             }
 
             return BadRequest(ModelState);

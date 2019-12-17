@@ -3,7 +3,6 @@ using Enfo.Domain.Querying;
 using Enfo.Domain.Repositories;
 using Enfo.Domain.Utils;
 using Enfo.Infrastructure.Contexts;
-using Enfo.Infrastructure.QueryingEvaluators;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -189,12 +188,13 @@ namespace Enfo.Infrastructure.Repositories
             return ListAsync(spec, pagination, inclusion: include);
         }
 
-        public async Task<bool> OrderNumberExists(
-            string orderNumber,
-            int ignoreId = -1) =>
-            await _context.Set<EnforcementOrder>()
+        public async Task<bool> OrderNumberExists(string orderNumber,
+            int ignoreId = -1)
+        {
+            return await _context.Set<EnforcementOrder>()
             .AnyAsync(e => e.OrderNumber == orderNumber && e.Id != ignoreId)
             .ConfigureAwait(false);
+        }
 
         public async Task<CreateEntityResult<EnforcementOrder>> CreateEnforcementOrderAsync(
             NewEnforcementOrderType createAs, string cause, int? commentContactId, DateTime? commentPeriodClosesDate,
@@ -218,6 +218,49 @@ namespace Enfo.Infrastructure.Repositories
             if (result.Success)
             {
                 Add(result.NewItem);
+                await CompleteAsync().ConfigureAwait(false);
+            }
+
+            return result;
+        }
+
+        public async Task<UpdateEntityResult> UpdateEnforcementOrderAsync(
+            int id,
+            string cause,
+            int? commentContactId,
+            DateTime? commentPeriodClosesDate,
+            string county,
+            string facilityName,
+            DateTime? executedDate,
+            DateTime? executedOrderPostedDate,
+            DateTime? hearingCommentPeriodClosesDate,
+            int? hearingContactId,
+            DateTime? hearingDate,
+            string hearingLocation,
+            bool isExecutedOrder,
+            bool isHearingScheduled,
+            int legalAuthorityId,
+            string orderNumber,
+            DateTime? proposedOrderPostedDate,
+            PublicationState publicationStatus,
+            string requirements,
+            decimal? settlementAmount)
+        {
+            var originalOrder = await GetByIdAsync(id).ConfigureAwait(false);
+
+            var result = originalOrder.Update(
+                cause, commentContactId, commentPeriodClosesDate, county, facilityName, executedDate,
+                executedOrderPostedDate, hearingCommentPeriodClosesDate, hearingContactId, hearingDate, hearingLocation,
+                isExecutedOrder, isHearingScheduled, legalAuthorityId, orderNumber, proposedOrderPostedDate,
+                publicationStatus, requirements, settlementAmount);
+
+            if (await OrderNumberExists(orderNumber, id).ConfigureAwait(false))
+            {
+                result.AddErrorMessage("OrderNumber", "An Order with the same number already exists.");
+            }
+
+            if (result.Success)
+            {
                 await CompleteAsync().ConfigureAwait(false);
             }
 

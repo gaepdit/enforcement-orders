@@ -79,5 +79,27 @@ namespace Enfo.Domain.Repositories
             PublicationState publicationStatus,
             string requirements,
             decimal? settlementAmount);
+
+        Task<UpdateEntityResult> UpdateEnforcementOrderAsync(
+            int id,
+            string cause,
+            int? commentContactId,
+            DateTime? commentPeriodClosesDate,
+            string county,
+            string facilityName,
+            DateTime? executedDate,
+            DateTime? executedOrderPostedDate,
+            DateTime? hearingCommentPeriodClosesDate,
+            int? hearingContactId,
+            DateTime? hearingDate,
+            string hearingLocation,
+            bool isExecutedOrder,
+            bool isHearingScheduled,
+            int legalAuthorityId,
+            string orderNumber,
+            DateTime? proposedOrderPostedDate,
+            PublicationState publicationStatus,
+            string requirements,
+            decimal? settlementAmount);
     }
 }
