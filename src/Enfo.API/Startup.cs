@@ -50,7 +50,9 @@ namespace Enfo.API
                 });
                 // DescribeAllEnumsAsStrings() is obsolete but cannot be removed until this Swashbuckle issue is fixed:
                 // https://github.com/domaindrivendev/Swashbuckle.AspNetCore/issues/1269#issuecomment-534298112
+                #pragma warning disable 618
                 c.DescribeAllEnumsAsStrings();
+                #pragma warning restore 618
             });
         }
 
