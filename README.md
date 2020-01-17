@@ -14,17 +14,17 @@ Enforcement order notices are time-critical and high-profile public information.
 
 # Info for developers
 
+ENFO is written using .NET Core 3.1.
+
 ## Prerequisites
 
-* [Visual Studio](https://www.visualstudio.com/vs/) or [Visual Studio Code](https://code.visualstudio.com/)
-* [.NET Core 2.2 SDK](https://dotnet.microsoft.com/download)
-* [Postman](https://www.getpostman.com/) for testing the API
+[Visual Studio](https://www.visualstudio.com/vs/) or [Visual Studio Code](https://code.visualstudio.com/)
 
 ## Project organization
 
-The Visual Studio solution contains eight projects:
+The Visual Studio solution contains four projects:
 
-* Models - A class library containing the data models and business logic
-* DataAccess - A class library containing the database interaction
+* Domain - A class library containing the data models and business logic
+* Infrastructure - A class library implementing the Domain Repository using Entity Framework
 * API - ASP.NET Core Web API
-* UI - ASP.NET Core Web App with Razor Pages
+* UI (not yet developed) - Front end application
