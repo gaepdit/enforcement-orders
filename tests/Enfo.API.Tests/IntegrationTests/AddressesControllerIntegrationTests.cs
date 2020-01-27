@@ -3,7 +3,6 @@ using Enfo.API.QueryStrings;
 using Enfo.API.Resources;
 using Enfo.API.Tests.Helpers;
 using Enfo.Domain.Entities;
-using Enfo.Domain.Querying;
 using Enfo.Infrastructure.SeedData;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
@@ -14,11 +13,11 @@ using Xunit;
 
 namespace Enfo.API.Tests.ControllerTests
 {
-    public class AddressesControllerTests
+    public class AddressesControllerIntegrationTests
     {
         private readonly Address[] _addresses;
 
-        public AddressesControllerTests()
+        public AddressesControllerIntegrationTests()
         {
             _addresses = ProdSeedData.GetAddresses();
         }
@@ -359,6 +358,8 @@ namespace Enfo.API.Tests.ControllerTests
             var repository = this.GetRepository<Address>();
             var controller = new AddressesController(repository);
 
+            var id = 9999;
+
             var target = new AddressUpdateResource
             {
                 City = "Atlanta",
@@ -367,11 +368,11 @@ namespace Enfo.API.Tests.ControllerTests
                 Street = "123 Fake St"
             };
 
-            var result = await controller.Put(9999, target).ConfigureAwait(false);
+            var result = await controller.Put(id, target).ConfigureAwait(false);
 
             result.Should().BeOfType<NotFoundObjectResult>();
             (result as NotFoundObjectResult).StatusCode.Should().Be(404);
-            (result as NotFoundObjectResult).Value.Should().Be(9999);
+            (result as NotFoundObjectResult).Value.Should().Be(id);
         }
     }
 }

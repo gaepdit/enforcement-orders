@@ -1,4 +1,4 @@
-using Enfo.API.QueryStrings;
+﻿using Enfo.API.QueryStrings;
 using Enfo.API.Resources;
 using Enfo.Domain.Entities;
 using Enfo.Domain.Querying;
