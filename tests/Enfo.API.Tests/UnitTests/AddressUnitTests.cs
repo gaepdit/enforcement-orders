@@ -1,5 +1,4 @@
 using Enfo.API.Controllers;
-using Enfo.API.QueryStrings;
 using Enfo.API.Resources;
 using Enfo.Domain.Entities;
 using Enfo.Domain.Querying;
@@ -8,19 +7,18 @@ using Enfo.Infrastructure.SeedData;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Enfo.API.Tests.ControllerTests
+namespace Enfo.API.Tests
 {
-    public class AddressesControllerUnitTests
+    public class AddressUnitTests
     {
         private readonly Address[] _addresses;
 
-        public AddressesControllerUnitTests()
+        public AddressUnitTests()
         {
             _addresses = ProdSeedData.GetAddresses();
         }
@@ -31,7 +29,7 @@ namespace Enfo.API.Tests.ControllerTests
             var mock = new Mock<IAsyncWritableRepository<Address>>();
 
             mock.Setup(l => l.ListAsync(
-                It.IsAny<FilterByActiveItems<Address>>(),
+                It.IsAny<Specification<Address>>(),
                 It.IsAny<Pagination>(),
                 null,
                 null))
@@ -43,7 +41,7 @@ namespace Enfo.API.Tests.ControllerTests
             var result = await controller.Get().ConfigureAwait(false);
 
             mock.Verify(l => l.ListAsync(
-                It.IsAny<FilterByActiveItems<Address>>(),
+                It.IsAny<Specification<Address>>(),
                 It.IsAny<Pagination>(),
                 null,
                 null));
@@ -58,16 +56,16 @@ namespace Enfo.API.Tests.ControllerTests
         [Fact]
         public async Task GetEmptySetReturnsCorrectly()
         {
-            var emptyAddressList = new List<Address>();
+            var emptyList = new List<Address>();
 
             var mock = new Mock<IAsyncWritableRepository<Address>>();
 
             mock.Setup(l => l.ListAsync(
-                It.IsAny<FilterByActiveItems<Address>>(),
+                It.IsAny<Specification<Address>>(),
                 It.IsAny<Pagination>(),
                 null,
                 null))
-                .ReturnsAsync(emptyAddressList)
+                .ReturnsAsync(emptyList)
                 .Verifiable();
 
             var controller = new AddressesController(mock.Object);
@@ -75,7 +73,7 @@ namespace Enfo.API.Tests.ControllerTests
             var result = await controller.Get().ConfigureAwait(false);
 
             mock.Verify(l => l.ListAsync(
-                It.IsAny<FilterByActiveItems<Address>>(),
+                It.IsAny<Specification<Address>>(),
                 It.IsAny<Pagination>(),
                 null,
                 null));
@@ -90,16 +88,18 @@ namespace Enfo.API.Tests.ControllerTests
         [Fact]
         public async Task GetByIdReturnsCorrectly()
         {
+            var id = 2000;
+
             var mock = new Mock<IAsyncWritableRepository<Address>>();
-            mock.Setup(l => l.GetByIdAsync(2000, null, null))
-                .ReturnsAsync(_addresses.Single(e => e.Id == 2000))
+            mock.Setup(l => l.GetByIdAsync(id, null, null))
+                .ReturnsAsync(_addresses.Single(e => e.Id == id))
                 .Verifiable();
 
             var controller = new AddressesController(mock.Object);
 
-            var result = await controller.Get(2000).ConfigureAwait(false);
+            var result = await controller.Get(id).ConfigureAwait(false);
 
-            mock.Verify(l => l.GetByIdAsync(2000, null, null));
+            mock.Verify(l => l.GetByIdAsync(id, null, null));
             mock.VerifyNoOtherCalls();
 
             result.Result.Should().BeOfType<OkObjectResult>();
@@ -135,9 +135,9 @@ namespace Enfo.API.Tests.ControllerTests
         public async Task GetByMissingIdReturnsNotFound(int id)
         {
             var mock = new Mock<IAsyncWritableRepository<Address>>();
-            Address nullAddress = null;
+            Address nullItem = null;
             mock.Setup(l => l.GetByIdAsync(id, null, null))
-                .ReturnsAsync(nullAddress);
+                .ReturnsAsync(nullItem);
 
             var controller = new AddressesController(mock.Object);
 
@@ -211,7 +211,12 @@ namespace Enfo.API.Tests.ControllerTests
             objectResult.StatusCode.Should().Be(400);
             var objectResultValue = (objectResult.Value as Microsoft.AspNetCore.Mvc.SerializableError);
             objectResultValue.Count.Should().Be(2);
-            objectResultValue.Keys.Should().BeEquivalentTo(new List<string>() { "City", "PostalCode" });
+            objectResultValue.Keys.Should()
+                .BeEquivalentTo(new List<string>() 
+                    { 
+                        nameof(AddressCreateResource.City), 
+                        nameof(AddressCreateResource.PostalCode) 
+                    });
         }
 
         [Fact]
@@ -259,12 +264,12 @@ namespace Enfo.API.Tests.ControllerTests
         public async Task UpdateWithMissingIdFails()
         {
             var id = 9999;
-            Address nullAddress = null;
+            Address nullItem = null;
 
             var mock = new Mock<IAsyncWritableRepository<Address>>();
             mock.Setup(l => l.CompleteAsync()).ReturnsAsync(1);
             mock.Setup(l => l.GetByIdAsync(id, null, null))
-                .ReturnsAsync(nullAddress);
+                .ReturnsAsync(nullItem);
 
             var controller = new AddressesController(mock.Object);
 

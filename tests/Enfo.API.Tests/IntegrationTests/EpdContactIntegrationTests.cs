@@ -3,6 +3,7 @@ using Enfo.API.QueryStrings;
 using Enfo.API.Resources;
 using Enfo.API.Tests.Helpers;
 using Enfo.Domain.Entities;
+using Enfo.Domain.Querying;
 using Enfo.Infrastructure.SeedData;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
@@ -11,45 +12,53 @@ using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Enfo.API.Tests.ControllerTests
+namespace Enfo.API.Tests
 {
-    public class AddressesControllerIntegrationTests
+    public class EpdContactIntegrationTests
     {
+        private readonly EpdContact[] _epdContacts;
         private readonly Address[] _addresses;
 
-        public AddressesControllerIntegrationTests()
+        public EpdContactIntegrationTests()
         {
             _addresses = ProdSeedData.GetAddresses();
+            _epdContacts = ProdSeedData.GetEpdContacts();
+
+            foreach (var contact in _epdContacts)
+            {
+                contact.Address = _addresses
+                    .SingleOrDefault(e => e.Id == contact.AddressId);
+            }
         }
 
         [Fact]
         public async Task GetReturnsCorrectly()
         {
-            var repository = this.GetRepository<Address>();
-            var controller = new AddressesController(repository);
+            var repository = this.GetRepository<EpdContact>();
+            var controller = new EpdContactsController(repository);
 
             var result = await controller.Get().ConfigureAwait(false);
 
             result.Result.Should().BeOfType<OkObjectResult>();
-            var actionResult = result.Result as OkObjectResult;
-            Assert.IsAssignableFrom<IEnumerable<AddressResource>>(actionResult.Value);
+            var actionResult = (result.Result as OkObjectResult);
+            Assert.IsAssignableFrom<IEnumerable<EpdContactResource>>(actionResult.Value);
             actionResult.StatusCode.Should().Be(200);
         }
 
         [Fact]
         public async Task GetDefaultReturnsOnePageOfActiveItems()
         {
-            var repository = this.GetRepository<Address>();
-            var controller = new AddressesController(repository);
+            var repository = this.GetRepository<EpdContact>();
+            var controller = new EpdContactsController(repository);
 
             var items = ((await controller.Get()
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
-            var expected = _addresses
+            var expected = _epdContacts
                 .OrderBy(e => e.Id)
                 .Where(e => e.Active)
                 .Take(PaginationFilter.DefaultPageSize)
-                .Select(e => new AddressResource(e));
+                .Select(e => new EpdContactResource(e));
 
             items.Should().BeEquivalentTo(expected);
         }
@@ -57,16 +66,16 @@ namespace Enfo.API.Tests.ControllerTests
         [Fact]
         public async Task GetReturnsAllActiveItems()
         {
-            var repository = this.GetRepository<Address>();
-            var controller = new AddressesController(repository);
+            var repository = this.GetRepository<EpdContact>();
+            var controller = new EpdContactsController(repository);
 
             var items = ((await controller.Get(
                 paging: new PaginationFilter() { PageSize = 0 })
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
-            var expected = _addresses
+            var expected = _epdContacts
                 .Where(e => e.Active)
-                .Select(e => new AddressResource(e));
+                .Select(e => new EpdContactResource(e));
 
             items.Should().BeEquivalentTo(expected);
         }
@@ -74,16 +83,16 @@ namespace Enfo.API.Tests.ControllerTests
         [Fact]
         public async Task GetWithIncludeInactiveReturnsAllItems()
         {
-            var repository = this.GetRepository<Address>();
-            var controller = new AddressesController(repository);
+            var repository = this.GetRepository<EpdContact>();
+            var controller = new EpdContactsController(repository);
 
             var items = ((await controller.Get(
                 new ActiveItemFilter() { IncludeInactive = true },
                 new PaginationFilter() { PageSize = 0 })
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
-            var expected = _addresses
-                .Select(e => new AddressResource(e));
+            var expected = _epdContacts
+                .Select(e => new EpdContactResource(e));
 
             items.Should().BeEquivalentTo(expected);
         }
@@ -91,8 +100,8 @@ namespace Enfo.API.Tests.ControllerTests
         [Fact]
         public async Task GetPaginatedReturnsCorrectItems()
         {
-            var repository = this.GetRepository<Address>();
-            var controller = new AddressesController(repository);
+            var repository = this.GetRepository<EpdContact>();
+            var controller = new EpdContactsController(repository);
 
             int pageSize = 3;
             int pageNum = 2;
@@ -101,11 +110,11 @@ namespace Enfo.API.Tests.ControllerTests
                 paging: new PaginationFilter() { PageSize = pageSize, Page = pageNum })
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
-            var expected = _addresses
+            var expected = _epdContacts
                 .OrderBy(e => e.Id)
                 .Where(e => e.Active)
                 .Skip((pageNum - 1) * pageSize).Take(pageSize)
-                .Select(e => new AddressResource(e));
+                .Select(e => new EpdContactResource(e));
 
             items.Should().BeEquivalentTo(expected);
         }
@@ -113,8 +122,8 @@ namespace Enfo.API.Tests.ControllerTests
         [Fact]
         public async Task InvalidPageSizeReturnsDefaultPagination()
         {
-            var repository = this.GetRepository<Address>();
-            var controller = new AddressesController(repository);
+            var repository = this.GetRepository<EpdContact>();
+            var controller = new EpdContactsController(repository);
 
             var result = (await controller.Get(
                 paging: new PaginationFilter() { PageSize = -1 })
@@ -129,11 +138,11 @@ namespace Enfo.API.Tests.ControllerTests
         [Fact]
         public async Task InvalidPageNumberReturnsDefaultPagination()
         {
-            var repository = this.GetRepository<Address>();
-            var controller = new AddressesController(repository);
+            var repository = this.GetRepository<EpdContact>();
+            var controller = new EpdContactsController(repository);
 
             var result = (await controller.Get(
-                paging: new PaginationFilter() { PageSize = 0 })
+                paging: new PaginationFilter() { Page = 0 })
                 .ConfigureAwait(false)).Result as OkObjectResult;
 
             var expected = (await controller.Get()
@@ -145,14 +154,14 @@ namespace Enfo.API.Tests.ControllerTests
         [Fact]
         public async Task GetByIdReturnsCorrectly()
         {
-            var repository = this.GetRepository<Address>();
-            var controller = new AddressesController(repository);
+            var repository = this.GetRepository<EpdContact>();
+            var controller = new EpdContactsController(repository);
 
             var result = await controller.Get(2000).ConfigureAwait(false);
 
             result.Result.Should().BeOfType<OkObjectResult>();
             var actionResult = result.Result as OkObjectResult;
-            actionResult.Value.Should().BeOfType<AddressResource>();
+            actionResult.Value.Should().BeOfType<EpdContactResource>();
             actionResult.StatusCode.Should().Be(200);
         }
 
@@ -162,16 +171,17 @@ namespace Enfo.API.Tests.ControllerTests
         [InlineData(2002)]
         public async Task GetByIdReturnsCorrectItem(int id)
         {
-            var repository = this.GetRepository<Address>(id);
-            var controller = new AddressesController(repository);
+            var repository = this.GetRepository<EpdContact>();
+            var controller = new EpdContactsController(repository);
 
             var value = ((await controller.Get(id).ConfigureAwait(false))
-                .Result as OkObjectResult).Value;
+                .Result as OkObjectResult).Value as EpdContactResource;
 
-            var expected = new AddressResource(_addresses
+            var expected = new EpdContactResource(_epdContacts
                 .Single(e => e.Id == id));
 
             value.Should().BeEquivalentTo(expected);
+            value.Address.Should().NotBeNull().And.BeEquivalentTo(expected.Address);
         }
 
         [Theory]
@@ -179,8 +189,8 @@ namespace Enfo.API.Tests.ControllerTests
         [InlineData(-1)]
         public async Task GetByMissingIdReturnsNotFound(int id)
         {
-            var repository = this.GetRepository<Address>();
-            var controller = new AddressesController(repository);
+            var repository = this.GetRepository<EpdContact>();
+            var controller = new EpdContactsController(repository);
 
             var result = await controller.Get(id).ConfigureAwait(false);
 
@@ -193,15 +203,16 @@ namespace Enfo.API.Tests.ControllerTests
         [Fact]
         public async Task AddNewItemReturnsCorrectly()
         {
-            var repository = this.GetRepository<Address>();
-            var controller = new AddressesController(repository);
+            var repository = this.GetRepository<EpdContact>();
+            var controller = new EpdContactsController(repository);
 
-            var item = new AddressCreateResource()
+            var item = new EpdContactCreateResource
             {
-                City = "Atlanta",
-                PostalCode = "33333",
-                State = "GA",
-                Street = "123 Fake St"
+                AddressId = 2000,
+                ContactName = "Mr. Fake Name",
+                Email = "fake.name@example.com",
+                Organization = "Environmental Protection Division",
+                Title = "Ombudsman"
             };
 
             var result = await controller.Post(item).ConfigureAwait(false);
@@ -214,41 +225,45 @@ namespace Enfo.API.Tests.ControllerTests
         }
 
         [Fact]
-        public async Task AddNewItemIsAddedCorrectly()
+        public async Task AddNewItemCorrectlyAdds()
         {
-            var repository = this.GetRepository<Address>();
-            var controller = new AddressesController(repository);
+            var repository = this.GetRepository<EpdContact>();
+            var controller = new EpdContactsController(repository);
 
-            var item = new AddressCreateResource()
+            var item = new EpdContactCreateResource
             {
-                City = "Atlanta",
-                PostalCode = "33333",
-                State = "GA",
-                Street = "123 Fake St"
+                AddressId = 2000,
+                ContactName = "Mr. Fake Name",
+                Email = "fake.name@example.com",
+                Organization = "Environmental Protection Division",
+                Title = "Ombudsman"
             };
 
             var result = await controller.Post(item).ConfigureAwait(false);
 
             var id = (int)(result as CreatedAtActionResult).Value;
-            var addedItem = await repository.GetByIdAsync(id).ConfigureAwait(false);
+            var addedItem = await repository
+                .GetByIdAsync(id, inclusion: new EpdContactIncludingAddress())
+                .ConfigureAwait(false);
 
             // Item gets added with next value in DB
-            var expected = item.NewAddress();
-            expected.Id = _addresses.Max(e => e.Id) + 1;
+            var expected = item.NewEpdContact();
+            expected.Id = _epdContacts.Max(e => e.Id) + 1;
+            expected.Address = _addresses.Single(e => e.Id == item.AddressId);
 
             addedItem.Should().BeEquivalentTo(expected);
 
             // Verify repository has changed.
             var resultItems = await repository.ListAsync().ConfigureAwait(false);
 
-            resultItems.Count.Should().Be(_addresses.Count() + 1);
+            resultItems.Count.Should().Be(_epdContacts.Count() + 1);
         }
 
         [Fact]
         public async Task AddNullItemFails()
         {
-            var repository = this.GetRepository<Address>();
-            var controller = new AddressesController(repository);
+            var repository = this.GetRepository<EpdContact>();
+            var controller = new EpdContactsController(repository);
 
             var result = await controller.Post(null).ConfigureAwait(false);
 
@@ -258,51 +273,12 @@ namespace Enfo.API.Tests.ControllerTests
             // Verify repository not changed after attempting to Post null item.
             var resultItems = ((await controller.Get(
                 new ActiveItemFilter() { IncludeInactive = true },
-                paging: new PaginationFilter() { PageSize = 0 })
+                new PaginationFilter() { PageSize = 0 })
                 .ConfigureAwait(false))
                 .Result as OkObjectResult).Value;
 
-            var expected = _addresses
-                .Select(e => new AddressResource(e));
-
-            resultItems.Should().BeEquivalentTo(expected);
-        }
-
-        [Fact]
-        public async Task AddInvalidItemFails()
-        {
-            var repository = this.GetRepository<Address>();
-            var controller = new AddressesController(repository);
-
-            var item = new AddressCreateResource()
-            {
-                City = null,
-                PostalCode = "abc",
-                State = "GA",
-                Street = "123 Fake St"
-            };
-
-            controller.ModelState.AddModelError(nameof(item.City), "City is required");
-            controller.ModelState.AddModelError(nameof(item.PostalCode), "Valid US Postal Code is required");
-
-            var result = await controller.Post(item).ConfigureAwait(false);
-
-            result.Should().BeOfType<BadRequestObjectResult>();
-            var objectResult = (result as BadRequestObjectResult);
-            objectResult.StatusCode.Should().Be(400);
-            var objectResultValue = (objectResult.Value as Microsoft.AspNetCore.Mvc.SerializableError);
-            objectResultValue.Count.Should().Be(2);
-            objectResultValue.Keys.Should().BeEquivalentTo(new List<string>() { "City", "PostalCode" });
-
-            // Verify repository not changed after attempting to Post invalid item.
-            var resultItems = ((await controller.Get(
-                new ActiveItemFilter() { IncludeInactive = true },
-                paging: new PaginationFilter() { PageSize = 0 })
-                .ConfigureAwait(false))
-                .Result as OkObjectResult).Value;
-
-            var expected = _addresses
-                .Select(e => new AddressResource(e));
+            var expected = _epdContacts
+                .Select(e => new EpdContactResource(e));
 
             resultItems.Should().BeEquivalentTo(expected);
         }
@@ -310,16 +286,18 @@ namespace Enfo.API.Tests.ControllerTests
         [Fact]
         public async Task UpdateItemSucceeds()
         {
-            var repository = this.GetRepository<Address>();
-            var controller = new AddressesController(repository);
+            var repository = this.GetRepository<EpdContact>();
+            var controller = new EpdContactsController(repository);
 
             var id = 2000;
-            var target = new AddressUpdateResource
+            var target = new EpdContactUpdateResource
             {
-                City = "Atlanta",
-                PostalCode = "33333",
-                State = "GA",
-                Street = "123 Fake St"
+                AddressId = 2002,
+                ContactName = "Name Update",
+                Email = "email@example.com",
+                Organization = "Com",
+                Telephone = "555-1212",
+                Title = "Title"
             };
 
             var result = await controller.Put(id, target)
@@ -337,8 +315,8 @@ namespace Enfo.API.Tests.ControllerTests
         [Fact]
         public async Task UpdateWithNullFails()
         {
-            var repository = this.GetRepository<Address>();
-            var controller = new AddressesController(repository);
+            var repository = this.GetRepository<EpdContact>();
+            var controller = new EpdContactsController(repository);
 
             var original = await repository.GetByIdAsync(2000).ConfigureAwait(false);
 
@@ -355,24 +333,24 @@ namespace Enfo.API.Tests.ControllerTests
         [Fact]
         public async Task UpdateWithMissingIdFails()
         {
-            var repository = this.GetRepository<Address>();
-            var controller = new AddressesController(repository);
+            var repository = this.GetRepository<EpdContact>();
+            var controller = new EpdContactsController(repository);
 
-            var id = 9999;
-
-            var target = new AddressUpdateResource
+            var target = new EpdContactUpdateResource
             {
-                City = "Atlanta",
-                PostalCode = "33333",
-                State = "GA",
-                Street = "123 Fake St"
+                AddressId = 2002,
+                ContactName = "Name Update",
+                Email = "email@example.com",
+                Organization = "Com",
+                Telephone = "555-1212",
+                Title = "Title"
             };
 
-            var result = await controller.Put(id, target).ConfigureAwait(false);
+            var result = await controller.Put(9999, target).ConfigureAwait(false);
 
             result.Should().BeOfType<NotFoundObjectResult>();
             (result as NotFoundObjectResult).StatusCode.Should().Be(404);
-            (result as NotFoundObjectResult).Value.Should().Be(id);
+            (result as NotFoundObjectResult).Value.Should().Be(9999);
         }
     }
 }

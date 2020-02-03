@@ -11,13 +11,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Enfo.API.Tests.ControllerTests
+namespace Enfo.API.Tests
 {
-    public class LegalAuthoritiesControllerTests
+    public class LegalAuthorityIntegrationTests
     {
         private readonly LegalAuthority[] _legalAuthorities;
 
-        public LegalAuthoritiesControllerTests()
+        public LegalAuthorityIntegrationTests()
         {
             _legalAuthorities = ProdSeedData.GetLegalAuthorities();
         }

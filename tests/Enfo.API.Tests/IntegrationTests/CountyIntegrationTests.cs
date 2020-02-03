@@ -11,13 +11,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Enfo.API.Tests.ControllerTests
+namespace Enfo.API.Tests
 {
-    public class CountiesControllerTests
+    public class CountyIntegrationTests
     {
         private readonly County[] _counties;
 
-        public CountiesControllerTests()
+        public CountyIntegrationTests()
         {
             _counties = ProdSeedData.GetCounties();
         }
