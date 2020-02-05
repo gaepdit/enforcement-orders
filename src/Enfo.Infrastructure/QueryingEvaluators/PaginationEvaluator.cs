@@ -1,5 +1,5 @@
-﻿using Enfo.Domain.Querying;
-using System.Linq;
+﻿using System.Linq;
+using Enfo.Domain.Querying;
 
 namespace Enfo.Infrastructure.QueryingEvaluators
 {

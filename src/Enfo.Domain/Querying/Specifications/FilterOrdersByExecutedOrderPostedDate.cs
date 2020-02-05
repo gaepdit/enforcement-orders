@@ -1,5 +1,5 @@
-﻿using Enfo.Domain.Entities;
-using System;
+﻿using System;
+using Enfo.Domain.Entities;
 
 namespace Enfo.Domain.Querying
 {

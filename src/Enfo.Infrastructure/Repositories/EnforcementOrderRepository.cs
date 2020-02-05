@@ -1,12 +1,12 @@
-﻿using Enfo.Domain.Entities;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Enfo.Domain.Entities;
 using Enfo.Domain.Querying;
 using Enfo.Domain.Repositories;
 using Enfo.Domain.Utils;
 using Enfo.Infrastructure.Contexts;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using static Enfo.Domain.Entities.EnforcementOrder;
 using static Enfo.Domain.Entities.Enums;
 using static Enfo.Domain.Utils.DateUtils;

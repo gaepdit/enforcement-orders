@@ -1,4 +1,5 @@
-﻿using Enfo.Domain.Repositories;
+﻿using System;
+using Enfo.Domain.Repositories;
 using Enfo.Infrastructure.Contexts;
 using Enfo.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Builder;
@@ -8,7 +9,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using System;
 
 namespace Enfo.API
 {
@@ -50,9 +50,9 @@ namespace Enfo.API
                 });
                 // DescribeAllEnumsAsStrings() is obsolete but cannot be removed until this Swashbuckle issue is fixed:
                 // https://github.com/domaindrivendev/Swashbuckle.AspNetCore/issues/1269#issuecomment-534298112
-                #pragma warning disable 618
+#pragma warning disable 618
                 c.DescribeAllEnumsAsStrings();
-                #pragma warning restore 618
+#pragma warning restore 618
             });
         }
 

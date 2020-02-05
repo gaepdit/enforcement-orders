@@ -205,8 +205,8 @@ namespace Enfo.API.Tests
             var objectResultValue = (objectResult.Value as Microsoft.AspNetCore.Mvc.SerializableError);
             objectResultValue.Count.Should().Be(1);
             objectResultValue.Keys.Should()
-                .BeEquivalentTo(new List<string>() 
-                    { 
+                .BeEquivalentTo(new List<string>()
+                    {
                         nameof(LegalAuthorityCreateResource.AuthorityName)
                     });
         }

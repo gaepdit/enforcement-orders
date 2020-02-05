@@ -1,8 +1,8 @@
-using Enfo.Domain.Entities;
-using Enfo.Domain.Querying;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Enfo.Domain.Entities;
+using Enfo.Domain.Querying;
 
 namespace Enfo.Domain.Repositories
 {
@@ -23,7 +23,7 @@ namespace Enfo.Domain.Repositories
         Task<int> CountAsync(ISpecification<T> specification = null);
 
         Task<bool> IdExists(
-            int id, 
+            int id,
             ISpecification<T> specification = null);
     }
 }

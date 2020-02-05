@@ -212,10 +212,10 @@ namespace Enfo.API.Tests
             var objectResultValue = (objectResult.Value as Microsoft.AspNetCore.Mvc.SerializableError);
             objectResultValue.Count.Should().Be(2);
             objectResultValue.Keys.Should()
-                .BeEquivalentTo(new List<string>() 
-                    { 
-                        nameof(AddressCreateResource.City), 
-                        nameof(AddressCreateResource.PostalCode) 
+                .BeEquivalentTo(new List<string>()
+                    {
+                        nameof(AddressCreateResource.City),
+                        nameof(AddressCreateResource.PostalCode)
                     });
         }
 

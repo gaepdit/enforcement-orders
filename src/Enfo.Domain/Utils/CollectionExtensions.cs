@@ -10,7 +10,7 @@ namespace Enfo.Domain.Utils
         /// <summary>
         /// Checks whatever given collection object is null or has no item.
         /// </summary>
-        public static bool IsNullOrEmpty<T>(this ICollection<T> source) => 
+        public static bool IsNullOrEmpty<T>(this ICollection<T> source) =>
             source is null || source.Count <= 0;
 
         /// <summary>

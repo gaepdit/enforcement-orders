@@ -1,6 +1,6 @@
-﻿using Enfo.Domain.Querying;
+﻿using System.Linq;
+using Enfo.Domain.Querying;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 
 namespace Enfo.Infrastructure.QueryingEvaluators
 {

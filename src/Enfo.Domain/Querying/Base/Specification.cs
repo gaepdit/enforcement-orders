@@ -1,7 +1,7 @@
-using Enfo.Domain.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using Enfo.Domain.Utils;
 
 namespace Enfo.Domain.Querying
 {

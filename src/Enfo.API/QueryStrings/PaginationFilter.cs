@@ -1,6 +1,6 @@
-﻿using Enfo.Domain.Querying;
-using System;
+﻿using System;
 using System.ComponentModel;
+using Enfo.Domain.Querying;
 
 namespace Enfo.API.QueryStrings
 {
@@ -10,7 +10,7 @@ namespace Enfo.API.QueryStrings
 
         [DefaultValue(DefaultPageSize)]
         public int PageSize { get; set; } = DefaultPageSize;
-        
+
         [DefaultValue(1)]
         public int Page { get; set; } = 1;
 

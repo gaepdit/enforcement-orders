@@ -1,4 +1,7 @@
-﻿using Enfo.API.QueryStrings;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Enfo.API.QueryStrings;
 using Enfo.API.Resources;
 using Enfo.Domain.Entities;
 using Enfo.Domain.Querying;
@@ -6,9 +9,6 @@ using Enfo.Domain.Repositories;
 // using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Enfo.API.Controllers
 {

@@ -1,8 +1,8 @@
-﻿using Enfo.Domain.Entities;
-using Enfo.Domain.Utils;
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using Enfo.Domain.Entities;
+using Enfo.Domain.Utils;
 using static Enfo.Domain.Entities.EnforcementOrder;
 
 namespace Enfo.API.Resources

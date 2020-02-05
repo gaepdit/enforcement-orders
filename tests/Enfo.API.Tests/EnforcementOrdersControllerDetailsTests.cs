@@ -82,7 +82,7 @@ namespace Enfo.API.Tests.ControllerTests
             result.Result.Should().BeOfType<NotFoundObjectResult>();
             result.Value.Should().BeNull();
             (result.Result as NotFoundObjectResult).StatusCode.Should().Be(404);
-            (result.Result as NotFoundObjectResult).Value.Should().Be(id);            
+            (result.Result as NotFoundObjectResult).Value.Should().Be(id);
         }
     }
 }

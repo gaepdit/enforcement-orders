@@ -1,6 +1,6 @@
+using System.ComponentModel;
 using Enfo.Domain.Entities;
 using Enfo.Domain.Utils;
-using System.ComponentModel;
 
 namespace Enfo.API.Resources
 {

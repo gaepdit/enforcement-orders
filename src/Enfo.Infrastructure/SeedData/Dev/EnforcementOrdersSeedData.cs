@@ -1,6 +1,6 @@
-﻿using Enfo.Domain.Entities;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Enfo.Domain.Entities;
 using static Enfo.Domain.Entities.EnforcementOrder;
 
 namespace Enfo.Infrastructure.SeedData

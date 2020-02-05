@@ -1,5 +1,5 @@
-﻿using Enfo.Domain.Entities;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Enfo.Domain.Entities;
 
 namespace Enfo.Infrastructure.SeedData
 {

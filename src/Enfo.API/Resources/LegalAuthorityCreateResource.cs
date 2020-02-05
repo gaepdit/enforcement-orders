@@ -1,6 +1,6 @@
-﻿using Enfo.Domain.Entities;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using Enfo.Domain.Entities;
 
 namespace Enfo.API.Resources
 {
