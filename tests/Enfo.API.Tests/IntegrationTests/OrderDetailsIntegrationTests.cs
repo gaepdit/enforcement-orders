@@ -11,11 +11,11 @@ using Xunit;
 
 namespace Enfo.API.Tests.ControllerTests
 {
-    public class EnforcementOrdersControllerDetailsTests
+    public class OrderDetailsIntegrationTests
     {
         private readonly EnforcementOrder[] _orders;
 
-        public EnforcementOrdersControllerDetailsTests()
+        public OrderDetailsIntegrationTests()
         {
             _orders = DevSeedData.GetEnforcementOrders();
 
