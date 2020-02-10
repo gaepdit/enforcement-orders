@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.Json.Serialization;
 using Enfo.Domain.Repositories;
 using Enfo.Infrastructure.Contexts;
 using Enfo.Infrastructure.Repositories;
@@ -21,7 +22,8 @@ namespace Enfo.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public static void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers()
+                .AddJsonOptions(o => o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
             services.AddHsts(options =>
             {
@@ -48,11 +50,6 @@ namespace Enfo.API
                         Email = "douglas.waldron@dnr.ga.gov"
                     }
                 });
-                // DescribeAllEnumsAsStrings() is obsolete but cannot be removed until this Swashbuckle issue is fixed:
-                // https://github.com/domaindrivendev/Swashbuckle.AspNetCore/issues/1269#issuecomment-534298112
-#pragma warning disable 618
-                c.DescribeAllEnumsAsStrings();
-#pragma warning restore 618
             });
         }
 

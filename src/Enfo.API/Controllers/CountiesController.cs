@@ -36,7 +36,8 @@ namespace Enfo.API.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(CountyResource), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<CountyResource>> Get(int id)
+        public async Task<ActionResult<CountyResource>> Get(
+            [FromRoute] int id)
         {
             var item = await _repository.GetByIdAsync(id).ConfigureAwait(false);
 

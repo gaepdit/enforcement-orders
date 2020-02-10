@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Enfo.API.QueryStrings;
@@ -43,7 +43,8 @@ namespace Enfo.API.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(LegalAuthorityResource), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<LegalAuthorityResource>> Get(int id)
+        public async Task<ActionResult<LegalAuthorityResource>> Get(
+            [FromRoute] int id)
         {
             var item = await _repository.GetByIdAsync(id).ConfigureAwait(false);
 
@@ -60,7 +61,8 @@ namespace Enfo.API.Controllers
         [HttpPost]
         [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Post([FromBody] LegalAuthorityCreateResource resource)
+        public async Task<IActionResult> Post(
+            [FromBody] LegalAuthorityCreateResource resource)
         {
             if (resource is null || !ModelState.IsValid)
             {
@@ -81,7 +83,7 @@ namespace Enfo.API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Put(
-            int id,
+            [FromRoute] int id,
             [FromBody] LegalAuthorityUpdateResource resource)
         {
             if (resource is null || !ModelState.IsValid)

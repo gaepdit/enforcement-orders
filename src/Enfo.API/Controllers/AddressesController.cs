@@ -43,7 +43,8 @@ namespace Enfo.API.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<AddressResource>> Get(int id)
+        public async Task<ActionResult<AddressResource>> Get(
+            [FromRoute] int id)
         {
             var item = await _repository.GetByIdAsync(id).ConfigureAwait(false);
 
@@ -60,7 +61,8 @@ namespace Enfo.API.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Post([FromBody] AddressCreateResource resource)
+        public async Task<IActionResult> Post(
+            [FromBody] AddressCreateResource resource)
         {
             if (resource is null || !ModelState.IsValid)
             {
@@ -81,7 +83,7 @@ namespace Enfo.API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Put(
-            int id,
+            [FromRoute] int id,
             [FromBody] AddressUpdateResource resource)
         {
             if (resource is null || !ModelState.IsValid)

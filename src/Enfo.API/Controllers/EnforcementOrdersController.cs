@@ -58,7 +58,8 @@ namespace Enfo.API.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(EnforcementOrderItemResource), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<EnforcementOrderItemResource>> Get(int id)
+        public async Task<ActionResult<EnforcementOrderItemResource>> Get(
+            [FromRoute] int id)
         {
             bool onlyIfPublic = false;
             // TODO: Only authorized users can request Orders that are not public.
@@ -81,7 +82,8 @@ namespace Enfo.API.Controllers
         [HttpGet("Details/{id}")]
         [ProducesResponseType(typeof(EnforcementOrderDetailedResource), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<EnforcementOrderDetailedResource>> Details(int id)
+        public async Task<ActionResult<EnforcementOrderDetailedResource>> Details(
+            [FromRoute] int id)
         {
             bool onlyIfPublic = false;
             // TODO: Only authorized users can request Orders that are not public.
@@ -196,7 +198,8 @@ namespace Enfo.API.Controllers
         [HttpPost]
         [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Post([FromBody] EnforcementOrderCreateResource resource)
+        public async Task<IActionResult> Post(
+            [FromBody] EnforcementOrderCreateResource resource)
         {
             if (resource is null || !ModelState.IsValid)
             {
@@ -233,7 +236,7 @@ namespace Enfo.API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Put(
-            int id,
+            [FromRoute] int id,
             [FromBody] EnforcementOrderUpdateResource resource)
         {
             if (resource is null || !ModelState.IsValid)
@@ -276,7 +279,8 @@ namespace Enfo.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(
+            [FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
@@ -308,7 +312,8 @@ namespace Enfo.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Undelete(int id)
+        public async Task<IActionResult> Undelete(
+            [FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
