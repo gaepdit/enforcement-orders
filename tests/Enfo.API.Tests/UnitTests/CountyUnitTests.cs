@@ -12,7 +12,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Enfo.API.Tests
+namespace Enfo.API.Tests.UnitTests
 {
     public class CountyUnitTests
     {
@@ -29,8 +29,8 @@ namespace Enfo.API.Tests
             var mock = new Mock<IAsyncReadableRepository<County>>();
 
             mock.Setup(l => l.ListAsync(
-                It.IsAny<Specification<County>>(),
-                It.IsAny<Pagination>(),
+                It.IsAny<ISpecification<County>>(),
+                It.IsAny<IPagination>(),
                 null,
                 null))
                 .ReturnsAsync(_counties.ToList())
@@ -41,8 +41,8 @@ namespace Enfo.API.Tests
             var result = await controller.Get().ConfigureAwait(false);
 
             mock.Verify(l => l.ListAsync(
-                It.IsAny<Specification<County>>(),
-                It.IsAny<Pagination>(),
+                It.IsAny<ISpecification<County>>(),
+                It.IsAny<IPagination>(),
                 null,
                 null));
             mock.VerifyNoOtherCalls();
@@ -61,8 +61,8 @@ namespace Enfo.API.Tests
             var mock = new Mock<IAsyncWritableRepository<County>>();
 
             mock.Setup(l => l.ListAsync(
-                It.IsAny<Specification<County>>(),
-                It.IsAny<Pagination>(),
+                It.IsAny<ISpecification<County>>(),
+                It.IsAny<IPagination>(),
                 null,
                 null))
                 .ReturnsAsync(emptyList)
@@ -73,8 +73,8 @@ namespace Enfo.API.Tests
             var result = await controller.Get().ConfigureAwait(false);
 
             mock.Verify(l => l.ListAsync(
-                It.IsAny<Specification<County>>(),
-                It.IsAny<Pagination>(),
+                It.IsAny<ISpecification<County>>(),
+                It.IsAny<IPagination>(),
                 null,
                 null));
             mock.VerifyNoOtherCalls();
@@ -89,10 +89,11 @@ namespace Enfo.API.Tests
         public async Task GetByIdReturnsCorrectly()
         {
             var id = 1;
+            var item = _counties.Single(e => e.Id == id);
 
             var mock = new Mock<IAsyncWritableRepository<County>>();
             mock.Setup(l => l.GetByIdAsync(id, null, null))
-                .ReturnsAsync(_counties.Single(e => e.Id == id))
+                .ReturnsAsync(item)
                 .Verifiable();
 
             var controller = new CountiesController(mock.Object);
@@ -114,17 +115,18 @@ namespace Enfo.API.Tests
         [InlineData(3)]
         public async Task GetByIdReturnsCorrectItem(int id)
         {
+            var item = _counties.Single(e => e.Id == id);
+
             var mock = new Mock<IAsyncWritableRepository<County>>();
             mock.Setup(l => l.GetByIdAsync(id, null, null))
-                .ReturnsAsync(_counties.Single(e => e.Id == id));
+                .ReturnsAsync(item);
 
             var controller = new CountiesController(mock.Object);
 
             var value = ((await controller.Get(id).ConfigureAwait(false))
                 .Result as OkObjectResult).Value;
 
-            var expected = new CountyResource(_counties
-                .Single(e => e.Id == id));
+            var expected = new CountyResource(item);
 
             value.Should().BeEquivalentTo(expected);
         }

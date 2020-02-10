@@ -12,7 +12,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Enfo.API.Tests
+namespace Enfo.API.Tests.UnitTests
 {
     public class EpdContactUnitTests
     {
@@ -37,10 +37,10 @@ namespace Enfo.API.Tests
             var mock = new Mock<IAsyncWritableRepository<EpdContact>>();
 
             mock.Setup(l => l.ListAsync(
-                It.IsAny<Specification<EpdContact>>(),
-                It.IsAny<Pagination>(),
+                It.IsAny<ISpecification<EpdContact>>(),
+                It.IsAny<IPagination>(),
                 null,
-                It.IsAny<Inclusion<EpdContact>>()))
+                It.IsAny<IInclusion<EpdContact>>()))
                 .ReturnsAsync(_epdContacts.ToList())
                 .Verifiable();
 
@@ -49,10 +49,10 @@ namespace Enfo.API.Tests
             var result = await controller.Get().ConfigureAwait(false);
 
             mock.Verify(l => l.ListAsync(
-                It.IsAny<Specification<EpdContact>>(),
-                It.IsAny<Pagination>(),
+                It.IsAny<ISpecification<EpdContact>>(),
+                It.IsAny<IPagination>(),
                 null,
-                It.IsAny<Inclusion<EpdContact>>()));
+                It.IsAny<IInclusion<EpdContact>>()));
             mock.VerifyNoOtherCalls();
 
             result.Result.Should().BeOfType<OkObjectResult>();
@@ -69,10 +69,10 @@ namespace Enfo.API.Tests
             var mock = new Mock<IAsyncWritableRepository<EpdContact>>();
 
             mock.Setup(l => l.ListAsync(
-                It.IsAny<Specification<EpdContact>>(),
-                It.IsAny<Pagination>(),
+                It.IsAny<ISpecification<EpdContact>>(),
+                It.IsAny<IPagination>(),
                 null,
-                It.IsAny<Inclusion<EpdContact>>()))
+                It.IsAny<IInclusion<EpdContact>>()))
                 .ReturnsAsync(emptyList)
                 .Verifiable();
 
@@ -81,10 +81,10 @@ namespace Enfo.API.Tests
             var result = await controller.Get().ConfigureAwait(false);
 
             mock.Verify(l => l.ListAsync(
-                It.IsAny<Specification<EpdContact>>(),
-                It.IsAny<Pagination>(),
+                It.IsAny<ISpecification<EpdContact>>(),
+                It.IsAny<IPagination>(),
                 null,
-                It.IsAny<Inclusion<EpdContact>>()));
+                It.IsAny<IInclusion<EpdContact>>()));
             mock.VerifyNoOtherCalls();
 
             result.Result.Should().BeOfType<OkObjectResult>();
@@ -97,13 +97,14 @@ namespace Enfo.API.Tests
         public async Task GetByIdReturnsCorrectly()
         {
             var id = 2000;
+            var item = _epdContacts.Single(e => e.Id == id);
 
             var mock = new Mock<IAsyncWritableRepository<EpdContact>>();
             mock.Setup(l => l.GetByIdAsync(
                 id,
                 null,
-                It.IsAny<Inclusion<EpdContact>>()))
-                .ReturnsAsync(_epdContacts.Single(e => e.Id == id))
+                It.IsAny<IInclusion<EpdContact>>()))
+                .ReturnsAsync(item)
                 .Verifiable();
 
             var controller = new EpdContactsController(mock.Object);
@@ -113,7 +114,7 @@ namespace Enfo.API.Tests
             mock.Verify(l => l.GetByIdAsync(
                 id,
                 null,
-                It.IsAny<EpdContactIncludingAddress>()));
+                It.IsAny<IInclusion<EpdContact>>()));
             mock.VerifyNoOtherCalls();
 
             result.Result.Should().BeOfType<OkObjectResult>();
@@ -128,17 +129,20 @@ namespace Enfo.API.Tests
         [InlineData(2002)]
         public async Task GetByIdReturnsCorrectItem(int id)
         {
-            var mock = new Mock<IAsyncWritableRepository<EpdContact>>();
-            mock.Setup(l => l.GetByIdAsync(id, null, It.IsAny<EpdContactIncludingAddress>()))
-                .ReturnsAsync(_epdContacts.Single(e => e.Id == id));
+            var item = _epdContacts.Single(e => e.Id == id);
 
+            var mock = new Mock<IAsyncWritableRepository<EpdContact>>();
+            mock.Setup(l => l.GetByIdAsync(
+                id,
+                null,
+                It.IsAny<IInclusion<EpdContact>>()))
+                .ReturnsAsync(item);
             var controller = new EpdContactsController(mock.Object);
 
             var value = ((await controller.Get(id).ConfigureAwait(false))
                 .Result as OkObjectResult).Value;
 
-            var expected = new EpdContactResource(_epdContacts
-                .Single(e => e.Id == id));
+            var expected = new EpdContactResource(item);
 
             value.Should().BeEquivalentTo(expected);
         }
@@ -149,10 +153,8 @@ namespace Enfo.API.Tests
         public async Task GetByMissingIdReturnsNotFound(int id)
         {
             var mock = new Mock<IAsyncWritableRepository<EpdContact>>();
-            EpdContact nullItem = null;
             mock.Setup(l => l.GetByIdAsync(id, null, null))
-                .ReturnsAsync(nullItem);
-
+                .ReturnsAsync((EpdContact)null);
             var controller = new EpdContactsController(mock.Object);
 
             var result = await controller.Get(id).ConfigureAwait(false);
@@ -237,6 +239,7 @@ namespace Enfo.API.Tests
         public async Task UpdateItemReturnCorrectly()
         {
             var id = 2000;
+            var item = _epdContacts.Single(e => e.Id == id);
 
             var target = new EpdContactUpdateResource
             {
@@ -251,7 +254,7 @@ namespace Enfo.API.Tests
             var mock = new Mock<IAsyncWritableRepository<EpdContact>>();
             mock.Setup(l => l.CompleteAsync()).ReturnsAsync(1);
             mock.Setup(l => l.GetByIdAsync(id, null, null))
-                .ReturnsAsync(_epdContacts.Single(e => e.Id == id));
+                .ReturnsAsync(item);
 
             var controller = new EpdContactsController(mock.Object);
 
@@ -280,12 +283,11 @@ namespace Enfo.API.Tests
         public async Task UpdateWithMissingIdFails()
         {
             var id = 9999;
-            EpdContact nullItem = null;
 
             var mock = new Mock<IAsyncWritableRepository<EpdContact>>();
             mock.Setup(l => l.CompleteAsync()).ReturnsAsync(1);
             mock.Setup(l => l.GetByIdAsync(id, null, null))
-                .ReturnsAsync(nullItem);
+                .ReturnsAsync((EpdContact)null);
 
             var controller = new EpdContactsController(mock.Object);
 

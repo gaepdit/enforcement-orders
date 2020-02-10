@@ -13,13 +13,13 @@ using System.Threading.Tasks;
 using Xunit;
 using static Enfo.Domain.Entities.Enums;
 
-namespace Enfo.API.Tests.ControllerTests
+namespace Enfo.API.Tests.IntegrationTests
 {
-    public class EnforcementOrdersControllerGetTests
+    public class OrdersGetIntegrationTests
     {
         private readonly EnforcementOrder[] _orders;
 
-        public EnforcementOrdersControllerGetTests()
+        public OrdersGetIntegrationTests()
         {
             _orders = DevSeedData.GetEnforcementOrders();
 

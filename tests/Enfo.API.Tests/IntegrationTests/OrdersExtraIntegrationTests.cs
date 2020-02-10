@@ -13,13 +13,13 @@ using Xunit;
 using static Enfo.Domain.Entities.EnforcementOrder;
 using static Enfo.Domain.Utils.DateUtils;
 
-namespace Enfo.API.Tests.ControllerTests
+namespace Enfo.API.Tests.IntegrationTests
 {
-    public class EnforcementOrdersControllerOtherTests
+    public class OrdersExtraIntegrationTests
     {
         private readonly EnforcementOrder[] _orders;
 
-        public EnforcementOrdersControllerOtherTests()
+        public OrdersExtraIntegrationTests()
         {
             _orders = DevSeedData.GetEnforcementOrders();
 

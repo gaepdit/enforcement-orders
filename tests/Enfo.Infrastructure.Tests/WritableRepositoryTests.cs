@@ -8,7 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Enfo.Infrastructure.Tests.RepositoryTests
+namespace Enfo.Infrastructure.Tests
 {
     public class WritableRepositoryTests
     {

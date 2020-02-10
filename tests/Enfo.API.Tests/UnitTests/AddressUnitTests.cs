@@ -12,7 +12,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Enfo.API.Tests
+namespace Enfo.API.Tests.UnitTests
 {
     public class AddressUnitTests
     {
@@ -41,8 +41,8 @@ namespace Enfo.API.Tests
             var result = await controller.Get().ConfigureAwait(false);
 
             mock.Verify(l => l.ListAsync(
-                It.IsAny<Specification<Address>>(),
-                It.IsAny<Pagination>(),
+                It.IsAny<ISpecification<Address>>(),
+                It.IsAny<IPagination>(),
                 null,
                 null));
             mock.VerifyNoOtherCalls();
@@ -61,8 +61,8 @@ namespace Enfo.API.Tests
             var mock = new Mock<IAsyncWritableRepository<Address>>();
 
             mock.Setup(l => l.ListAsync(
-                It.IsAny<Specification<Address>>(),
-                It.IsAny<Pagination>(),
+                It.IsAny<ISpecification<Address>>(),
+                It.IsAny<IPagination>(),
                 null,
                 null))
                 .ReturnsAsync(emptyList)
@@ -73,8 +73,8 @@ namespace Enfo.API.Tests
             var result = await controller.Get().ConfigureAwait(false);
 
             mock.Verify(l => l.ListAsync(
-                It.IsAny<Specification<Address>>(),
-                It.IsAny<Pagination>(),
+                It.IsAny<ISpecification<Address>>(),
+                It.IsAny<IPagination>(),
                 null,
                 null));
             mock.VerifyNoOtherCalls();
@@ -89,10 +89,11 @@ namespace Enfo.API.Tests
         public async Task GetByIdReturnsCorrectly()
         {
             var id = 2000;
+            var item = _addresses.Single(e => e.Id == id);
 
             var mock = new Mock<IAsyncWritableRepository<Address>>();
             mock.Setup(l => l.GetByIdAsync(id, null, null))
-                .ReturnsAsync(_addresses.Single(e => e.Id == id))
+                .ReturnsAsync(item)
                 .Verifiable();
 
             var controller = new AddressesController(mock.Object);
@@ -114,17 +115,18 @@ namespace Enfo.API.Tests
         [InlineData(2002)]
         public async Task GetByIdReturnsCorrectItem(int id)
         {
+            var item = _addresses.Single(e => e.Id == id);
+
             var mock = new Mock<IAsyncWritableRepository<Address>>();
             mock.Setup(l => l.GetByIdAsync(id, null, null))
-                .ReturnsAsync(_addresses.Single(e => e.Id == id));
+                .ReturnsAsync(item);
 
             var controller = new AddressesController(mock.Object);
 
             var value = ((await controller.Get(id).ConfigureAwait(false))
                 .Result as OkObjectResult).Value;
 
-            var expected = new AddressResource(_addresses
-                .Single(e => e.Id == id));
+            var expected = new AddressResource(item);
 
             value.Should().BeEquivalentTo(expected);
         }
@@ -135,9 +137,8 @@ namespace Enfo.API.Tests
         public async Task GetByMissingIdReturnsNotFound(int id)
         {
             var mock = new Mock<IAsyncWritableRepository<Address>>();
-            Address nullItem = null;
             mock.Setup(l => l.GetByIdAsync(id, null, null))
-                .ReturnsAsync(nullItem);
+                .ReturnsAsync((Address)null);
 
             var controller = new AddressesController(mock.Object);
 
@@ -223,6 +224,7 @@ namespace Enfo.API.Tests
         public async Task UpdateItemReturnCorrectly()
         {
             var id = 2000;
+            var item = _addresses.Single(e => e.Id == id);
 
             var target = new AddressUpdateResource
             {
@@ -235,7 +237,7 @@ namespace Enfo.API.Tests
             var mock = new Mock<IAsyncWritableRepository<Address>>();
             mock.Setup(l => l.CompleteAsync()).ReturnsAsync(1);
             mock.Setup(l => l.GetByIdAsync(id, null, null))
-                .ReturnsAsync(_addresses.Single(e => e.Id == id));
+                .ReturnsAsync(item);
 
             var controller = new AddressesController(mock.Object);
 
@@ -264,12 +266,11 @@ namespace Enfo.API.Tests
         public async Task UpdateWithMissingIdFails()
         {
             var id = 9999;
-            Address nullItem = null;
 
             var mock = new Mock<IAsyncWritableRepository<Address>>();
             mock.Setup(l => l.CompleteAsync()).ReturnsAsync(1);
             mock.Setup(l => l.GetByIdAsync(id, null, null))
-                .ReturnsAsync(nullItem);
+                .ReturnsAsync((Address)null);
 
             var controller = new AddressesController(mock.Object);
 

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Xunit;
 using static Enfo.Domain.Entities.EnforcementOrder;
 
-namespace Enfo.Infrastructure.Tests.RepositoryTests
+namespace Enfo.Infrastructure.Tests
 {
     public class EnforcementOrderRepositoryTests
     {

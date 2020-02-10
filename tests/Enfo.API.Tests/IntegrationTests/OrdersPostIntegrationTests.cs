@@ -13,16 +13,16 @@ using System.Threading.Tasks;
 using Xunit;
 using static Enfo.Domain.Entities.EnforcementOrder;
 
-namespace Enfo.API.Tests.ControllerTests
+namespace Enfo.API.Tests.IntegrationTests
 {
-    public class EnforcementOrdersControllerPostTests
+    public class OrdersPostIntegrationTests
     {
         private readonly EnforcementOrder[] _enforcementOrders;
         private readonly EpdContact[] _epdContacts;
         private readonly Address[] _addresses;
         private readonly LegalAuthority[] _legalAuthorities;
 
-        public EnforcementOrdersControllerPostTests()
+        public OrdersPostIntegrationTests()
         {
             _enforcementOrders = DevSeedData.GetEnforcementOrders();
             _epdContacts = ProdSeedData.GetEpdContacts();

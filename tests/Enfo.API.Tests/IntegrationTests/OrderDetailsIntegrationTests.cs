@@ -9,7 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Enfo.API.Tests.ControllerTests
+namespace Enfo.API.Tests.IntegrationTests
 {
     public class OrderDetailsIntegrationTests
     {

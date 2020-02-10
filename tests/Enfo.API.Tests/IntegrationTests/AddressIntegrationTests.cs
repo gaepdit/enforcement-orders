@@ -11,7 +11,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Enfo.API.Tests
+namespace Enfo.API.Tests.IntegrationTests
 {
     public class AddressIntegrationTests
     {

@@ -12,7 +12,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Enfo.API.Tests
+namespace Enfo.API.Tests.UnitTests
 {
     public class LegalAuthorityUnitTests
     {
@@ -29,8 +29,8 @@ namespace Enfo.API.Tests
             var mock = new Mock<IAsyncWritableRepository<LegalAuthority>>();
 
             mock.Setup(l => l.ListAsync(
-                It.IsAny<Specification<LegalAuthority>>(),
-                It.IsAny<Pagination>(),
+                It.IsAny<ISpecification<LegalAuthority>>(),
+                It.IsAny<IPagination>(),
                 null,
                 null))
                 .ReturnsAsync(_legalAuthorities.ToList())
@@ -41,8 +41,8 @@ namespace Enfo.API.Tests
             var result = await controller.Get().ConfigureAwait(false);
 
             mock.Verify(l => l.ListAsync(
-                It.IsAny<Specification<LegalAuthority>>(),
-                It.IsAny<Pagination>(),
+                It.IsAny<ISpecification<LegalAuthority>>(),
+                It.IsAny<IPagination>(),
                 null,
                 null));
             mock.VerifyNoOtherCalls();
@@ -61,8 +61,8 @@ namespace Enfo.API.Tests
             var mock = new Mock<IAsyncWritableRepository<LegalAuthority>>();
 
             mock.Setup(l => l.ListAsync(
-                It.IsAny<Specification<LegalAuthority>>(),
-                It.IsAny<Pagination>(),
+                It.IsAny<ISpecification<LegalAuthority>>(),
+                It.IsAny<IPagination>(),
                 null,
                 null))
                 .ReturnsAsync(emptyList)
@@ -73,8 +73,8 @@ namespace Enfo.API.Tests
             var result = await controller.Get().ConfigureAwait(false);
 
             mock.Verify(l => l.ListAsync(
-                It.IsAny<Specification<LegalAuthority>>(),
-                It.IsAny<Pagination>(),
+                It.IsAny<ISpecification<LegalAuthority>>(),
+                It.IsAny<IPagination>(),
                 null,
                 null));
             mock.VerifyNoOtherCalls();
@@ -89,10 +89,11 @@ namespace Enfo.API.Tests
         public async Task GetByIdReturnsCorrectly()
         {
             var id = 1;
+            var item = _legalAuthorities.Single(e => e.Id == id);
 
             var mock = new Mock<IAsyncWritableRepository<LegalAuthority>>();
             mock.Setup(l => l.GetByIdAsync(id, null, null))
-                .ReturnsAsync(_legalAuthorities.Single(e => e.Id == id))
+                .ReturnsAsync(item)
                 .Verifiable();
 
             var controller = new LegalAuthoritiesController(mock.Object);
@@ -114,17 +115,18 @@ namespace Enfo.API.Tests
         [InlineData(3)]
         public async Task GetByIdReturnsCorrectItem(int id)
         {
+            var item = _legalAuthorities.Single(e => e.Id == id);
+
             var mock = new Mock<IAsyncWritableRepository<LegalAuthority>>();
             mock.Setup(l => l.GetByIdAsync(id, null, null))
-                .ReturnsAsync(_legalAuthorities.Single(e => e.Id == id));
+                .ReturnsAsync(item);
 
             var controller = new LegalAuthoritiesController(mock.Object);
 
             var value = ((await controller.Get(id).ConfigureAwait(false))
                 .Result as OkObjectResult).Value;
 
-            var expected = new LegalAuthorityResource(_legalAuthorities
-                .Single(e => e.Id == id));
+            var expected = new LegalAuthorityResource(item);
 
             value.Should().BeEquivalentTo(expected);
         }
@@ -215,6 +217,7 @@ namespace Enfo.API.Tests
         public async Task UpdateItemReturnCorrectly()
         {
             var id = 1;
+            var item = _legalAuthorities.Single(e => e.Id == id);
 
             var target = new LegalAuthorityUpdateResource
             {
@@ -225,7 +228,7 @@ namespace Enfo.API.Tests
             var mock = new Mock<IAsyncWritableRepository<LegalAuthority>>();
             mock.Setup(l => l.CompleteAsync()).ReturnsAsync(1);
             mock.Setup(l => l.GetByIdAsync(id, null, null))
-                .ReturnsAsync(_legalAuthorities.Single(e => e.Id == id));
+                .ReturnsAsync(item);
 
             var controller = new LegalAuthoritiesController(mock.Object);
 
@@ -254,12 +257,11 @@ namespace Enfo.API.Tests
         public async Task UpdateWithMissingIdFails()
         {
             var id = 9999;
-            LegalAuthority nullItem = null;
 
             var mock = new Mock<IAsyncWritableRepository<LegalAuthority>>();
             mock.Setup(l => l.CompleteAsync()).ReturnsAsync(1);
             mock.Setup(l => l.GetByIdAsync(id, null, null))
-                .ReturnsAsync(nullItem);
+                .ReturnsAsync((LegalAuthority)null);
 
             var controller = new LegalAuthoritiesController(mock.Object);
 
