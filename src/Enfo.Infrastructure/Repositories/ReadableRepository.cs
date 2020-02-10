@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Enfo.Domain.Entities;
@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Enfo.Infrastructure.Repositories
 {
-    public class ReadableRepository<T> : IAsyncReadableRepository<T>
+    public class ReadableRepository<T> : IReadableRepository<T>
         where T : BaseEntity
     {
         internal readonly EnfoDbContext _context;

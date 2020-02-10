@@ -16,9 +16,9 @@ namespace Enfo.API.Controllers
     [ApiController]
     public class EpdContactsController : ControllerBase
     {
-        private readonly IAsyncWritableRepository<EpdContact> _repository;
+        private readonly IWritableRepository<EpdContact> _repository;
 
-        public EpdContactsController(IAsyncWritableRepository<EpdContact> repository) =>
+        public EpdContactsController(IWritableRepository<EpdContact> repository) =>
             _repository = repository;
 
         // GET: api/EpdContacts?pageSize&page

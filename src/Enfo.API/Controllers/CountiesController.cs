@@ -14,9 +14,9 @@ namespace Enfo.API.Controllers
     [ApiController]
     public class CountiesController : ControllerBase
     {
-        private readonly IAsyncReadableRepository<County> _repository;
+        private readonly IReadableRepository<County> _repository;
 
-        public CountiesController(IAsyncReadableRepository<County> repository) =>
+        public CountiesController(IReadableRepository<County> repository) =>
             _repository = repository;
 
         // GET: api/Counties?pageSize&page

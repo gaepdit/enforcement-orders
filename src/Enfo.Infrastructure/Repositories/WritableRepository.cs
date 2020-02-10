@@ -5,7 +5,7 @@ using Enfo.Infrastructure.Contexts;
 
 namespace Enfo.Infrastructure.Repositories
 {
-    public class WritableRepository<T> : ReadableRepository<T>, IAsyncWritableRepository<T>
+    public class WritableRepository<T> : ReadableRepository<T>, IWritableRepository<T>
         where T : BaseEntity
     {
         public WritableRepository(EnfoDbContext context) : base(context) { }

@@ -10,7 +10,7 @@ namespace Enfo.Infrastructure.Tests.Helpers
 {
     internal static class RepositoryHelpers
     {
-        public static IAsyncWritableRepository<T> GetRepository<T>(
+        public static IWritableRepository<T> GetRepository<T>(
             this object callingClass,
             int appendToName = 0,
             [CallerMemberName] string dbName = null)

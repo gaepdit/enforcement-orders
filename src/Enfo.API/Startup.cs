@@ -34,8 +34,8 @@ namespace Enfo.API
             services.AddDbContext<EnfoDbContext>(options => options.UseSqlite("Data Source=EnfoSqliteDatabase.db"));
             //services.AddDbContext<EnfoDbContext>(options => options.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=Enfo;Trusted_Connection=True;"));
 
-            services.AddScoped(typeof(IAsyncWritableRepository<>), typeof(WritableRepository<>));
-            services.AddScoped(typeof(IAsyncReadableRepository<>), typeof(ReadableRepository<>));
+            services.AddScoped(typeof(IWritableRepository<>), typeof(WritableRepository<>));
+            services.AddScoped(typeof(IReadableRepository<>), typeof(ReadableRepository<>));
             services.AddScoped(typeof(IEnforcementOrderRepository), typeof(EnforcementOrderRepository));
 
             services.AddSwaggerGen(c =>

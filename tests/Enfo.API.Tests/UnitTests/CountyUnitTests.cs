@@ -26,7 +26,7 @@ namespace Enfo.API.Tests.UnitTests
         [Fact]
         public async Task GetReturnsCorrectly()
         {
-            var mock = new Mock<IAsyncReadableRepository<County>>();
+            var mock = new Mock<IReadableRepository<County>>();
 
             mock.Setup(l => l.ListAsync(
                 It.IsAny<ISpecification<County>>(),
@@ -58,7 +58,7 @@ namespace Enfo.API.Tests.UnitTests
         {
             var emptyList = new List<County>();
 
-            var mock = new Mock<IAsyncWritableRepository<County>>();
+            var mock = new Mock<IWritableRepository<County>>();
 
             mock.Setup(l => l.ListAsync(
                 It.IsAny<ISpecification<County>>(),
@@ -91,7 +91,7 @@ namespace Enfo.API.Tests.UnitTests
             var id = 1;
             var item = _counties.Single(e => e.Id == id);
 
-            var mock = new Mock<IAsyncWritableRepository<County>>();
+            var mock = new Mock<IWritableRepository<County>>();
             mock.Setup(l => l.GetByIdAsync(id, null, null))
                 .ReturnsAsync(item)
                 .Verifiable();
@@ -117,7 +117,7 @@ namespace Enfo.API.Tests.UnitTests
         {
             var item = _counties.Single(e => e.Id == id);
 
-            var mock = new Mock<IAsyncWritableRepository<County>>();
+            var mock = new Mock<IWritableRepository<County>>();
             mock.Setup(l => l.GetByIdAsync(id, null, null))
                 .ReturnsAsync(item);
 
@@ -136,7 +136,7 @@ namespace Enfo.API.Tests.UnitTests
         [InlineData(-1)]
         public async Task GetByMissingIdReturnsNotFound(int id)
         {
-            var mock = new Mock<IAsyncWritableRepository<County>>();
+            var mock = new Mock<IWritableRepository<County>>();
             County nullAddress = null;
             mock.Setup(l => l.GetByIdAsync(id, null, null))
                 .ReturnsAsync(nullAddress);

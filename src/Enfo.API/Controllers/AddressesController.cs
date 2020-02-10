@@ -16,9 +16,9 @@ namespace Enfo.API.Controllers
     [ApiController]
     public class AddressesController : ControllerBase
     {
-        private readonly IAsyncWritableRepository<Address> _repository;
+        private readonly IWritableRepository<Address> _repository;
 
-        public AddressesController(IAsyncWritableRepository<Address> repository) =>
+        public AddressesController(IWritableRepository<Address> repository) =>
             _repository = repository;
 
         // GET: api/Addresses?pageSize&page

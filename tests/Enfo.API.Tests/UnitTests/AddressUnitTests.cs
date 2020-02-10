@@ -26,7 +26,7 @@ namespace Enfo.API.Tests.UnitTests
         [Fact]
         public async Task GetReturnsCorrectly()
         {
-            var mock = new Mock<IAsyncWritableRepository<Address>>();
+            var mock = new Mock<IWritableRepository<Address>>();
 
             mock.Setup(l => l.ListAsync(
                 It.IsAny<Specification<Address>>(),
@@ -58,7 +58,7 @@ namespace Enfo.API.Tests.UnitTests
         {
             var emptyList = new List<Address>();
 
-            var mock = new Mock<IAsyncWritableRepository<Address>>();
+            var mock = new Mock<IWritableRepository<Address>>();
 
             mock.Setup(l => l.ListAsync(
                 It.IsAny<ISpecification<Address>>(),
@@ -91,7 +91,7 @@ namespace Enfo.API.Tests.UnitTests
             var id = 2000;
             var item = _addresses.Single(e => e.Id == id);
 
-            var mock = new Mock<IAsyncWritableRepository<Address>>();
+            var mock = new Mock<IWritableRepository<Address>>();
             mock.Setup(l => l.GetByIdAsync(id, null, null))
                 .ReturnsAsync(item)
                 .Verifiable();
@@ -117,7 +117,7 @@ namespace Enfo.API.Tests.UnitTests
         {
             var item = _addresses.Single(e => e.Id == id);
 
-            var mock = new Mock<IAsyncWritableRepository<Address>>();
+            var mock = new Mock<IWritableRepository<Address>>();
             mock.Setup(l => l.GetByIdAsync(id, null, null))
                 .ReturnsAsync(item);
 
@@ -136,7 +136,7 @@ namespace Enfo.API.Tests.UnitTests
         [InlineData(-1)]
         public async Task GetByMissingIdReturnsNotFound(int id)
         {
-            var mock = new Mock<IAsyncWritableRepository<Address>>();
+            var mock = new Mock<IWritableRepository<Address>>();
             mock.Setup(l => l.GetByIdAsync(id, null, null))
                 .ReturnsAsync((Address)null);
 
@@ -161,7 +161,7 @@ namespace Enfo.API.Tests.UnitTests
                 Street = "123 Fake St"
             };
 
-            var mock = new Mock<IAsyncWritableRepository<Address>>();
+            var mock = new Mock<IWritableRepository<Address>>();
             mock.Setup(l => l.CompleteAsync()).ReturnsAsync(1);
             mock.Setup(l => l.Add(item.NewAddress()));
 
@@ -179,7 +179,7 @@ namespace Enfo.API.Tests.UnitTests
         [Fact]
         public async Task AddNullItemFails()
         {
-            var mock = new Mock<IAsyncWritableRepository<Address>>();
+            var mock = new Mock<IWritableRepository<Address>>();
             var controller = new AddressesController(mock.Object);
 
             var result = await controller.Post(null).ConfigureAwait(false);
@@ -191,7 +191,7 @@ namespace Enfo.API.Tests.UnitTests
         [Fact]
         public async Task AddInvalidItemFails()
         {
-            var mock = new Mock<IAsyncWritableRepository<Address>>();
+            var mock = new Mock<IWritableRepository<Address>>();
             var controller = new AddressesController(mock.Object);
 
             var item = new AddressCreateResource()
@@ -234,7 +234,7 @@ namespace Enfo.API.Tests.UnitTests
                 Street = "123 Fake St"
             };
 
-            var mock = new Mock<IAsyncWritableRepository<Address>>();
+            var mock = new Mock<IWritableRepository<Address>>();
             mock.Setup(l => l.CompleteAsync()).ReturnsAsync(1);
             mock.Setup(l => l.GetByIdAsync(id, null, null))
                 .ReturnsAsync(item);
@@ -253,7 +253,7 @@ namespace Enfo.API.Tests.UnitTests
         {
             var id = 2000;
 
-            var mock = new Mock<IAsyncWritableRepository<Address>>();
+            var mock = new Mock<IWritableRepository<Address>>();
             var controller = new AddressesController(mock.Object);
 
             var result = await controller.Put(id, null).ConfigureAwait(false);
@@ -267,7 +267,7 @@ namespace Enfo.API.Tests.UnitTests
         {
             var id = 9999;
 
-            var mock = new Mock<IAsyncWritableRepository<Address>>();
+            var mock = new Mock<IWritableRepository<Address>>();
             mock.Setup(l => l.CompleteAsync()).ReturnsAsync(1);
             mock.Setup(l => l.GetByIdAsync(id, null, null))
                 .ReturnsAsync((Address)null);

@@ -16,9 +16,9 @@ namespace Enfo.API.Controllers
     [ApiController]
     public class LegalAuthoritiesController : ControllerBase
     {
-        private readonly IAsyncWritableRepository<LegalAuthority> _repository;
+        private readonly IWritableRepository<LegalAuthority> _repository;
 
-        public LegalAuthoritiesController(IAsyncWritableRepository<LegalAuthority> repository) =>
+        public LegalAuthoritiesController(IWritableRepository<LegalAuthority> repository) =>
             _repository = repository;
 
         // GET: api/LegalAuthorities?pageSize&page

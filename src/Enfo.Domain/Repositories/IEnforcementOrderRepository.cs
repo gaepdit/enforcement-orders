@@ -8,7 +8,7 @@ using static Enfo.Domain.Entities.Enums;
 
 namespace Enfo.Domain.Repositories
 {
-    public interface IEnforcementOrderRepository : IAsyncWritableRepository<EnforcementOrder>
+    public interface IEnforcementOrderRepository : IWritableRepository<EnforcementOrder>
 
     {
         Task<EnforcementOrder> GetEnforcementOrder(
