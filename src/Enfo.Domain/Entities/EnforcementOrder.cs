@@ -227,7 +227,7 @@ namespace Enfo.Domain.Entities
 
             if (result.Success)
             {
-                result.NewItem = new EnforcementOrder()
+                result.AddItem(new EnforcementOrder()
                 {
                     Cause = cause,
                     CommentContactId = (createAs == NewEnforcementOrderType.Proposed) ? commentContactId : null,
@@ -249,7 +249,7 @@ namespace Enfo.Domain.Entities
                     PublicationStatus = publicationStatus,
                     Requirements = requirements,
                     SettlementAmount = settlementAmount
-                };
+                });
             }
 
             return result;

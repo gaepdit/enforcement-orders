@@ -5,21 +5,12 @@ namespace Enfo.Domain.Repositories
     public class UpdateEntityResult
     {
         public bool Success { get; private set; } = true;
-        public Dictionary<string, string> ErrorMessages { get; }
+        public Dictionary<string, string> ErrorMessages { get; } = new Dictionary<string, string>();
 
-        public UpdateEntityResult()
-        {
-            ErrorMessages = new Dictionary<string, string>();
-        }
+        public UpdateEntityResult() { }
 
-        public UpdateEntityResult(string key, string message)
-        {
-            Success = false;
-            ErrorMessages = new Dictionary<string, string>
-            {
-                { key, message }
-            };
-        }
+        public UpdateEntityResult(string key, string message) =>
+            AddErrorMessage(key, message);
 
         public void AddErrorMessage(string key, string message)
         {

@@ -6,33 +6,29 @@ namespace Enfo.Domain.Repositories
     public class CreateEntityResult<T> where T : BaseEntity
     {
         public bool Success { get; private set; } = true;
-        public T NewItem { get; set; }
-        public Dictionary<string, string> ErrorMessages { get; }
+        public T NewItem { get; private set; }
+        public Dictionary<string, string> ErrorMessages { get; } = new Dictionary<string, string>();
 
-        public CreateEntityResult()
-        {
-            ErrorMessages = new Dictionary<string, string>();
-        }
+        public CreateEntityResult() { }
 
-        public CreateEntityResult(T item)
-        {
-            NewItem = item;
-        }
+        public CreateEntityResult(T item) =>
+            AddItem(item);
 
-        public CreateEntityResult(string key, string message)
-        {
-            Success = false;
-            ErrorMessages = new Dictionary<string, string>
-            {
-                { key, message }
-            };
-        }
+        public CreateEntityResult(string key, string message) =>
+            AddErrorMessage(key, message);
 
         public void AddErrorMessage(string key, string message)
         {
             Success = false;
-            ErrorMessages.Add(key, message);
             NewItem = null;
+            ErrorMessages.Add(key, message);
+        }
+
+        public void AddItem(T item)
+        {
+            Success = true;
+            NewItem = item;
+            ErrorMessages.Clear();
         }
     }
 }
