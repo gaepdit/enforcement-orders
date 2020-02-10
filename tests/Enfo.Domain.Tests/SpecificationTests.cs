@@ -48,22 +48,25 @@ namespace Enfo.Domain.Tests
         [Fact]
         public void NullSpecificationCriterionThrowsException()
         {
-            Assert.Throws<ArgumentNullException>(() => new NullCriterionSpecification())
-                .ParamName.Should().Be("criterion");
+            Action act = () => new NullCriterionSpecification();
+            act.Should().Throw<ArgumentNullException>()
+                .And.ParamName.Should().Be("criterion");
         }
 
         [Fact]
         public void NullSpecificationCriteriaThrowsException()
         {
-            Assert.Throws<ArgumentNullException>(() => new NullCriteriaSpecification())
-                .ParamName.Should().Be("criteria");
+            Action act = () => new NullCriteriaSpecification();
+            act.Should().Throw<ArgumentNullException>()
+                .And.ParamName.Should().Be("criteria");
         }
 
         [Fact]
         public void EmptySpecificationCriteriaThrowsException()
         {
-            Assert.Throws<ArgumentException>(() => new EmptyCriteriaSpecification())
-                .ParamName.Should().Be("criteria");
+            Action act = () => new EmptyCriteriaSpecification();
+            act.Should().Throw<ArgumentException>()
+                .And.ParamName.Should().Be("criteria");
         }
     }
 }
