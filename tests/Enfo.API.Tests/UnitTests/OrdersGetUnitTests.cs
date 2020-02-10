@@ -1,22 +1,26 @@
 ﻿using Enfo.API.Controllers;
 using Enfo.API.Resources;
 using Enfo.Domain.Entities;
+using Enfo.Domain.Querying;
 using Enfo.Domain.Repositories;
 using Enfo.Infrastructure.SeedData;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
+using static Enfo.Domain.Entities.Enums;
 
 namespace Enfo.API.Tests.UnitTests
 {
-    public class OrderDetailsUnitTests
+    public class OrdersGetUnitTests
     {
         private readonly EnforcementOrder[] _orders;
 
-        public OrderDetailsUnitTests()
+        public OrdersGetUnitTests()
         {
             _orders = DevSeedData.GetEnforcementOrders();
 
@@ -26,8 +30,7 @@ namespace Enfo.API.Tests.UnitTests
 
             foreach (var contact in epdContacts)
             {
-                contact.Address = addresses
-                    .SingleOrDefault(e => e.Id == contact.AddressId);
+                contact.Address = addresses.SingleOrDefault(e => e.Id == contact.AddressId);
             }
 
             foreach (var order in _orders)
@@ -42,6 +45,55 @@ namespace Enfo.API.Tests.UnitTests
         }
 
         [Fact]
+        public async Task GetReturnsCorrectly()
+        {
+            var mock = new Mock<IEnforcementOrderRepository>();
+            mock.Setup(l => l.FindEnforcementOrdersAsync(
+                It.IsAny<string>(),
+                It.IsAny<string>(),
+                It.IsAny<int?>(),
+                It.IsAny<DateTime?>(),
+                It.IsAny<DateTime?>(),
+                It.IsAny<ActivityStatus>(),
+                It.IsAny<PublicationStatus>(),
+                It.IsAny<string>(),
+                It.IsAny<string>(),
+                It.IsAny<bool>(),
+                It.IsAny<bool>(),
+                It.IsAny<EnforcementOrderSorting>(),
+                It.IsAny<IPagination>()
+                ))
+                .ReturnsAsync(_orders.ToList())
+                .Verifiable();
+
+            var controller = new EnforcementOrdersController(mock.Object);
+
+            var result = await controller.Get().ConfigureAwait(false);
+
+            mock.Verify(l => l.FindEnforcementOrdersAsync(
+                It.IsAny<string>(),
+                It.IsAny<string>(),
+                It.IsAny<int?>(),
+                It.IsAny<DateTime?>(),
+                It.IsAny<DateTime?>(),
+                It.IsAny<ActivityStatus>(),
+                It.IsAny<PublicationStatus>(),
+                It.IsAny<string>(),
+                It.IsAny<string>(),
+                It.IsAny<bool>(),
+                It.IsAny<bool>(),
+                It.IsAny<EnforcementOrderSorting>(),
+                It.IsAny<IPagination>()
+                ));
+            mock.VerifyNoOtherCalls();
+
+            result.Result.Should().BeOfType<OkObjectResult>();
+            var actionResult = result.Result as OkObjectResult;
+            Assert.IsAssignableFrom<IEnumerable<EnforcementOrderListResource>>(actionResult.Value);
+            actionResult.StatusCode.Should().Be(200);
+        }
+
+        [Fact]
         public async Task GetByIdReturnsCorrectly()
         {
             var id = 140;
@@ -53,15 +105,15 @@ namespace Enfo.API.Tests.UnitTests
                 .Verifiable();
 
             var controller = new EnforcementOrdersController(mock.Object);
-            
-            var result = await controller.Details(id).ConfigureAwait(false);
+
+            var result = await controller.Get(id).ConfigureAwait(false);
 
             mock.Verify(l => l.GetEnforcementOrder(id, It.IsAny<bool>()));
             mock.VerifyNoOtherCalls();
 
             result.Result.Should().BeOfType<OkObjectResult>();
             var actionResult = result.Result as OkObjectResult;
-            actionResult.Value.Should().BeOfType<EnforcementOrderDetailedResource>();
+            actionResult.Value.Should().BeOfType<EnforcementOrderItemResource>();
             actionResult.StatusCode.Should().Be(200);
         }
 
@@ -70,7 +122,7 @@ namespace Enfo.API.Tests.UnitTests
         [InlineData(27)]
         [InlineData(70789)]
         [InlineData(71715)]
-        public async Task GetDetailedByIdReturnsCorrectItem(int id)
+        public async Task GetByIdReturnsCorrectItem(int id)
         {
             var item = _orders.Single(e => e.Id == id);
 
@@ -80,10 +132,10 @@ namespace Enfo.API.Tests.UnitTests
                 .Verifiable();
             var controller = new EnforcementOrdersController(mock.Object);
 
-            var value = ((await controller.Details(id).ConfigureAwait(false))
+            var value = ((await controller.Get(id).ConfigureAwait(false))
                 .Result as OkObjectResult).Value;
 
-            var expected = new EnforcementOrderDetailedResource(item);
+            var expected = new EnforcementOrderItemResource(item);
 
             value.Should().BeEquivalentTo(expected);
         }
@@ -91,7 +143,7 @@ namespace Enfo.API.Tests.UnitTests
         [Theory]
         [InlineData(0)]
         [InlineData(-1)]
-        public async Task GetDetailedByMissingIdReturnsNotFound(int id)
+        public async Task GetByMissingIdReturnsNotFound(int id)
         {
             var mock = new Mock<IEnforcementOrderRepository>();
             mock.Setup(l => l.GetEnforcementOrder(id, It.IsAny<bool>()))
@@ -99,7 +151,7 @@ namespace Enfo.API.Tests.UnitTests
                 .Verifiable();
             var controller = new EnforcementOrdersController(mock.Object);
 
-            var result = await controller.Details(id).ConfigureAwait(false);
+            var result = await controller.Get(id).ConfigureAwait(false);
 
             result.Result.Should().BeOfType<NotFoundObjectResult>();
             result.Value.Should().BeNull();
