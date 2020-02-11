@@ -1,4 +1,5 @@
-﻿using Enfo.API.Controllers;
+﻿using Enfo.API.Classes;
+using Enfo.API.Controllers;
 using Enfo.API.Resources;
 using Enfo.Domain.Entities;
 using Enfo.Domain.Querying;
@@ -8,7 +9,6 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
@@ -64,6 +64,19 @@ namespace Enfo.API.Tests.UnitTests
                     It.IsAny<IPagination>()))
                 .ReturnsAsync(_orders.ToList())
                 .Verifiable();
+            mock.Setup(l => l.CountEnforcementOrdersAsync(
+                    It.IsAny<string>(),
+                    It.IsAny<string>(),
+                    It.IsAny<int?>(),
+                    It.IsAny<DateTime?>(),
+                    It.IsAny<DateTime?>(),
+                    It.IsAny<ActivityStatus>(),
+                    It.IsAny<PublicationStatus>(),
+                    It.IsAny<string>(),
+                    It.IsAny<string>(),
+                    It.IsAny<bool>(),
+                    It.IsAny<bool>()))
+                .Verifiable();
 
             var controller = new EnforcementOrdersController(mock.Object);
 
@@ -74,7 +87,7 @@ namespace Enfo.API.Tests.UnitTests
 
             result.Result.Should().BeOfType<OkObjectResult>();
             var actionResult = result.Result as OkObjectResult;
-            Assert.IsAssignableFrom<IEnumerable<EnforcementOrderListResource>>(actionResult.Value);
+            Assert.IsAssignableFrom<PaginatedList<EnforcementOrderListResource>>(actionResult.Value);
             actionResult.StatusCode.Should().Be(200);
         }
 

@@ -1,3 +1,4 @@
+using Enfo.API.Classes;
 using Enfo.API.Controllers;
 using Enfo.API.QueryStrings;
 using Enfo.API.Resources;
@@ -6,7 +7,6 @@ using Enfo.Domain.Entities;
 using Enfo.Infrastructure.SeedData;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
@@ -32,7 +32,7 @@ namespace Enfo.API.Tests.IntegrationTests
 
             result.Result.Should().BeOfType<OkObjectResult>();
             var actionResult = (result.Result as OkObjectResult);
-            Assert.IsAssignableFrom<IEnumerable<LegalAuthorityResource>>(actionResult.Value);
+            Assert.IsAssignableFrom<PaginatedList<LegalAuthorityResource>>(actionResult.Value);
             actionResult.StatusCode.Should().Be(200);
         }
 
@@ -42,7 +42,7 @@ namespace Enfo.API.Tests.IntegrationTests
             var repository = this.GetRepository<LegalAuthority>();
             var controller = new LegalAuthoritiesController(repository);
 
-            var items = ((await controller.Get()
+            var items = (PaginatedList<LegalAuthorityResource>)((await controller.Get()
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
             var expected = _legalAuthorities
@@ -51,7 +51,7 @@ namespace Enfo.API.Tests.IntegrationTests
                 .Take(PaginationFilter.DefaultPageSize)
                 .Select(e => new LegalAuthorityResource(e));
 
-            items.Should().BeEquivalentTo(expected);
+            items.Items.Should().BeEquivalentTo(expected);
         }
 
         [Fact]
@@ -60,7 +60,7 @@ namespace Enfo.API.Tests.IntegrationTests
             var repository = this.GetRepository<LegalAuthority>();
             var controller = new LegalAuthoritiesController(repository);
 
-            var items = ((await controller.Get(
+            var items = (PaginatedList<LegalAuthorityResource>)((await controller.Get(
                 paging: new PaginationFilter() { PageSize = 0 })
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
@@ -68,7 +68,7 @@ namespace Enfo.API.Tests.IntegrationTests
                 .Where(e => e.Active)
                 .Select(e => new LegalAuthorityResource(e));
 
-            items.Should().BeEquivalentTo(expected);
+            items.Items.Should().BeEquivalentTo(expected);
         }
 
         [Fact]
@@ -77,7 +77,7 @@ namespace Enfo.API.Tests.IntegrationTests
             var repository = this.GetRepository<LegalAuthority>();
             var controller = new LegalAuthoritiesController(repository);
 
-            var items = ((await controller.Get(
+            var items = (PaginatedList<LegalAuthorityResource>)((await controller.Get(
                 new ActiveItemFilter() { IncludeInactive = true },
                 new PaginationFilter() { PageSize = 0 })
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
@@ -85,7 +85,7 @@ namespace Enfo.API.Tests.IntegrationTests
             var expected = _legalAuthorities
                 .Select(e => new LegalAuthorityResource(e));
 
-            items.Should().BeEquivalentTo(expected);
+            items.Items.Should().BeEquivalentTo(expected);
         }
 
         [Fact]
@@ -97,7 +97,7 @@ namespace Enfo.API.Tests.IntegrationTests
             int pageSize = 3;
             int pageNumber = 1;
 
-            var items = ((await controller.Get(
+            var items = (PaginatedList<LegalAuthorityResource>)((await controller.Get(
                 paging: new PaginationFilter() { PageSize = pageSize, Page = pageNumber })
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
@@ -107,7 +107,7 @@ namespace Enfo.API.Tests.IntegrationTests
                 .Skip((pageNumber - 1) * pageSize).Take(pageSize)
                 .Select(e => new LegalAuthorityResource(e));
 
-            items.Should().BeEquivalentTo(expected);
+            items.Items.Should().BeEquivalentTo(expected);
         }
 
         [Fact]
@@ -250,7 +250,7 @@ namespace Enfo.API.Tests.IntegrationTests
             (result as BadRequestObjectResult).StatusCode.Should().Be(400);
 
             // Verify repository not changed after attempting to Post null item.
-            var resultItems = ((await controller.Get(
+            var resultItems = (PaginatedList<LegalAuthorityResource>)((await controller.Get(
                 new ActiveItemFilter() { IncludeInactive = true },
                 paging: new PaginationFilter() { PageSize = 0 })
                 .ConfigureAwait(false))
@@ -259,7 +259,7 @@ namespace Enfo.API.Tests.IntegrationTests
             var expected = _legalAuthorities
                 .Select(e => new LegalAuthorityResource(e));
 
-            resultItems.Should().BeEquivalentTo(expected);
+            resultItems.Items.Should().BeEquivalentTo(expected);
         }
 
         [Fact]

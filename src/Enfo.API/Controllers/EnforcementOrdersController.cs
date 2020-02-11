@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Enfo.API.Classes;
 using Enfo.API.QueryStrings;
 using Enfo.API.Resources;
 using Enfo.Domain.Repositories;
@@ -21,9 +22,9 @@ namespace Enfo.API.Controllers
 
         // GET: api/EnforcementOrders?params
         [HttpGet]
-        [ProducesResponseType(typeof(IEnumerable<EnforcementOrderListResource>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<IEnumerable<EnforcementOrderListResource>>> Get(
+        public async Task<ActionResult<PaginatedList<EnforcementOrderListResource>>> Get(
             [FromQuery] EnforcementOrderFilter filter = null,
             [FromQuery] PaginationFilter paging = null)
         {
@@ -45,13 +46,22 @@ namespace Enfo.API.Controllers
             // Paging
             var pagination = (paging ??= new PaginationFilter()).Pagination();
 
-            return Ok((await _repository
-                .FindEnforcementOrdersAsync(filter.FacilityFilter, filter.County,
-                    filter.LegalAuth, filter.FromDate, filter.TillDate, filter.Status,
-                    filter.PublicationStatus, filter.OrderNumber, filter.TextContains,
-                    onlyIfPublic, filter.Deleted, filter.SortOrder, pagination)
-                .ConfigureAwait(false))
-                .Select(e => new EnforcementOrderListResource(e)));
+            var countTask = _repository.CountEnforcementOrdersAsync(
+                filter.FacilityFilter, filter.County, filter.LegalAuth, filter.FromDate, filter.TillDate, filter.Status,
+                filter.PublicationStatus, filter.OrderNumber, filter.TextContains, onlyIfPublic, filter.Deleted)
+                .ConfigureAwait(false);
+
+            var itemsTask = _repository.FindEnforcementOrdersAsync(
+                filter.FacilityFilter, filter.County, filter.LegalAuth, filter.FromDate, filter.TillDate, filter.Status,
+                filter.PublicationStatus, filter.OrderNumber, filter.TextContains, onlyIfPublic, filter.Deleted,
+                filter.SortOrder, pagination)
+                .ConfigureAwait(false);
+
+            var paginatedList = (await itemsTask)
+                .Select(e => new EnforcementOrderListResource(e))
+                .GetPaginatedList(await countTask, paging);
+
+            return Ok(paginatedList);
         }
 
         // GET: api/EnforcementOrders/5
@@ -133,30 +143,24 @@ namespace Enfo.API.Controllers
 
         // GET: api/EnforcementOrders/CurrentProposed
         [HttpGet("CurrentProposed")]
-        [ProducesResponseType(typeof(IEnumerable<EnforcementOrderListResource>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<IEnumerable<EnforcementOrderListResource>>> CurrentProposed(
-            [FromQuery] PaginationFilter paging = null)
+        public async Task<ActionResult<IEnumerable<EnforcementOrderListResource>>> CurrentProposed()
         {
-            var pagination = (paging ??= new PaginationFilter()).Pagination();
-
             return Ok((await _repository
-                .FindCurrentProposedEnforcementOrders(pagination)
+                .FindCurrentProposedEnforcementOrders()
                 .ConfigureAwait(false))
                 .Select(e => new EnforcementOrderListResource(e)));
         }
 
         // GET: api/EnforcementOrders/RecentlyExecuted
         [HttpGet("RecentlyExecuted")]
-        [ProducesResponseType(typeof(IEnumerable<EnforcementOrderListResource>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<IEnumerable<EnforcementOrderListResource>>> RecentlyExecuted(
-            [FromQuery] PaginationFilter paging = null)
+        public async Task<ActionResult<IEnumerable<EnforcementOrderListResource>>> RecentlyExecuted()
         {
-            var pagination = (paging ??= new PaginationFilter()).Pagination();
-
             return Ok((await _repository
-                .FindRecentlyExecutedEnforcementOrders(pagination)
+                .FindRecentlyExecutedEnforcementOrders()
                 .ConfigureAwait(false))
                 .Select(e => new EnforcementOrderListResource(e)));
         }
@@ -164,15 +168,12 @@ namespace Enfo.API.Controllers
         // GET: api/EnforcementOrders/Draft
         //[Authorize]
         [HttpGet("Draft")]
-        [ProducesResponseType(typeof(IEnumerable<EnforcementOrderListResource>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<IEnumerable<EnforcementOrderListResource>>> Drafts(
-            [FromQuery] PaginationFilter paging = null)
+        public async Task<ActionResult<IEnumerable<EnforcementOrderListResource>>> Drafts()
         {
-            var pagination = (paging ??= new PaginationFilter()).Pagination();
-
             return Ok((await _repository
-                .FindDraftEnforcementOrders(pagination)
+                .FindDraftEnforcementOrders()
                 .ConfigureAwait(false))
                 .Select(e => new EnforcementOrderListResource(e)));
         }
@@ -180,15 +181,12 @@ namespace Enfo.API.Controllers
         // GET: api/EnforcementOrders/Pending
         //[Authorize]
         [HttpGet("Pending")]
-        [ProducesResponseType(typeof(IEnumerable<EnforcementOrderListResource>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<IEnumerable<EnforcementOrderListResource>>> Pending(
-            [FromQuery] PaginationFilter paging = null)
+        public async Task<ActionResult<IEnumerable<EnforcementOrderListResource>>> Pending()
         {
-            var pagination = (paging ??= new PaginationFilter()).Pagination();
-
             return Ok((await _repository
-                .FindPendingEnforcementOrders(pagination)
+                .FindPendingEnforcementOrders()
                 .ConfigureAwait(false))
                 .Select(e => new EnforcementOrderListResource(e)));
         }

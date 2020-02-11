@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
+using Enfo.API.Classes;
 using Enfo.API.QueryStrings;
 using Enfo.API.Resources;
 using Enfo.Domain.Entities;
@@ -25,7 +25,7 @@ namespace Enfo.API.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<IEnumerable<AddressResource>>> Get(
+        public async Task<ActionResult<PaginatedList<AddressResource>>> Get(
             [FromQuery] ActiveItemFilter filter = null,
             [FromQuery] PaginationFilter paging = null)
         {
@@ -34,9 +34,14 @@ namespace Enfo.API.Controllers
 
             var spec = new FilterByActiveItems<Address>(filter.IncludeInactive);
 
-            return Ok((await _repository.ListAsync(spec, paging.Pagination())
-                .ConfigureAwait(false))
-                .Select(e => new AddressResource(e)));
+            var countTask = _repository.CountAsync(spec).ConfigureAwait(false);
+            var itemsTask = _repository.ListAsync(spec, paging.Pagination()).ConfigureAwait(false);
+
+            var paginatedList = (await itemsTask)
+                .Select(e => new AddressResource(e))
+                .GetPaginatedList(await countTask, paging);
+
+            return Ok(paginatedList);
         }
 
         // GET: api/Addresses/5

@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
+using Enfo.API.Classes;
 using Enfo.API.QueryStrings;
 using Enfo.API.Resources;
 using Enfo.Domain.Entities;
@@ -23,9 +23,9 @@ namespace Enfo.API.Controllers
 
         // GET: api/LegalAuthorities?pageSize&page
         [HttpGet]
-        [ProducesResponseType(typeof(IEnumerable<LegalAuthorityResource>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<IEnumerable<LegalAuthorityResource>>> Get(
+        public async Task<ActionResult<PaginatedList<LegalAuthorityResource>>> Get(
             [FromQuery] ActiveItemFilter filter = null,
             [FromQuery] PaginationFilter paging = null)
         {
@@ -34,14 +34,19 @@ namespace Enfo.API.Controllers
 
             var spec = new FilterByActiveItems<LegalAuthority>(filter.IncludeInactive);
 
-            return Ok((await _repository.ListAsync(spec, paging.Pagination())
-                .ConfigureAwait(false))
-                .Select(e => new LegalAuthorityResource(e)));
+            var countTask = _repository.CountAsync(spec).ConfigureAwait(false);
+            var itemsTask = _repository.ListAsync(spec, paging.Pagination()).ConfigureAwait(false);
+
+            var paginatedList = (await itemsTask)
+                .Select(e => new LegalAuthorityResource(e))
+                .GetPaginatedList(await countTask, paging);
+
+            return Ok(paginatedList);
         }
 
         // GET: api/LegalAuthorities/5
         [HttpGet("{id}")]
-        [ProducesResponseType(typeof(LegalAuthorityResource), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<LegalAuthorityResource>> Get(
             [FromRoute] int id)
@@ -59,7 +64,7 @@ namespace Enfo.API.Controllers
         // POST: api/LegalAuthorities
         //[Authorize]
         [HttpPost]
-        [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Post(
             [FromBody] LegalAuthorityCreateResource resource)

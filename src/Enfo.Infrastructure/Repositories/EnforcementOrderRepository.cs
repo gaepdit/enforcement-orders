@@ -135,7 +135,7 @@ namespace Enfo.Infrastructure.Repositories
             return CountAsync(spec);
         }
 
-        public Task<IReadOnlyList<EnforcementOrder>> FindCurrentProposedEnforcementOrders(IPagination pagination = null)
+        public Task<IReadOnlyList<EnforcementOrder>> FindCurrentProposedEnforcementOrders()
         {
             // Current Proposed are public proposed orders 
             // (publication date in the past)
@@ -145,20 +145,20 @@ namespace Enfo.Infrastructure.Repositories
 
             var include = new EnforcementOrderIncludeLegalAuth();
 
-            return ListAsync(spec, pagination, inclusion: include);
+            return ListAsync(spec, inclusion: include);
         }
 
-        public Task<IReadOnlyList<EnforcementOrder>> FindDraftEnforcementOrders(IPagination pagination = null)
+        public Task<IReadOnlyList<EnforcementOrder>> FindDraftEnforcementOrders()
         {
             // Draft are orders with publication status set to Draft
             var spec = new FilterOrdersByPublicationStatus(PublicationStatus.Draft);
 
             var include = new EnforcementOrderIncludeLegalAuth();
 
-            return ListAsync(spec, pagination, inclusion: include);
+            return ListAsync(spec, inclusion: include);
         }
 
-        public Task<IReadOnlyList<EnforcementOrder>> FindPendingEnforcementOrders(IPagination pagination = null)
+        public Task<IReadOnlyList<EnforcementOrder>> FindPendingEnforcementOrders()
         {
             // Pending are public proposed or executed orders with 
             // publication date after the current week
@@ -169,10 +169,10 @@ namespace Enfo.Infrastructure.Repositories
 
             var include = new EnforcementOrderIncludeLegalAuth();
 
-            return ListAsync(spec, pagination, inclusion: include);
+            return ListAsync(spec, inclusion: include);
         }
 
-        public Task<IReadOnlyList<EnforcementOrder>> FindRecentlyExecutedEnforcementOrders(IPagination pagination = null)
+        public Task<IReadOnlyList<EnforcementOrder>> FindRecentlyExecutedEnforcementOrders()
         {
             // Recently Executed are public executed orders with 
             // publication date within current week
@@ -185,7 +185,7 @@ namespace Enfo.Infrastructure.Repositories
 
             var include = new EnforcementOrderIncludeLegalAuth();
 
-            return ListAsync(spec, pagination, inclusion: include);
+            return ListAsync(spec, inclusion: include);
         }
 
         public async Task<bool> OrderNumberExists(string orderNumber,

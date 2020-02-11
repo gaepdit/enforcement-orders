@@ -1,4 +1,5 @@
-﻿using Enfo.API.Controllers;
+﻿using Enfo.API.Classes;
+using Enfo.API.Controllers;
 using Enfo.API.QueryStrings;
 using Enfo.API.Resources;
 using Enfo.API.Tests.Helpers;
@@ -128,7 +129,7 @@ namespace Enfo.API.Tests.IntegrationTests
 
             // Verify repository not changed after attempting to Post 
             // duplicate order number.
-            var resultItems = ((await controller.Get(
+            var resultItems = (PaginatedList<EnforcementOrderListResource>)((await controller.Get(
                 paging: new PaginationFilter() { PageSize = 0 })
                 .ConfigureAwait(false))
                 .Result as OkObjectResult).Value;
@@ -137,7 +138,7 @@ namespace Enfo.API.Tests.IntegrationTests
                 .Where(e => !e.Deleted)
                 .Select(e => new EnforcementOrderListResource(e));
 
-            resultItems.Should().BeEquivalentTo(expected);
+            resultItems.Items.Should().BeEquivalentTo(expected);
         }
 
         [Fact]
@@ -176,7 +177,7 @@ namespace Enfo.API.Tests.IntegrationTests
 
             // Verify repository not changed after attempting to Post 
             // duplicate order number.
-            var resultItems = ((await controller.Get(
+            var resultItems = (PaginatedList<EnforcementOrderListResource>)((await controller.Get(
                 paging: new PaginationFilter() { PageSize = 0 })
                 .ConfigureAwait(false))
                 .Result as OkObjectResult).Value;
@@ -185,7 +186,7 @@ namespace Enfo.API.Tests.IntegrationTests
                 .Where(e => !e.Deleted)
                 .Select(e => new EnforcementOrderListResource(e));
 
-            resultItems.Should().BeEquivalentTo(expected);
+            resultItems.Items.Should().BeEquivalentTo(expected);
         }
 
         [Fact]
@@ -200,7 +201,7 @@ namespace Enfo.API.Tests.IntegrationTests
             (result as BadRequestObjectResult).StatusCode.Should().Be(400);
 
             // Verify repository not changed after attempting to Post null item.
-            var resultItems = ((await controller.Get(
+            var resultItems = (PaginatedList<EnforcementOrderListResource>)((await controller.Get(
                 paging: new PaginationFilter() { PageSize = 0 })
                 .ConfigureAwait(false))
                 .Result as OkObjectResult).Value;
@@ -209,7 +210,7 @@ namespace Enfo.API.Tests.IntegrationTests
                 .Where(e => !e.Deleted)
                 .Select(e => new EnforcementOrderListResource(e));
 
-            resultItems.Should().BeEquivalentTo(expected);
+            resultItems.Items.Should().BeEquivalentTo(expected);
         }
 
         [Fact]

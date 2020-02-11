@@ -43,17 +43,13 @@ namespace Enfo.Domain.Repositories
             bool onlyIfPublic,
             bool Deleted);
 
-        Task<IReadOnlyList<EnforcementOrder>> FindCurrentProposedEnforcementOrders(
-            IPagination pagination = null);
+        Task<IReadOnlyList<EnforcementOrder>> FindCurrentProposedEnforcementOrders();
 
-        Task<IReadOnlyList<EnforcementOrder>> FindDraftEnforcementOrders(
-            IPagination pagination = null);
+        Task<IReadOnlyList<EnforcementOrder>> FindDraftEnforcementOrders();
 
-        Task<IReadOnlyList<EnforcementOrder>> FindPendingEnforcementOrders(
-            IPagination pagination = null);
+        Task<IReadOnlyList<EnforcementOrder>> FindPendingEnforcementOrders();
 
-        Task<IReadOnlyList<EnforcementOrder>> FindRecentlyExecutedEnforcementOrders(
-            IPagination pagination = null);
+        Task<IReadOnlyList<EnforcementOrder>> FindRecentlyExecutedEnforcementOrders();
 
         Task<bool> OrderNumberExists(
             string orderNumber,

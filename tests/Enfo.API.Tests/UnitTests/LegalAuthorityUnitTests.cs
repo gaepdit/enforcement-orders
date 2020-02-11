@@ -1,3 +1,4 @@
+using Enfo.API.Classes;
 using Enfo.API.Controllers;
 using Enfo.API.Resources;
 using Enfo.Domain.Entities;
@@ -34,6 +35,8 @@ namespace Enfo.API.Tests.UnitTests
                     null))
                 .ReturnsAsync(_legalAuthorities.ToList())
                 .Verifiable();
+            mock.Setup(l => l.CountAsync(It.IsAny<ISpecification<LegalAuthority>>()))
+                .Verifiable();
 
             var controller = new LegalAuthoritiesController(mock.Object);
 
@@ -44,7 +47,7 @@ namespace Enfo.API.Tests.UnitTests
 
             result.Result.Should().BeOfType<OkObjectResult>();
             var actionResult = result.Result as OkObjectResult;
-            Assert.IsAssignableFrom<IEnumerable<LegalAuthorityResource>>(actionResult.Value);
+            Assert.IsAssignableFrom<PaginatedList<LegalAuthorityResource>>(actionResult.Value);
             actionResult.StatusCode.Should().Be(200);
         }
 
@@ -61,6 +64,8 @@ namespace Enfo.API.Tests.UnitTests
                     null))
                 .ReturnsAsync(emptyList)
                 .Verifiable();
+            mock.Setup(l => l.CountAsync(It.IsAny<ISpecification<LegalAuthority>>()))
+                .Verifiable();
 
             var controller = new LegalAuthoritiesController(mock.Object);
 
@@ -71,7 +76,7 @@ namespace Enfo.API.Tests.UnitTests
 
             result.Result.Should().BeOfType<OkObjectResult>();
             var actionResult = result.Result as OkObjectResult;
-            Assert.IsAssignableFrom<IEnumerable<LegalAuthorityResource>>(actionResult.Value);
+            Assert.IsAssignableFrom<PaginatedList<LegalAuthorityResource>>(actionResult.Value);
             actionResult.StatusCode.Should().Be(200);
         }
 

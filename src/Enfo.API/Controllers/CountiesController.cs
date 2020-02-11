@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
+using Enfo.API.Classes;
 using Enfo.API.QueryStrings;
 using Enfo.API.Resources;
 using Enfo.Domain.Entities;
@@ -21,20 +21,26 @@ namespace Enfo.API.Controllers
 
         // GET: api/Counties?pageSize&page
         [HttpGet]
-        [ProducesResponseType(typeof(IEnumerable<CountyResource>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<IEnumerable<CountyResource>>> Get(
+        public async Task<ActionResult<PaginatedList<CountyResource>>> Get(
             [FromQuery] PaginationFilter paging = null)
         {
             paging ??= new PaginationFilter();
-            return Ok((await _repository.ListAsync(pagination: paging.Pagination())
-                .ConfigureAwait(false))
-                .Select(e => new CountyResource(e)));
+
+            var countTask = _repository.CountAsync().ConfigureAwait(false);
+            var itemsTask = _repository.ListAsync(pagination: paging.Pagination()).ConfigureAwait(false);
+
+            var paginatedList = (await itemsTask)
+                .Select(e => new CountyResource(e))
+                .GetPaginatedList(await countTask, paging);
+
+            return Ok(paginatedList);
         }
 
         // GET: api/Counties/{id}
         [HttpGet("{id}")]
-        [ProducesResponseType(typeof(CountyResource), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<CountyResource>> Get(
             [FromRoute] int id)

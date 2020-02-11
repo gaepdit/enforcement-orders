@@ -1,7 +1,6 @@
-using Enfo.API.Controllers;
+﻿using Enfo.API.Controllers;
 using Enfo.API.Resources;
 using Enfo.Domain.Entities;
-using Enfo.Domain.Querying;
 using Enfo.Domain.Repositories;
 using Enfo.Infrastructure.SeedData;
 using FluentAssertions;
@@ -79,8 +78,7 @@ namespace Enfo.API.Tests.IntegrationTests
         public async Task GetCurrentProposedReturnsCorrectItems()
         {
             var mock = new Mock<IEnforcementOrderRepository>();
-            mock.Setup(l => l.FindCurrentProposedEnforcementOrders(
-                    It.IsAny<IPagination>()))
+            mock.Setup(l => l.FindCurrentProposedEnforcementOrders())
                 .ReturnsAsync(_orders.ToList());
 
             var controller = new EnforcementOrdersController(mock.Object);
@@ -97,8 +95,7 @@ namespace Enfo.API.Tests.IntegrationTests
         public async Task GetRecentlyExecutedReturnsCorrectItems()
         {
             var mock = new Mock<IEnforcementOrderRepository>();
-            mock.Setup(l => l.FindRecentlyExecutedEnforcementOrders(
-                    It.IsAny<IPagination>()))
+            mock.Setup(l => l.FindRecentlyExecutedEnforcementOrders())
                 .ReturnsAsync(_orders.ToList());
 
             var controller = new EnforcementOrdersController(mock.Object);
@@ -115,8 +112,7 @@ namespace Enfo.API.Tests.IntegrationTests
         public async Task GetDraftsReturnsCorrectItems()
         {
             var mock = new Mock<IEnforcementOrderRepository>();
-            mock.Setup(l => l.FindDraftEnforcementOrders(
-                    It.IsAny<IPagination>()))
+            mock.Setup(l => l.FindDraftEnforcementOrders())
                 .ReturnsAsync(_orders.ToList());
 
             var controller = new EnforcementOrdersController(mock.Object);
@@ -133,8 +129,7 @@ namespace Enfo.API.Tests.IntegrationTests
         public async Task GetPendingReturnsCorrectItems()
         {
             var mock = new Mock<IEnforcementOrderRepository>();
-            mock.Setup(l => l.FindPendingEnforcementOrders(
-                    It.IsAny<IPagination>()))
+            mock.Setup(l => l.FindPendingEnforcementOrders())
                 .ReturnsAsync(_orders.ToList());
 
             var controller = new EnforcementOrdersController(mock.Object);

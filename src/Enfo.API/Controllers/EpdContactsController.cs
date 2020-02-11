@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
+using Enfo.API.Classes;
 using Enfo.API.QueryStrings;
 using Enfo.API.Resources;
 using Enfo.Domain.Entities;
@@ -23,9 +23,9 @@ namespace Enfo.API.Controllers
 
         // GET: api/EpdContacts?pageSize&page
         [HttpGet]
-        [ProducesResponseType(typeof(IEnumerable<EpdContactResource>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<IEnumerable<EpdContactResource>>> Get(
+        public async Task<ActionResult<PaginatedList<EpdContactResource>>> Get(
             [FromQuery] ActiveItemFilter filter = null,
             [FromQuery] PaginationFilter paging = null)
         {
@@ -36,14 +36,19 @@ namespace Enfo.API.Controllers
             var pagination = paging.Pagination();
             var include = new EpdContactIncludingAddress();
 
-            return Ok((await _repository.ListAsync(spec, pagination, inclusion: include)
-                .ConfigureAwait(false))
-                .Select(e => new EpdContactResource(e)));
+            var countTask = _repository.CountAsync(spec).ConfigureAwait(false);
+            var itemsTask = _repository.ListAsync(spec, pagination, inclusion: include).ConfigureAwait(false);
+
+            var paginatedList = (await itemsTask)
+                .Select(e => new EpdContactResource(e))
+                .GetPaginatedList(await countTask, paging);
+
+            return Ok(paginatedList);
         }
 
         // GET: api/EpdContacts/5
         [HttpGet("{id}", Name = "Get")]
-        [ProducesResponseType(typeof(EpdContactResource), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<EpdContactResource>> Get(
             [FromRoute] int id)
@@ -63,7 +68,7 @@ namespace Enfo.API.Controllers
         // POST: api/EpdContacts
         //[Authorize]
         [HttpPost]
-        [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Post(
             [FromBody] EpdContactCreateResource resource)

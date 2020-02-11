@@ -1,3 +1,4 @@
+using Enfo.API.Classes;
 using Enfo.API.Controllers;
 using Enfo.API.QueryStrings;
 using Enfo.API.Resources;
@@ -7,7 +8,6 @@ using Enfo.Domain.Querying;
 using Enfo.Infrastructure.SeedData;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
@@ -41,7 +41,7 @@ namespace Enfo.API.Tests.IntegrationTests
 
             result.Result.Should().BeOfType<OkObjectResult>();
             var actionResult = (result.Result as OkObjectResult);
-            Assert.IsAssignableFrom<IEnumerable<EpdContactResource>>(actionResult.Value);
+            Assert.IsAssignableFrom<PaginatedList<EpdContactResource>>(actionResult.Value);
             actionResult.StatusCode.Should().Be(200);
         }
 
@@ -51,7 +51,7 @@ namespace Enfo.API.Tests.IntegrationTests
             var repository = this.GetRepository<EpdContact>();
             var controller = new EpdContactsController(repository);
 
-            var items = ((await controller.Get()
+            var items = (PaginatedList<EpdContactResource>)((await controller.Get()
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
             var expected = _epdContacts
@@ -60,7 +60,7 @@ namespace Enfo.API.Tests.IntegrationTests
                 .Take(PaginationFilter.DefaultPageSize)
                 .Select(e => new EpdContactResource(e));
 
-            items.Should().BeEquivalentTo(expected);
+            items.Items.Should().BeEquivalentTo(expected);
         }
 
         [Fact]
@@ -69,7 +69,7 @@ namespace Enfo.API.Tests.IntegrationTests
             var repository = this.GetRepository<EpdContact>();
             var controller = new EpdContactsController(repository);
 
-            var items = ((await controller.Get(
+            var items = (PaginatedList<EpdContactResource>)((await controller.Get(
                 paging: new PaginationFilter() { PageSize = 0 })
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
@@ -77,7 +77,7 @@ namespace Enfo.API.Tests.IntegrationTests
                 .Where(e => e.Active)
                 .Select(e => new EpdContactResource(e));
 
-            items.Should().BeEquivalentTo(expected);
+            items.Items.Should().BeEquivalentTo(expected);
         }
 
         [Fact]
@@ -86,7 +86,7 @@ namespace Enfo.API.Tests.IntegrationTests
             var repository = this.GetRepository<EpdContact>();
             var controller = new EpdContactsController(repository);
 
-            var items = ((await controller.Get(
+            var items = (PaginatedList<EpdContactResource>)((await controller.Get(
                 new ActiveItemFilter() { IncludeInactive = true },
                 new PaginationFilter() { PageSize = 0 })
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
@@ -94,7 +94,7 @@ namespace Enfo.API.Tests.IntegrationTests
             var expected = _epdContacts
                 .Select(e => new EpdContactResource(e));
 
-            items.Should().BeEquivalentTo(expected);
+            items.Items.Should().BeEquivalentTo(expected);
         }
 
         [Fact]
@@ -106,7 +106,7 @@ namespace Enfo.API.Tests.IntegrationTests
             int pageSize = 3;
             int pageNumber = 2;
 
-            var items = ((await controller.Get(
+            var items = (PaginatedList<EpdContactResource>)((await controller.Get(
                 paging: new PaginationFilter() { PageSize = pageSize, Page = pageNumber })
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
@@ -116,7 +116,7 @@ namespace Enfo.API.Tests.IntegrationTests
                 .Skip((pageNumber - 1) * pageSize).Take(pageSize)
                 .Select(e => new EpdContactResource(e));
 
-            items.Should().BeEquivalentTo(expected);
+            items.Items.Should().BeEquivalentTo(expected);
         }
 
         [Fact]
@@ -271,7 +271,7 @@ namespace Enfo.API.Tests.IntegrationTests
             (result as BadRequestObjectResult).StatusCode.Should().Be(400);
 
             // Verify repository not changed after attempting to Post null item.
-            var resultItems = ((await controller.Get(
+            var resultItems = (PaginatedList<EpdContactResource>)((await controller.Get(
                 new ActiveItemFilter() { IncludeInactive = true },
                 new PaginationFilter() { PageSize = 0 })
                 .ConfigureAwait(false))
@@ -280,7 +280,7 @@ namespace Enfo.API.Tests.IntegrationTests
             var expected = _epdContacts
                 .Select(e => new EpdContactResource(e));
 
-            resultItems.Should().BeEquivalentTo(expected);
+            resultItems.Items.Should().BeEquivalentTo(expected);
         }
 
         [Fact]

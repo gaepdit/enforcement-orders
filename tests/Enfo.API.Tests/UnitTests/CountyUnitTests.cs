@@ -1,3 +1,4 @@
+using Enfo.API.Classes;
 using Enfo.API.Controllers;
 using Enfo.API.Resources;
 using Enfo.Domain.Entities;
@@ -35,6 +36,8 @@ namespace Enfo.API.Tests.UnitTests
                     null))
                 .ReturnsAsync(_counties.ToList())
                 .Verifiable();
+            mock.Setup(l => l.CountAsync(It.IsAny<ISpecification<County>>()))
+                .Verifiable();
 
             var controller = new CountiesController(mock.Object);
 
@@ -45,7 +48,7 @@ namespace Enfo.API.Tests.UnitTests
 
             result.Result.Should().BeOfType<OkObjectResult>();
             var actionResult = result.Result as OkObjectResult;
-            Assert.IsAssignableFrom<IEnumerable<CountyResource>>(actionResult.Value);
+            Assert.IsAssignableFrom<PaginatedList<CountyResource>>(actionResult.Value);
             actionResult.StatusCode.Should().Be(200);
         }
 
@@ -63,6 +66,8 @@ namespace Enfo.API.Tests.UnitTests
                     null))
                 .ReturnsAsync(emptyList)
                 .Verifiable();
+            mock.Setup(l => l.CountAsync(It.IsAny<ISpecification<County>>()))
+                .Verifiable();
 
             var controller = new CountiesController(mock.Object);
 
@@ -73,7 +78,7 @@ namespace Enfo.API.Tests.UnitTests
 
             result.Result.Should().BeOfType<OkObjectResult>();
             var actionResult = result.Result as OkObjectResult;
-            Assert.IsAssignableFrom<IEnumerable<CountyResource>>(actionResult.Value);
+            Assert.IsAssignableFrom<PaginatedList<CountyResource>>(actionResult.Value);
             actionResult.StatusCode.Should().Be(200);
         }
 

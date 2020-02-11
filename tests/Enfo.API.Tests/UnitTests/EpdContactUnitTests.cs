@@ -1,3 +1,4 @@
+using Enfo.API.Classes;
 using Enfo.API.Controllers;
 using Enfo.API.Resources;
 using Enfo.Domain.Entities;
@@ -43,6 +44,8 @@ namespace Enfo.API.Tests.UnitTests
                     It.IsAny<IInclusion<EpdContact>>()))
                 .ReturnsAsync(_epdContacts.ToList())
                 .Verifiable();
+            mock.Setup(l => l.CountAsync(It.IsAny<ISpecification<EpdContact>>()))
+                .Verifiable();
 
             var controller = new EpdContactsController(mock.Object);
 
@@ -53,7 +56,7 @@ namespace Enfo.API.Tests.UnitTests
 
             result.Result.Should().BeOfType<OkObjectResult>();
             var actionResult = result.Result as OkObjectResult;
-            Assert.IsAssignableFrom<IEnumerable<EpdContactResource>>(actionResult.Value);
+            Assert.IsAssignableFrom<PaginatedList<EpdContactResource>>(actionResult.Value);
             actionResult.StatusCode.Should().Be(200);
         }
 
@@ -71,6 +74,8 @@ namespace Enfo.API.Tests.UnitTests
                     It.IsAny<IInclusion<EpdContact>>()))
                 .ReturnsAsync(emptyList)
                 .Verifiable();
+            mock.Setup(l => l.CountAsync(It.IsAny<ISpecification<EpdContact>>()))
+                .Verifiable();
 
             var controller = new EpdContactsController(mock.Object);
 
@@ -81,7 +86,7 @@ namespace Enfo.API.Tests.UnitTests
 
             result.Result.Should().BeOfType<OkObjectResult>();
             var actionResult = result.Result as OkObjectResult;
-            Assert.IsAssignableFrom<IEnumerable<EpdContactResource>>(actionResult.Value);
+            Assert.IsAssignableFrom<PaginatedList<EpdContactResource>>(actionResult.Value);
             actionResult.StatusCode.Should().Be(200);
         }
 
