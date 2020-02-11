@@ -29,10 +29,10 @@ namespace Enfo.API.Tests.UnitTests
             var mock = new Mock<IReadableRepository<County>>();
 
             mock.Setup(l => l.ListAsync(
-                It.IsAny<ISpecification<County>>(),
-                It.IsAny<IPagination>(),
-                null,
-                null))
+                    It.IsAny<ISpecification<County>>(),
+                    It.IsAny<IPagination>(),
+                    null,
+                    null))
                 .ReturnsAsync(_counties.ToList())
                 .Verifiable();
 
@@ -40,11 +40,7 @@ namespace Enfo.API.Tests.UnitTests
 
             var result = await controller.Get().ConfigureAwait(false);
 
-            mock.Verify(l => l.ListAsync(
-                It.IsAny<ISpecification<County>>(),
-                It.IsAny<IPagination>(),
-                null,
-                null));
+            mock.Verify();
             mock.VerifyNoOtherCalls();
 
             result.Result.Should().BeOfType<OkObjectResult>();
@@ -61,10 +57,10 @@ namespace Enfo.API.Tests.UnitTests
             var mock = new Mock<IWritableRepository<County>>();
 
             mock.Setup(l => l.ListAsync(
-                It.IsAny<ISpecification<County>>(),
-                It.IsAny<IPagination>(),
-                null,
-                null))
+                    It.IsAny<ISpecification<County>>(),
+                    It.IsAny<IPagination>(),
+                    null,
+                    null))
                 .ReturnsAsync(emptyList)
                 .Verifiable();
 
@@ -72,11 +68,7 @@ namespace Enfo.API.Tests.UnitTests
 
             var result = await controller.Get().ConfigureAwait(false);
 
-            mock.Verify(l => l.ListAsync(
-                It.IsAny<ISpecification<County>>(),
-                It.IsAny<IPagination>(),
-                null,
-                null));
+            mock.Verify();
             mock.VerifyNoOtherCalls();
 
             result.Result.Should().BeOfType<OkObjectResult>();
@@ -100,7 +92,7 @@ namespace Enfo.API.Tests.UnitTests
 
             var result = await controller.Get(id).ConfigureAwait(false);
 
-            mock.Verify(l => l.GetByIdAsync(id, null, null));
+            mock.Verify();
             mock.VerifyNoOtherCalls();
 
             result.Result.Should().BeOfType<OkObjectResult>();

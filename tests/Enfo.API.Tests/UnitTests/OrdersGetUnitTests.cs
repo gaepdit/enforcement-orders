@@ -49,20 +49,19 @@ namespace Enfo.API.Tests.UnitTests
         {
             var mock = new Mock<IEnforcementOrderRepository>();
             mock.Setup(l => l.FindEnforcementOrdersAsync(
-                It.IsAny<string>(),
-                It.IsAny<string>(),
-                It.IsAny<int?>(),
-                It.IsAny<DateTime?>(),
-                It.IsAny<DateTime?>(),
-                It.IsAny<ActivityStatus>(),
-                It.IsAny<PublicationStatus>(),
-                It.IsAny<string>(),
-                It.IsAny<string>(),
-                It.IsAny<bool>(),
-                It.IsAny<bool>(),
-                It.IsAny<EnforcementOrderSorting>(),
-                It.IsAny<IPagination>()
-                ))
+                    It.IsAny<string>(),
+                    It.IsAny<string>(),
+                    It.IsAny<int?>(),
+                    It.IsAny<DateTime?>(),
+                    It.IsAny<DateTime?>(),
+                    It.IsAny<ActivityStatus>(),
+                    It.IsAny<PublicationStatus>(),
+                    It.IsAny<string>(),
+                    It.IsAny<string>(),
+                    It.IsAny<bool>(),
+                    It.IsAny<bool>(),
+                    It.IsAny<EnforcementOrderSorting>(),
+                    It.IsAny<IPagination>()))
                 .ReturnsAsync(_orders.ToList())
                 .Verifiable();
 
@@ -70,21 +69,7 @@ namespace Enfo.API.Tests.UnitTests
 
             var result = await controller.Get().ConfigureAwait(false);
 
-            mock.Verify(l => l.FindEnforcementOrdersAsync(
-                It.IsAny<string>(),
-                It.IsAny<string>(),
-                It.IsAny<int?>(),
-                It.IsAny<DateTime?>(),
-                It.IsAny<DateTime?>(),
-                It.IsAny<ActivityStatus>(),
-                It.IsAny<PublicationStatus>(),
-                It.IsAny<string>(),
-                It.IsAny<string>(),
-                It.IsAny<bool>(),
-                It.IsAny<bool>(),
-                It.IsAny<EnforcementOrderSorting>(),
-                It.IsAny<IPagination>()
-                ));
+            mock.Verify();
             mock.VerifyNoOtherCalls();
 
             result.Result.Should().BeOfType<OkObjectResult>();
@@ -108,7 +93,7 @@ namespace Enfo.API.Tests.UnitTests
 
             var result = await controller.Get(id).ConfigureAwait(false);
 
-            mock.Verify(l => l.GetEnforcementOrder(id, It.IsAny<bool>()));
+            mock.Verify();
             mock.VerifyNoOtherCalls();
 
             result.Result.Should().BeOfType<OkObjectResult>();
@@ -128,8 +113,8 @@ namespace Enfo.API.Tests.UnitTests
 
             var mock = new Mock<IEnforcementOrderRepository>();
             mock.Setup(l => l.GetEnforcementOrder(id, It.IsAny<bool>()))
-                .ReturnsAsync(item)
-                .Verifiable();
+                .ReturnsAsync(item);
+
             var controller = new EnforcementOrdersController(mock.Object);
 
             var value = ((await controller.Get(id).ConfigureAwait(false))
@@ -147,8 +132,8 @@ namespace Enfo.API.Tests.UnitTests
         {
             var mock = new Mock<IEnforcementOrderRepository>();
             mock.Setup(l => l.GetEnforcementOrder(id, It.IsAny<bool>()))
-                .ReturnsAsync((EnforcementOrder)null)
-                .Verifiable();
+                .ReturnsAsync((EnforcementOrder)null);
+
             var controller = new EnforcementOrdersController(mock.Object);
 
             var result = await controller.Get(id).ConfigureAwait(false);

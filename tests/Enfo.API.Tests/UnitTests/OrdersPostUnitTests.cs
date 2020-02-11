@@ -1,7 +1,5 @@
 ﻿using Enfo.API.Controllers;
-using Enfo.API.QueryStrings;
 using Enfo.API.Resources;
-using Enfo.API.Tests.Helpers;
 using Enfo.Domain.Entities;
 using Enfo.Domain.Querying;
 using Enfo.Domain.Repositories;
@@ -60,26 +58,25 @@ namespace Enfo.API.Tests.IntegrationTests
             mock.Setup(l => l.OrderNumberExists(item.OrderNumber, -1))
                 .ReturnsAsync(false);
             mock.Setup(l => l.CreateEnforcementOrderAsync(
-                It.IsAny<NewEnforcementOrderType>(),
-                It.IsAny<string>(),
-                It.IsAny<int?>(),
-                It.IsAny<DateTime?>(),
-                It.IsAny<string>(),
-                It.IsAny<string>(),
-                It.IsAny<DateTime?>(),
-                It.IsAny<DateTime?>(),
-                It.IsAny<DateTime?>(),
-                It.IsAny<int?>(),
-                It.IsAny<DateTime?>(),
-                It.IsAny<string>(),
-                It.IsAny<bool>(),
-                It.IsAny<int>(),
-                It.IsAny<string>(),
-                It.IsAny<DateTime?>(),
-                It.IsAny<PublicationState>(),
-                It.IsAny<string>(),
-                It.IsAny<decimal?>()
-                ))
+                    It.IsAny<NewEnforcementOrderType>(),
+                    It.IsAny<string>(),
+                    It.IsAny<int?>(),
+                    It.IsAny<DateTime?>(),
+                    It.IsAny<string>(),
+                    It.IsAny<string>(),
+                    It.IsAny<DateTime?>(),
+                    It.IsAny<DateTime?>(),
+                    It.IsAny<DateTime?>(),
+                    It.IsAny<int?>(),
+                    It.IsAny<DateTime?>(),
+                    It.IsAny<string>(),
+                    It.IsAny<bool>(),
+                    It.IsAny<int>(),
+                    It.IsAny<string>(),
+                    It.IsAny<DateTime?>(),
+                    It.IsAny<PublicationState>(),
+                    It.IsAny<string>(),
+                    It.IsAny<decimal?>()))
                 .ReturnsAsync(new CreateEntityResult<EnforcementOrder>(item.NewEnforcementOrder()));
 
             var controller = new EnforcementOrdersController(mock.Object);
@@ -109,26 +106,25 @@ namespace Enfo.API.Tests.IntegrationTests
 
             var mock = new Mock<IEnforcementOrderRepository>();
             mock.Setup(l => l.CreateEnforcementOrderAsync(
-                It.IsAny<NewEnforcementOrderType>(),
-                It.IsAny<string>(),
-                It.IsAny<int?>(),
-                It.IsAny<DateTime?>(),
-                It.IsAny<string>(),
-                It.IsAny<string>(),
-                It.IsAny<DateTime?>(),
-                It.IsAny<DateTime?>(),
-                It.IsAny<DateTime?>(),
-                It.IsAny<int?>(),
-                It.IsAny<DateTime?>(),
-                It.IsAny<string>(),
-                It.IsAny<bool>(),
-                It.IsAny<int>(),
-                It.IsAny<string>(),
-                It.IsAny<DateTime?>(),
-                It.IsAny<PublicationState>(),
-                It.IsAny<string>(),
-                It.IsAny<decimal?>()
-                ))
+                    It.IsAny<NewEnforcementOrderType>(),
+                    It.IsAny<string>(),
+                    It.IsAny<int?>(),
+                    It.IsAny<DateTime?>(),
+                    It.IsAny<string>(),
+                    It.IsAny<string>(),
+                    It.IsAny<DateTime?>(),
+                    It.IsAny<DateTime?>(),
+                    It.IsAny<DateTime?>(),
+                    It.IsAny<int?>(),
+                    It.IsAny<DateTime?>(),
+                    It.IsAny<string>(),
+                    It.IsAny<bool>(),
+                    It.IsAny<int>(),
+                    It.IsAny<string>(),
+                    It.IsAny<DateTime?>(),
+                    It.IsAny<PublicationState>(),
+                    It.IsAny<string>(),
+                    It.IsAny<decimal?>()))
                 .ReturnsAsync(createResult);
 
             var controller = new EnforcementOrdersController(mock.Object);
@@ -184,31 +180,30 @@ namespace Enfo.API.Tests.IntegrationTests
 
             var mock = new Mock<IEnforcementOrderRepository>();
             mock.Setup(l => l.IdExists(
-                id,
-                It.IsAny<ISpecification<EnforcementOrder>>()))
+                    id,
+                    It.IsAny<ISpecification<EnforcementOrder>>()))
                 .ReturnsAsync(true);
             mock.Setup(l => l.UpdateEnforcementOrderAsync(
-                It.IsAny<int>(),
-                It.IsAny<string>(),
-                It.IsAny<int?>(),
-                It.IsAny<DateTime?>(),
-                It.IsAny<string>(),
-                It.IsAny<string>(),
-                It.IsAny<DateTime?>(),
-                It.IsAny<DateTime?>(),
-                It.IsAny<DateTime?>(),
-                It.IsAny<int?>(),
-                It.IsAny<DateTime?>(),
-                It.IsAny<string>(),
-                It.IsAny<bool>(),
-                It.IsAny<bool>(),
-                It.IsAny<int>(),
-                It.IsAny<string>(),
-                It.IsAny<DateTime?>(),
-                It.IsAny<PublicationState>(),
-                It.IsAny<string>(),
-                It.IsAny<decimal?>()
-                ))
+                    It.IsAny<int>(),
+                    It.IsAny<string>(),
+                    It.IsAny<int?>(),
+                    It.IsAny<DateTime?>(),
+                    It.IsAny<string>(),
+                    It.IsAny<string>(),
+                    It.IsAny<DateTime?>(),
+                    It.IsAny<DateTime?>(),
+                    It.IsAny<DateTime?>(),
+                    It.IsAny<int?>(),
+                    It.IsAny<DateTime?>(),
+                    It.IsAny<string>(),
+                    It.IsAny<bool>(),
+                    It.IsAny<bool>(),
+                    It.IsAny<int>(),
+                    It.IsAny<string>(),
+                    It.IsAny<DateTime?>(),
+                    It.IsAny<PublicationState>(),
+                    It.IsAny<string>(),
+                    It.IsAny<decimal?>()))
                 .ReturnsAsync(new UpdateEntityResult());
 
             var controller = new EnforcementOrdersController(mock.Object);
@@ -262,10 +257,9 @@ namespace Enfo.API.Tests.IntegrationTests
             };
 
             var mock = new Mock<IEnforcementOrderRepository>();
-
             mock.Setup(l => l.IdExists(
-                id,
-                It.IsAny<ISpecification<EnforcementOrder>>()))
+                    id,
+                    It.IsAny<ISpecification<EnforcementOrder>>()))
                 .ReturnsAsync(false);
 
             var controller = new EnforcementOrdersController(mock.Object);
@@ -310,37 +304,34 @@ namespace Enfo.API.Tests.IntegrationTests
             updateResult.AddErrorMessage("OrderNumber", "An Order with the same number already exists.");
 
             var mock = new Mock<IEnforcementOrderRepository>();
-
             mock.Setup(l => l.IdExists(
-                id,
-                It.IsAny<ISpecification<EnforcementOrder>>()))
+                    id,
+                    It.IsAny<ISpecification<EnforcementOrder>>()))
                 .ReturnsAsync(true);
 
             mock.Setup(l => l.OrderNumberExists(target.OrderNumber, id))
                 .ReturnsAsync(false);
-
             mock.Setup(l => l.UpdateEnforcementOrderAsync(
-                id,
-                It.IsAny<string>(),
-                It.IsAny<int?>(),
-                It.IsAny<DateTime?>(),
-                It.IsAny<string>(),
-                It.IsAny<string>(),
-                It.IsAny<DateTime?>(),
-                It.IsAny<DateTime?>(),
-                It.IsAny<DateTime?>(),
-                It.IsAny<int?>(),
-                It.IsAny<DateTime?>(),
-                It.IsAny<string>(),
-                It.IsAny<bool>(),
-                It.IsAny<bool>(),
-                It.IsAny<int>(),
-                It.IsAny<string>(),
-                It.IsAny<DateTime?>(),
-                It.IsAny<PublicationState>(),
-                It.IsAny<string>(),
-                It.IsAny<decimal?>()
-                ))
+                    id,
+                    It.IsAny<string>(),
+                    It.IsAny<int?>(),
+                    It.IsAny<DateTime?>(),
+                    It.IsAny<string>(),
+                    It.IsAny<string>(),
+                    It.IsAny<DateTime?>(),
+                    It.IsAny<DateTime?>(),
+                    It.IsAny<DateTime?>(),
+                    It.IsAny<int?>(),
+                    It.IsAny<DateTime?>(),
+                    It.IsAny<string>(),
+                    It.IsAny<bool>(),
+                    It.IsAny<bool>(),
+                    It.IsAny<int>(),
+                    It.IsAny<string>(),
+                    It.IsAny<DateTime?>(),
+                    It.IsAny<PublicationState>(),
+                    It.IsAny<string>(),
+                    It.IsAny<decimal?>()))
                 .ReturnsAsync(updateResult);
 
             var controller = new EnforcementOrdersController(mock.Object);
@@ -370,7 +361,6 @@ namespace Enfo.API.Tests.IntegrationTests
             };
 
             var mock = new Mock<IEnforcementOrderRepository>();
-
             mock.Setup(l => l.GetByIdAsync(id, null, null))
                 .ReturnsAsync(item);
 
@@ -400,10 +390,8 @@ namespace Enfo.API.Tests.IntegrationTests
             };
 
             var mock = new Mock<IEnforcementOrderRepository>();
-
             mock.Setup(l => l.GetByIdAsync(id, null, null))
                 .ReturnsAsync(item);
-
             mock.Setup(l => l.CompleteAsync())
                 .ReturnsAsync(1);
 
@@ -433,7 +421,6 @@ namespace Enfo.API.Tests.IntegrationTests
             };
 
             var mock = new Mock<IEnforcementOrderRepository>();
-
             mock.Setup(l => l.GetByIdAsync(id, null, null))
                 .ReturnsAsync(item);
 
@@ -463,7 +450,6 @@ namespace Enfo.API.Tests.IntegrationTests
             };
 
             var mock = new Mock<IEnforcementOrderRepository>();
-
             mock.Setup(l => l.GetByIdAsync(id, null, null))
                 .ReturnsAsync(item);
 
@@ -482,7 +468,6 @@ namespace Enfo.API.Tests.IntegrationTests
             int id = -1;
 
             var mock = new Mock<IEnforcementOrderRepository>();
-
             mock.Setup(l => l.GetByIdAsync(id, null, null))
                 .ReturnsAsync((EnforcementOrder)null);
 
@@ -500,7 +485,6 @@ namespace Enfo.API.Tests.IntegrationTests
             int id = -1;
 
             var mock = new Mock<IEnforcementOrderRepository>();
-
             mock.Setup(l => l.GetByIdAsync(id, null, null))
                 .ReturnsAsync((EnforcementOrder)null);
 

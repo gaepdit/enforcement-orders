@@ -27,12 +27,11 @@ namespace Enfo.API.Tests.UnitTests
         public async Task GetReturnsCorrectly()
         {
             var mock = new Mock<IWritableRepository<Address>>();
-
             mock.Setup(l => l.ListAsync(
-                It.IsAny<Specification<Address>>(),
-                It.IsAny<Pagination>(),
-                null,
-                null))
+                    It.IsAny<ISpecification<Address>>(),
+                    It.IsAny<IPagination>(),
+                    null,
+                    null))
                 .ReturnsAsync(_addresses.ToList())
                 .Verifiable();
 
@@ -40,11 +39,7 @@ namespace Enfo.API.Tests.UnitTests
 
             var result = await controller.Get().ConfigureAwait(false);
 
-            mock.Verify(l => l.ListAsync(
-                It.IsAny<ISpecification<Address>>(),
-                It.IsAny<IPagination>(),
-                null,
-                null));
+            mock.Verify();
             mock.VerifyNoOtherCalls();
 
             result.Result.Should().BeOfType<OkObjectResult>();
@@ -59,12 +54,11 @@ namespace Enfo.API.Tests.UnitTests
             var emptyList = new List<Address>();
 
             var mock = new Mock<IWritableRepository<Address>>();
-
             mock.Setup(l => l.ListAsync(
-                It.IsAny<ISpecification<Address>>(),
-                It.IsAny<IPagination>(),
-                null,
-                null))
+                    It.IsAny<ISpecification<Address>>(),
+                    It.IsAny<IPagination>(),
+                    null,
+                    null))
                 .ReturnsAsync(emptyList)
                 .Verifiable();
 
@@ -72,11 +66,7 @@ namespace Enfo.API.Tests.UnitTests
 
             var result = await controller.Get().ConfigureAwait(false);
 
-            mock.Verify(l => l.ListAsync(
-                It.IsAny<ISpecification<Address>>(),
-                It.IsAny<IPagination>(),
-                null,
-                null));
+            mock.Verify();
             mock.VerifyNoOtherCalls();
 
             result.Result.Should().BeOfType<OkObjectResult>();
@@ -100,7 +90,7 @@ namespace Enfo.API.Tests.UnitTests
 
             var result = await controller.Get(id).ConfigureAwait(false);
 
-            mock.Verify(l => l.GetByIdAsync(id, null, null));
+            mock.Verify();
             mock.VerifyNoOtherCalls();
 
             result.Result.Should().BeOfType<OkObjectResult>();

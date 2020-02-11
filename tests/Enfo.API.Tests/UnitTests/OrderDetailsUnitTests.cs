@@ -56,7 +56,7 @@ namespace Enfo.API.Tests.UnitTests
             
             var result = await controller.Details(id).ConfigureAwait(false);
 
-            mock.Verify(l => l.GetEnforcementOrder(id, It.IsAny<bool>()));
+            mock.Verify();
             mock.VerifyNoOtherCalls();
 
             result.Result.Should().BeOfType<OkObjectResult>();
@@ -76,8 +76,8 @@ namespace Enfo.API.Tests.UnitTests
 
             var mock = new Mock<IEnforcementOrderRepository>();
             mock.Setup(l => l.GetEnforcementOrder(id, It.IsAny<bool>()))
-                .ReturnsAsync(item)
-                .Verifiable();
+                .ReturnsAsync(item);
+
             var controller = new EnforcementOrdersController(mock.Object);
 
             var value = ((await controller.Details(id).ConfigureAwait(false))
@@ -95,8 +95,8 @@ namespace Enfo.API.Tests.UnitTests
         {
             var mock = new Mock<IEnforcementOrderRepository>();
             mock.Setup(l => l.GetEnforcementOrder(id, It.IsAny<bool>()))
-                .ReturnsAsync((EnforcementOrder)null)
-                .Verifiable();
+                .ReturnsAsync((EnforcementOrder)null);
+
             var controller = new EnforcementOrdersController(mock.Object);
 
             var result = await controller.Details(id).ConfigureAwait(false);
