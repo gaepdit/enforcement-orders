@@ -95,16 +95,16 @@ namespace Enfo.API.Tests.IntegrationTests
             var controller = new LegalAuthoritiesController(repository);
 
             int pageSize = 3;
-            int pageNum = 1;
+            int pageNumber = 1;
 
             var items = ((await controller.Get(
-                paging: new PaginationFilter() { PageSize = pageSize, Page = pageNum })
+                paging: new PaginationFilter() { PageSize = pageSize, Page = pageNumber })
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
             var expected = _legalAuthorities
                 .OrderBy(e => e.Id)
                 .Where(e => e.Active)
-                .Skip((pageNum - 1) * pageSize).Take(pageSize)
+                .Skip((pageNumber - 1) * pageSize).Take(pageSize)
                 .Select(e => new LegalAuthorityResource(e));
 
             items.Should().BeEquivalentTo(expected);

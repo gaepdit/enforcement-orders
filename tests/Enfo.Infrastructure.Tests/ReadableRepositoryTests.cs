@@ -184,12 +184,12 @@ namespace Enfo.Infrastructure.Tests
         public async Task GetPaginatedByPageSizeReturnsPartialListAsync()
         {
             int pageSize = 10;
-            int pageNum = 2;
-            int itemIndex = (pageNum - 1) * pageSize;
+            int pageNumber = 2;
+            int itemIndex = (pageNumber - 1) * pageSize;
 
             using var repository = this.GetRepository<County>();
 
-            var pagination = Pagination.FromPageSizeAndNumber(pageSize, pageNum);
+            var pagination = Pagination.FromPageSizeAndNumber(pageSize, pageNumber);
 
             var items = await repository.ListAsync(pagination: pagination).ConfigureAwait(false);
 
@@ -204,13 +204,13 @@ namespace Enfo.Infrastructure.Tests
         public async Task GetPaginatedWithSpecification(string startsWith)
         {
             int pageSize = 10;
-            int pageNum = 1;
-            int itemIndex = (pageNum - 1) * pageSize;
+            int pageNumber = 1;
+            int itemIndex = (pageNumber - 1) * pageSize;
 
             using var repository = this.GetRepository<County>();
 
             var spec = new CountyNameStartsWithSpecification(startsWith);
-            var pagination = Pagination.FromPageSizeAndNumber(pageSize, pageNum);
+            var pagination = Pagination.FromPageSizeAndNumber(pageSize, pageNumber);
 
             IReadOnlyList<County> items = await repository.ListAsync(spec, pagination).ConfigureAwait(false);
 

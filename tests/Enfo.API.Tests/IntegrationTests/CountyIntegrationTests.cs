@@ -76,16 +76,16 @@ namespace Enfo.API.Tests.IntegrationTests
             var controller = new CountiesController(repository);
 
             int pageSize = 3;
-            int pageNum = 2;
-            int firstItemIndex = (pageNum - 1) * pageSize;
+            int pageNumber = 2;
+            int firstItemIndex = (pageNumber - 1) * pageSize;
 
             var items = ((await controller.Get(
-                new PaginationFilter() { PageSize = pageSize, Page = pageNum })
+                new PaginationFilter() { PageSize = pageSize, Page = pageNumber })
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
             var expected = _counties
                 .OrderBy(e => e.CountyName)
-                .Skip((pageNum - 1) * pageSize).Take(pageSize)
+                .Skip((pageNumber - 1) * pageSize).Take(pageSize)
                 .Select(e => new CountyResource(e));
 
             items.Should().BeEquivalentTo(expected);

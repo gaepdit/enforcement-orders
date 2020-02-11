@@ -11,12 +11,12 @@ namespace Enfo.Domain.Tests
         public void GetPaginatedReturnsCorrectly()
         {
             int pageSize = 10;
-            int pageNum = 2;
+            int pageNumber = 2;
             
-            var pagination = Pagination.FromPageSizeAndNumber(pageSize, pageNum);
+            var pagination = Pagination.FromPageSizeAndNumber(pageSize, pageNumber);
 
             pagination.Take.Should().Be(pageSize);
-            pagination.Skip.Should().Be((pageNum - 1) * pageSize);
+            pagination.Skip.Should().Be((pageNumber - 1) * pageSize);
             pagination.IsPagingEnabled.Should().BeTrue();
         }
 
@@ -24,9 +24,9 @@ namespace Enfo.Domain.Tests
         public void GetPaginatedWithZeroPageSizeReturnsCorrectly()
         {
             int pageSize = 0;
-            int pageNum = 2;
+            int pageNumber = 2;
 
-            var pagination = Pagination.FromPageSizeAndNumber(pageSize, pageNum);
+            var pagination = Pagination.FromPageSizeAndNumber(pageSize, pageNumber);
 
             pagination.Take.Should().Be(0);
             pagination.Skip.Should().Be(0);
@@ -37,9 +37,9 @@ namespace Enfo.Domain.Tests
         public void GetPaginatedWithNegativePageSizeThrowsException()
         {
             int pageSize = -1;
-            int pageNum = 2;
+            int pageNumber = 2;
 
-            Action act = () => Pagination.FromPageSizeAndNumber(pageSize, pageNum);
+            Action act = () => Pagination.FromPageSizeAndNumber(pageSize, pageNumber);
             act.Should().Throw<ArgumentException>()
                 .And.ParamName.Should().Be(nameof(pageSize));
         }
@@ -48,11 +48,11 @@ namespace Enfo.Domain.Tests
         public void GetPaginatedWithZeroPageNumThrowsException()
         {
             int pageSize = 20;
-            int pageNum = 0;
+            int pageNumber = 0;
 
-            Action act = () => Pagination.FromPageSizeAndNumber(pageSize, pageNum);
+            Action act = () => Pagination.FromPageSizeAndNumber(pageSize, pageNumber);
             act.Should().Throw<ArgumentException>()
-                .And.ParamName.Should().Be(nameof(pageNum));
+                .And.ParamName.Should().Be(nameof(pageNumber));
         }
     }
 }

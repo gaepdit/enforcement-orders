@@ -104,16 +104,16 @@ namespace Enfo.API.Tests.IntegrationTests
             var controller = new EpdContactsController(repository);
 
             int pageSize = 3;
-            int pageNum = 2;
+            int pageNumber = 2;
 
             var items = ((await controller.Get(
-                paging: new PaginationFilter() { PageSize = pageSize, Page = pageNum })
+                paging: new PaginationFilter() { PageSize = pageSize, Page = pageNumber })
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
             var expected = _epdContacts
                 .OrderBy(e => e.Id)
                 .Where(e => e.Active)
-                .Skip((pageNum - 1) * pageSize).Take(pageSize)
+                .Skip((pageNumber - 1) * pageSize).Take(pageSize)
                 .Select(e => new EpdContactResource(e));
 
             items.Should().BeEquivalentTo(expected);

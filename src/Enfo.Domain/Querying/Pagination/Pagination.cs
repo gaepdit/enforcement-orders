@@ -28,10 +28,10 @@ namespace Enfo.Domain.Querying
         //    return new Pagination(skip, take);
         //}
 
-        public static Pagination FromPageSizeAndNumber(int pageSize, int pageNum)
+        public static Pagination FromPageSizeAndNumber(int pageSize, int pageNumber)
         {
             Check.NotNegative(pageSize, nameof(pageSize));
-            Check.Positive(pageNum, nameof(pageNum));
+            Check.Positive(pageNumber, nameof(pageNumber));
 
             // When page size is set to zero, return all results. (Page number is ignored.)
             if (pageSize == 0)
@@ -39,7 +39,7 @@ namespace Enfo.Domain.Querying
                 return new Pagination();
             }
 
-            return new Pagination((pageNum - 1) * pageSize, pageSize);
+            return new Pagination((pageNumber - 1) * pageSize, pageSize);
         }
     }
 }

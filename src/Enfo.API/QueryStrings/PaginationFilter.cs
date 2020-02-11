@@ -17,6 +17,6 @@ namespace Enfo.API.QueryStrings
         public Pagination Pagination() =>
             Domain.Querying.Pagination.FromPageSizeAndNumber(
                 pageSize: PageSize < 0 ? DefaultPageSize : PageSize,
-                pageNum: Math.Max(Page, 1));
+                pageNumber: Math.Max(Page, 1));
     }
 }

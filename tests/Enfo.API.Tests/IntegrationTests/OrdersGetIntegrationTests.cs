@@ -128,14 +128,14 @@ namespace Enfo.API.Tests.IntegrationTests
         public async Task GetPaginatedAndSortedReturnsCorrectItems(
             EnforcementOrderSorting sortOrder,
             int pageSize,
-            int pageNum)
+            int pageNumber)
         {
             var repository = this.GetEnforcementOrderRepository();
             var controller = new EnforcementOrdersController(repository);
 
             var items = ((await controller.Get(
                 new EnforcementOrderFilter() { SortOrder = sortOrder },
-                new PaginationFilter() { PageSize = pageSize, Page = pageNum })
+                new PaginationFilter() { PageSize = pageSize, Page = pageNumber })
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
             var orderedOrders = sortOrder switch
@@ -150,7 +150,7 @@ namespace Enfo.API.Tests.IntegrationTests
             var expected = orderedOrders
                 .ThenBy(e => e.FacilityName)
                 .Where(e => !e.Deleted)
-                .Skip((pageNum - 1) * pageSize).Take(pageSize)
+                .Skip((pageNumber - 1) * pageSize).Take(pageSize)
                 .Select(e => new EnforcementOrderListResource(e));
 
             items.Should().BeEquivalentTo(expected, o => o.WithStrictOrdering());
