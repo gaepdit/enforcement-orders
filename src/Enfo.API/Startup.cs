@@ -31,7 +31,10 @@ namespace Enfo.API
                 options.MaxAge = TimeSpan.FromSeconds(300);
             });
 
-            services.AddDbContext<EnfoDbContext>(options => options.UseSqlite("Data Source=EnfoSqliteDatabase.db"));
+            services.AddDbContext<EnfoDbContext>(opts => 
+                opts.UseSqlite(
+                    "Data Source=EnfoSqliteDatabase.db",
+                    x => x.MigrationsAssembly("Enfo.API")));
             //services.AddDbContext<EnfoDbContext>(options => options.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=Enfo;Trusted_Connection=True;"));
 
             services.AddScoped(typeof(IWritableRepository<>), typeof(WritableRepository<>));
