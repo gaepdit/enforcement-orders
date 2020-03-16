@@ -3,14 +3,16 @@ using System;
 using Enfo.Infrastructure.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Enfo.API.Migrations
 {
     [DbContext(typeof(EnfoDbContext))]
-    partial class EnfoDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200316210643_AddUserModel")]
+    partial class AddUserModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
