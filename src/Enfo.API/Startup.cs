@@ -20,7 +20,7 @@ namespace Enfo.API
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public static void ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers()
                 .AddJsonOptions(o => o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
@@ -32,10 +32,8 @@ namespace Enfo.API
             });
 
             services.AddDbContext<EnfoDbContext>(opts => 
-                opts.UseSqlite(
-                    "Data Source=EnfoSqliteDatabase.db",
+                opts.UseSqlite(Configuration.GetConnectionString("DefaultConnection"),
                     x => x.MigrationsAssembly("Enfo.API")));
-            //services.AddDbContext<EnfoDbContext>(options => options.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=Enfo;Trusted_Connection=True;"));
 
             services.AddScoped(typeof(IWritableRepository<>), typeof(WritableRepository<>));
             services.AddScoped(typeof(IReadableRepository<>), typeof(ReadableRepository<>));
