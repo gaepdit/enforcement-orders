@@ -35,7 +35,7 @@ namespace Enfo.API.Resources
 
         public AddressResource(Address item)
         {
-            Check.NotNull(item, nameof(item));
+            Guard.NotNull(item, nameof(item));
 
             Id = item.Id;
             Active = item.Active;

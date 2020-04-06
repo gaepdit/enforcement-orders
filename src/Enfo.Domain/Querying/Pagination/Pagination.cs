@@ -30,8 +30,8 @@ namespace Enfo.Domain.Querying
 
         public static Pagination FromPageSizeAndNumber(int pageSize, int pageNumber)
         {
-            Check.NotNegative(pageSize, nameof(pageSize));
-            Check.Positive(pageNumber, nameof(pageNumber));
+            Guard.NotNegative(pageSize, nameof(pageSize));
+            Guard.Positive(pageNumber, nameof(pageNumber));
 
             // When page size is set to zero, return all results. (Page number is ignored.)
             if (pageSize == 0)

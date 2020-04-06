@@ -41,8 +41,8 @@ namespace Enfo.API.Resources
     {
         public static void UpdateFrom(this EpdContact item, EpdContactUpdateResource resource)
         {
-            Check.NotNull(item, nameof(item));
-            Check.NotNull(resource, nameof(resource));
+            Guard.NotNull(item, nameof(item));
+            Guard.NotNull(resource, nameof(resource));
 
             item.Active = resource.Active;
             item.AddressId = resource.AddressId;

@@ -7,7 +7,7 @@ namespace Enfo.Domain.Querying
     {
         public FilterOrdersByLegalAuth(int legalAuth)
         {
-            Check.Positive(legalAuth, nameof(legalAuth));
+            Guard.Positive(legalAuth, nameof(legalAuth));
             ApplyCriteria(e => e.LegalAuthorityId.Equals(legalAuth));
         }
     }

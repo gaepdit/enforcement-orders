@@ -11,10 +11,10 @@ namespace Enfo.Domain.Querying
 
         protected virtual void ApplyCriteria(Expression<Func<T, bool>> criterion) =>
             (Criteria ??= new List<Expression<Func<T, bool>>>())
-                .Add(Check.NotNull(criterion, nameof(criterion)));
+                .Add(Guard.NotNull(criterion, nameof(criterion)));
 
         protected virtual void ApplyCriteria(List<Expression<Func<T, bool>>> criteria) =>
             (Criteria ??= new List<Expression<Func<T, bool>>>())
-                .AddRange(Check.NotNullOrEmpty(criteria, nameof(criteria)));
+                .AddRange(Guard.NotNullOrEmpty(criteria, nameof(criteria)));
     }
 }

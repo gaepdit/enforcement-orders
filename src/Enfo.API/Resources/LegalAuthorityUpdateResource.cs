@@ -19,8 +19,8 @@ namespace Enfo.API.Resources
     {
         public static void UpdateFrom(this LegalAuthority item, LegalAuthorityUpdateResource resource)
         {
-            Check.NotNull(item, nameof(item));
-            Check.NotNull(resource, nameof(resource));
+            Guard.NotNull(item, nameof(item));
+            Guard.NotNull(resource, nameof(resource));
 
             item.Active = resource.Active;
             item.AuthorityName = resource.AuthorityName;

@@ -39,7 +39,7 @@ namespace Enfo.API.Resources
 
         public EpdContactResource(EpdContact item)
         {
-            Check.NotNull(item, nameof(item));
+            Guard.NotNull(item, nameof(item));
 
             Id = item.Id;
             Active = item.Active;

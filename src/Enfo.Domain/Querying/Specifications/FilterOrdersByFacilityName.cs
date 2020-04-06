@@ -7,7 +7,7 @@ namespace Enfo.Domain.Querying
     {
         public FilterOrdersByFacilityName(string facilityFilter)
         {
-            Check.NotNullOrWhiteSpace(facilityFilter, nameof(facilityFilter));
+            Guard.NotNullOrWhiteSpace(facilityFilter, nameof(facilityFilter));
             ApplyCriteria(e => e.FacilityName.ToLower().Contains(facilityFilter.ToLower()));
         }
     }

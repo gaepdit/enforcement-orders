@@ -7,7 +7,7 @@ namespace Enfo.Domain.Querying
     {
         public FilterOrdersByOrderNumber(string orderNumber)
         {
-            Check.NotNullOrWhiteSpace(orderNumber, nameof(orderNumber));
+            Guard.NotNullOrWhiteSpace(orderNumber, nameof(orderNumber));
             ApplyCriteria(e => e.OrderNumber.ToLower().Contains(orderNumber.ToLower()));
         }
     }

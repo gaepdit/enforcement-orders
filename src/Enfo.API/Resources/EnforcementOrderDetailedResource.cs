@@ -90,7 +90,7 @@ namespace Enfo.API.Resources
 
         public EnforcementOrderDetailedResource(EnforcementOrder item)
         {
-            Check.NotNull(item, nameof(item));
+            Guard.NotNull(item, nameof(item));
 
             Id = item.Id;
 

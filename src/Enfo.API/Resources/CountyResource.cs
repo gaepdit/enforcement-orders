@@ -14,7 +14,7 @@ namespace Enfo.API.Resources
 
         public CountyResource(County item)
         {
-            Check.NotNull(item, nameof(item));
+            Guard.NotNull(item, nameof(item));
 
             Id = item.Id;
             CountyName = item.CountyName;

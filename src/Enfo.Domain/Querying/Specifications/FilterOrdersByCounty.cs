@@ -7,7 +7,7 @@ namespace Enfo.Domain.Querying
     {
         public FilterOrdersByCounty(string county)
         {
-            Check.NotNullOrWhiteSpace(county, nameof(county));
+            Guard.NotNullOrWhiteSpace(county, nameof(county));
             ApplyCriteria(e => e.County.ToLower().Equals(county.ToLower()));
         }
     }

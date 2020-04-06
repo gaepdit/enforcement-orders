@@ -38,8 +38,8 @@ namespace Enfo.API.Resources
     {
         public static void UpdateFrom(this Address item, AddressUpdateResource resource)
         {
-            Check.NotNull(item, nameof(item));
-            Check.NotNull(resource, nameof(resource));
+            Guard.NotNull(item, nameof(item));
+            Guard.NotNull(resource, nameof(resource));
 
             item.Active = resource.Active;
             item.City = resource.City;

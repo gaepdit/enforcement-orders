@@ -17,7 +17,7 @@ namespace Enfo.API.Resources
         public LegalAuthorityResource() { }
         public LegalAuthorityResource(LegalAuthority item)
         {
-            Check.NotNull(item, nameof(item));
+            Guard.NotNull(item, nameof(item));
 
             Id = item.Id;
             Active = item.Active;

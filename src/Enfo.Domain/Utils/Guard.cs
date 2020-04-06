@@ -5,7 +5,7 @@ using System.Diagnostics;
 namespace Enfo.Domain.Utils
 {
     [DebuggerStepThrough]
-    public static class Check
+    public static class Guard
     {
         public static T NotNull<T>(T value, string parameterName) =>
             value ?? throw new ArgumentNullException(parameterName);

@@ -49,7 +49,7 @@ namespace Enfo.API.Resources
 
         public EnforcementOrderListResource(EnforcementOrder item)
         {
-            Check.NotNull(item, nameof(item));
+            Guard.NotNull(item, nameof(item));
 
             Id = item.Id;
 
