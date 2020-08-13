@@ -1,0 +1,9 @@
+{
+  "$schema": "https://on.cypress.io/cypress.schema.json",
+  "baseUrl": "https://dev-enfo.gaepd.org",
+  "env": {
+    "writesEnabled": false,
+    "username": "",
+    "password": ""
+  }
+}

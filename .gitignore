@@ -7,6 +7,16 @@ EnfoSqliteDatabase\.db-*
 # Build artifacts
 artifacts/
 
+# Cypress.io config files
+cypress.env.json
+**/config/*.json
+
+# Cypress.io generated videos, screenshots, and logs
+**/cypress/videos/
+**/cypress/screenshots/
+**/cypress/logs/
+
+
 ### Generic ###
 # Created by https://www.gitignore.io/api/visualstudio,visualstudiocode
 # Edit at https://www.gitignore.io/?templates=visualstudio,visualstudiocode
