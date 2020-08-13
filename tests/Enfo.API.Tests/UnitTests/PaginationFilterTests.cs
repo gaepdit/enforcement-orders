@@ -1,15 +1,11 @@
 using Enfo.API.QueryStrings;
 using FluentAssertions;
-using System;
 using Xunit;
 
-namespace Enfo.API.Tests
+namespace Enfo.API.Tests.UnitTests
 {
     public class PaginationFilterTests
     {
-        private const int defaultPageSize = 20;
-        private const int defaultPageNumber = 1;
-
         [Fact]
         public void PaginationFilterWithDefaultParams()
         {
@@ -17,8 +13,8 @@ namespace Enfo.API.Tests
 
             var pagination = paginationFilter.Pagination();
 
-            pagination.Take.Should().Be(defaultPageSize);
-            pagination.Skip.Should().Be((defaultPageNumber - 1) * defaultPageSize);
+            pagination.Take.Should().Be(PaginationFilter.DefaultPageSize);
+            pagination.Skip.Should().Be(0);
             pagination.IsPagingEnabled.Should().BeTrue();
         }
 
@@ -28,9 +24,11 @@ namespace Enfo.API.Tests
             int pageSize = 10;
             int pageNumber = 2;
 
-            var paginationFilter = new PaginationFilter();
-            paginationFilter.PageSize = pageSize;
-            paginationFilter.Page = pageNumber;
+            var paginationFilter = new PaginationFilter
+            {
+                PageSize = pageSize,
+                Page = pageNumber
+            };
 
             var pagination = paginationFilter.Pagination();
 
@@ -42,28 +40,30 @@ namespace Enfo.API.Tests
         [Fact]
         public void PaginationFilterWithNegativePageSize()
         {
-            var paginationFilter = new PaginationFilter();
-            paginationFilter.PageSize = -1;
-            paginationFilter.Page = defaultPageNumber;
+            var paginationFilter = new PaginationFilter
+            {
+                PageSize = -1
+            };
 
             var pagination = paginationFilter.Pagination();
 
-            pagination.Take.Should().Be(defaultPageSize);
-            pagination.Skip.Should().Be((defaultPageNumber - 1) * defaultPageSize);
+            pagination.Take.Should().Be(PaginationFilter.DefaultPageSize);
+            pagination.Skip.Should().Be(0);
             pagination.IsPagingEnabled.Should().BeTrue();
         }
 
         [Fact]
         public void PaginationFilterWithZeroPageNum()
         {
-            var paginationFilter = new PaginationFilter();
-            paginationFilter.PageSize = defaultPageSize;
-            paginationFilter.Page = 0;
+            var paginationFilter = new PaginationFilter
+            {
+                Page = 0
+            };
 
             var pagination = paginationFilter.Pagination();
 
-            pagination.Take.Should().Be(defaultPageSize);
-            pagination.Skip.Should().Be((defaultPageNumber - 1) * defaultPageSize);
+            pagination.Take.Should().Be(PaginationFilter.DefaultPageSize);
+            pagination.Skip.Should().Be(0);
             pagination.IsPagingEnabled.Should().BeTrue();
         }
     }

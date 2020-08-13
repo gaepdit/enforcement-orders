@@ -98,7 +98,7 @@ namespace Enfo.API.Tests.IntegrationTests
             var controller = new CountiesController(repository);
 
             var result = (await controller.Get(
-                new PaginationFilter() { PageSize = -1 })
+                paging: new PaginationFilter() { PageSize = -1 })
                 .ConfigureAwait(false)).Result as OkObjectResult;
 
             var expected = (await controller.Get()

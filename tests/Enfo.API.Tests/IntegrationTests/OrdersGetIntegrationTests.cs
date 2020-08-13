@@ -180,7 +180,7 @@ namespace Enfo.API.Tests.IntegrationTests
             var controller = new EnforcementOrdersController(repository);
 
             var result = (await controller.Get(
-                paging: new PaginationFilter() { PageSize = 0 })
+                paging: new PaginationFilter() { Page = 0 })
                 .ConfigureAwait(false)).Result as OkObjectResult;
 
             var expected = (await controller.Get()

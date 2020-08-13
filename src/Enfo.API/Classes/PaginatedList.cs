@@ -1,6 +1,7 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Enfo.API.QueryStrings;
+using Enfo.Domain.Utils;
 
 namespace Enfo.API.Classes
 {
@@ -10,9 +11,9 @@ namespace Enfo.API.Classes
         public int PageSize { get; }
         public int PageNumber { get; }
 
-        public int TotalPages => (int)Math.Ceiling(TotalItems / (double)PageSize);
-        public int FirstItemIndex => Math.Min(PageSize * (PageNumber - 1) + 1, TotalItems);
-        public int LastItemIndex => Math.Min(PageSize * PageNumber, TotalItems);
+        public int TotalPages => PageSize == 0 ? 1 : (int)Math.Ceiling(TotalItems / (double)PageSize);
+        public int FirstItemIndex => PageSize == 0 ? 1 : Math.Min(PageSize * (PageNumber - 1) + 1, TotalItems);
+        public int LastItemIndex => PageSize == 0 ? TotalItems : Math.Min(PageSize * PageNumber, TotalItems);
 
         public bool HasPreviousPage => (PageNumber > 1);
         public bool HasNextPage => (PageNumber < TotalPages);
@@ -25,7 +26,7 @@ namespace Enfo.API.Classes
             int pageNumber,
             int pageSize)
         {
-            PageNumber = pageNumber;
+            PageNumber = pageSize == 0 ? 1 : pageNumber;
             PageSize = pageSize;
             TotalItems = totalCount;
 
@@ -40,6 +41,7 @@ namespace Enfo.API.Classes
             int totalCount,
             PaginationFilter paging)
         {
+            Check.NotNull(paging, nameof(paging));
             return new PaginatedList<T>(items, totalCount, paging.Page, paging.PageSize);
         }
     }
