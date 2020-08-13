@@ -1,4 +1,13 @@
+### Repo-specific ###
 
+# Dev database
+EnfoSqliteDatabase\.db
+EnfoSqliteDatabase\.db-*
+
+# Build artifacts
+artifacts/
+
+### Generic ###
 # Created by https://www.gitignore.io/api/visualstudio,visualstudiocode
 # Edit at https://www.gitignore.io/?templates=visualstudio,visualstudiocode
 
@@ -360,7 +369,3 @@ healthchecksdb
 MigrationBackup/
 
 # End of https://www.gitignore.io/api/visualstudio,visualstudiocode
-
-# Sqlite database
-EnfoSqliteDatabase\.db
-EnfoSqliteDatabase\.db-*
