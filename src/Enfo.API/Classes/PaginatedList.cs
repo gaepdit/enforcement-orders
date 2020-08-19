@@ -41,7 +41,7 @@ namespace Enfo.API.Classes
             int totalCount,
             PaginationFilter paging)
         {
-            Check.NotNull(paging, nameof(paging));
+            Guard.NotNull(paging, nameof(paging));
             return new PaginatedList<T>(items, totalCount, paging.Page, paging.PageSize);
         }
     }
