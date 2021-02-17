@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Text.Json.Serialization;
-using Enfo.Domain.Repositories;
+using Enfo.Repository.Repositories;
 using Enfo.Infrastructure.Contexts;
 using Enfo.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Builder;

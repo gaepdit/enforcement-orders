@@ -1,4 +1,4 @@
-using Enfo.Domain.Validation;
+using Enfo.Repository.Validation;
 using FluentAssertions;
 using Xunit;
 

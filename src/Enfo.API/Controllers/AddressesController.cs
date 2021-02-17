@@ -2,10 +2,10 @@
 using System.Threading.Tasks;
 using Enfo.API.Classes;
 using Enfo.API.QueryStrings;
-using Enfo.API.Resources;
 using Enfo.Domain.Entities;
-using Enfo.Domain.Querying;
-using Enfo.Domain.Repositories;
+using Enfo.Repository.Resources;
+using Enfo.Repository.Querying;
+using Enfo.Repository.Repositories;
 // using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

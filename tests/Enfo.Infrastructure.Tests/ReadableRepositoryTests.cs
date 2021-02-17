@@ -1,5 +1,5 @@
 using Enfo.Domain.Entities;
-using Enfo.Domain.Querying;
+using Enfo.Repository.Querying;
 using Enfo.Infrastructure.SeedData;
 using Enfo.Infrastructure.Tests.Helpers;
 using FluentAssertions;

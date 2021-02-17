@@ -1,13 +1,13 @@
 ﻿using Enfo.API.Controllers;
-using Enfo.API.Resources;
 using Enfo.Domain.Entities;
-using Enfo.Domain.Repositories;
+using Enfo.Repository.Repositories;
 using Enfo.Infrastructure.SeedData;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using System.Linq;
 using System.Threading.Tasks;
+using Enfo.Repository.Resources;
 using Xunit;
 
 namespace Enfo.API.Tests.UnitTests

@@ -1,4 +1,4 @@
-using Enfo.Domain.Querying;
+using Enfo.Repository.Querying;
 using FluentAssertions;
 using System;
 using Xunit;

@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 using Enfo.Domain.Entities;
-using Enfo.Domain.Repositories;
+using Enfo.Repository.Repositories;
 using Enfo.Infrastructure.Contexts;
 
 namespace Enfo.Infrastructure.Repositories

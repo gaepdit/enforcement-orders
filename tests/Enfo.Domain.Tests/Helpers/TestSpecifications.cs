@@ -1,4 +1,4 @@
-﻿using Enfo.Domain.Querying;
+﻿using Enfo.Repository.Querying;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;

@@ -1,0 +1,20 @@
+using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
+using Enfo.Repository.Utils;
+
+namespace Enfo.Repository.Querying
+{
+    public abstract class Specification<T> : ISpecification<T>
+    {
+        public virtual List<Expression<Func<T, bool>>> Criteria { get; private set; }
+
+        protected virtual void ApplyCriteria(Expression<Func<T, bool>> criterion) =>
+            (Criteria ??= new List<Expression<Func<T, bool>>>())
+                .Add(Guard.NotNull(criterion, nameof(criterion)));
+
+        protected virtual void ApplyCriteria(List<Expression<Func<T, bool>>> criteria) =>
+            (Criteria ??= new List<Expression<Func<T, bool>>>())
+                .AddRange(Guard.NotNullOrEmpty(criteria, nameof(criteria)));
+    }
+}

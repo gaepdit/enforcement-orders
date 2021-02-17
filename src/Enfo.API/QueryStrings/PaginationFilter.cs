@@ -1,6 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
-using Enfo.Domain.Querying;
+using Enfo.Repository.Querying;
 
 namespace Enfo.API.QueryStrings
 {
@@ -17,6 +17,6 @@ namespace Enfo.API.QueryStrings
         public int Page { get => page; set => page = Math.Max(value, 1); }
 
         public Pagination Pagination() =>
-            Domain.Querying.Pagination.FromPageSizeAndNumber(pageSize, page);
+            Repository.Querying.Pagination.FromPageSizeAndNumber(pageSize, page);
     }
 }

@@ -3,6 +3,8 @@ using FluentAssertions;
 using System;
 using Xunit;
 using static Enfo.Domain.Entities.EnforcementOrder;
+using static Enfo.Repository.Resources.EnforcementOrderCreateResource;
+using static Enfo.Repository.Resources.EnforcementOrderUpdateResource;
 
 namespace Enfo.Domain.Tests
 {
@@ -296,7 +298,7 @@ namespace Enfo.Domain.Tests
                 SettlementAmount = _order.SettlementAmount
             };
 
-            var result = thisOrder.Update(
+            var result = UpdateEnforcementOrder(thisOrder,
                 _order.Cause, _order.CommentContactId, _order.CommentPeriodClosesDate, _order.County,
                 _order.FacilityName, _order.ExecutedDate, _order.ExecutedOrderPostedDate,
                 _order.HearingCommentPeriodClosesDate, _order.HearingContactId, _order.HearingDate,
@@ -337,7 +339,7 @@ namespace Enfo.Domain.Tests
                 SettlementAmount = _order.SettlementAmount
             };
 
-            var result = thisOrder.Update(
+            var result = UpdateEnforcementOrder(thisOrder,
                 _order.Cause, _order.CommentContactId, _order.CommentPeriodClosesDate, _order.County,
                 _order.FacilityName, _order.ExecutedDate, _order.ExecutedOrderPostedDate,
                 _order.HearingCommentPeriodClosesDate, _order.HearingContactId, _order.HearingDate,
@@ -380,7 +382,7 @@ namespace Enfo.Domain.Tests
                 SettlementAmount = _order.SettlementAmount
             };
 
-            var result = thisOrder.Update(
+            var result = UpdateEnforcementOrder(thisOrder,
                 _order.Cause, _order.CommentContactId, _order.CommentPeriodClosesDate, _order.County,
                 _order.FacilityName, null, null, _order.HearingCommentPeriodClosesDate, _order.HearingContactId,
                 _order.HearingDate, _order.HearingLocation, false, _order.IsHearingScheduled, _order.LegalAuthorityId,
@@ -422,7 +424,7 @@ namespace Enfo.Domain.Tests
                 SettlementAmount = _order.SettlementAmount
             };
 
-            var result = thisOrder.Update(
+            var result = UpdateEnforcementOrder(thisOrder,
                 _order.Cause, _order.CommentContactId, _order.CommentPeriodClosesDate, _order.County,
                 _order.FacilityName, null, null, _order.HearingCommentPeriodClosesDate, _order.HearingContactId,
                 _order.HearingDate, _order.HearingLocation, false, _order.IsHearingScheduled, _order.LegalAuthorityId,
@@ -464,7 +466,7 @@ namespace Enfo.Domain.Tests
                 SettlementAmount = _order.SettlementAmount
             };
 
-            var result = thisOrder.Update(
+            var result = UpdateEnforcementOrder(thisOrder,
                 _order.Cause, _order.CommentContactId, _order.CommentPeriodClosesDate, _order.County,
                 _order.FacilityName, null, null, _order.HearingCommentPeriodClosesDate, _order.HearingContactId,
                 _order.HearingDate, _order.HearingLocation, _order.IsExecutedOrder, _order.IsHearingScheduled,
@@ -534,7 +536,7 @@ namespace Enfo.Domain.Tests
                 SettlementAmount = _order.SettlementAmount,
             };
 
-            var result = thisOrder.Update(
+            var result = UpdateEnforcementOrder(thisOrder,
                 _order.Cause, _order.CommentContactId, _order.CommentPeriodClosesDate, _order.County,
                 _order.FacilityName, _order.ExecutedDate, _order.ExecutedOrderPostedDate,
                 _order.HearingCommentPeriodClosesDate, _order.HearingContactId, _order.HearingDate,
@@ -575,7 +577,7 @@ namespace Enfo.Domain.Tests
                 SettlementAmount = _order.SettlementAmount
             };
 
-            var result = thisOrder.Update(
+            var result = UpdateEnforcementOrder(thisOrder,
                 _order.Cause, _order.CommentContactId, _order.CommentPeriodClosesDate, _order.County,
                 _order.FacilityName, _order.ExecutedDate, _order.ExecutedOrderPostedDate, null, null, null, null,
                 _order.IsExecutedOrder, _order.IsHearingScheduled, _order.LegalAuthorityId, _order.OrderNumber,

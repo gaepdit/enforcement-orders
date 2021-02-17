@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Enfo.Domain.Entities;
-using Enfo.Domain.Querying;
-using Enfo.Domain.Repositories;
+using Enfo.Repository.Querying;
+using Enfo.Repository.Repositories;
 using Enfo.Infrastructure.Contexts;
 using Enfo.Infrastructure.QueryingEvaluators;
 using Microsoft.EntityFrameworkCore;

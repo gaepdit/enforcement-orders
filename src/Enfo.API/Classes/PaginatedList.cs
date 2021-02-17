@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Enfo.API.QueryStrings;
-using Enfo.Domain.Utils;
+using Enfo.Repository.Utils;
 
 namespace Enfo.API.Classes
 {

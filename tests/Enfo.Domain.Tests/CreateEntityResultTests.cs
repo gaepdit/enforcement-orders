@@ -1,5 +1,5 @@
 using Enfo.Domain.Entities;
-using Enfo.Domain.Repositories;
+using Enfo.Repository.Repositories;
 using FluentAssertions;
 using Xunit;
 

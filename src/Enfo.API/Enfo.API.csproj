@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Enfo.Domain\Enfo.Domain.csproj" />
+    <ProjectReference Include="..\Enfo.Repository\Enfo.Repository.csproj" />
     <ProjectReference Include="..\Enfo.Infrastructure\Enfo.Infrastructure.csproj" />
   </ItemGroup>
 

@@ -1,5 +1,5 @@
 ﻿using Enfo.Domain.Entities;
-using Enfo.Domain.Querying;
+using Enfo.Repository.Querying;
 
 namespace Enfo.Infrastructure.Tests.Helpers
 {

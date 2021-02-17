@@ -2,14 +2,16 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Enfo.Domain.Entities;
-using Enfo.Domain.Querying;
-using Enfo.Domain.Repositories;
-using Enfo.Domain.Utils;
+using Enfo.Repository.Querying;
+using Enfo.Repository.Repositories;
+using Enfo.Repository.Utils;
 using Enfo.Infrastructure.Contexts;
 using Microsoft.EntityFrameworkCore;
 using static Enfo.Domain.Entities.EnforcementOrder;
 using static Enfo.Domain.Entities.Enums;
-using static Enfo.Domain.Utils.DateUtils;
+using static Enfo.Repository.Utils.DateUtils;
+using static Enfo.Repository.Resources.EnforcementOrderCreateResource;
+using static Enfo.Repository.Resources.EnforcementOrderUpdateResource;
 
 namespace Enfo.Infrastructure.Repositories
 {
@@ -248,7 +250,7 @@ namespace Enfo.Infrastructure.Repositories
         {
             var originalOrder = await GetByIdAsync(id).ConfigureAwait(false);
 
-            var result = originalOrder.Update(
+            var result = UpdateEnforcementOrder(originalOrder,
                 cause, commentContactId, commentPeriodClosesDate, county, facilityName, executedDate,
                 executedOrderPostedDate, hearingCommentPeriodClosesDate, hearingContactId, hearingDate, hearingLocation,
                 isExecutedOrder, isHearingScheduled, legalAuthorityId, orderNumber, proposedOrderPostedDate,

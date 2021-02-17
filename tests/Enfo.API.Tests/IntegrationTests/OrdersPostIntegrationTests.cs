@@ -1,16 +1,16 @@
 ﻿using Enfo.API.Classes;
 using Enfo.API.Controllers;
 using Enfo.API.QueryStrings;
-using Enfo.API.Resources;
 using Enfo.API.Tests.Helpers;
 using Enfo.Domain.Entities;
-using Enfo.Domain.Querying;
+using Enfo.Repository.Querying;
 using Enfo.Infrastructure.SeedData;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Enfo.Repository.Resources;
 using Xunit;
 using static Enfo.Domain.Entities.EnforcementOrder;
 

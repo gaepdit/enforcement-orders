@@ -1,8 +1,7 @@
 ﻿using Enfo.API.Controllers;
-using Enfo.API.Resources;
 using Enfo.Domain.Entities;
-using Enfo.Domain.Querying;
-using Enfo.Domain.Repositories;
+using Enfo.Repository.Querying;
+using Enfo.Repository.Repositories;
 using Enfo.Infrastructure.SeedData;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +9,7 @@ using Moq;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Enfo.Repository.Resources;
 using Xunit;
 using static Enfo.Domain.Entities.EnforcementOrder;
 

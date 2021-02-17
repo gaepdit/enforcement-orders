@@ -1,4 +1,4 @@
-﻿using Enfo.Domain.Querying;
+﻿using Enfo.Repository.Querying;
 using Enfo.Infrastructure.QueryingEvaluators;
 using Enfo.Infrastructure.Tests.Helpers;
 using FluentAssertions;
