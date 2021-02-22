@@ -8,7 +8,7 @@ namespace Enfo.Domain.Entities
     // Add profile data for application users by adding properties to the 
     // ApplicationUser class
 
-    public class ApplicationUser : IdentityUser<Guid>, IActive
+    public class ApplicationUser : IdentityUser<Guid>, IActiveEntity
     {
         [ProtectedPersonalData]
         [StringLength(150)]

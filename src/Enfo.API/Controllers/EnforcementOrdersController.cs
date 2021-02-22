@@ -5,6 +5,7 @@ using Enfo.API.Classes;
 using Enfo.API.QueryStrings;
 using Enfo.Repository.Resources;
 using Enfo.Repository.Repositories;
+using Enfo.Repository.Resources.EnforcementOrder;
 // using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -24,7 +25,7 @@ namespace Enfo.API.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<PaginatedList<EnforcementOrderListResource>>> Get(
+        public async Task<ActionResult<PaginatedList<EnforcementOrderSummaryView>>> Get(
             [FromQuery] EnforcementOrderFilter filter = null,
             [FromQuery] PaginationFilter paging = null)
         {
@@ -58,7 +59,7 @@ namespace Enfo.API.Controllers
                 .ConfigureAwait(false);
 
             var paginatedList = (await itemsTask)
-                .Select(e => new EnforcementOrderListResource(e))
+                .Select(e => new EnforcementOrderSummaryView(e))
                 .GetPaginatedList(await countTask, paging);
 
             return Ok(paginatedList);
@@ -66,9 +67,9 @@ namespace Enfo.API.Controllers
 
         // GET: api/EnforcementOrders/5
         [HttpGet("{id}")]
-        [ProducesResponseType(typeof(EnforcementOrderItemResource), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(EnforcementOrderView), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<EnforcementOrderItemResource>> Get(
+        public async Task<ActionResult<EnforcementOrderView>> Get(
             [FromRoute] int id)
         {
             bool onlyIfPublic = false;
@@ -84,15 +85,15 @@ namespace Enfo.API.Controllers
                 return NotFound(id);
             }
 
-            return Ok(new EnforcementOrderItemResource(item));
+            return Ok(new EnforcementOrderView(item));
         }
 
         // GET: api/EnforcementOrders/Details/5
         //[Authorize]
         [HttpGet("Details/{id}")]
-        [ProducesResponseType(typeof(EnforcementOrderDetailedResource), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(EnforcementOrderDetailedView), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<EnforcementOrderDetailedResource>> Details(
+        public async Task<ActionResult<EnforcementOrderDetailedView>> Details(
             [FromRoute] int id)
         {
             bool onlyIfPublic = false;
@@ -108,7 +109,7 @@ namespace Enfo.API.Controllers
                 return NotFound(id);
             }
 
-            return Ok(new EnforcementOrderDetailedResource(item));
+            return Ok(new EnforcementOrderDetailedView(item));
         }
 
         // GET: api/EnforcementOrders?params
@@ -145,24 +146,24 @@ namespace Enfo.API.Controllers
         [HttpGet("CurrentProposed")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<IEnumerable<EnforcementOrderListResource>>> CurrentProposed()
+        public async Task<ActionResult<IEnumerable<EnforcementOrderSummaryView>>> CurrentProposed()
         {
             return Ok((await _repository
                 .FindCurrentProposedEnforcementOrders()
                 .ConfigureAwait(false))
-                .Select(e => new EnforcementOrderListResource(e)));
+                .Select(e => new EnforcementOrderSummaryView(e)));
         }
 
         // GET: api/EnforcementOrders/RecentlyExecuted
         [HttpGet("RecentlyExecuted")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<IEnumerable<EnforcementOrderListResource>>> RecentlyExecuted()
+        public async Task<ActionResult<IEnumerable<EnforcementOrderSummaryView>>> RecentlyExecuted()
         {
             return Ok((await _repository
                 .FindRecentlyExecutedEnforcementOrders()
                 .ConfigureAwait(false))
-                .Select(e => new EnforcementOrderListResource(e)));
+                .Select(e => new EnforcementOrderSummaryView(e)));
         }
 
         // GET: api/EnforcementOrders/Draft
@@ -170,12 +171,12 @@ namespace Enfo.API.Controllers
         [HttpGet("Draft")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<IEnumerable<EnforcementOrderListResource>>> Drafts()
+        public async Task<ActionResult<IEnumerable<EnforcementOrderSummaryView>>> Drafts()
         {
             return Ok((await _repository
                 .FindDraftEnforcementOrders()
                 .ConfigureAwait(false))
-                .Select(e => new EnforcementOrderListResource(e)));
+                .Select(e => new EnforcementOrderSummaryView(e)));
         }
 
         // GET: api/EnforcementOrders/Pending
@@ -183,12 +184,12 @@ namespace Enfo.API.Controllers
         [HttpGet("Pending")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<IEnumerable<EnforcementOrderListResource>>> Pending()
+        public async Task<ActionResult<IEnumerable<EnforcementOrderSummaryView>>> Pending()
         {
             return Ok((await _repository
                 .FindPendingEnforcementOrders()
                 .ConfigureAwait(false))
-                .Select(e => new EnforcementOrderListResource(e)));
+                .Select(e => new EnforcementOrderSummaryView(e)));
         }
 
         // POST: api/EnforcementOrders
@@ -197,7 +198,7 @@ namespace Enfo.API.Controllers
         [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Post(
-            [FromBody] EnforcementOrderCreateResource resource)
+            [FromBody] EnforcementOrderCreate resource)
         {
             if (resource is null || !ModelState.IsValid)
             {
@@ -235,7 +236,7 @@ namespace Enfo.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Put(
             [FromRoute] int id,
-            [FromBody] EnforcementOrderUpdateResource resource)
+            [FromBody] EnforcementOrderUpdate resource)
         {
             if (resource is null || !ModelState.IsValid)
             {

@@ -6,18 +6,20 @@ using Enfo.Repository.Querying;
 using Enfo.Repository.Repositories;
 using Enfo.Repository.Utils;
 using Enfo.Infrastructure.Contexts;
+using Enfo.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using static Enfo.Domain.Entities.EnforcementOrder;
 using static Enfo.Domain.Entities.Enums;
 using static Enfo.Repository.Utils.DateUtils;
-using static Enfo.Repository.Resources.EnforcementOrderCreateResource;
-using static Enfo.Repository.Resources.EnforcementOrderUpdateResource;
+using static Enfo.Repository.Resources.EnforcementOrder.EnforcementOrderCreate;
+using static Enfo.Repository.Resources.EnforcementOrder.EnforcementOrderUpdate;
 
 namespace Enfo.Infrastructure.Repositories
 {
-    public class EnforcementOrderRepository : WritableRepository<EnforcementOrder>, IEnforcementOrderRepository
+    public class EnforcementOrderRepository :  IEnforcementOrderRepository
     {
-        public EnforcementOrderRepository(EnfoDbContext context) : base(context) { }
+        private readonly EnfoDbContext _context;
+        public EnforcementOrderRepository(EnfoDbContext context) => _context = context;
 
         public Task<EnforcementOrder> GetEnforcementOrder(int id, bool onlyIfPublic)
         {
@@ -28,7 +30,7 @@ namespace Enfo.Infrastructure.Repositories
 
             var include = new EnforcementOrderIncludeAll();
 
-            return GetByIdAsync(id, spec, include);
+            return GetAsync(id, spec, include);
         }
 
         public Task<IReadOnlyList<EnforcementOrder>> FindEnforcementOrdersAsync(
@@ -206,7 +208,7 @@ namespace Enfo.Infrastructure.Repositories
             DateTime? proposedOrderPostedDate, PublicationState publicationStatus, string requirements,
             decimal? settlementAmount)
         {
-            var result = CreateNewEnforcementOrderEntity(
+            var result = ValidateNewEnforcementOrder(
                 createAs, cause, commentContactId, commentPeriodClosesDate, county, facilityName, executedDate,
                 executedOrderPostedDate, hearingCommentPeriodClosesDate, hearingContactId, hearingDate, hearingLocation,
                 isHearingScheduled, legalAuthorityId, orderNumber, proposedOrderPostedDate, publicationStatus,
@@ -248,7 +250,7 @@ namespace Enfo.Infrastructure.Repositories
             string requirements,
             decimal? settlementAmount)
         {
-            var originalOrder = await GetByIdAsync(id).ConfigureAwait(false);
+            var originalOrder = await GetAsync(id).ConfigureAwait(false);
 
             var result = UpdateEnforcementOrder(originalOrder,
                 cause, commentContactId, commentPeriodClosesDate, county, facilityName, executedDate,

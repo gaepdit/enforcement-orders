@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Enfo.Repository.Resources;
+using Enfo.Repository.Resources.Address;
 using Xunit;
 
 namespace Enfo.API.Tests.IntegrationTests
@@ -33,7 +34,7 @@ namespace Enfo.API.Tests.IntegrationTests
 
             result.Result.Should().BeOfType<OkObjectResult>();
             var actionResult = result.Result as OkObjectResult;
-            Assert.IsAssignableFrom<PaginatedList<AddressResource>>(actionResult.Value);
+            Assert.IsAssignableFrom<PaginatedList<AddressView>>(actionResult.Value);
             actionResult.StatusCode.Should().Be(200);
         }
 
@@ -43,14 +44,14 @@ namespace Enfo.API.Tests.IntegrationTests
             var repository = this.GetRepository<Address>();
             var controller = new AddressesController(repository);
 
-            var items = (PaginatedList<AddressResource>)((await controller.Get()
+            var items = (PaginatedList<AddressView>)((await controller.Get()
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
             var expected = _addresses
                 .OrderBy(e => e.Id)
                 .Where(e => e.Active)
                 .Take(PaginationFilter.DefaultPageSize)
-                .Select(e => new AddressResource(e));
+                .Select(e => new AddressView(e));
 
             items.Items.Should().BeEquivalentTo(expected);
         }
@@ -61,13 +62,13 @@ namespace Enfo.API.Tests.IntegrationTests
             var repository = this.GetRepository<Address>();
             var controller = new AddressesController(repository);
 
-            var items = (PaginatedList<AddressResource>)((await controller.Get(
+            var items = (PaginatedList<AddressView>)((await controller.Get(
                 paging: new PaginationFilter() { PageSize = 0 })
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
             var expected = _addresses
                 .Where(e => e.Active)
-                .Select(e => new AddressResource(e));
+                .Select(e => new AddressView(e));
 
             items.Items.Should().BeEquivalentTo(expected);
         }
@@ -78,13 +79,13 @@ namespace Enfo.API.Tests.IntegrationTests
             var repository = this.GetRepository<Address>();
             var controller = new AddressesController(repository);
 
-            var items = (PaginatedList<AddressResource>)((await controller.Get(
+            var items = (PaginatedList<AddressView>)((await controller.Get(
                 new ActiveItemFilter() { IncludeInactive = true },
                 new PaginationFilter() { PageSize = 0 })
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
             var expected = _addresses
-                .Select(e => new AddressResource(e));
+                .Select(e => new AddressView(e));
 
             items.Items.Should().BeEquivalentTo(expected);
         }
@@ -98,7 +99,7 @@ namespace Enfo.API.Tests.IntegrationTests
             int pageSize = 3;
             int pageNumber = 2;
 
-            var items = (PaginatedList<AddressResource>)((await controller.Get(
+            var items = (PaginatedList<AddressView>)((await controller.Get(
                 paging: new PaginationFilter() { PageSize = pageSize, Page = pageNumber })
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
@@ -106,7 +107,7 @@ namespace Enfo.API.Tests.IntegrationTests
                 .OrderBy(e => e.Id)
                 .Where(e => e.Active)
                 .Skip((pageNumber - 1) * pageSize).Take(pageSize)
-                .Select(e => new AddressResource(e));
+                .Select(e => new AddressView(e));
 
             items.Items.Should().BeEquivalentTo(expected);
         }
@@ -153,7 +154,7 @@ namespace Enfo.API.Tests.IntegrationTests
 
             result.Result.Should().BeOfType<OkObjectResult>();
             var actionResult = result.Result as OkObjectResult;
-            actionResult.Value.Should().BeOfType<AddressResource>();
+            actionResult.Value.Should().BeOfType<AddressView>();
             actionResult.StatusCode.Should().Be(200);
         }
 
@@ -169,7 +170,7 @@ namespace Enfo.API.Tests.IntegrationTests
             var value = ((await controller.Get(id).ConfigureAwait(false))
                 .Result as OkObjectResult).Value;
 
-            var expected = new AddressResource(_addresses
+            var expected = new AddressView(_addresses
                 .Single(e => e.Id == id));
 
             value.Should().BeEquivalentTo(expected);
@@ -197,7 +198,7 @@ namespace Enfo.API.Tests.IntegrationTests
             var repository = this.GetRepository<Address>();
             var controller = new AddressesController(repository);
 
-            var item = new AddressCreateResource()
+            var item = new AddressCreate()
             {
                 City = "Atlanta",
                 PostalCode = "33333",
@@ -220,7 +221,7 @@ namespace Enfo.API.Tests.IntegrationTests
             var repository = this.GetRepository<Address>();
             var controller = new AddressesController(repository);
 
-            var item = new AddressCreateResource()
+            var item = new AddressCreate()
             {
                 City = "Atlanta",
                 PostalCode = "33333",
@@ -257,14 +258,14 @@ namespace Enfo.API.Tests.IntegrationTests
             (result as BadRequestObjectResult).StatusCode.Should().Be(400);
 
             // Verify repository not changed after attempting to Post null item.
-            var resultItems = (PaginatedList<AddressResource>)((await controller.Get(
+            var resultItems = (PaginatedList<AddressView>)((await controller.Get(
                 new ActiveItemFilter() { IncludeInactive = true },
                 paging: new PaginationFilter() { PageSize = 0 })
                 .ConfigureAwait(false))
                 .Result as OkObjectResult).Value;
 
             var expected = _addresses
-                .Select(e => new AddressResource(e));
+                .Select(e => new AddressView(e));
 
             resultItems.Items.Should().BeEquivalentTo(expected);
         }
@@ -275,7 +276,7 @@ namespace Enfo.API.Tests.IntegrationTests
             var repository = this.GetRepository<Address>();
             var controller = new AddressesController(repository);
 
-            var item = new AddressCreateResource()
+            var item = new AddressCreate()
             {
                 City = null,
                 PostalCode = "abc",
@@ -296,14 +297,14 @@ namespace Enfo.API.Tests.IntegrationTests
             objectResultValue.Keys.Should().BeEquivalentTo(new List<string>() { "City", "PostalCode" });
 
             // Verify repository not changed after attempting to Post invalid item.
-            var resultItems = (PaginatedList<AddressResource>)((await controller.Get(
+            var resultItems = (PaginatedList<AddressView>)((await controller.Get(
                 new ActiveItemFilter() { IncludeInactive = true },
                 paging: new PaginationFilter() { PageSize = 0 })
                 .ConfigureAwait(false))
                 .Result as OkObjectResult).Value;
 
             var expected = _addresses
-                .Select(e => new AddressResource(e));
+                .Select(e => new AddressView(e));
 
             resultItems.Items.Should().BeEquivalentTo(expected);
         }
@@ -315,7 +316,7 @@ namespace Enfo.API.Tests.IntegrationTests
             var controller = new AddressesController(repository);
 
             var id = 2000;
-            var target = new AddressUpdateResource
+            var target = new AddressUpdate
             {
                 City = "Atlanta",
                 PostalCode = "33333",
@@ -361,7 +362,7 @@ namespace Enfo.API.Tests.IntegrationTests
 
             var id = 9999;
 
-            var target = new AddressUpdateResource
+            var target = new AddressUpdate
             {
                 City = "Atlanta",
                 PostalCode = "33333",

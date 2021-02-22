@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
 using Enfo.Repository.Resources;
+using Enfo.Repository.Resources.LegalAuthority;
 using Xunit;
 
 namespace Enfo.API.Tests.IntegrationTests
@@ -32,7 +33,7 @@ namespace Enfo.API.Tests.IntegrationTests
 
             result.Result.Should().BeOfType<OkObjectResult>();
             var actionResult = (result.Result as OkObjectResult);
-            Assert.IsAssignableFrom<PaginatedList<LegalAuthorityResource>>(actionResult.Value);
+            Assert.IsAssignableFrom<PaginatedList<LegalAuthorityView>>(actionResult.Value);
             actionResult.StatusCode.Should().Be(200);
         }
 
@@ -42,14 +43,14 @@ namespace Enfo.API.Tests.IntegrationTests
             var repository = this.GetRepository<LegalAuthority>();
             var controller = new LegalAuthoritiesController(repository);
 
-            var items = (PaginatedList<LegalAuthorityResource>)((await controller.Get()
+            var items = (PaginatedList<LegalAuthorityView>)((await controller.Get()
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
             var expected = _legalAuthorities
                 .OrderBy(e => e.Id)
                 .Where(e => e.Active)
                 .Take(PaginationFilter.DefaultPageSize)
-                .Select(e => new LegalAuthorityResource(e));
+                .Select(e => new LegalAuthorityView(e));
 
             items.Items.Should().BeEquivalentTo(expected);
         }
@@ -60,13 +61,13 @@ namespace Enfo.API.Tests.IntegrationTests
             var repository = this.GetRepository<LegalAuthority>();
             var controller = new LegalAuthoritiesController(repository);
 
-            var items = (PaginatedList<LegalAuthorityResource>)((await controller.Get(
+            var items = (PaginatedList<LegalAuthorityView>)((await controller.Get(
                 paging: new PaginationFilter() { PageSize = 0 })
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
             var expected = _legalAuthorities
                 .Where(e => e.Active)
-                .Select(e => new LegalAuthorityResource(e));
+                .Select(e => new LegalAuthorityView(e));
 
             items.Items.Should().BeEquivalentTo(expected);
         }
@@ -77,13 +78,13 @@ namespace Enfo.API.Tests.IntegrationTests
             var repository = this.GetRepository<LegalAuthority>();
             var controller = new LegalAuthoritiesController(repository);
 
-            var items = (PaginatedList<LegalAuthorityResource>)((await controller.Get(
+            var items = (PaginatedList<LegalAuthorityView>)((await controller.Get(
                 new ActiveItemFilter() { IncludeInactive = true },
                 new PaginationFilter() { PageSize = 0 })
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
             var expected = _legalAuthorities
-                .Select(e => new LegalAuthorityResource(e));
+                .Select(e => new LegalAuthorityView(e));
 
             items.Items.Should().BeEquivalentTo(expected);
         }
@@ -97,7 +98,7 @@ namespace Enfo.API.Tests.IntegrationTests
             int pageSize = 3;
             int pageNumber = 1;
 
-            var items = (PaginatedList<LegalAuthorityResource>)((await controller.Get(
+            var items = (PaginatedList<LegalAuthorityView>)((await controller.Get(
                 paging: new PaginationFilter() { PageSize = pageSize, Page = pageNumber })
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
@@ -105,7 +106,7 @@ namespace Enfo.API.Tests.IntegrationTests
                 .OrderBy(e => e.Id)
                 .Where(e => e.Active)
                 .Skip((pageNumber - 1) * pageSize).Take(pageSize)
-                .Select(e => new LegalAuthorityResource(e));
+                .Select(e => new LegalAuthorityView(e));
 
             items.Items.Should().BeEquivalentTo(expected);
         }
@@ -152,7 +153,7 @@ namespace Enfo.API.Tests.IntegrationTests
 
             result.Result.Should().BeOfType<OkObjectResult>();
             var actionResult = result.Result as OkObjectResult;
-            actionResult.Value.Should().BeOfType<LegalAuthorityResource>();
+            actionResult.Value.Should().BeOfType<LegalAuthorityView>();
             actionResult.StatusCode.Should().Be(200);
         }
 
@@ -168,7 +169,7 @@ namespace Enfo.API.Tests.IntegrationTests
             var value = ((await controller.Get(id).ConfigureAwait(false))
                 .Result as OkObjectResult).Value;
 
-            var expected = new LegalAuthorityResource(_legalAuthorities
+            var expected = new LegalAuthorityView(_legalAuthorities
                 .Single(e => e.Id == id));
 
             value.Should().BeEquivalentTo(expected);
@@ -196,7 +197,7 @@ namespace Enfo.API.Tests.IntegrationTests
             var repository = this.GetRepository<LegalAuthority>();
             var controller = new LegalAuthoritiesController(repository);
 
-            var item = new LegalAuthorityCreateResource()
+            var item = new LegalAuthorityCreate()
             {
                 AuthorityName = "New"
             };
@@ -216,7 +217,7 @@ namespace Enfo.API.Tests.IntegrationTests
             var repository = this.GetRepository<LegalAuthority>();
             var controller = new LegalAuthoritiesController(repository);
 
-            var item = new LegalAuthorityCreateResource()
+            var item = new LegalAuthorityCreate()
             {
                 AuthorityName = "New"
             };
@@ -250,14 +251,14 @@ namespace Enfo.API.Tests.IntegrationTests
             (result as BadRequestObjectResult).StatusCode.Should().Be(400);
 
             // Verify repository not changed after attempting to Post null item.
-            var resultItems = (PaginatedList<LegalAuthorityResource>)((await controller.Get(
+            var resultItems = (PaginatedList<LegalAuthorityView>)((await controller.Get(
                 new ActiveItemFilter() { IncludeInactive = true },
                 paging: new PaginationFilter() { PageSize = 0 })
                 .ConfigureAwait(false))
                 .Result as OkObjectResult).Value;
 
             var expected = _legalAuthorities
-                .Select(e => new LegalAuthorityResource(e));
+                .Select(e => new LegalAuthorityView(e));
 
             resultItems.Items.Should().BeEquivalentTo(expected);
         }
@@ -269,7 +270,7 @@ namespace Enfo.API.Tests.IntegrationTests
             var controller = new LegalAuthoritiesController(repository);
 
             var id = 1;
-            var target = new LegalAuthorityUpdateResource
+            var target = new LegalAuthorityUpdate
             {
                 Active = false,
                 AuthorityName = "XYZ"
@@ -316,7 +317,7 @@ namespace Enfo.API.Tests.IntegrationTests
             var controller = new LegalAuthoritiesController(repository);
 
             var id = 9999;
-            var target = new LegalAuthorityUpdateResource
+            var target = new LegalAuthorityUpdate
             {
                 Active = false,
                 AuthorityName = "XYZ"

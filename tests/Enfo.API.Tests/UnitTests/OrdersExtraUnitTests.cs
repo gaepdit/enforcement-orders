@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Enfo.Repository.Resources;
+using Enfo.Repository.Resources.EnforcementOrder;
 using Xunit;
 using static Enfo.Domain.Entities.Enums;
 
@@ -87,7 +88,7 @@ namespace Enfo.API.Tests.IntegrationTests
 
             result.Result.Should().BeOfType<OkObjectResult>();
             var actionResult = result.Result as OkObjectResult;
-            Assert.IsAssignableFrom<IEnumerable<EnforcementOrderListResource>>(actionResult.Value);
+            Assert.IsAssignableFrom<IEnumerable<EnforcementOrderSummaryView>>(actionResult.Value);
             actionResult.StatusCode.Should().Be(200);
         }
 
@@ -104,7 +105,7 @@ namespace Enfo.API.Tests.IntegrationTests
 
             result.Result.Should().BeOfType<OkObjectResult>();
             var actionResult = result.Result as OkObjectResult;
-            Assert.IsAssignableFrom<IEnumerable<EnforcementOrderListResource>>(actionResult.Value);
+            Assert.IsAssignableFrom<IEnumerable<EnforcementOrderSummaryView>>(actionResult.Value);
             actionResult.StatusCode.Should().Be(200);
         }
 
@@ -121,7 +122,7 @@ namespace Enfo.API.Tests.IntegrationTests
 
             result.Result.Should().BeOfType<OkObjectResult>();
             var actionResult = result.Result as OkObjectResult;
-            Assert.IsAssignableFrom<IEnumerable<EnforcementOrderListResource>>(actionResult.Value);
+            Assert.IsAssignableFrom<IEnumerable<EnforcementOrderSummaryView>>(actionResult.Value);
             actionResult.StatusCode.Should().Be(200);
         }
 
@@ -138,7 +139,7 @@ namespace Enfo.API.Tests.IntegrationTests
 
             result.Result.Should().BeOfType<OkObjectResult>();
             var actionResult = result.Result as OkObjectResult;
-            Assert.IsAssignableFrom<IEnumerable<EnforcementOrderListResource>>(actionResult.Value);
+            Assert.IsAssignableFrom<IEnumerable<EnforcementOrderSummaryView>>(actionResult.Value);
             actionResult.StatusCode.Should().Be(200);
         }
     }

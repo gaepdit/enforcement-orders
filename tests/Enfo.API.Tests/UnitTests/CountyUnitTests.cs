@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Enfo.Repository.Resources;
+using Enfo.Repository.Resources.County;
 using Xunit;
 
 namespace Enfo.API.Tests.UnitTests
@@ -27,7 +28,7 @@ namespace Enfo.API.Tests.UnitTests
         [Fact]
         public async Task GetReturnsCorrectly()
         {
-            var mock = new Mock<IReadableRepository<County>>();
+            var mock = new Mock<IReadOnlyRepository<County>>();
 
             mock.Setup(l => l.ListAsync(
                     It.IsAny<ISpecification<County>>(),
@@ -48,7 +49,7 @@ namespace Enfo.API.Tests.UnitTests
 
             result.Result.Should().BeOfType<OkObjectResult>();
             var actionResult = result.Result as OkObjectResult;
-            Assert.IsAssignableFrom<PaginatedList<CountyResource>>(actionResult.Value);
+            Assert.IsAssignableFrom<PaginatedList<CountyView>>(actionResult.Value);
             actionResult.StatusCode.Should().Be(200);
         }
 
@@ -78,7 +79,7 @@ namespace Enfo.API.Tests.UnitTests
 
             result.Result.Should().BeOfType<OkObjectResult>();
             var actionResult = result.Result as OkObjectResult;
-            Assert.IsAssignableFrom<PaginatedList<CountyResource>>(actionResult.Value);
+            Assert.IsAssignableFrom<PaginatedList<CountyView>>(actionResult.Value);
             actionResult.StatusCode.Should().Be(200);
         }
 
@@ -102,7 +103,7 @@ namespace Enfo.API.Tests.UnitTests
 
             result.Result.Should().BeOfType<OkObjectResult>();
             var actionResult = result.Result as OkObjectResult;
-            actionResult.Value.Should().BeOfType<CountyResource>();
+            actionResult.Value.Should().BeOfType<CountyView>();
             actionResult.StatusCode.Should().Be(200);
         }
 
@@ -123,7 +124,7 @@ namespace Enfo.API.Tests.UnitTests
             var value = ((await controller.Get(id).ConfigureAwait(false))
                 .Result as OkObjectResult).Value;
 
-            var expected = new CountyResource(item);
+            var expected = new CountyView(item);
 
             value.Should().BeEquivalentTo(expected);
         }

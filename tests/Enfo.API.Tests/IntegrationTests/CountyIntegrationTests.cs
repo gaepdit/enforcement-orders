@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
 using Enfo.Repository.Resources;
+using Enfo.Repository.Resources.County;
 using Xunit;
 
 namespace Enfo.API.Tests.IntegrationTests
@@ -32,7 +33,7 @@ namespace Enfo.API.Tests.IntegrationTests
 
             result.Result.Should().BeOfType<OkObjectResult>();
             var actionResult = result.Result as OkObjectResult;
-            Assert.IsAssignableFrom<PaginatedList<CountyResource>>(actionResult.Value);
+            Assert.IsAssignableFrom<PaginatedList<CountyView>>(actionResult.Value);
             actionResult.StatusCode.Should().Be(200);
         }
 
@@ -42,13 +43,13 @@ namespace Enfo.API.Tests.IntegrationTests
             var repository = this.GetRepository<County>();
             var controller = new CountiesController(repository);
 
-            var items = (PaginatedList<CountyResource>)((await controller.Get()
+            var items = (PaginatedList<CountyView>)((await controller.Get()
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
             var expected = _counties
                 .OrderBy(e => e.CountyName)
                 .Take(PaginationFilter.DefaultPageSize)
-                .Select(e => new CountyResource(e));
+                .Select(e => new CountyView(e));
 
             items.Items.Should().BeEquivalentTo(expected);
         }
@@ -59,12 +60,12 @@ namespace Enfo.API.Tests.IntegrationTests
             var repository = this.GetRepository<County>();
             var controller = new CountiesController(repository);
 
-            var items = (PaginatedList<CountyResource>)((await controller.Get(
+            var items = (PaginatedList<CountyView>)((await controller.Get(
                 new PaginationFilter() { PageSize = 0 })
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
             var expected = _counties
-                .Select(e => new CountyResource(e));
+                .Select(e => new CountyView(e));
 
             items.Items.Should().BeEquivalentTo(expected);
         }
@@ -79,14 +80,14 @@ namespace Enfo.API.Tests.IntegrationTests
             int pageNumber = 2;
             int firstItemIndex = (pageNumber - 1) * pageSize;
 
-            var items = (PaginatedList<CountyResource>)((await controller.Get(
+            var items = (PaginatedList<CountyView>)((await controller.Get(
                 new PaginationFilter() { PageSize = pageSize, Page = pageNumber })
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
             var expected = _counties
                 .OrderBy(e => e.CountyName)
                 .Skip((pageNumber - 1) * pageSize).Take(pageSize)
-                .Select(e => new CountyResource(e));
+                .Select(e => new CountyView(e));
 
             items.Items.Should().BeEquivalentTo(expected);
         }
@@ -133,7 +134,7 @@ namespace Enfo.API.Tests.IntegrationTests
 
             result.Result.Should().BeOfType<OkObjectResult>();
             var actionResult = result.Result as OkObjectResult;
-            actionResult.Value.Should().BeOfType<CountyResource>();
+            actionResult.Value.Should().BeOfType<CountyView>();
             actionResult.StatusCode.Should().Be(200);
         }
 
@@ -149,7 +150,7 @@ namespace Enfo.API.Tests.IntegrationTests
             var value = ((await controller.Get(id).ConfigureAwait(false))
                 .Result as OkObjectResult).Value;
 
-            var expected = new CountyResource(_counties
+            var expected = new CountyView(_counties
                 .Single(e => e.Id == id));
 
             value.Should().BeEquivalentTo(expected);

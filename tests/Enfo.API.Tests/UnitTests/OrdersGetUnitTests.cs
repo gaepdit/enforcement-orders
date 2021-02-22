@@ -11,6 +11,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Enfo.Repository.Resources;
+using Enfo.Repository.Resources.EnforcementOrder;
 using Xunit;
 using static Enfo.Domain.Entities.Enums;
 
@@ -87,7 +88,7 @@ namespace Enfo.API.Tests.UnitTests
 
             result.Result.Should().BeOfType<OkObjectResult>();
             var actionResult = result.Result as OkObjectResult;
-            Assert.IsAssignableFrom<PaginatedList<EnforcementOrderListResource>>(actionResult.Value);
+            Assert.IsAssignableFrom<PaginatedList<EnforcementOrderSummaryView>>(actionResult.Value);
             actionResult.StatusCode.Should().Be(200);
         }
 
@@ -111,7 +112,7 @@ namespace Enfo.API.Tests.UnitTests
 
             result.Result.Should().BeOfType<OkObjectResult>();
             var actionResult = result.Result as OkObjectResult;
-            actionResult.Value.Should().BeOfType<EnforcementOrderItemResource>();
+            actionResult.Value.Should().BeOfType<EnforcementOrderView>();
             actionResult.StatusCode.Should().Be(200);
         }
 
@@ -133,7 +134,7 @@ namespace Enfo.API.Tests.UnitTests
             var value = ((await controller.Get(id).ConfigureAwait(false))
                 .Result as OkObjectResult).Value;
 
-            var expected = new EnforcementOrderItemResource(item);
+            var expected = new EnforcementOrderView(item);
 
             value.Should().BeEquivalentTo(expected);
         }

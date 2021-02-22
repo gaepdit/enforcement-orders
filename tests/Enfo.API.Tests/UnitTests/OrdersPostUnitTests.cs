@@ -10,6 +10,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Enfo.Repository.Resources;
+using Enfo.Repository.Resources.EnforcementOrder;
 using Xunit;
 using static Enfo.Domain.Entities.EnforcementOrder;
 
@@ -45,7 +46,7 @@ namespace Enfo.API.Tests.IntegrationTests
         [Fact]
         public async Task AddNewItemReturnsCorrectly()
         {
-            var item = new EnforcementOrderCreateResource()
+            var item = new EnforcementOrderCreate()
             {
                 FacilityName = "TEST FACILITY",
                 County = "Appling",
@@ -93,7 +94,7 @@ namespace Enfo.API.Tests.IntegrationTests
         [Fact]
         public async Task CreateWithDuplicateOrderNumberFails()
         {
-            var item = new EnforcementOrderCreateResource()
+            var item = new EnforcementOrderCreate()
             {
                 FacilityName = "TEST FACILITY",
                 County = "Appling",
@@ -154,7 +155,7 @@ namespace Enfo.API.Tests.IntegrationTests
         public async Task UpdateOrderSucceeds()
         {
             var id = 140;
-            var target = new EnforcementOrderUpdateResource()
+            var target = new EnforcementOrderUpdate()
             {
                 Cause = "Integer feugiat scelerisque varius morbi enim nunc faucibus a.",
                 CommentContactId = null,
@@ -232,7 +233,7 @@ namespace Enfo.API.Tests.IntegrationTests
         public async Task UpdateWithMissingIdFails()
         {
             var id = 9999;
-            var target = new EnforcementOrderUpdateResource()
+            var target = new EnforcementOrderUpdate()
             {
                 Cause = "Integer feugiat scelerisque varius morbi enim nunc faucibus a.",
                 CommentContactId = null,
@@ -276,7 +277,7 @@ namespace Enfo.API.Tests.IntegrationTests
         {
             var id = 140;
 
-            var target = new EnforcementOrderUpdateResource()
+            var target = new EnforcementOrderUpdate()
             {
                 Cause = "Integer feugiat scelerisque varius morbi enim nunc faucibus a.",
                 CommentContactId = null,

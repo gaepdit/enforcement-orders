@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Enfo.Repository.Resources;
+using Enfo.Repository.Resources.EnforcementOrder;
 using Xunit;
 using static Enfo.Domain.Entities.Enums;
 
@@ -51,7 +52,7 @@ namespace Enfo.API.Tests.IntegrationTests
 
             result.Result.Should().BeOfType<OkObjectResult>();
             var actionResult = result.Result as OkObjectResult;
-            Assert.IsAssignableFrom<PaginatedList<EnforcementOrderListResource>>(actionResult.Value);
+            Assert.IsAssignableFrom<PaginatedList<EnforcementOrderSummaryView>>(actionResult.Value);
             actionResult.StatusCode.Should().Be(200);
         }
 
@@ -61,14 +62,14 @@ namespace Enfo.API.Tests.IntegrationTests
             var repository = this.GetEnforcementOrderRepository();
             var controller = new EnforcementOrdersController(repository);
 
-            var items = (PaginatedList<EnforcementOrderListResource>)((await controller.Get()
+            var items = (PaginatedList<EnforcementOrderSummaryView>)((await controller.Get()
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
             var expected = _orders
                 .Where(e => !e.Deleted)
                 .OrderBy(e => e.Id)
                 .Take(PaginationFilter.DefaultPageSize)
-                .Select(e => new EnforcementOrderListResource(e));
+                .Select(e => new EnforcementOrderSummaryView(e));
 
             items.Items.Should().BeEquivalentTo(expected);
         }
@@ -79,13 +80,13 @@ namespace Enfo.API.Tests.IntegrationTests
             var repository = this.GetEnforcementOrderRepository();
             var controller = new EnforcementOrdersController(repository);
 
-            var items = (PaginatedList<EnforcementOrderListResource>)((await controller.Get(
+            var items = (PaginatedList<EnforcementOrderSummaryView>)((await controller.Get(
                 paging: new PaginationFilter() { PageSize = 0 })
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
             var expected = _orders
                 .Where(e => !e.Deleted)
-                .Select(e => new EnforcementOrderListResource(e));
+                .Select(e => new EnforcementOrderSummaryView(e));
 
             items.Items.Should().BeEquivalentTo(expected);
         }
@@ -100,7 +101,7 @@ namespace Enfo.API.Tests.IntegrationTests
             var repository = this.GetEnforcementOrderRepository();
             var controller = new EnforcementOrdersController(repository);
 
-            var items = (PaginatedList<EnforcementOrderListResource>)((await controller.Get(
+            var items = (PaginatedList<EnforcementOrderSummaryView>)((await controller.Get(
                 new EnforcementOrderFilter() { SortOrder = sortOrder })
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
@@ -116,7 +117,7 @@ namespace Enfo.API.Tests.IntegrationTests
             var expected = orderedOrders
                 .ThenBy(e => e.FacilityName)
                 .Where(e => !e.Deleted)
-                .Select(e => new EnforcementOrderListResource(e));
+                .Select(e => new EnforcementOrderSummaryView(e));
 
             items.Items.Should().BeEquivalentTo(expected, o => o.WithStrictOrdering());
         }
@@ -134,7 +135,7 @@ namespace Enfo.API.Tests.IntegrationTests
             var repository = this.GetEnforcementOrderRepository();
             var controller = new EnforcementOrdersController(repository);
 
-            var items = (PaginatedList<EnforcementOrderListResource>)((await controller.Get(
+            var items = (PaginatedList<EnforcementOrderSummaryView>)((await controller.Get(
                 new EnforcementOrderFilter() { SortOrder = sortOrder },
                 new PaginationFilter() { PageSize = pageSize, Page = pageNumber })
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
@@ -152,7 +153,7 @@ namespace Enfo.API.Tests.IntegrationTests
                 .ThenBy(e => e.FacilityName)
                 .Where(e => !e.Deleted)
                 .Skip((pageNumber - 1) * pageSize).Take(pageSize)
-                .Select(e => new EnforcementOrderListResource(e));
+                .Select(e => new EnforcementOrderSummaryView(e));
 
             items.Items.Should().BeEquivalentTo(expected, o => o.WithStrictOrdering());
         }
@@ -203,12 +204,12 @@ namespace Enfo.API.Tests.IntegrationTests
                 .ConfigureAwait(false))
                 .Result as OkObjectResult;
 
-            var items = result.Value as PaginatedList<EnforcementOrderListResource>;
+            var items = result.Value as PaginatedList<EnforcementOrderSummaryView>;
 
             var expected = _orders
                 .Where(e => e.FacilityName.ToLower().Contains(facilityFilter.ToLower()))
                 .Where(e => !e.Deleted)
-                .Select(e => new EnforcementOrderListResource(e));
+                .Select(e => new EnforcementOrderSummaryView(e));
 
             items.Items.Should().BeEquivalentTo(expected);
         }
@@ -227,12 +228,12 @@ namespace Enfo.API.Tests.IntegrationTests
                 .ConfigureAwait(false))
                 .Result as OkObjectResult;
 
-            var items = result.Value as PaginatedList<EnforcementOrderListResource>;
+            var items = result.Value as PaginatedList<EnforcementOrderSummaryView>;
 
             var expected = _orders
                 .Where(e => e.County.ToLower().Contains(county.ToLower()))
                 .Where(e => !e.Deleted)
-                .Select(e => new EnforcementOrderListResource(e));
+                .Select(e => new EnforcementOrderSummaryView(e));
 
             items.Items.Should().BeEquivalentTo(expected);
         }
@@ -251,12 +252,12 @@ namespace Enfo.API.Tests.IntegrationTests
                 .ConfigureAwait(false))
                 .Result as OkObjectResult;
 
-            var items = result.Value as PaginatedList<EnforcementOrderListResource>;
+            var items = result.Value as PaginatedList<EnforcementOrderSummaryView>;
 
             var expected = _orders
                 .Where(e => e.LegalAuthorityId.Equals(legalAuth))
                 .Where(e => !e.Deleted)
-                .Select(e => new EnforcementOrderListResource(e));
+                .Select(e => new EnforcementOrderSummaryView(e));
 
             items.Items.Should().BeEquivalentTo(expected);
         }
@@ -288,14 +289,14 @@ namespace Enfo.API.Tests.IntegrationTests
                 .ConfigureAwait(false))
                 .Result as OkObjectResult;
 
-            var items = result.Value as PaginatedList<EnforcementOrderListResource>;
+            var items = result.Value as PaginatedList<EnforcementOrderSummaryView>;
 
             var expected = _orders
                 .Where(e => (status == ActivityStatus.All && (e.ProposedOrderPostedDate >= fromDate || e.ExecutedDate >= fromDate))
                     || (status == ActivityStatus.Executed && e.IsExecutedOrder && e.ExecutedDate >= fromDate)
                     || (status == ActivityStatus.Proposed && e.IsProposedOrder && !e.IsExecutedOrder && e.ProposedOrderPostedDate >= fromDate))
                 .Where(e => !e.Deleted)
-                .Select(e => new EnforcementOrderListResource(e));
+                .Select(e => new EnforcementOrderSummaryView(e));
 
             items.Items.Should().BeEquivalentTo(expected);
         }
@@ -315,14 +316,14 @@ namespace Enfo.API.Tests.IntegrationTests
                 .ConfigureAwait(false))
                 .Result as OkObjectResult;
 
-            var items = result.Value as PaginatedList<EnforcementOrderListResource>;
+            var items = result.Value as PaginatedList<EnforcementOrderSummaryView>;
 
             var expected = _orders
                 .Where(e => publicationStatus == PublicationStatus.All
                     || (publicationStatus == PublicationStatus.Draft && e.PublicationStatus == EnforcementOrder.PublicationState.Draft)
                     || (publicationStatus == PublicationStatus.Published && e.PublicationStatus == EnforcementOrder.PublicationState.Published))
                 .Where(e => !e.Deleted)
-                .Select(e => new EnforcementOrderListResource(e));
+                .Select(e => new EnforcementOrderSummaryView(e));
 
             items.Items.Should().BeEquivalentTo(expected);
         }
@@ -341,14 +342,14 @@ namespace Enfo.API.Tests.IntegrationTests
                 .ConfigureAwait(false))
                 .Result as OkObjectResult;
 
-            var items = result.Value as PaginatedList<EnforcementOrderListResource>;
+            var items = result.Value as PaginatedList<EnforcementOrderSummaryView>;
 
             var expected = _orders
                 .Where(e => (status == ActivityStatus.All && (e.ProposedOrderPostedDate <= tillDate || e.ExecutedDate <= tillDate))
                     || (status == ActivityStatus.Executed && e.IsExecutedOrder && e.ExecutedDate <= tillDate)
                     || (status == ActivityStatus.Proposed && e.IsProposedOrder && !e.IsExecutedOrder && e.ProposedOrderPostedDate <= tillDate))
                 .Where(e => !e.Deleted)
-                .Select(e => new EnforcementOrderListResource(e));
+                .Select(e => new EnforcementOrderSummaryView(e));
 
             items.Items.Should().BeEquivalentTo(expected);
         }
@@ -368,12 +369,12 @@ namespace Enfo.API.Tests.IntegrationTests
                 .ConfigureAwait(false))
                 .Result as OkObjectResult;
 
-            var items = result.Value as PaginatedList<EnforcementOrderListResource>;
+            var items = result.Value as PaginatedList<EnforcementOrderSummaryView>;
 
             var expected = _orders
                 .Where(e => e.OrderNumber.ToLower().Contains(orderNumber.ToLower()))
                 .Where(e => !e.Deleted)
-                .Select(e => new EnforcementOrderListResource(e));
+                .Select(e => new EnforcementOrderSummaryView(e));
 
             items.Items.Should().BeEquivalentTo(expected);
         }
@@ -398,13 +399,13 @@ namespace Enfo.API.Tests.IntegrationTests
                 .ConfigureAwait(false))
                 .Result as OkObjectResult;
 
-            var items = result.Value as PaginatedList<EnforcementOrderListResource>;
+            var items = result.Value as PaginatedList<EnforcementOrderSummaryView>;
 
             var expected = _orders
                 .Where(e => e.Cause.ToLower().Contains(textContains.ToLower())
                     || e.Requirements.ToLower().Contains(textContains.ToLower()))
                 .Where(e => !e.Deleted)
-                .Select(e => new EnforcementOrderListResource(e));
+                .Select(e => new EnforcementOrderSummaryView(e));
 
             items.Items.Should().BeEquivalentTo(expected);
         }
@@ -415,14 +416,14 @@ namespace Enfo.API.Tests.IntegrationTests
             var repository = this.GetEnforcementOrderRepository();
             var controller = new EnforcementOrdersController(repository);
 
-            var items = (PaginatedList<EnforcementOrderListResource>)((await controller.Get(
+            var items = (PaginatedList<EnforcementOrderSummaryView>)((await controller.Get(
                 new EnforcementOrderFilter() { Deleted = true },
                 new PaginationFilter() { PageSize = 0 })
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
             var expected = _orders
                 .Where(e => e.Deleted)
-                .Select(e => new EnforcementOrderListResource(e));
+                .Select(e => new EnforcementOrderSummaryView(e));
 
             items.Items.Should().BeEquivalentTo(expected);
         }
@@ -441,12 +442,12 @@ namespace Enfo.API.Tests.IntegrationTests
                 .ConfigureAwait(false))
                 .Result as OkObjectResult;
 
-            var items = result.Value as PaginatedList<EnforcementOrderListResource>;
+            var items = result.Value as PaginatedList<EnforcementOrderSummaryView>;
 
             var expected = _orders
                 .Where(e => e.County.ToLower().Equals(county.ToLower()))
                 .Where(e => e.Deleted)
-                .Select(e => new EnforcementOrderListResource(e));
+                .Select(e => new EnforcementOrderSummaryView(e));
 
             items.Items.Should().BeEquivalentTo(expected);
         }
@@ -461,7 +462,7 @@ namespace Enfo.API.Tests.IntegrationTests
 
             result.Result.Should().BeOfType<OkObjectResult>();
             var actionResult = result.Result as OkObjectResult;
-            actionResult.Value.Should().BeOfType<EnforcementOrderItemResource>();
+            actionResult.Value.Should().BeOfType<EnforcementOrderView>();
             actionResult.StatusCode.Should().Be(200);
         }
 
@@ -478,7 +479,7 @@ namespace Enfo.API.Tests.IntegrationTests
             var value = ((await controller.Get(id).ConfigureAwait(false))
                 .Result as OkObjectResult).Value;
 
-            var expected = new EnforcementOrderItemResource(
+            var expected = new EnforcementOrderView(
                 _orders.Single(e => e.Id == id));
 
             value.Should().BeEquivalentTo(expected);

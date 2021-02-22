@@ -3,8 +3,8 @@ using FluentAssertions;
 using System;
 using Xunit;
 using static Enfo.Domain.Entities.EnforcementOrder;
-using static Enfo.Repository.Resources.EnforcementOrderCreateResource;
-using static Enfo.Repository.Resources.EnforcementOrderUpdateResource;
+using static Enfo.Repository.Resources.EnforcementOrder.EnforcementOrderCreate;
+using static Enfo.Repository.Resources.EnforcementOrder.EnforcementOrderUpdate;
 
 namespace Enfo.Domain.Tests
 {

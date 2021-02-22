@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using static Enfo.Domain.Utils.StringUtils;
+using Enfo.Utils;
 
 namespace Enfo.Domain.Entities
 {
@@ -40,9 +40,9 @@ namespace Enfo.Domain.Entities
 
         private string CompileAddressString(string lineSeparator = ", ")
         {
-            string cityState = ConcatNonEmptyStrings(new string[] { City, State }, ", ");
-            string cityStateZip = ConcatNonEmptyStrings(new string[] { cityState, PostalCode }, " ");
-            return ConcatNonEmptyStrings(new string[] { Street, Street2, cityStateZip }, lineSeparator);
+            string cityState = new[] {City, State}.ConcatNonEmptyStrings(", ");
+            string cityStateZip = new[] {cityState, PostalCode}.ConcatNonEmptyStrings(" ");
+            return new[] {Street, Street2, cityStateZip}.ConcatNonEmptyStrings(lineSeparator);
         }
     }
 }

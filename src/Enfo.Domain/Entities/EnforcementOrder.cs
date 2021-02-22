@@ -46,7 +46,7 @@ namespace Enfo.Domain.Entities
         [Column(TypeName = "money")]
         public decimal? SettlementAmount { get; set; }
 
-        public bool Deleted { get; set; } = false;
+        public bool Deleted { get; set; } 
 
         [DisplayName("Progress")]
         public PublicationState PublicationStatus { get; set; }
@@ -151,13 +151,5 @@ namespace Enfo.Domain.Entities
         [DisplayName("Hearing Information Contact")]
         public virtual EpdContact HearingContact { get; set; }
         public int? HearingContactId { get; set; }
-
-        // Create/Update methods
-
-        public enum NewEnforcementOrderType
-        {
-            Proposed,
-            Executed
-        }
     }
 }

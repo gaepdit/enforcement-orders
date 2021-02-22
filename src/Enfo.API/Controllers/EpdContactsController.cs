@@ -6,6 +6,7 @@ using Enfo.Domain.Entities;
 using Enfo.Repository.Resources;
 using Enfo.Repository.Querying;
 using Enfo.Repository.Repositories;
+using Enfo.Repository.Resources.EpdContact;
 // using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -25,7 +26,7 @@ namespace Enfo.API.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<PaginatedList<EpdContactResource>>> Get(
+        public async Task<ActionResult<PaginatedList<EpdContactView>>> Get(
             [FromQuery] ActiveItemFilter filter = null,
             [FromQuery] PaginationFilter paging = null)
         {
@@ -40,7 +41,7 @@ namespace Enfo.API.Controllers
             var itemsTask = _repository.ListAsync(spec, pagination, inclusion: include).ConfigureAwait(false);
 
             var paginatedList = (await itemsTask)
-                .Select(e => new EpdContactResource(e))
+                .Select(e => new EpdContactView(e))
                 .GetPaginatedList(await countTask, paging);
 
             return Ok(paginatedList);
@@ -50,7 +51,7 @@ namespace Enfo.API.Controllers
         [HttpGet("{id}", Name = "Get")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<EpdContactResource>> Get(
+        public async Task<ActionResult<EpdContactView>> Get(
             [FromRoute] int id)
         {
             var item = await _repository.GetByIdAsync(id,
@@ -62,7 +63,7 @@ namespace Enfo.API.Controllers
                 return NotFound(id);
             }
 
-            return Ok(new EpdContactResource(item));
+            return Ok(new EpdContactView(item));
         }
 
         // POST: api/EpdContacts
@@ -71,7 +72,7 @@ namespace Enfo.API.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Post(
-            [FromBody] EpdContactCreateResource resource)
+            [FromBody] EpdContactCreate resource)
         {
             if (resource is null || !ModelState.IsValid)
             {
@@ -93,7 +94,7 @@ namespace Enfo.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Put(
             [FromRoute] int id,
-            [FromBody] EpdContactUpdateResource resource)
+            [FromBody] EpdContactUpdate resource)
         {
             if (resource is null || !ModelState.IsValid)
             {

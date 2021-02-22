@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Enfo.Repository.Resources;
+using Enfo.Repository.Resources.LegalAuthority;
 using Xunit;
 
 namespace Enfo.API.Tests.UnitTests
@@ -47,7 +48,7 @@ namespace Enfo.API.Tests.UnitTests
 
             result.Result.Should().BeOfType<OkObjectResult>();
             var actionResult = result.Result as OkObjectResult;
-            Assert.IsAssignableFrom<PaginatedList<LegalAuthorityResource>>(actionResult.Value);
+            Assert.IsAssignableFrom<PaginatedList<LegalAuthorityView>>(actionResult.Value);
             actionResult.StatusCode.Should().Be(200);
         }
 
@@ -76,7 +77,7 @@ namespace Enfo.API.Tests.UnitTests
 
             result.Result.Should().BeOfType<OkObjectResult>();
             var actionResult = result.Result as OkObjectResult;
-            Assert.IsAssignableFrom<PaginatedList<LegalAuthorityResource>>(actionResult.Value);
+            Assert.IsAssignableFrom<PaginatedList<LegalAuthorityView>>(actionResult.Value);
             actionResult.StatusCode.Should().Be(200);
         }
 
@@ -100,7 +101,7 @@ namespace Enfo.API.Tests.UnitTests
 
             result.Result.Should().BeOfType<OkObjectResult>();
             var actionResult = result.Result as OkObjectResult;
-            actionResult.Value.Should().BeOfType<LegalAuthorityResource>();
+            actionResult.Value.Should().BeOfType<LegalAuthorityView>();
             actionResult.StatusCode.Should().Be(200);
         }
 
@@ -121,7 +122,7 @@ namespace Enfo.API.Tests.UnitTests
             var value = ((await controller.Get(id).ConfigureAwait(false))
                 .Result as OkObjectResult).Value;
 
-            var expected = new LegalAuthorityResource(item);
+            var expected = new LegalAuthorityView(item);
 
             value.Should().BeEquivalentTo(expected);
         }
@@ -149,7 +150,7 @@ namespace Enfo.API.Tests.UnitTests
         [Fact]
         public async Task AddNewItemReturnsCorrectly()
         {
-            var item = new LegalAuthorityCreateResource()
+            var item = new LegalAuthorityCreate()
             {
                 AuthorityName = "New"
             };
@@ -187,7 +188,7 @@ namespace Enfo.API.Tests.UnitTests
             var mock = new Mock<IWritableRepository<LegalAuthority>>();
             var controller = new LegalAuthoritiesController(mock.Object);
 
-            var item = new LegalAuthorityCreateResource()
+            var item = new LegalAuthorityCreate()
             {
                 AuthorityName = null
             };
@@ -204,7 +205,7 @@ namespace Enfo.API.Tests.UnitTests
             objectResultValue.Keys.Should()
                 .BeEquivalentTo(new List<string>()
                     {
-                        nameof(LegalAuthorityCreateResource.AuthorityName)
+                        nameof(LegalAuthorityCreate.AuthorityName)
                     });
         }
 
@@ -214,7 +215,7 @@ namespace Enfo.API.Tests.UnitTests
             var id = 1;
             var item = _legalAuthorities.Single(e => e.Id == id);
 
-            var target = new LegalAuthorityUpdateResource
+            var target = new LegalAuthorityUpdate
             {
                 Active = false,
                 AuthorityName = "XYZ"
@@ -260,7 +261,7 @@ namespace Enfo.API.Tests.UnitTests
 
             var controller = new LegalAuthoritiesController(mock.Object);
 
-            var target = new LegalAuthorityUpdateResource
+            var target = new LegalAuthorityUpdate
             {
                 Active = false,
                 AuthorityName = "XYZ"

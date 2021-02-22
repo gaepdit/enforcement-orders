@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Enfo.Utils;
 
 namespace Enfo.Repository.Utils
 {
     [DebuggerStepThrough]
     public static class Guard
     {
-        public static T NotNull<T>(T value, string parameterName) =>
-            value ?? throw new ArgumentNullException(parameterName);
+        public static T NotNull<T>(T value, string parameterName)
+        {
+            return value ?? throw new ArgumentNullException(parameterName);
+        }
 
         public static string NotNullOrEmpty(string value, string parameterName)
         {
@@ -17,9 +20,9 @@ namespace Enfo.Repository.Utils
                 throw new ArgumentNullException(parameterName);
             }
 
-            if (value.IsNullOrEmpty())
+            if (value.IsNullOrEmptyString())
             {
-                throw new ArgumentException($"{parameterName} can not be null or empty.", parameterName);
+                throw new ArgumentException($"{parameterName} cannot be null or empty.", parameterName);
             }
 
             return value;
@@ -32,9 +35,9 @@ namespace Enfo.Repository.Utils
                 throw new ArgumentNullException(parameterName);
             }
 
-            if (value.IsNullOrWhiteSpace())
+            if (value.IsNullOrWhiteSpaceString())
             {
-                throw new ArgumentException($"{parameterName} can not be null, empty, or white space.", parameterName);
+                throw new ArgumentException($"{parameterName} cannot be null, empty, or white space.", parameterName);
             }
 
             return value;
@@ -47,24 +50,32 @@ namespace Enfo.Repository.Utils
                 throw new ArgumentNullException(parameterName);
             }
 
-            if (value.IsNullOrEmpty())
+            if (value is null || value.Count == 0)
             {
-                throw new ArgumentException($"{parameterName} can not be null or empty.", parameterName);
+                throw new ArgumentException($"{parameterName} cannot be null or empty.", parameterName);
             }
 
             return value;
         }
 
-        public static int NotNegative(int value, string parameterName) =>
-            value >= 0 ? value :
-                throw new ArgumentException($"{parameterName} can not be negative.", parameterName);
+        public static int NotNegative(int value, string parameterName)
+        {
+            if (value < 0)
+            {
+                throw new ArgumentException($"{parameterName} cannot be negative.", parameterName);
+            }
 
-        public static int Positive(int value, string parameterName) =>
-            value > 0 ? value :
+            return value;
+        }
+
+        public static int Positive(int value, string parameterName)
+        {
+            if (value <= 0)
+            {
                 throw new ArgumentException($"{parameterName} must be positive (greater than zero).", parameterName);
+            }
 
-        //public static int AtLeast(int value, int atLeast, string parameterName) =>
-        //    value >= atLeast ? value :
-        //        throw new ArgumentException($"{parameterName} must be at least {atLeast}.", parameterName);
+            return value;
+        }
     }
 }

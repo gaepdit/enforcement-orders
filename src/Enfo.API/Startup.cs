@@ -36,7 +36,7 @@ namespace Enfo.API
                     x => x.MigrationsAssembly("Enfo.API")));
 
             services.AddScoped(typeof(IWritableRepository<>), typeof(WritableRepository<>));
-            services.AddScoped(typeof(IReadableRepository<>), typeof(ReadableRepository<>));
+            services.AddScoped(typeof(IReadOnlyRepository<>), typeof(ReadOnlyRepository<>));
             services.AddScoped(typeof(IEnforcementOrderRepository), typeof(EnforcementOrderRepository));
 
             services.AddSwaggerGen(c =>

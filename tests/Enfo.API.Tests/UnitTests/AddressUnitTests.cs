@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Enfo.Repository.Resources;
+using Enfo.Repository.Resources.Address;
 using Xunit;
 
 namespace Enfo.API.Tests.UnitTests
@@ -47,7 +48,7 @@ namespace Enfo.API.Tests.UnitTests
 
             result.Result.Should().BeOfType<OkObjectResult>();
             var actionResult = result.Result as OkObjectResult;
-            Assert.IsAssignableFrom<PaginatedList<AddressResource>>(actionResult.Value);
+            Assert.IsAssignableFrom<PaginatedList<AddressView>>(actionResult.Value);
             actionResult.StatusCode.Should().Be(200);
         }
 
@@ -76,7 +77,7 @@ namespace Enfo.API.Tests.UnitTests
 
             result.Result.Should().BeOfType<OkObjectResult>();
             var actionResult = result.Result as OkObjectResult;
-            Assert.IsAssignableFrom<PaginatedList<AddressResource>>(actionResult.Value);
+            Assert.IsAssignableFrom<PaginatedList<AddressView>>(actionResult.Value);
             actionResult.StatusCode.Should().Be(200);
         }
 
@@ -100,7 +101,7 @@ namespace Enfo.API.Tests.UnitTests
 
             result.Result.Should().BeOfType<OkObjectResult>();
             var actionResult = result.Result as OkObjectResult;
-            actionResult.Value.Should().BeOfType<AddressResource>();
+            actionResult.Value.Should().BeOfType<AddressView>();
             actionResult.StatusCode.Should().Be(200);
         }
 
@@ -121,7 +122,7 @@ namespace Enfo.API.Tests.UnitTests
             var value = ((await controller.Get(id).ConfigureAwait(false))
                 .Result as OkObjectResult).Value;
 
-            var expected = new AddressResource(item);
+            var expected = new AddressView(item);
 
             value.Should().BeEquivalentTo(expected);
         }
@@ -148,7 +149,7 @@ namespace Enfo.API.Tests.UnitTests
         [Fact]
         public async Task AddNewItemReturnsCorrectly()
         {
-            var item = new AddressCreateResource()
+            var item = new AddressCreate()
             {
                 City = "Atlanta",
                 PostalCode = "33333",
@@ -189,7 +190,7 @@ namespace Enfo.API.Tests.UnitTests
             var mock = new Mock<IWritableRepository<Address>>();
             var controller = new AddressesController(mock.Object);
 
-            var item = new AddressCreateResource()
+            var item = new AddressCreate()
             {
                 City = null,
                 PostalCode = "abc",
@@ -210,8 +211,8 @@ namespace Enfo.API.Tests.UnitTests
             objectResultValue.Keys.Should()
                 .BeEquivalentTo(new List<string>()
                     {
-                        nameof(AddressCreateResource.City),
-                        nameof(AddressCreateResource.PostalCode)
+                        nameof(AddressCreate.City),
+                        nameof(AddressCreate.PostalCode)
                     });
         }
 
@@ -221,7 +222,7 @@ namespace Enfo.API.Tests.UnitTests
             var id = 2000;
             var item = _addresses.Single(e => e.Id == id);
 
-            var target = new AddressUpdateResource
+            var target = new AddressUpdate
             {
                 City = "Atlanta",
                 PostalCode = "33333",
@@ -269,7 +270,7 @@ namespace Enfo.API.Tests.UnitTests
 
             var controller = new AddressesController(mock.Object);
 
-            var target = new AddressUpdateResource
+            var target = new AddressUpdate
             {
                 City = "Atlanta",
                 PostalCode = "33333",

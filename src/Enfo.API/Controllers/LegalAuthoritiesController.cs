@@ -6,6 +6,7 @@ using Enfo.Domain.Entities;
 using Enfo.Repository.Resources;
 using Enfo.Repository.Querying;
 using Enfo.Repository.Repositories;
+using Enfo.Repository.Resources.LegalAuthority;
 // using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -25,7 +26,7 @@ namespace Enfo.API.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<PaginatedList<LegalAuthorityResource>>> Get(
+        public async Task<ActionResult<PaginatedList<LegalAuthorityView>>> Get(
             [FromQuery] ActiveItemFilter filter = null,
             [FromQuery] PaginationFilter paging = null)
         {
@@ -38,7 +39,7 @@ namespace Enfo.API.Controllers
             var itemsTask = _repository.ListAsync(spec, paging.Pagination()).ConfigureAwait(false);
 
             var paginatedList = (await itemsTask)
-                .Select(e => new LegalAuthorityResource(e))
+                .Select(e => new LegalAuthorityView(e))
                 .GetPaginatedList(await countTask, paging);
 
             return Ok(paginatedList);
@@ -48,7 +49,7 @@ namespace Enfo.API.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<LegalAuthorityResource>> Get(
+        public async Task<ActionResult<LegalAuthorityView>> Get(
             [FromRoute] int id)
         {
             var item = await _repository.GetByIdAsync(id).ConfigureAwait(false);
@@ -58,7 +59,7 @@ namespace Enfo.API.Controllers
                 return NotFound(id);
             }
 
-            return Ok(new LegalAuthorityResource(item));
+            return Ok(new LegalAuthorityView(item));
         }
 
         // POST: api/LegalAuthorities
@@ -67,7 +68,7 @@ namespace Enfo.API.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Post(
-            [FromBody] LegalAuthorityCreateResource resource)
+            [FromBody] LegalAuthorityCreate resource)
         {
             if (resource is null || !ModelState.IsValid)
             {
@@ -89,7 +90,7 @@ namespace Enfo.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Put(
             [FromRoute] int id,
-            [FromBody] LegalAuthorityUpdateResource resource)
+            [FromBody] LegalAuthorityUpdate resource)
         {
             if (resource is null || !ModelState.IsValid)
             {

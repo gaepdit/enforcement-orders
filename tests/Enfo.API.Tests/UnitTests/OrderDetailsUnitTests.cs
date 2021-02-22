@@ -8,6 +8,7 @@ using Moq;
 using System.Linq;
 using System.Threading.Tasks;
 using Enfo.Repository.Resources;
+using Enfo.Repository.Resources.EnforcementOrder;
 using Xunit;
 
 namespace Enfo.API.Tests.UnitTests
@@ -61,7 +62,7 @@ namespace Enfo.API.Tests.UnitTests
 
             result.Result.Should().BeOfType<OkObjectResult>();
             var actionResult = result.Result as OkObjectResult;
-            actionResult.Value.Should().BeOfType<EnforcementOrderDetailedResource>();
+            actionResult.Value.Should().BeOfType<EnforcementOrderDetailedView>();
             actionResult.StatusCode.Should().Be(200);
         }
 
@@ -83,7 +84,7 @@ namespace Enfo.API.Tests.UnitTests
             var value = ((await controller.Details(id).ConfigureAwait(false))
                 .Result as OkObjectResult).Value;
 
-            var expected = new EnforcementOrderDetailedResource(item);
+            var expected = new EnforcementOrderDetailedView(item);
 
             value.Should().BeEquivalentTo(expected);
         }

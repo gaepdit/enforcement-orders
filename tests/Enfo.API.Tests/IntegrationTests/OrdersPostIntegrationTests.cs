@@ -11,6 +11,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Enfo.Repository.Resources;
+using Enfo.Repository.Resources.EnforcementOrder;
 using Xunit;
 using static Enfo.Domain.Entities.EnforcementOrder;
 
@@ -49,7 +50,7 @@ namespace Enfo.API.Tests.IntegrationTests
             var repository = this.GetEnforcementOrderRepository();
             var controller = new EnforcementOrdersController(repository);
 
-            var item = new EnforcementOrderCreateResource()
+            var item = new EnforcementOrderCreate()
             {
                 FacilityName = "TEST FACILITY",
                 County = "Appling",
@@ -73,7 +74,7 @@ namespace Enfo.API.Tests.IntegrationTests
             var repository = this.GetEnforcementOrderRepository();
             var controller = new EnforcementOrdersController(repository);
 
-            var item = new EnforcementOrderCreateResource()
+            var item = new EnforcementOrderCreate()
             {
                 FacilityName = "TEST FACILITY",
                 County = "Appling",
@@ -110,7 +111,7 @@ namespace Enfo.API.Tests.IntegrationTests
             var repository = this.GetEnforcementOrderRepository();
             var controller = new EnforcementOrdersController(repository);
 
-            var item = new EnforcementOrderCreateResource()
+            var item = new EnforcementOrderCreate()
             {
                 FacilityName = "TEST FACILITY",
                 County = "Appling",
@@ -129,14 +130,14 @@ namespace Enfo.API.Tests.IntegrationTests
 
             // Verify repository not changed after attempting to Post 
             // duplicate order number.
-            var resultItems = (PaginatedList<EnforcementOrderListResource>)((await controller.Get(
+            var resultItems = (PaginatedList<EnforcementOrderSummaryView>)((await controller.Get(
                 paging: new PaginationFilter() { PageSize = 0 })
                 .ConfigureAwait(false))
                 .Result as OkObjectResult).Value;
 
             var expected = _enforcementOrders
                 .Where(e => !e.Deleted)
-                .Select(e => new EnforcementOrderListResource(e));
+                .Select(e => new EnforcementOrderSummaryView(e));
 
             resultItems.Items.Should().BeEquivalentTo(expected);
         }
@@ -147,7 +148,7 @@ namespace Enfo.API.Tests.IntegrationTests
             var repository = this.GetEnforcementOrderRepository();
             var controller = new EnforcementOrdersController(repository);
 
-            var item = new EnforcementOrderCreateResource()
+            var item = new EnforcementOrderCreate()
             {
                 FacilityName = "TEST FACILITY",
                 County = "Appling",
@@ -177,14 +178,14 @@ namespace Enfo.API.Tests.IntegrationTests
 
             // Verify repository not changed after attempting to Post 
             // duplicate order number.
-            var resultItems = (PaginatedList<EnforcementOrderListResource>)((await controller.Get(
+            var resultItems = (PaginatedList<EnforcementOrderSummaryView>)((await controller.Get(
                 paging: new PaginationFilter() { PageSize = 0 })
                 .ConfigureAwait(false))
                 .Result as OkObjectResult).Value;
 
             var expected = _enforcementOrders
                 .Where(e => !e.Deleted)
-                .Select(e => new EnforcementOrderListResource(e));
+                .Select(e => new EnforcementOrderSummaryView(e));
 
             resultItems.Items.Should().BeEquivalentTo(expected);
         }
@@ -201,14 +202,14 @@ namespace Enfo.API.Tests.IntegrationTests
             (result as BadRequestObjectResult).StatusCode.Should().Be(400);
 
             // Verify repository not changed after attempting to Post null item.
-            var resultItems = (PaginatedList<EnforcementOrderListResource>)((await controller.Get(
+            var resultItems = (PaginatedList<EnforcementOrderSummaryView>)((await controller.Get(
                 paging: new PaginationFilter() { PageSize = 0 })
                 .ConfigureAwait(false))
                 .Result as OkObjectResult).Value;
 
             var expected = _enforcementOrders
                 .Where(e => !e.Deleted)
-                .Select(e => new EnforcementOrderListResource(e));
+                .Select(e => new EnforcementOrderSummaryView(e));
 
             resultItems.Items.Should().BeEquivalentTo(expected);
         }
@@ -220,7 +221,7 @@ namespace Enfo.API.Tests.IntegrationTests
             var controller = new EnforcementOrdersController(repository);
 
             var id = 140;
-            var target = new EnforcementOrderUpdateResource()
+            var target = new EnforcementOrderUpdate()
             {
                 Cause = "Integer feugiat scelerisque varius morbi enim nunc faucibus a.",
                 CommentContactId = null,
@@ -281,7 +282,7 @@ namespace Enfo.API.Tests.IntegrationTests
             var controller = new EnforcementOrdersController(repository);
 
             var id = 9999;
-            var target = new EnforcementOrderUpdateResource()
+            var target = new EnforcementOrderUpdate()
             {
                 Cause = "Integer feugiat scelerisque varius morbi enim nunc faucibus a.",
                 CommentContactId = null,
@@ -321,7 +322,7 @@ namespace Enfo.API.Tests.IntegrationTests
             var id = 140;
             var original = await repository.GetByIdAsync(id).ConfigureAwait(false);
 
-            var target = new EnforcementOrderUpdateResource()
+            var target = new EnforcementOrderUpdate()
             {
                 Cause = "Integer feugiat scelerisque varius morbi enim nunc faucibus a.",
                 CommentContactId = null,

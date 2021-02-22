@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Enfo.Repository.Resources;
+using Enfo.Repository.Resources.EpdContact;
 using Xunit;
 
 namespace Enfo.API.Tests.UnitTests
@@ -56,7 +57,7 @@ namespace Enfo.API.Tests.UnitTests
 
             result.Result.Should().BeOfType<OkObjectResult>();
             var actionResult = result.Result as OkObjectResult;
-            Assert.IsAssignableFrom<PaginatedList<EpdContactResource>>(actionResult.Value);
+            Assert.IsAssignableFrom<PaginatedList<EpdContactView>>(actionResult.Value);
             actionResult.StatusCode.Should().Be(200);
         }
 
@@ -86,7 +87,7 @@ namespace Enfo.API.Tests.UnitTests
 
             result.Result.Should().BeOfType<OkObjectResult>();
             var actionResult = result.Result as OkObjectResult;
-            Assert.IsAssignableFrom<PaginatedList<EpdContactResource>>(actionResult.Value);
+            Assert.IsAssignableFrom<PaginatedList<EpdContactView>>(actionResult.Value);
             actionResult.StatusCode.Should().Be(200);
         }
 
@@ -113,7 +114,7 @@ namespace Enfo.API.Tests.UnitTests
 
             result.Result.Should().BeOfType<OkObjectResult>();
             var actionResult = result.Result as OkObjectResult;
-            actionResult.Value.Should().BeOfType<EpdContactResource>();
+            actionResult.Value.Should().BeOfType<EpdContactView>();
             actionResult.StatusCode.Should().Be(200);
         }
 
@@ -137,7 +138,7 @@ namespace Enfo.API.Tests.UnitTests
             var value = ((await controller.Get(id).ConfigureAwait(false))
                 .Result as OkObjectResult).Value;
 
-            var expected = new EpdContactResource(item);
+            var expected = new EpdContactView(item);
 
             value.Should().BeEquivalentTo(expected);
         }
@@ -164,7 +165,7 @@ namespace Enfo.API.Tests.UnitTests
         [Fact]
         public async Task AddNewItemReturnsCorrectly()
         {
-            var item = new EpdContactCreateResource()
+            var item = new EpdContactCreate()
             {
                 AddressId = 2000,
                 ContactName = "Mr. Fake Name",
@@ -206,7 +207,7 @@ namespace Enfo.API.Tests.UnitTests
             var mock = new Mock<IWritableRepository<EpdContact>>();
             var controller = new EpdContactsController(mock.Object);
 
-            var item = new EpdContactCreateResource()
+            var item = new EpdContactCreate()
             {
                 AddressId = 2000,
                 ContactName = null,
@@ -227,7 +228,7 @@ namespace Enfo.API.Tests.UnitTests
             objectResultValue.Keys.Should()
                 .BeEquivalentTo(new List<string>()
                     {
-                        nameof(EpdContactCreateResource.ContactName)
+                        nameof(EpdContactCreate.ContactName)
                     });
         }
 
@@ -237,7 +238,7 @@ namespace Enfo.API.Tests.UnitTests
             var id = 2000;
             var item = _epdContacts.Single(e => e.Id == id);
 
-            var target = new EpdContactUpdateResource
+            var target = new EpdContactUpdate
             {
                 AddressId = 2002,
                 ContactName = "Name Update",
@@ -287,7 +288,7 @@ namespace Enfo.API.Tests.UnitTests
 
             var controller = new EpdContactsController(mock.Object);
 
-            var target = new EpdContactUpdateResource
+            var target = new EpdContactUpdate
             {
                 AddressId = 2002,
                 ContactName = "Name Update",

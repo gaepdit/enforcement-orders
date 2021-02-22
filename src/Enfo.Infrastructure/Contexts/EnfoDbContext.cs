@@ -35,7 +35,7 @@ namespace Enfo.Infrastructure.Contexts
                 .HasIndex(b => b.OrderNumber).IsUnique();
 
             // Seed production data
-            builder.Entity<County>().HasData(ProdSeedData.GetCounties());
+            builder.Entity<County>().HasData(Domain.Data.DomainData.Counties());
             builder.Entity<LegalAuthority>().HasData(ProdSeedData.GetLegalAuthorities());
             builder.Entity<Address>().HasData(ProdSeedData.GetAddresses());
             builder.Entity<EpdContact>().HasData(ProdSeedData.GetEpdContacts());

@@ -9,6 +9,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Enfo.Repository.Resources;
+using Enfo.Repository.Resources.EnforcementOrder;
 using Xunit;
 using static Enfo.Domain.Entities.EnforcementOrder;
 using static Enfo.Repository.Utils.DateUtils;
@@ -125,7 +126,7 @@ namespace Enfo.API.Tests.IntegrationTests
             var expected = _orders
                 .Where(e => e.GetIsPublicProposedOrder() && e.CommentPeriodClosesDate >= DateTime.Today)
                 .Where(e => !e.Deleted)
-                .Select(e => new EnforcementOrderListResource(e));
+                .Select(e => new EnforcementOrderSummaryView(e));
 
             items.Should().BeEquivalentTo(expected);
         }
@@ -147,7 +148,7 @@ namespace Enfo.API.Tests.IntegrationTests
                     && e.ExecutedOrderPostedDate >= fromDate
                     && e.ExecutedOrderPostedDate <= DateTime.Today)
                 .Where(e => !e.Deleted)
-                .Select(e => new EnforcementOrderListResource(e));
+                .Select(e => new EnforcementOrderSummaryView(e));
 
             items.Should().BeEquivalentTo(expected);
         }
@@ -164,7 +165,7 @@ namespace Enfo.API.Tests.IntegrationTests
             var expected = _orders
                 .Where(e => e.PublicationStatus == PublicationState.Draft)
                 .Where(e => !e.Deleted)
-                .Select(e => new EnforcementOrderListResource(e));
+                .Select(e => new EnforcementOrderSummaryView(e));
 
             items.Should().BeEquivalentTo(expected);
         }
@@ -182,7 +183,7 @@ namespace Enfo.API.Tests.IntegrationTests
                 .Where(e => e.GetIsPublic()
                     && e.GetLastPostedDate() > GetNextWeekday(DateTime.Today.AddDays(-6), DayOfWeek.Monday))
                 .Where(e => !e.Deleted)
-                .Select(e => new EnforcementOrderListResource(e));
+                .Select(e => new EnforcementOrderSummaryView(e));
 
             items.Should().BeEquivalentTo(expected);
         }

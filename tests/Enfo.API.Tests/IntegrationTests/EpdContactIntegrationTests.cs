@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
 using Enfo.Repository.Resources;
+using Enfo.Repository.Resources.EpdContact;
 using Xunit;
 
 namespace Enfo.API.Tests.IntegrationTests
@@ -41,7 +42,7 @@ namespace Enfo.API.Tests.IntegrationTests
 
             result.Result.Should().BeOfType<OkObjectResult>();
             var actionResult = (result.Result as OkObjectResult);
-            Assert.IsAssignableFrom<PaginatedList<EpdContactResource>>(actionResult.Value);
+            Assert.IsAssignableFrom<PaginatedList<EpdContactView>>(actionResult.Value);
             actionResult.StatusCode.Should().Be(200);
         }
 
@@ -51,14 +52,14 @@ namespace Enfo.API.Tests.IntegrationTests
             var repository = this.GetRepository<EpdContact>();
             var controller = new EpdContactsController(repository);
 
-            var items = (PaginatedList<EpdContactResource>)((await controller.Get()
+            var items = (PaginatedList<EpdContactView>)((await controller.Get()
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
             var expected = _epdContacts
                 .OrderBy(e => e.Id)
                 .Where(e => e.Active)
                 .Take(PaginationFilter.DefaultPageSize)
-                .Select(e => new EpdContactResource(e));
+                .Select(e => new EpdContactView(e));
 
             items.Items.Should().BeEquivalentTo(expected);
         }
@@ -69,13 +70,13 @@ namespace Enfo.API.Tests.IntegrationTests
             var repository = this.GetRepository<EpdContact>();
             var controller = new EpdContactsController(repository);
 
-            var items = (PaginatedList<EpdContactResource>)((await controller.Get(
+            var items = (PaginatedList<EpdContactView>)((await controller.Get(
                 paging: new PaginationFilter() { PageSize = 0 })
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
             var expected = _epdContacts
                 .Where(e => e.Active)
-                .Select(e => new EpdContactResource(e));
+                .Select(e => new EpdContactView(e));
 
             items.Items.Should().BeEquivalentTo(expected);
         }
@@ -86,13 +87,13 @@ namespace Enfo.API.Tests.IntegrationTests
             var repository = this.GetRepository<EpdContact>();
             var controller = new EpdContactsController(repository);
 
-            var items = (PaginatedList<EpdContactResource>)((await controller.Get(
+            var items = (PaginatedList<EpdContactView>)((await controller.Get(
                 new ActiveItemFilter() { IncludeInactive = true },
                 new PaginationFilter() { PageSize = 0 })
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
             var expected = _epdContacts
-                .Select(e => new EpdContactResource(e));
+                .Select(e => new EpdContactView(e));
 
             items.Items.Should().BeEquivalentTo(expected);
         }
@@ -106,7 +107,7 @@ namespace Enfo.API.Tests.IntegrationTests
             int pageSize = 3;
             int pageNumber = 2;
 
-            var items = (PaginatedList<EpdContactResource>)((await controller.Get(
+            var items = (PaginatedList<EpdContactView>)((await controller.Get(
                 paging: new PaginationFilter() { PageSize = pageSize, Page = pageNumber })
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
@@ -114,7 +115,7 @@ namespace Enfo.API.Tests.IntegrationTests
                 .OrderBy(e => e.Id)
                 .Where(e => e.Active)
                 .Skip((pageNumber - 1) * pageSize).Take(pageSize)
-                .Select(e => new EpdContactResource(e));
+                .Select(e => new EpdContactView(e));
 
             items.Items.Should().BeEquivalentTo(expected);
         }
@@ -161,7 +162,7 @@ namespace Enfo.API.Tests.IntegrationTests
 
             result.Result.Should().BeOfType<OkObjectResult>();
             var actionResult = result.Result as OkObjectResult;
-            actionResult.Value.Should().BeOfType<EpdContactResource>();
+            actionResult.Value.Should().BeOfType<EpdContactView>();
             actionResult.StatusCode.Should().Be(200);
         }
 
@@ -175,9 +176,9 @@ namespace Enfo.API.Tests.IntegrationTests
             var controller = new EpdContactsController(repository);
 
             var value = ((await controller.Get(id).ConfigureAwait(false))
-                .Result as OkObjectResult).Value as EpdContactResource;
+                .Result as OkObjectResult).Value as EpdContactView;
 
-            var expected = new EpdContactResource(_epdContacts
+            var expected = new EpdContactView(_epdContacts
                 .Single(e => e.Id == id));
 
             value.Should().BeEquivalentTo(expected);
@@ -206,7 +207,7 @@ namespace Enfo.API.Tests.IntegrationTests
             var repository = this.GetRepository<EpdContact>();
             var controller = new EpdContactsController(repository);
 
-            var item = new EpdContactCreateResource
+            var item = new EpdContactCreate
             {
                 AddressId = 2000,
                 ContactName = "Mr. Fake Name",
@@ -230,7 +231,7 @@ namespace Enfo.API.Tests.IntegrationTests
             var repository = this.GetRepository<EpdContact>();
             var controller = new EpdContactsController(repository);
 
-            var item = new EpdContactCreateResource
+            var item = new EpdContactCreate
             {
                 AddressId = 2000,
                 ContactName = "Mr. Fake Name",
@@ -271,14 +272,14 @@ namespace Enfo.API.Tests.IntegrationTests
             (result as BadRequestObjectResult).StatusCode.Should().Be(400);
 
             // Verify repository not changed after attempting to Post null item.
-            var resultItems = (PaginatedList<EpdContactResource>)((await controller.Get(
+            var resultItems = (PaginatedList<EpdContactView>)((await controller.Get(
                 new ActiveItemFilter() { IncludeInactive = true },
                 new PaginationFilter() { PageSize = 0 })
                 .ConfigureAwait(false))
                 .Result as OkObjectResult).Value;
 
             var expected = _epdContacts
-                .Select(e => new EpdContactResource(e));
+                .Select(e => new EpdContactView(e));
 
             resultItems.Items.Should().BeEquivalentTo(expected);
         }
@@ -290,7 +291,7 @@ namespace Enfo.API.Tests.IntegrationTests
             var controller = new EpdContactsController(repository);
 
             var id = 2000;
-            var target = new EpdContactUpdateResource
+            var target = new EpdContactUpdate
             {
                 AddressId = 2002,
                 ContactName = "Name Update",
@@ -336,7 +337,7 @@ namespace Enfo.API.Tests.IntegrationTests
             var repository = this.GetRepository<EpdContact>();
             var controller = new EpdContactsController(repository);
 
-            var target = new EpdContactUpdateResource
+            var target = new EpdContactUpdate
             {
                 AddressId = 2002,
                 ContactName = "Name Update",
