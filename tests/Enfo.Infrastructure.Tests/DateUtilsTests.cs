@@ -5,40 +5,10 @@ using Xunit;
 using static Enfo.Repository.Utils.DateUtils;
 using static Enfo.Domain.Utils.StringUtils;
 
-namespace Enfo.Domain.Tests
+namespace Enfo.Infrastructure.Tests
 {
-    public class UtilsTests
+    public class DateUtilsTests
     {
-        [Fact]
-        public void ConcatEmptyStringsReturnsNull()
-        {
-            string[] emptyStringArray = Array.Empty<string>();
-
-            string actual = ConcatNonEmptyStrings(emptyStringArray, ",");
-
-            actual.Should().BeEmpty();
-        }
-
-        [Fact]
-        public void ConcatNonEmptyStringArrayReturnsCorrectString()
-        {
-            var stringArray = new string[] { "abc", "def" };
-
-            string actual = ConcatNonEmptyStrings(stringArray, ",");
-
-            actual.Should().Be("abc,def");
-        }
-
-        [Fact]
-        public void ConcatMixedArrayReturnsCorrectString()
-        {
-            var stringArray = new string[] { "abc", null, "def" };
-
-            string actual = ConcatNonEmptyStrings(stringArray, ",");
-
-            actual.Should().Be("abc,def");
-        }
-
         public static IEnumerable<object[]> WeekdayTestData
         {
             get

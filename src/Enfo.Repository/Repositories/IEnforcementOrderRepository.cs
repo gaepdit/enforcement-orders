@@ -4,7 +4,7 @@ using Enfo.Repository.Pagination;
 using Enfo.Repository.Resources.EnforcementOrder;
 using Enfo.Repository.Specs;
 
-namespace Enfo.Repository.Interfaces
+namespace Enfo.Repository.Repositories
 {
     public interface IEnforcementOrderRepository
     {

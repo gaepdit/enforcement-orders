@@ -6,7 +6,7 @@ using Enfo.Repository.Resources.County;
 using Enfo.Repository.Resources.EpdContact;
 using Enfo.Repository.Resources.LegalAuthority;
 
-namespace Enfo.Repository.Interfaces
+namespace Enfo.Repository.Repositories
 {
     public interface ILegalAuthorityRepository : IDisposable
     {

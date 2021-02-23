@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Enfo.Repository.Resources.County;
 using Enfo.Repository.Resources.EpdContact;
 
-namespace Enfo.Repository.Interfaces
+namespace Enfo.Repository.Repositories
 {
     public interface IEpdContactRepository : IDisposable
     {

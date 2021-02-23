@@ -7,8 +7,6 @@ namespace Enfo.Repository.Resources.EnforcementOrder
 {
     public class EnforcementOrderUpdate
     {
-        public bool Active { get; set; }
-
         // Common data elements
 
         [DisplayName("Facility")]

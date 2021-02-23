@@ -95,7 +95,7 @@ namespace Enfo.Repository.Validation
                     result.AddErrorMessage("CommentContact",
                         "A contact is required for comments for proposed orders.");
 
-                if (!resource.HearingCommentPeriodClosesDate.HasValue)
+                if (!resource.CommentPeriodClosesDate.HasValue)
                     result.AddErrorMessage("CommentPeriodClosesDate",
                         "A closing date is required for comments for proposed orders.");
 

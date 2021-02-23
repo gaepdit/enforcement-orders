@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Enfo.Repository.Resources.County;
 
-namespace Enfo.Repository.Interfaces
+namespace Enfo.Repository.Repositories
 {
     public interface ICountyRepository : IDisposable
     {

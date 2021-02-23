@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Enfo.Domain.Entities;
 using Enfo.Infrastructure.Contexts;
-using Enfo.Repository.Interfaces;
+using Enfo.Repository.Repositories;
 using Enfo.Repository.PaginationSpec;
 using Enfo.Repository.Querying;
 using Microsoft.EntityFrameworkCore;
