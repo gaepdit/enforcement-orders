@@ -1,6 +1,6 @@
 ﻿using System;
+using System.ComponentModel;
 using Enfo.Domain.Entities;
-using Enfo.Repository.Resources;
 using Enfo.Repository.Resources.EnforcementOrder;
 using Enfo.Repository.Utils;
 using static Enfo.Repository.Resources.EnforcementOrder.EnforcementOrderCreate;
@@ -62,7 +62,7 @@ namespace Enfo.Repository.Mapping
                 Requirements = item.Requirements,
                 SettlementAmount = item.SettlementAmount,
                 Deleted = item.Deleted,
-                PublicationStatus = item.PublicationStatus,
+                PublicationStatus = GetResourcePublicationState(item.PublicationStatus),
                 OrderNumber = item.OrderNumber,
                 LastPostedDate = item.GetLastPostedDate(),
                 IsProposedOrder = item.IsProposedOrder,
@@ -132,7 +132,7 @@ namespace Enfo.Repository.Mapping
                 ProposedOrderPostedDate = resource.CreateAs == NewEnforcementOrderType.Proposed
                     ? resource.ProposedOrderPostedDate
                     : null,
-                PublicationStatus = resource.PublicationStatus,
+                PublicationStatus = GetEntityPublicationState(resource.PublicationStatus),
                 Requirements = resource.Requirements,
                 SettlementAmount = resource.SettlementAmount
             };
@@ -160,9 +160,26 @@ namespace Enfo.Repository.Mapping
             order.LegalAuthorityId = resource.LegalAuthorityId;
             order.OrderNumber = resource.OrderNumber;
             order.ProposedOrderPostedDate = order.IsProposedOrder ? resource.ProposedOrderPostedDate : null;
-            order.PublicationStatus = resource.PublicationStatus;
+            order.PublicationStatus = GetEntityPublicationState(resource.PublicationStatus);
             order.Requirements = resource.Requirements;
             order.SettlementAmount = resource.SettlementAmount;
         }
+
+        private static EnforcementOrder.PublicationState GetEntityPublicationState(PublicationState status) =>
+            status switch
+            {
+                PublicationState.Draft => EnforcementOrder.PublicationState.Draft,
+                PublicationState.Published => EnforcementOrder.PublicationState.Published,
+                _ => throw new InvalidEnumArgumentException(nameof(status), (int) status, typeof(PublicationState))
+            };
+
+        private static PublicationState GetResourcePublicationState(EnforcementOrder.PublicationState status) =>
+            status switch
+            {
+                EnforcementOrder.PublicationState.Draft => PublicationState.Draft,
+                EnforcementOrder.PublicationState.Published => PublicationState.Published,
+                _ => throw new InvalidEnumArgumentException(nameof(status), (int) status,
+                    typeof(EnforcementOrder.PublicationState))
+            };
     }
 }

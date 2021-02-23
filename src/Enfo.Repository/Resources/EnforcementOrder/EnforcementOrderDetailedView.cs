@@ -3,7 +3,6 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using Enfo.Repository.Resources.EpdContact;
 using Enfo.Repository.Resources.LegalAuthority;
-using static Enfo.Domain.Entities.EnforcementOrder;
 
 namespace Enfo.Repository.Resources.EnforcementOrder
 {

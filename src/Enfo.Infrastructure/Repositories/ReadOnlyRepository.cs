@@ -28,7 +28,7 @@ namespace Enfo.Infrastructure.Repositories
 
         public async Task<IReadOnlyList<T>> ListAsync(
             ISpecification<T> specification = null,
-            IPagination pagination = null,
+            Pagination pagination = null,
             ISorting<T> sorting = null,
             IInclusion<T> inclusion = null) =>
             await _context.Set<T>()

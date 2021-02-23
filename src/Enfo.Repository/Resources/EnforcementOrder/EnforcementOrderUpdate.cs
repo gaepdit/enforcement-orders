@@ -2,7 +2,6 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using Enfo.Repository.Validation;
-using static Enfo.Domain.Entities.EnforcementOrder;
 
 namespace Enfo.Repository.Resources.EnforcementOrder
 {

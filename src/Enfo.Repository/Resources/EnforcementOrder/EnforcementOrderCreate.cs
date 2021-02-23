@@ -2,14 +2,13 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using Enfo.Repository.Validation;
-using static Enfo.Domain.Entities.EnforcementOrder;
 
 namespace Enfo.Repository.Resources.EnforcementOrder
 {
     public class EnforcementOrderCreate
     {
         /// <summary>
-        ///  NewEnforcementOrderType determines how to create the new Enforcement Order
+        ///  NewEnforcementOrderType determines the type of the new Enforcement Order
         /// </summary>
         public enum NewEnforcementOrderType
         {

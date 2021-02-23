@@ -1,6 +1,5 @@
 ﻿using System;
 using Enfo.Domain.Entities;
-using Enfo.Repository.Resources;
 using Enfo.Repository.Resources.EnforcementOrder;
 
 namespace Enfo.Repository.Validation
@@ -11,7 +10,7 @@ namespace Enfo.Repository.Validation
         {
             var result = new ValidateResourceResult();
 
-            if (resource.PublicationStatus != EnforcementOrder.PublicationState.Published) return result;
+            if (resource.PublicationStatus != PublicationState.Published) return result;
 
             switch (resource.CreateAs)
             {
@@ -87,7 +86,7 @@ namespace Enfo.Repository.Validation
                     "Executed Order details are required for this Enforcement Order.");
             }
 
-            if (resource.PublicationStatus != EnforcementOrder.PublicationState.Published) return result;
+            if (resource.PublicationStatus != PublicationState.Published) return result;
             
             // Proposed order info cannot be removed from an existing order.
             if (order.IsProposedOrder)

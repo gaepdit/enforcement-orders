@@ -2,17 +2,15 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Enfo.Domain.Entities;
-using Enfo.Repository.Querying;
-using Enfo.Repository.Repositories;
-using Enfo.Repository.Utils;
 using Enfo.Infrastructure.Contexts;
 using Enfo.Repository.Interfaces;
+using Enfo.Repository.PaginationSpec;
+using Enfo.Repository.Querying;
 using Microsoft.EntityFrameworkCore;
 using static Enfo.Domain.Entities.EnforcementOrder;
 using static Enfo.Domain.Entities.Enums;
 using static Enfo.Repository.Utils.DateUtils;
 using static Enfo.Repository.Resources.EnforcementOrder.EnforcementOrderCreate;
-using static Enfo.Repository.Resources.EnforcementOrder.EnforcementOrderUpdate;
 
 namespace Enfo.Infrastructure.Repositories
 {
@@ -46,7 +44,7 @@ namespace Enfo.Infrastructure.Repositories
             bool onlyIfPublic,
             bool Deleted,
             EnforcementOrderSorting SortOrder,
-            IPagination pagination = null)
+            Pagination pagination = null)
         {
             // Either deleted or active items are returned; not both.
             ISpecification<EnforcementOrder> spec = new FilterOrdersByDeletedStatus(Deleted);
