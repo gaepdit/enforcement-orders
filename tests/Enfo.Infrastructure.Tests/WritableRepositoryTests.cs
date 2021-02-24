@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Enfo.Domain.Data;
 using Xunit;
 
 namespace Enfo.Infrastructure.Tests
@@ -17,8 +18,8 @@ namespace Enfo.Infrastructure.Tests
 
         public WritableRepositoryTests()
         {
-            _counties = ProdSeedData.GetCounties();
-            _epdContacts = ProdSeedData.GetEpdContacts();
+            _counties = DomainData.GetCounties();
+            _epdContacts = DomainData.GetEpdContacts();
         }
 
         [Fact]

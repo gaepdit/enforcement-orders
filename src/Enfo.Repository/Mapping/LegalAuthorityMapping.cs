@@ -1,5 +1,4 @@
 ﻿using Enfo.Domain.Entities;
-using Enfo.Repository.Resources;
 using Enfo.Repository.Resources.LegalAuthority;
 using Enfo.Repository.Utils;
 

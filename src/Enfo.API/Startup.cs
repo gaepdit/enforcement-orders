@@ -91,7 +91,7 @@ namespace Enfo.API
             {
                 context.Database.EnsureDeleted();
                 context.Database.EnsureCreated();
-                Infrastructure.SeedData.DevSeedData.SeedTestData(context);
+                Infrastructure.TestData.TestData.SeedTestData(context);
             }
             else
             {

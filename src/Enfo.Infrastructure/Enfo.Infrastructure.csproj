@@ -19,4 +19,22 @@
     <ProjectReference Include="..\Enfo.Repository\Enfo.Repository.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Remove="Obsolete Specifications\**" />
+    <Compile Remove="QueryingEvaluators\**" />
+    <Compile Remove="Repositories\EnforcementOrderRepository.cs" />
+    <Compile Remove="Repositories\ReadOnlyRepository.cs" />
+    <Compile Remove="Repositories\WritableRepository.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Remove="Obsolete Specifications\**" />
+    <EmbeddedResource Remove="QueryingEvaluators\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Obsolete Specifications\**" />
+    <None Remove="QueryingEvaluators\**" />
+  </ItemGroup>
+
 </Project>

@@ -9,7 +9,7 @@ using Enfo.Repository.Querying;
 using Microsoft.EntityFrameworkCore;
 using static Enfo.Domain.Entities.EnforcementOrder;
 using static Enfo.Domain.Entities.Enums;
-using static Enfo.Repository.Utils.DateUtils;
+using static Enfo.Domain.Utils.DateUtils;
 using static Enfo.Repository.Resources.EnforcementOrder.EnforcementOrderCreate;
 
 namespace Enfo.Infrastructure.Repositories

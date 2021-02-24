@@ -8,7 +8,7 @@ namespace Enfo.Repository.Repositories
     public interface IAddressRepository : IDisposable
     {
         Task<AddressView> GetAsync(int id);
-        Task<IReadOnlyList<AddressView>> ListAsync(bool includeInactive);
+        Task<IReadOnlyList<AddressView>> ListAsync(bool includeInactive = false);
         Task<int> CreateAsync(AddressCreate resource);
         Task UpdateAsync(int id, AddressUpdate resource);
     }

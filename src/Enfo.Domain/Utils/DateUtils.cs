@@ -1,6 +1,6 @@
 using System;
 
-namespace Enfo.Repository.Utils
+namespace Enfo.Domain.Utils
 {
     public static class DateUtils
     {

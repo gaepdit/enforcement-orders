@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using Enfo.Utils;
+using Enfo.Domain.Utils;
 
 namespace Enfo.Domain.Entities
 {
@@ -8,35 +8,26 @@ namespace Enfo.Domain.Entities
     {
         // Postal (mailable) addresses only
 
-        [DisplayName("Street Address")]
+        [Required]
         [StringLength(100)]
-        [Required(ErrorMessage = "Street is required")]
         public string Street { get; set; }
 
-        [DisplayName("Apt / Suite / Other")]
         [StringLength(100)]
         public string Street2 { get; set; }
 
+        [Required]
         [StringLength(50)]
-        [Required(ErrorMessage = "City is required")]
         public string City { get; set; }
 
+        [Required]
         [DefaultValue("GA")]
         [StringLength(2)]
         public string State { get; set; } = "GA";
 
-        [DisplayName("Postal Code")]
         [StringLength(10)]
-        [RegularExpression("^\\d{5}(-\\d{4})?$",
-            ErrorMessage = "Valid US Postal Code is required")]
         public string PostalCode { get; set; }
 
-        public const string Country = "USA";
-
-        public override string ToString()
-        {
-            return CompileAddressString();
-        }
+        public override string ToString() => CompileAddressString();
 
         private string CompileAddressString(string lineSeparator = ", ")
         {

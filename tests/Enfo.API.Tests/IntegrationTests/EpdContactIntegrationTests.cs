@@ -9,6 +9,7 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
+using Enfo.Domain.Data;
 using Enfo.Repository.Resources;
 using Enfo.Repository.Resources.EpdContact;
 using Xunit;
@@ -22,8 +23,8 @@ namespace Enfo.API.Tests.IntegrationTests
 
         public EpdContactIntegrationTests()
         {
-            _addresses = ProdSeedData.GetAddresses();
-            _epdContacts = ProdSeedData.GetEpdContacts();
+            _addresses = DomainData.GetAddresses();
+            _epdContacts = DomainData.GetEpdContacts();
 
             foreach (var contact in _epdContacts)
             {

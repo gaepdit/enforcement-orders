@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Enfo.Utils
+namespace Enfo.Domain.Utils
 {
     public static class StringUtils
     {

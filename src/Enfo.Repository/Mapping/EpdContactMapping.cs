@@ -1,5 +1,5 @@
 ﻿using Enfo.Domain.Entities;
-using Enfo.Repository.Resources;
+using Enfo.Repository.Resources.Address;
 using Enfo.Repository.Resources.EpdContact;
 using Enfo.Repository.Utils;
 
@@ -18,7 +18,7 @@ namespace Enfo.Repository.Mapping
                 ContactName = item.ContactName,
                 Title = item.Title,
                 Organization = item.Organization,
-                Address = item.Address.ToAddressView(),
+                Address = new AddressView(item.Address),
                 AddressId = item.AddressId,
                 Telephone = item.Telephone,
                 Email = item.Email,

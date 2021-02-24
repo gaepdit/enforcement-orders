@@ -1,5 +1,4 @@
 ﻿using Enfo.Domain.Entities;
-using Enfo.Repository.Resources;
 using Enfo.Repository.Resources.Address;
 using Enfo.Repository.Utils;
 
@@ -7,22 +6,6 @@ namespace Enfo.Repository.Mapping
 {
     public static class AddressMapping
     {
-        public static AddressView ToAddressView(this Address item)
-        {
-            Guard.NotNull(item, nameof(item));
-
-            return new AddressView()
-            {
-                Active = item.Active,
-                City = item.City,
-                Id = item.Id,
-                PostalCode = item.PostalCode,
-                State = item.State,
-                Street = item.Street,
-                Street2 = item.Street2,
-            };
-        }
-
         public static Address ToAddress(this AddressCreate resource)
         {
             Guard.NotNull(resource, nameof(resource));

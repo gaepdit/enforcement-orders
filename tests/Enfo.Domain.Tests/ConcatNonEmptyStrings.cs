@@ -1,5 +1,5 @@
 using System;
-using Enfo.Utils;
+using Enfo.Domain.Utils;
 using FluentAssertions;
 using Xunit;
 

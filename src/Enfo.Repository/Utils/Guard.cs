@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using Enfo.Utils;
+using Enfo.Domain.Utils;
 
 namespace Enfo.Repository.Utils
 {

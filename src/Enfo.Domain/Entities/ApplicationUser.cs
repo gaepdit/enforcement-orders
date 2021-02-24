@@ -25,14 +25,14 @@ namespace Enfo.Domain.Entities
         {
             get
             {
-                return String.Join(" ", new string[] { FirstName, LastName }.Where(s => !string.IsNullOrEmpty(s)));
+                return String.Join(" ", new[] { FirstName, LastName }.Where(s => !string.IsNullOrEmpty(s)));
             }
         }
         public string SortableFullName
         {
             get
             {
-                return String.Join(", ", new string[] { LastName, FirstName }.Where(s => !string.IsNullOrEmpty(s)));
+                return String.Join(", ", new[] { LastName, FirstName }.Where(s => !string.IsNullOrEmpty(s)));
             }
         }
     }

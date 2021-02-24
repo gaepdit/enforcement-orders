@@ -1,12 +1,12 @@
 using Enfo.Domain.Entities;
 using Enfo.Repository.Querying;
-using Enfo.Infrastructure.SeedData;
 using Enfo.Infrastructure.Tests.Helpers;
 using FluentAssertions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Enfo.Domain.Data;
 using Xunit;
 
 namespace Enfo.Infrastructure.Tests
@@ -19,9 +19,9 @@ namespace Enfo.Infrastructure.Tests
 
         public ReadableRepositoryTests()
         {
-            _counties = ProdSeedData.GetCounties();
-            _addresses = ProdSeedData.GetAddresses();
-            _epdContacts = ProdSeedData.GetEpdContacts();
+            _counties = DomainData.GetCounties();
+            _addresses = DomainData.GetAddresses();
+            _epdContacts = DomainData.GetEpdContacts();
         }
 
         [Fact]

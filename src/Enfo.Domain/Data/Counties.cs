@@ -5,7 +5,7 @@ namespace Enfo.Domain.Data
 {
     public static class DomainData
     {
-        public static List<County> Counties() => new List<County>
+        public static readonly IEnumerable<County> Counties = new List<County>
         {
             new County {Id = 1, CountyName = "Appling"},
             new County {Id = 2, CountyName = "Atkinson"},

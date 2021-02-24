@@ -10,7 +10,7 @@ namespace Enfo.Repository.Tests.ValidationTests
         {
             const decimal value = 20M;
 
-            var validation = new Repository.Validation.NonNegativeAttribute();
+            var validation = new Validation.NonNegativeAttribute();
             validation.IsValid(value).Should().BeTrue();
         }
 
@@ -19,7 +19,7 @@ namespace Enfo.Repository.Tests.ValidationTests
         {
             const decimal value = 0M;
 
-            var validation = new Repository.Validation.NonNegativeAttribute();
+            var validation = new Validation.NonNegativeAttribute();
             validation.IsValid(value).Should().BeTrue();
         }
 
@@ -28,7 +28,7 @@ namespace Enfo.Repository.Tests.ValidationTests
         {
             const decimal value = -20M;
 
-            var validation = new Repository.Validation.NonNegativeAttribute();
+            var validation = new Validation.NonNegativeAttribute();
             validation.IsValid(value).Should().BeFalse();
         }
     }

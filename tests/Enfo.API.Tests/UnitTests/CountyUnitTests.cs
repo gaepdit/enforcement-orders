@@ -10,6 +10,7 @@ using Moq;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Enfo.Domain.Data;
 using Enfo.Repository.Resources;
 using Enfo.Repository.Resources.County;
 using Xunit;
@@ -22,7 +23,7 @@ namespace Enfo.API.Tests.UnitTests
 
         public CountyUnitTests()
         {
-            _counties = ProdSeedData.GetCounties();
+            _counties = DomainData.GetCounties();
         }
 
         [Fact]

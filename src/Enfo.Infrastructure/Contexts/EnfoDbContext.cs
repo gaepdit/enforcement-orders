@@ -1,6 +1,5 @@
 ﻿using System;
 using Enfo.Domain.Entities;
-using Enfo.Infrastructure.SeedData;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +11,6 @@ namespace Enfo.Infrastructure.Contexts
         public EnfoDbContext(DbContextOptions<EnfoDbContext> options) : base(options) { }
 
         public DbSet<Address> Addresses { get; set; }
-        public DbSet<County> Counties { get; set; }
         public DbSet<EnforcementOrder> EnforcementOrders { get; set; }
         public DbSet<EpdContact> EpdContacts { get; set; }
         public DbSet<LegalAuthority> LegalAuthorities { get; set; }
@@ -20,6 +18,9 @@ namespace Enfo.Infrastructure.Contexts
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder ?? throw new ArgumentNullException(nameof(builder)));
+
+            // Unique indexes
+            builder.Entity<EnforcementOrder>().HasIndex(b => b.OrderNumber).IsUnique();
 
             // ASP.NET Identity Tables
             builder.Entity<ApplicationUser>().ToTable("AppUsers");
@@ -30,15 +31,11 @@ namespace Enfo.Infrastructure.Contexts
             builder.Entity<IdentityUserRole<Guid>>().ToTable("AppUserRoles");
             builder.Entity<IdentityUserToken<Guid>>().ToTable("AppUserTokens");
 
-            // EnforcementOrder model
-            builder.Entity<EnforcementOrder>()
-                .HasIndex(b => b.OrderNumber).IsUnique();
-
+            // TODO: move to data migration scripts
             // Seed production data
-            builder.Entity<County>().HasData(Domain.Data.DomainData.Counties());
-            builder.Entity<LegalAuthority>().HasData(ProdSeedData.GetLegalAuthorities());
-            builder.Entity<Address>().HasData(ProdSeedData.GetAddresses());
-            builder.Entity<EpdContact>().HasData(ProdSeedData.GetEpdContacts());
+            // builder.Entity<LegalAuthority>().HasData(DomainData.GetLegalAuthorities());
+            // builder.Entity<Address>().HasData(DomainData.GetAddresses());
+            // builder.Entity<EpdContact>().HasData(DomainData.GetEpdContacts());
         }
     }
 }

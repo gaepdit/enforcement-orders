@@ -40,7 +40,7 @@ namespace Enfo.Infrastructure.Tests
 
         public EnforcementOrderRepositoryTests()
         {
-            _orders = DevSeedData.GetEnforcementOrders();
+            _orders = TestData.GetEnforcementOrders();
         }
 
         [Fact]

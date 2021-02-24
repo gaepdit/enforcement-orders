@@ -8,6 +8,7 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
+using Enfo.Domain.Data;
 using Enfo.Repository.Resources;
 using Enfo.Repository.Resources.County;
 using Xunit;
@@ -20,7 +21,7 @@ namespace Enfo.API.Tests.IntegrationTests
 
         public CountyIntegrationTests()
         {
-            _counties = ProdSeedData.GetCounties();
+            _counties = DomainData.GetCounties();
         }
 
         [Fact]

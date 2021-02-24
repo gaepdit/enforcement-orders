@@ -1,10 +1,25 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using Enfo.Repository.Utils;
 
 namespace Enfo.Repository.Resources.Address
 {
     public class AddressView
     {
+        public AddressView(Domain.Entities.Address item)
+        {
+            Guard.NotNull(item, nameof(item));
+
+            Active = item.Active;
+            City = item.City;
+            Id = item.Id;
+            PostalCode = item.PostalCode;
+            State = item.State;
+            Street = item.Street;
+            Street2 = item.Street2;
+        }
+
+
         public int Id { get; set; }
         public bool Active { get; set; }
 

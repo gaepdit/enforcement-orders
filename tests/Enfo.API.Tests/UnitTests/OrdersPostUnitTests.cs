@@ -9,6 +9,7 @@ using Moq;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Enfo.Domain.Data;
 using Enfo.Repository.Resources;
 using Enfo.Repository.Resources.EnforcementOrder;
 using Xunit;
@@ -25,10 +26,10 @@ namespace Enfo.API.Tests.IntegrationTests
 
         public OrdersPostUnitTests()
         {
-            _enforcementOrders = DevSeedData.GetEnforcementOrders();
-            _epdContacts = ProdSeedData.GetEpdContacts();
-            _addresses = ProdSeedData.GetAddresses();
-            _legalAuthorities = ProdSeedData.GetLegalAuthorities();
+            _enforcementOrders = TestData.GetEnforcementOrders();
+            _epdContacts = DomainData.GetEpdContacts();
+            _addresses = DomainData.GetAddresses();
+            _legalAuthorities = DomainData.GetLegalAuthorities();
 
             foreach (var contact in _epdContacts)
             {

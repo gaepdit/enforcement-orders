@@ -8,11 +8,12 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Enfo.Domain.Data;
 using Enfo.Repository.Resources;
 using Enfo.Repository.Resources.EnforcementOrder;
 using Xunit;
 using static Enfo.Domain.Entities.EnforcementOrder;
-using static Enfo.Repository.Utils.DateUtils;
+using static Enfo.Domain.Utils.DateUtils;
 
 namespace Enfo.API.Tests.IntegrationTests
 {
@@ -22,11 +23,11 @@ namespace Enfo.API.Tests.IntegrationTests
 
         public OrdersExtraIntegrationTests()
         {
-            _orders = DevSeedData.GetEnforcementOrders();
+            _orders = TestData.GetEnforcementOrders();
 
-            var epdContacts = ProdSeedData.GetEpdContacts();
-            var addresses = ProdSeedData.GetAddresses();
-            var legalAuthorities = ProdSeedData.GetLegalAuthorities();
+            var epdContacts = DomainData.GetEpdContacts();
+            var addresses = DomainData.GetAddresses();
+            var legalAuthorities = DomainData.GetLegalAuthorities();
 
             foreach (var contact in epdContacts)
             {

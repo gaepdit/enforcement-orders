@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Enfo.Repository.Resources.County;
 
 namespace Enfo.Repository.Repositories
 {
-    public interface ICountyRepository : IDisposable
+    public interface ICountyRepository 
     {
-        Task<CountyView> GetAsync(int id);
-        Task<IReadOnlyList<CountyView>> ListAsync(bool includeInactive);
+        CountyView Get(int id);
+        IReadOnlyList<CountyView> List();
     }
 }
