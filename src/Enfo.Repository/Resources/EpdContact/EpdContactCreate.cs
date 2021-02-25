@@ -6,30 +6,28 @@ namespace Enfo.Repository.Resources.EpdContact
     public class EpdContactCreate
     {
         [DisplayName("Contact Name")]
+        [Required(ErrorMessage = "Contact Name is required.")]
         [StringLength(50)]
-        [Required(ErrorMessage = "Contact Name is required")]
         public string ContactName { get; set; }
 
+        [Required(ErrorMessage = "Title is required.")]
         [StringLength(50)]
-        [Required(ErrorMessage = "Title is required")]
         public string Title { get; set; }
 
+        [Required(ErrorMessage = "Organization is required.")]
         [StringLength(100)]
-        [Required(ErrorMessage = "Organization is required")]
         public string Organization { get; set; }
 
-        [Required(ErrorMessage = "Address ID is required")]
+        [DisplayName("Address")]
+        [Required(ErrorMessage = "Address is required.")]
         public int AddressId { get; set; }
 
-        [RegularExpression("^\\D?(\\d{3})\\D?\\D?(\\d{3})\\D?(\\d{4})$",
-            ErrorMessage = "Please enter valid a phone number")]
         [StringLength(50)]
+        [RegularExpression(ResourceRegex.Telephone, ErrorMessage = "Provide a valid phone number.")]
         public string Telephone { get; set; }
 
-        [RegularExpression(
-            "^([a-zA-Z0-9_\\-\\.]+)@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.)|(([a-zA-Z0-9\\-]+\\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\\]?)$",
-            ErrorMessage = "Please provide a valid email address")]
         [StringLength(100)]
+        [RegularExpression(ResourceRegex.Email, ErrorMessage = "Provide a valid email address.")]
         public string Email { get; set; }
     }
 }

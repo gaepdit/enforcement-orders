@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Enfo.Infrastructure.Contexts;
 using Enfo.Repository.Mapping;
 using Enfo.Repository.Repositories;
+using Enfo.Repository.Resources;
 using Enfo.Repository.Resources.Address;
 using Enfo.Repository.Utils;
 using Microsoft.EntityFrameworkCore;
@@ -39,11 +40,7 @@ namespace Enfo.Infrastructure.Repositories
             Guard.NotNullOrWhiteSpace(resource.State, nameof(resource.State));
             Guard.NotNullOrWhiteSpace(resource.Street, nameof(resource.Street));
             Guard.NotNullOrWhiteSpace(resource.PostalCode, nameof(resource.PostalCode));
-
-            if (!Regex.IsMatch(resource.PostalCode, AddressCreate.PostalCodeRegex))
-            {
-                throw new ArgumentException($"Postal Code ({resource.PostalCode}) is not valid.", nameof(resource));
-            }
+            Guard.RegexMatch(resource.PostalCode, nameof(resource.PostalCode), ResourceRegex.PostalCode);
 
             var item = resource.ToAddress();
             await _context.Addresses.AddAsync(item).ConfigureAwait(false);
@@ -59,11 +56,7 @@ namespace Enfo.Infrastructure.Repositories
             Guard.NotNullOrWhiteSpace(resource.State, nameof(resource.State));
             Guard.NotNullOrWhiteSpace(resource.Street, nameof(resource.Street));
             Guard.NotNullOrWhiteSpace(resource.PostalCode, nameof(resource.PostalCode));
-
-            if (!Regex.IsMatch(resource.PostalCode, AddressCreate.PostalCodeRegex))
-            {
-                throw new ArgumentException($"Postal Code ({resource.PostalCode}) is not valid.", nameof(resource));
-            }
+            Guard.RegexMatch(resource.PostalCode, nameof(resource.PostalCode), ResourceRegex.PostalCode);
 
             var item = await _context.Addresses.FindAsync(id).ConfigureAwait(false);
 

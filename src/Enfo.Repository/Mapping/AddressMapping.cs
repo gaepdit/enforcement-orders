@@ -10,7 +10,7 @@ namespace Enfo.Repository.Mapping
         {
             Guard.NotNull(resource, nameof(resource));
 
-            return new Address()
+            return new Address
             {
                 City = resource.City,
                 PostalCode = resource.PostalCode,

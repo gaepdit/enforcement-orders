@@ -27,7 +27,7 @@ namespace Enfo.Domain.Entities
         public string County { get; set; }
 
         [DisplayName("Legal Authority")]
-        public virtual LegalAuthority LegalAuthority { get; set; }
+        public LegalAuthority LegalAuthority { get; set; }
         [Required(ErrorMessage = "Legal Authority is required")]
         public int LegalAuthorityId { get; set; }
 
@@ -78,7 +78,7 @@ namespace Enfo.Domain.Entities
         public DateTime? CommentPeriodClosesDate { get; set; }
 
         [DisplayName("Send Comments To")]
-        public virtual EpdContact CommentContact { get; set; }
+        public EpdContact CommentContact { get; set; }
         public int? CommentContactId { get; set; }
 
         [DisplayName("Publication Date For Proposed Order")]
@@ -149,7 +149,7 @@ namespace Enfo.Domain.Entities
         public DateTime? HearingCommentPeriodClosesDate { get; set; }
 
         [DisplayName("Hearing Information Contact")]
-        public virtual EpdContact HearingContact { get; set; }
+        public EpdContact HearingContact { get; set; }
         public int? HearingContactId { get; set; }
     }
 }

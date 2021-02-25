@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Text.RegularExpressions;
 using Enfo.Domain.Utils;
+using Enfo.Repository.Resources.Address;
 
 namespace Enfo.Repository.Utils
 {
@@ -73,6 +75,21 @@ namespace Enfo.Repository.Utils
             if (value <= 0)
             {
                 throw new ArgumentException($"{parameterName} must be positive (greater than zero).", parameterName);
+            }
+
+            return value;
+        }
+
+        // ReSharper disable once ParameterOnlyUsedForPreconditionCheck.Global
+        public static string RegexMatch(string value, string parameterName, string pattern)
+        {
+            NotNull(pattern, nameof(pattern));
+
+            if (value == null) return null;
+
+            if (!Regex.IsMatch(value, pattern))
+            {
+                throw new ArgumentException($"Value ({value}) is not valid.", parameterName);
             }
 
             return value;

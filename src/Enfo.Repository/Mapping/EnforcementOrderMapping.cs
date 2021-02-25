@@ -2,6 +2,8 @@
 using System.ComponentModel;
 using Enfo.Domain.Entities;
 using Enfo.Repository.Resources.EnforcementOrder;
+using Enfo.Repository.Resources.EpdContact;
+using Enfo.Repository.Resources.LegalAuthority;
 using Enfo.Repository.Utils;
 using static Enfo.Repository.Resources.EnforcementOrder.EnforcementOrderCreate;
 
@@ -13,12 +15,12 @@ namespace Enfo.Repository.Mapping
         {
             Guard.NotNull(item, nameof(item));
 
-            return new EnforcementOrderView()
+            return new EnforcementOrderView
             {
                 Id = item.Id,
                 FacilityName = item.FacilityName,
                 County = item.County,
-                LegalAuthority = item.LegalAuthority.ToLegalAuthorityView(),
+                LegalAuthority = new LegalAuthorityView(item.LegalAuthority),
                 Cause = item.Cause,
                 Requirements = item.Requirements,
                 SettlementAmount = item.SettlementAmount,
@@ -30,7 +32,7 @@ namespace Enfo.Repository.Mapping
                     item.GetIsPublicProposedOrder() &&
                     item.CommentPeriodClosesDate.HasValue &&
                     item.CommentPeriodClosesDate >= DateTime.Today
-                        ? item.CommentContact.ToEpdContactView()
+                        ? new EpdContactView(item.CommentContact)
                         : null,
                 ProposedOrderPostedDate = item.GetIsPublicProposedOrder() ? item.ProposedOrderPostedDate : null,
                 IsPublicExecutedOrder = item.GetIsPublicExecutedOrder(),
@@ -43,7 +45,7 @@ namespace Enfo.Repository.Mapping
                 HearingContact = item.HearingContactId.HasValue &&
                     item.HearingCommentPeriodClosesDate.HasValue &&
                     item.HearingCommentPeriodClosesDate >= DateTime.Today
-                        ? item.HearingContact.ToEpdContactView()
+                        ? new EpdContactView(item.HearingContact)
                         : null,
             };
         }
@@ -52,12 +54,12 @@ namespace Enfo.Repository.Mapping
         {
             Guard.NotNull(item, nameof(item));
 
-            return new EnforcementOrderDetailedView()
+            return new EnforcementOrderDetailedView
             {
                 Id = item.Id,
                 FacilityName = item.FacilityName,
                 County = item.County,
-                LegalAuthority = item.LegalAuthority.ToLegalAuthorityView(),
+                LegalAuthority = new LegalAuthorityView(item.LegalAuthority),
                 Cause = item.Cause,
                 Requirements = item.Requirements,
                 SettlementAmount = item.SettlementAmount,
@@ -67,7 +69,7 @@ namespace Enfo.Repository.Mapping
                 LastPostedDate = item.GetLastPostedDate(),
                 IsProposedOrder = item.IsProposedOrder,
                 CommentPeriodClosesDate = item.CommentPeriodClosesDate,
-                CommentContact = item.CommentContactId.HasValue ? item.CommentContact.ToEpdContactView() : null,
+                CommentContact = item.CommentContactId.HasValue ? new EpdContactView(item.CommentContact) : null,
                 ProposedOrderPostedDate = item.ProposedOrderPostedDate,
                 IsExecutedOrder = item.IsExecutedOrder,
                 ExecutedDate = item.ExecutedDate,
@@ -75,7 +77,7 @@ namespace Enfo.Repository.Mapping
                 HearingDate = item.HearingDate,
                 HearingLocation = item.HearingLocation,
                 HearingCommentPeriodClosesDate = item.HearingCommentPeriodClosesDate,
-                HearingContact = item.HearingContactId.HasValue ? item.HearingContact.ToEpdContactView() : null,
+                HearingContact = item.HearingContactId.HasValue ? new EpdContactView(item.HearingContact) : null,
             };
         }
 
@@ -83,12 +85,12 @@ namespace Enfo.Repository.Mapping
         {
             Guard.NotNull(item, nameof(item));
 
-            return new EnforcementOrderSummaryView()
+            return new EnforcementOrderSummaryView
             {
                 Id = item.Id,
                 FacilityName = item.FacilityName,
                 County = item.County,
-                LegalAuthority = item.LegalAuthority.ToLegalAuthorityView(),
+                LegalAuthority = new LegalAuthorityView(item.LegalAuthority),
                 OrderNumber = item.OrderNumber,
                 IsPublicProposedOrder = item.GetIsPublicProposedOrder(),
                 IsProposedOrder = item.GetIsPublicProposedOrder() && item.IsProposedOrder,

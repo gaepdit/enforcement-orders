@@ -6,23 +6,11 @@ namespace Enfo.Repository.Mapping
 {
     public static class LegalAuthorityMapping
     {
-        public static LegalAuthorityView ToLegalAuthorityView(this LegalAuthority item)
-        {
-            Guard.NotNull(item, nameof(item));
-
-            return new LegalAuthorityView()
-            {
-                Id = item.Id,
-                Active = item.Active,
-                AuthorityName = item.AuthorityName,
-            };
-        }
-
         public static LegalAuthority ToLegalAuthority(this LegalAuthorityCreate resource)
         {
             Guard.NotNull(resource, nameof(resource));
 
-            return new LegalAuthority()
+            return new LegalAuthority
             {
                 AuthorityName = resource.AuthorityName
             };

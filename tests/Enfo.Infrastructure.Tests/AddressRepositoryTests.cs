@@ -7,6 +7,7 @@ using Enfo.Repository.Mapping;
 using Enfo.Repository.Resources.Address;
 using FluentAssertions;
 using Xunit;
+using static Enfo.Infrastructure.Tests.RepositoryHelper;
 
 namespace Enfo.Infrastructure.Tests
 {
@@ -22,7 +23,7 @@ namespace Enfo.Infrastructure.Tests
         [InlineData(2001)]
         public async Task Get_ReturnsItem(int id)
         {
-            using var repository = new RepositoryHelper().GetAddressRepository();
+            using var repository = CreateRepositoryHelper().SeedAddressData().GetAddressRepository();
             var item = await repository.GetAsync(id).ConfigureAwait(false);
             item.Should().BeEquivalentTo(new AddressView(_addresses.Single(e => e.Id == id)));
         }
@@ -30,7 +31,7 @@ namespace Enfo.Infrastructure.Tests
         [Fact]
         public async Task Get_GivenMissingId_ReturnsNull()
         {
-            using var repository = new RepositoryHelper().GetAddressRepository();
+            using var repository = CreateRepositoryHelper().SeedAddressData().GetAddressRepository();
             var item = await repository.GetAsync(-1).ConfigureAwait(false);
             item.Should().BeNull();
         }
@@ -40,7 +41,7 @@ namespace Enfo.Infrastructure.Tests
         [Fact]
         public async Task List_ByDefault_ReturnsAllActive()
         {
-            using var repository = new RepositoryHelper().GetAddressRepository();
+            using var repository = CreateRepositoryHelper().SeedAddressData().GetAddressRepository();
             var items = await repository.ListAsync().ConfigureAwait(false);
             items.Should().HaveCount(_addresses.Count(e => e.Active));
             items[0].Should().BeEquivalentTo(new AddressView(_addresses.First(e => e.Active)));
@@ -49,7 +50,7 @@ namespace Enfo.Infrastructure.Tests
         [Fact]
         public async Task List_WithInactive_ReturnsAll()
         {
-            using var repository = new RepositoryHelper().GetAddressRepository();
+            using var repository = CreateRepositoryHelper().SeedAddressData().GetAddressRepository();
             var items = await repository.ListAsync(true).ConfigureAwait(false);
             items.Should().HaveCount(_addresses.Count);
             items[0].Should().BeEquivalentTo(new AddressView(_addresses.First()));
@@ -69,7 +70,7 @@ namespace Enfo.Infrastructure.Tests
                 Street = "300 Main St.",
             };
 
-            var repositoryHelper = new RepositoryHelper();
+            var repositoryHelper = CreateRepositoryHelper().SeedAddressData();
 
             using (var repository = repositoryHelper.GetAddressRepository())
             {
@@ -95,7 +96,7 @@ namespace Enfo.Infrastructure.Tests
 
             Func<Task> action = async () =>
             {
-                using var repository = new RepositoryHelper().GetAddressRepository();
+                using var repository = CreateRepositoryHelper().SeedAddressData().GetAddressRepository();
                 await repository.CreateAsync(itemCreate);
             };
 
@@ -117,13 +118,13 @@ namespace Enfo.Infrastructure.Tests
 
             Func<Task> action = async () =>
             {
-                using var repository = new RepositoryHelper().GetAddressRepository();
+                using var repository = CreateRepositoryHelper().SeedAddressData().GetAddressRepository();
                 await repository.CreateAsync(itemCreate);
             };
 
             (await action.Should().ThrowAsync<ArgumentException>())
-                .WithMessage($"Postal Code ({itemCreate.PostalCode}) is not valid. (Parameter 'resource')")
-                .And.ParamName.Should().Be("resource");
+                .WithMessage($"Value ({itemCreate.PostalCode}) is not valid. (Parameter 'PostalCode')")
+                .And.ParamName.Should().Be(nameof(itemCreate.PostalCode));
         }
 
         // UpdateAsync
@@ -141,7 +142,7 @@ namespace Enfo.Infrastructure.Tests
                 Street2 = "Box 1",
             };
 
-            var repositoryHelper = new RepositoryHelper();
+            var repositoryHelper = CreateRepositoryHelper().SeedAddressData();
 
             using (var repository = repositoryHelper.GetAddressRepository())
             {
@@ -170,7 +171,7 @@ namespace Enfo.Infrastructure.Tests
                 Street2 = original.Street2,
             };
 
-            var repositoryHelper = new RepositoryHelper();
+            var repositoryHelper = CreateRepositoryHelper().SeedAddressData();
 
             using (var repository = repositoryHelper.GetAddressRepository())
             {
@@ -199,7 +200,7 @@ namespace Enfo.Infrastructure.Tests
 
             Func<Task> action = async () =>
             {
-                using var repository = new RepositoryHelper().GetAddressRepository();
+                using var repository = CreateRepositoryHelper().SeedAddressData().GetAddressRepository();
                 await repository.UpdateAsync(itemId, itemUpdate);
             };
 
@@ -221,13 +222,13 @@ namespace Enfo.Infrastructure.Tests
 
             Func<Task> action = async () =>
             {
-                using var repository = new RepositoryHelper().GetAddressRepository();
+                using var repository = CreateRepositoryHelper().SeedAddressData().GetAddressRepository();
                 await repository.UpdateAsync(itemId, itemUpdate);
             };
 
             (await action.Should().ThrowAsync<ArgumentException>())
-                .WithMessage($"Postal Code ({itemUpdate.PostalCode}) is not valid. (Parameter 'resource')")
-                .And.ParamName.Should().Be("resource");
+                .WithMessage($"Value ({itemUpdate.PostalCode}) is not valid. (Parameter 'PostalCode')")
+                .And.ParamName.Should().Be(nameof(itemUpdate.PostalCode));
         }
 
         [Fact]
@@ -242,11 +243,11 @@ namespace Enfo.Infrastructure.Tests
                 Street2 = "Box 1",
             };
 
-            var itemId = -1;
+            const int itemId = -1;
 
             Func<Task> action = async () =>
             {
-                using var repository = new RepositoryHelper().GetAddressRepository();
+                using var repository = CreateRepositoryHelper().SeedAddressData().GetAddressRepository();
                 await repository.UpdateAsync(itemId, itemUpdate);
             };
 

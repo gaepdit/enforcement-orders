@@ -7,29 +7,11 @@ namespace Enfo.Repository.Mapping
 {
     public static class EpdContactMapping
     {
-        public static EpdContactView ToEpdContactView(this EpdContact item)
-        {
-            Guard.NotNull(item, nameof(item));
-
-            return new EpdContactView()
-            {
-                Id = item.Id,
-                Active = item.Active,
-                ContactName = item.ContactName,
-                Title = item.Title,
-                Organization = item.Organization,
-                Address = new AddressView(item.Address),
-                AddressId = item.AddressId,
-                Telephone = item.Telephone,
-                Email = item.Email,
-            };
-        }
-
         public static EpdContact ToEpdContact(this EpdContactCreate resource)
         {
             Guard.NotNull(resource, nameof(resource));
 
-            return new EpdContact()
+            return new EpdContact
             {
                 AddressId = resource.AddressId,
                 ContactName = resource.ContactName,
