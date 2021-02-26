@@ -11,5 +11,6 @@ namespace Enfo.Repository.Repositories
         Task<IReadOnlyList<AddressView>> ListAsync(bool includeInactive = false);
         Task<int> CreateAsync(AddressCreate resource);
         Task UpdateAsync(int id, AddressUpdate resource);
+        Task<bool> ExistsAsync(int id);
     }
 }

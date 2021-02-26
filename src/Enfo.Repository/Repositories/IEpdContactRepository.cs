@@ -11,5 +11,6 @@ namespace Enfo.Repository.Repositories
         Task<IReadOnlyList<EpdContactView>> ListAsync(bool includeInactive = false);
         Task<int> CreateAsync(EpdContactCreate resource);
         Task UpdateAsync(int id, EpdContactUpdate resource);
+        Task<bool> ExistsAsync(int id);
     }
 }

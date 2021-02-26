@@ -103,7 +103,7 @@ namespace Enfo.Infrastructure.Tests
             using (var repository = repositoryHelper.GetEpdContactRepository())
             {
                 var epdContact = itemCreate.ToEpdContact();
-                epdContact.Address=_addresses.Single(e => e.Id == itemCreate.AddressId);
+                epdContact.Address = _addresses.Single(e => e.Id == itemCreate.AddressId);
                 epdContact.Id = itemId;
                 var expected = new EpdContactView(epdContact);
 
@@ -265,7 +265,7 @@ namespace Enfo.Infrastructure.Tests
             };
 
             (await action.Should().ThrowAsync<ArgumentException>())
-                .And.ParamName.Should().Be(nameof(EpdContactCreate.ContactName));
+                .And.ParamName.Should().Be(nameof(itemUpdate.ContactName));
         }
 
         [Fact]
@@ -342,6 +342,24 @@ namespace Enfo.Infrastructure.Tests
             (await action.Should().ThrowAsync<ArgumentException>())
                 .WithMessage($"ID ({itemId}) not found. (Parameter 'id')")
                 .And.ParamName.Should().Be("id");
+        }
+        
+        // ExistsAsync
+
+        [Fact]
+        public async Task Exists_GivenExists_ReturnsTrue()
+        {
+            using var repository = CreateRepositoryHelper().SeedEpdContactData().GetEpdContactRepository();
+            var result = await repository.ExistsAsync(_contacts[0].Id);
+            result.Should().BeTrue();
+        }
+
+        [Fact]
+        public async Task Exists_GivenNotExists_ReturnsFalse()
+        {
+            using var repository = CreateRepositoryHelper().SeedEpdContactData().GetEpdContactRepository();
+            var result = await repository.ExistsAsync(-1);
+            result.Should().BeFalse();
         }
     }
 }

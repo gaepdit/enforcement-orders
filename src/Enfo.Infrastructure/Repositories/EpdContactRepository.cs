@@ -76,6 +76,9 @@ namespace Enfo.Infrastructure.Repositories
             await _context.SaveChangesAsync().ConfigureAwait(false);
         }
 
+        public async Task<bool> ExistsAsync(int id) => 
+            await _context.EpdContacts.AnyAsync(e => e.Id == id).ConfigureAwait(false);
+
         public void Dispose() => _context.Dispose();
     }
 }

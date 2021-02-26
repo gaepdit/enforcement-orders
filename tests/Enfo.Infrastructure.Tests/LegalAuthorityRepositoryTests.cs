@@ -74,7 +74,8 @@ namespace Enfo.Infrastructure.Tests
             using (var repository = repositoryHelper.GetLegalAuthorityRepository())
             {
                 var expected = new LegalAuthorityView(itemCreate.ToLegalAuthority()) {Id = itemId};
-                (await repository.GetAsync(itemId)).Should().BeEquivalentTo(expected);
+                (await repository.GetAsync(itemId))
+                    .Should().BeEquivalentTo(expected);
             }
         }
 
@@ -167,6 +168,24 @@ namespace Enfo.Infrastructure.Tests
             (await action.Should().ThrowAsync<ArgumentException>())
                 .WithMessage($"ID ({itemId}) not found. (Parameter 'id')")
                 .And.ParamName.Should().Be("id");
+        }
+
+        // ExistsAsync
+
+        [Fact]
+        public async Task Exists_GivenExists_ReturnsTrue()
+        {
+            using var repository = CreateRepositoryHelper().SeedLegalAuthorityData().GetLegalAuthorityRepository();
+            var result = await repository.ExistsAsync(_authorities[0].Id);
+            result.Should().BeTrue();
+        }
+
+        [Fact]
+        public async Task Exists_GivenNotExists_ReturnsFalse()
+        {
+            using var repository = CreateRepositoryHelper().SeedLegalAuthorityData().GetLegalAuthorityRepository();
+            var result = await repository.ExistsAsync(-1);
+            result.Should().BeFalse();
         }
     }
 }
