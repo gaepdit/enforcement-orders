@@ -1,21 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
+using Enfo.Repository.Specs;
 using Enfo.Repository.Utils;
 
-namespace Enfo.Repository.Pagination
+namespace Enfo.Repository.Resources
 {
     public class PaginatedResult<T>
     {
-        public ICollection<T> Items { get; }
+        public IReadOnlyList<T> Items { get; }
         public int TotalCount { get; }
         public int PageNumber { get; }
         public int PageSize { get; }
-
-        public PaginatedResult(IEnumerable<T> items, int totalCount, int pageNumber, int pageSize)
+        
+        public PaginatedResult(IEnumerable<T> items, int totalCount, PaginationSpec paging)
         {
+            Guard.NotNull(paging, nameof(paging));
+            
             TotalCount = Guard.NotNegative(totalCount, nameof(totalCount));
-            PageNumber = Guard.Positive(pageNumber, nameof(pageNumber));
-            PageSize = Guard.Positive(pageSize, nameof(pageSize));
+            PageNumber = paging.PageNumber;
+            PageSize = paging.PageSize;
+
             var itemsList = new List<T>();
             itemsList.AddRange(items);
             Items = itemsList;

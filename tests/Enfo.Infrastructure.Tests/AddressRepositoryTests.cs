@@ -1,21 +1,17 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Enfo.Domain.Entities;
 using Enfo.Repository.Mapping;
 using Enfo.Repository.Resources.Address;
 using FluentAssertions;
 using Xunit;
 using static Enfo.Infrastructure.Tests.RepositoryHelper;
+using static Enfo.Infrastructure.Tests.RepositoryHelperData;
 
 namespace Enfo.Infrastructure.Tests
 {
     public class AddressRepositoryTests
     {
-        private readonly List<Address> _addresses;
-        public AddressRepositoryTests() => _addresses = RepositoryHelperData.GetAddresses().ToList();
-
         // GetAsync
 
         [Theory]
@@ -23,16 +19,16 @@ namespace Enfo.Infrastructure.Tests
         [InlineData(2001)]
         public async Task Get_ReturnsItem(int id)
         {
-            using var repository = CreateRepositoryHelper().SeedAddressData().GetAddressRepository();
-            var item = await repository.GetAsync(id).ConfigureAwait(false);
-            item.Should().BeEquivalentTo(new AddressView(_addresses.Single(e => e.Id == id)));
+            using var repository = CreateRepositoryHelper().GetAddressRepository();
+            var item = await repository.GetAsync(id);
+            item.Should().BeEquivalentTo(new AddressView(GetAddresses.Single(e => e.Id == id)));
         }
 
         [Fact]
         public async Task Get_GivenMissingId_ReturnsNull()
         {
-            using var repository = CreateRepositoryHelper().SeedAddressData().GetAddressRepository();
-            var item = await repository.GetAsync(-1).ConfigureAwait(false);
+            using var repository = CreateRepositoryHelper().GetAddressRepository();
+            var item = await repository.GetAsync(-1);
             item.Should().BeNull();
         }
 
@@ -41,19 +37,19 @@ namespace Enfo.Infrastructure.Tests
         [Fact]
         public async Task List_ByDefault_ReturnsAllActive()
         {
-            using var repository = CreateRepositoryHelper().SeedAddressData().GetAddressRepository();
-            var items = await repository.ListAsync().ConfigureAwait(false);
-            items.Should().HaveCount(_addresses.Count(e => e.Active));
-            items[0].Should().BeEquivalentTo(new AddressView(_addresses.First(e => e.Active)));
+            using var repository = CreateRepositoryHelper().GetAddressRepository();
+            var items = await repository.ListAsync();
+            items.Should().HaveCount(GetAddresses.Count(e => e.Active));
+            items[0].Should().BeEquivalentTo(new AddressView(GetAddresses.First(e => e.Active)));
         }
 
         [Fact]
         public async Task List_WithInactive_ReturnsAll()
         {
-            using var repository = CreateRepositoryHelper().SeedAddressData().GetAddressRepository();
-            var items = await repository.ListAsync(true).ConfigureAwait(false);
-            items.Should().HaveCount(_addresses.Count);
-            items[0].Should().BeEquivalentTo(new AddressView(_addresses.First()));
+            using var repository = CreateRepositoryHelper().GetAddressRepository();
+            var items = await repository.ListAsync(true);
+            items.Should().HaveCount(GetAddresses.Count());
+            items[0].Should().BeEquivalentTo(new AddressView(GetAddresses.First()));
         }
 
         // CreateAsync
@@ -70,7 +66,7 @@ namespace Enfo.Infrastructure.Tests
                 Street = "300 Main St.",
             };
 
-            var repositoryHelper = CreateRepositoryHelper().SeedAddressData();
+            using var repositoryHelper = CreateRepositoryHelper();
 
             using (var repository = repositoryHelper.GetAddressRepository())
             {
@@ -97,7 +93,7 @@ namespace Enfo.Infrastructure.Tests
 
             Func<Task> action = async () =>
             {
-                using var repository = CreateRepositoryHelper().SeedAddressData().GetAddressRepository();
+                using var repository = CreateRepositoryHelper().GetAddressRepository();
                 await repository.CreateAsync(itemCreate);
             };
 
@@ -119,7 +115,7 @@ namespace Enfo.Infrastructure.Tests
 
             Func<Task> action = async () =>
             {
-                using var repository = CreateRepositoryHelper().SeedAddressData().GetAddressRepository();
+                using var repository = CreateRepositoryHelper().GetAddressRepository();
                 await repository.CreateAsync(itemCreate);
             };
 
@@ -133,7 +129,7 @@ namespace Enfo.Infrastructure.Tests
         [Fact]
         public async Task Update_SuccessfullyUpdatesItem()
         {
-            var itemId = _addresses.First(e => e.Active).Id;
+            var itemId = GetAddresses.First(e => e.Active).Id;
             var itemUpdate = new AddressUpdate()
             {
                 City = "NewCity",
@@ -143,7 +139,7 @@ namespace Enfo.Infrastructure.Tests
                 Street2 = "Box 1",
             };
 
-            var repositoryHelper = CreateRepositoryHelper().SeedAddressData();
+            using var repositoryHelper = CreateRepositoryHelper();
 
             using (var repository = repositoryHelper.GetAddressRepository())
             {
@@ -160,7 +156,7 @@ namespace Enfo.Infrastructure.Tests
         [Fact]
         public async Task Update_WithNoChanges_Succeeds()
         {
-            var original = _addresses.First(e => e.Active);
+            var original = GetAddresses.First(e => e.Active);
             var itemId = original.Id;
             var itemUpdate = new AddressUpdate()
             {
@@ -172,7 +168,7 @@ namespace Enfo.Infrastructure.Tests
                 Street2 = original.Street2,
             };
 
-            var repositoryHelper = CreateRepositoryHelper().SeedAddressData();
+            using var repositoryHelper = CreateRepositoryHelper();
 
             using (var repository = repositoryHelper.GetAddressRepository())
             {
@@ -189,7 +185,7 @@ namespace Enfo.Infrastructure.Tests
         [Fact]
         public async Task Update_GivenNullStreet_ThrowsException()
         {
-            var itemId = _addresses.First(e => e.Active).Id;
+            var itemId = GetAddresses.First(e => e.Active).Id;
             var itemUpdate = new AddressUpdate()
             {
                 City = "NewCity",
@@ -201,7 +197,7 @@ namespace Enfo.Infrastructure.Tests
 
             Func<Task> action = async () =>
             {
-                using var repository = CreateRepositoryHelper().SeedAddressData().GetAddressRepository();
+                using var repository = CreateRepositoryHelper().GetAddressRepository();
                 await repository.UpdateAsync(itemId, itemUpdate);
             };
 
@@ -212,7 +208,7 @@ namespace Enfo.Infrastructure.Tests
         [Fact]
         public async Task Update_GivenInvalidZIP_ThrowsException()
         {
-            var itemId = _addresses.First(e => e.Active).Id;
+            var itemId = GetAddresses.First(e => e.Active).Id;
             var itemUpdate = new AddressUpdate()
             {
                 City = "NewCity",
@@ -223,7 +219,7 @@ namespace Enfo.Infrastructure.Tests
 
             Func<Task> action = async () =>
             {
-                using var repository = CreateRepositoryHelper().SeedAddressData().GetAddressRepository();
+                using var repository = CreateRepositoryHelper().GetAddressRepository();
                 await repository.UpdateAsync(itemId, itemUpdate);
             };
 
@@ -248,7 +244,7 @@ namespace Enfo.Infrastructure.Tests
 
             Func<Task> action = async () =>
             {
-                using var repository = CreateRepositoryHelper().SeedAddressData().GetAddressRepository();
+                using var repository = CreateRepositoryHelper().GetAddressRepository();
                 await repository.UpdateAsync(itemId, itemUpdate);
             };
 
@@ -262,15 +258,15 @@ namespace Enfo.Infrastructure.Tests
         [Fact]
         public async Task Exists_GivenExists_ReturnsTrue()
         {
-            using var repository = CreateRepositoryHelper().SeedAddressData().GetAddressRepository();
-            var result = await repository.ExistsAsync(_addresses[0].Id);
+            using var repository = CreateRepositoryHelper().GetAddressRepository();
+            var result = await repository.ExistsAsync(GetAddresses.First().Id);
             result.Should().BeTrue();
         }
 
         [Fact]
         public async Task Exists_GivenNotExists_ReturnsFalse()
         {
-            using var repository = CreateRepositoryHelper().SeedAddressData().GetAddressRepository();
+            using var repository = CreateRepositoryHelper().GetAddressRepository();
             var result = await repository.ExistsAsync(-1);
             result.Should().BeFalse();
         }

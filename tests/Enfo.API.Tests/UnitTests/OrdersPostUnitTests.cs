@@ -57,7 +57,7 @@ namespace Enfo.API.Tests.IntegrationTests
             };
 
             var mock = new Mock<IEnforcementOrderRepository>();
-            mock.Setup(l => l.OrderNumberExists(item.OrderNumber, -1))
+            mock.Setup(l => l.OrderNumberExistsAsync(item.OrderNumber, -1))
                 .ReturnsAsync(false);
             mock.Setup(l => l.CreateEnforcementOrderAsync(
                     It.IsAny<NewEnforcementOrderType>(),
@@ -311,7 +311,7 @@ namespace Enfo.API.Tests.IntegrationTests
                     It.IsAny<ISpecification<EnforcementOrder>>()))
                 .ReturnsAsync(true);
 
-            mock.Setup(l => l.OrderNumberExists(target.OrderNumber, id))
+            mock.Setup(l => l.OrderNumberExistsAsync(target.OrderNumber, id))
                 .ReturnsAsync(false);
             mock.Setup(l => l.UpdateEnforcementOrderAsync(
                     id,

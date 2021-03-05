@@ -26,6 +26,7 @@ namespace Enfo.Repository.Resources.Address
         public string State { get; set; } = "GA";
 
         [DisplayName("Postal Code")]
+        [DataType(DataType.PostalCode)]
         [StringLength(10)]
         [RegularExpression(ResourceRegex.PostalCode, ErrorMessage = "Provide a valid US ZIP Code.")]
         public string PostalCode { get; set; }

@@ -2,7 +2,7 @@
 
 namespace Enfo.Repository.Validation
 {
-    public class ValidateResourceResult
+    public class ResourceValidationResult
     {
         public bool Success { get; private set; } = true;
         public Dictionary<string, string> ErrorMessages { get; } = new Dictionary<string, string>();

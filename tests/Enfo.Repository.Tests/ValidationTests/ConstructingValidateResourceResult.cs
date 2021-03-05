@@ -9,7 +9,7 @@ namespace Enfo.Repository.Tests.ValidationTests
         [Fact]
         public void ReturnsSuccessByDefault()
         {
-            var result = new ValidateResourceResult();
+            var result = new ResourceValidationResult();
 
             result.Success.Should().BeTrue();
             result.ErrorMessages.Should().BeEmpty();
@@ -21,7 +21,7 @@ namespace Enfo.Repository.Tests.ValidationTests
             const string key = "Name";
             const string message = "Name is missing";
 
-            var result = new ValidateResourceResult();
+            var result = new ResourceValidationResult();
             result.AddErrorMessage(key, message);
 
             result.Success.Should().BeFalse();

@@ -1,27 +1,31 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using Enfo.Repository.Pagination;
+using Enfo.Repository.Resources;
 using Enfo.Repository.Resources.EnforcementOrder;
 using Enfo.Repository.Specs;
+using Enfo.Repository.Validation;
 
 namespace Enfo.Repository.Repositories
 {
-    public interface IEnforcementOrderRepository
+    public interface IEnforcementOrderRepository : IDisposable
     {
-        Task<EnforcementOrderView> GetAsync(int id, bool onlyIfPublic);
+        Task<EnforcementOrderDetailedView> GetAsync(int id, bool onlyPublic = true);
+        Task<EnforcementOrderAdminView> GetAdminViewAsync(int id);
 
         Task<PaginatedResult<EnforcementOrderSummaryView>> ListAsync(
-            EnforcementOrderSpec spec,
-            PaginationSpec paginationSpec = null);
+            EnforcementOrderSpec spec, PaginationSpec paging);
 
         Task<int> CountAsync(EnforcementOrderSpec spec);
-        Task<bool> ExistsAsync(int id);
-        Task<bool> OrderNumberExists(string orderNumber, int ignoreId = -1);
-        Task<IReadOnlyList<EnforcementOrderSummaryView>> ListCurrentProposedEnforcementOrders();
-        Task<IReadOnlyList<EnforcementOrderSummaryView>> ListDraftEnforcementOrders();
-        Task<IReadOnlyList<EnforcementOrderSummaryView>> ListPendingEnforcementOrders();
-        Task<IReadOnlyList<EnforcementOrderSummaryView>> ListRecentlyExecutedEnforcementOrders();
+        Task<bool> ExistsAsync(int id, bool onlyPublic = true);
+        Task<bool> OrderNumberExistsAsync(string orderNumber, int? ignoreId = null);
+        Task<IReadOnlyList<EnforcementOrderSummaryView>> ListCurrentProposedEnforcementOrdersAsync();
+        Task<IReadOnlyList<EnforcementOrderSummaryView>> ListDraftEnforcementOrdersAsync();
+        Task<IReadOnlyList<EnforcementOrderSummaryView>> ListPendingEnforcementOrdersAsync();
+        Task<IReadOnlyList<EnforcementOrderSummaryView>> ListRecentlyExecutedEnforcementOrdersAsync();
         Task<int> CreateAsync(EnforcementOrderCreate resource);
-        Task UpdateAsync(int id, EnforcementOrderUpdate resource);
+        Task<ResourceValidationResult> UpdateAsync(int id, EnforcementOrderUpdate resource);
+        Task DeleteAsync(int id);
+        Task RestoreAsync(int id);
     }
 }

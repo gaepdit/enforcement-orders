@@ -3,6 +3,7 @@
     public static class ResourceRegex
     {
         public const string PostalCode = "^\\d{5}(-\\d{4})?$";
+
         public const string Telephone = "^\\D?(\\d{3})\\D?\\D?(\\d{3})\\D?(\\d{4})$";
 
         public const string Email =

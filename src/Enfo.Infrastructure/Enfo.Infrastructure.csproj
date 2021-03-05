@@ -22,9 +22,6 @@
   <ItemGroup>
     <Compile Remove="Obsolete Specifications\**" />
     <Compile Remove="QueryingEvaluators\**" />
-    <Compile Remove="Repositories\EnforcementOrderRepository.cs" />
-    <Compile Remove="Repositories\ReadOnlyRepository.cs" />
-    <Compile Remove="Repositories\WritableRepository.cs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -13,7 +13,7 @@ using Enfo.Repository.Resources;
 using Enfo.Repository.Resources.EnforcementOrder;
 using Xunit;
 using static Enfo.Domain.Entities.EnforcementOrder;
-using static Enfo.Domain.Utils.DateUtils;
+using static Enfo.Repository.Utils.DateUtils;
 
 namespace Enfo.API.Tests.IntegrationTests
 {
@@ -142,7 +142,7 @@ namespace Enfo.API.Tests.IntegrationTests
                 .ConfigureAwait(false)).Result as OkObjectResult).Value;
 
             // fromDate is most recent Monday
-            var fromDate = GetNextWeekday(DateTime.Today.AddDays(-6), DayOfWeek.Monday);
+            var fromDate = MostRecentMonday();
 
             var expected = _orders
                 .Where(e => e.GetIsPublicExecutedOrder()
@@ -182,7 +182,7 @@ namespace Enfo.API.Tests.IntegrationTests
 
             var expected = _orders
                 .Where(e => e.GetIsPublic()
-                    && e.GetLastPostedDate() > GetNextWeekday(DateTime.Today.AddDays(-6), DayOfWeek.Monday))
+                    && e.GetLastPostedDate() > MostRecentMonday())
                 .Where(e => !e.Deleted)
                 .Select(e => new EnforcementOrderSummaryView(e));
 

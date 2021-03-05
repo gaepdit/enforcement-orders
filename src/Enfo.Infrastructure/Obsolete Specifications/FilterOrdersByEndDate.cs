@@ -19,7 +19,8 @@ namespace Enfo.Repository.Querying
                     break;
 
                 case ActivityStatus.All:
-                    ApplyCriteria(e => e.ProposedOrderPostedDate <= tillDate || e.ExecutedDate <= tillDate);
+                    ApplyCriteria(e => 
+                        e.ProposedOrderPostedDate <= tillDate || e.ExecutedDate <= tillDate);
                     break;
             }
         }

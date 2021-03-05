@@ -24,12 +24,14 @@ namespace Enfo.Repository.Resources.EpdContact
         [Required(ErrorMessage = "Address is required.")]
         public int? AddressId { get; set; }
 
-        [RegularExpression(ResourceRegex.Telephone, ErrorMessage = "Provide a valid phone number.")]
+        [DataType(DataType.PhoneNumber)]
         [StringLength(50)]
+        [RegularExpression(ResourceRegex.Telephone, ErrorMessage = "Provide a valid phone number.")]
         public string Telephone { get; set; }
 
-        [RegularExpression(ResourceRegex.Email, ErrorMessage = "Provide a valid email address.")]
+        [DataType(DataType.EmailAddress)]
         [StringLength(100)]
+        [RegularExpression(ResourceRegex.Email, ErrorMessage = "Provide a valid email address.")]
         public string Email { get; set; }
     }
 }

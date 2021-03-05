@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
-using Enfo.Repository.Pagination;
+using Enfo.Repository.Resources;
+using Enfo.Repository.Specs;
 using FluentAssertions;
 using Xunit;
 
@@ -15,7 +16,8 @@ namespace Enfo.Repository.Tests.PaginationTests
         public void ReturnsCorrectlyGivenCompleteList()
         {
             var itemCount = _items.Length;
-            var result = new PaginatedResult<string>(_items, itemCount, 1, _items.Length);
+            var result = new PaginatedResult<string>(_items, itemCount,
+                new PaginationSpec(1, _items.Length));
 
             result.CurrentCount.Should().Be(_items.Length);
             result.PageNumber.Should().Be(1);
@@ -32,7 +34,8 @@ namespace Enfo.Repository.Tests.PaginationTests
         public void ReturnsCorrectlyGivenPartialList()
         {
             const int itemCount = 10;
-            var result = new PaginatedResult<string>(_items, itemCount, 2, _items.Length);
+            var result = new PaginatedResult<string>(_items, itemCount,
+                new PaginationSpec(2, _items.Length));
 
             result.CurrentCount.Should().Be(_items.Length);
             result.PageNumber.Should().Be(2);
@@ -48,7 +51,8 @@ namespace Enfo.Repository.Tests.PaginationTests
         [Fact]
         public void ThrowsExceptionGivenNegativeCount()
         {
-            Action action = () => new PaginatedResult<string>(_items, -1, 1, _items.Length);
+            Action action = () => new PaginatedResult<string>(_items, -1,
+                new PaginationSpec(1, _items.Length));
             action.Should().Throw<ArgumentException>()
                 .And.ParamName.Should().Be("totalCount");
         }
@@ -56,7 +60,8 @@ namespace Enfo.Repository.Tests.PaginationTests
         [Fact]
         public void ThrowsExceptionGivenZeroPageNum()
         {
-            Action action = () => new PaginatedResult<string>(_items, _items.Length, 0, _items.Length);
+            Action action = () => new PaginatedResult<string>(_items, _items.Length,
+                new PaginationSpec(0, _items.Length));
             action.Should().Throw<ArgumentException>()
                 .And.ParamName.Should().Be("pageNumber");
         }
@@ -64,7 +69,8 @@ namespace Enfo.Repository.Tests.PaginationTests
         [Fact]
         public void ThrowsExceptionGivenZeroPageSize()
         {
-            Action action = () => new PaginatedResult<string>(_items, _items.Length, 1, 0);
+            Action action = () => new PaginatedResult<string>(_items, _items.Length,
+                new PaginationSpec(1, 0));
             action.Should().Throw<ArgumentException>()
                 .And.ParamName.Should().Be("pageSize");
         }

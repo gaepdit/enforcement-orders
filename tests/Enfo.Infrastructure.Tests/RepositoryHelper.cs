@@ -21,45 +21,63 @@ namespace Enfo.Infrastructure.Tests
 
         public static RepositoryHelper CreateRepositoryHelper() => new RepositoryHelper();
 
-        public RepositoryHelper SeedAddressData()
+        private void SeedAddressData()
         {
-            if (_context.Addresses.Any()) return this;
-
-            _context.Addresses.AddRange(RepositoryHelperData.GetAddresses());
+            if (_context.Addresses.Any()) return;
+            _context.Addresses.AddRange(RepositoryHelperData.GetAddresses);
             _context.SaveChanges();
-
-            return this;
         }
 
-        public RepositoryHelper SeedLegalAuthorityData()
+        private void SeedLegalAuthorityData()
         {
-            if (_context.LegalAuthorities.Any()) return this;
-
-            _context.LegalAuthorities.AddRange(RepositoryHelperData.GetLegalAuthorities());
+            if (_context.LegalAuthorities.Any()) return;
+            _context.LegalAuthorities.AddRange(RepositoryHelperData.GetLegalAuthorities);
             _context.SaveChanges();
-
-            return this;
         }
 
-        public RepositoryHelper SeedEpdContactData()
+        private void SeedEpdContactData()
         {
-            if (_context.EpdContacts.Any()) return this;
-
-            if (!_context.Addresses.Any()) _context.Addresses.AddRange(RepositoryHelperData.GetAddresses());
-            _context.EpdContacts.AddRange(RepositoryHelperData.GetEpdContacts());
+            if (_context.EpdContacts.Any()) return;
+            if (!_context.Addresses.Any()) _context.Addresses.AddRange(RepositoryHelperData.GetAddresses);
+            _context.EpdContacts.AddRange(RepositoryHelperData.GetEpdContacts);
             _context.SaveChanges();
-
-            return this;
         }
 
-        public IAddressRepository GetAddressRepository() =>
-            new AddressRepository(new EnfoDbContext(_options));
+        private void SeedEnforcementOrderData()
+        {
+            if (_context.EnforcementOrders.Any()) return;
+            if (!_context.Addresses.Any()) _context.Addresses.AddRange(RepositoryHelperData.GetAddresses);
+            if (!_context.EpdContacts.Any()) _context.EpdContacts.AddRange(RepositoryHelperData.GetEpdContacts);
+            if (!_context.LegalAuthorities.Any())
+                _context.LegalAuthorities.AddRange(RepositoryHelperData.GetLegalAuthorities);
+            _context.SaveChanges();
+            _context.EnforcementOrders.AddRange(RepositoryHelperData.GetEnforcementOrders);
+            _context.SaveChanges();
+        }
 
-        public ILegalAuthorityRepository GetLegalAuthorityRepository() =>
-            new LegalAuthorityRepository(new EnfoDbContext(_options));
+        public IAddressRepository GetAddressRepository()
+        {
+            SeedAddressData();
+            return new AddressRepository(new EnfoDbContext(_options));
+        }
 
-        public IEpdContactRepository GetEpdContactRepository() =>
-            new EpdContactRepository(new EnfoDbContext(_options));
+        public ILegalAuthorityRepository GetLegalAuthorityRepository()
+        {
+            SeedLegalAuthorityData();
+            return new LegalAuthorityRepository(new EnfoDbContext(_options));
+        }
+
+        public IEpdContactRepository GetEpdContactRepository()
+        {
+            SeedEpdContactData();
+            return new EpdContactRepository(new EnfoDbContext(_options));
+        }
+
+        public IEnforcementOrderRepository GetEnforcementOrderRepository()
+        {
+            SeedEnforcementOrderData();
+            return new EnforcementOrderRepository(new EnfoDbContext(_options));
+        }
 
         public void Dispose() => _context.Dispose();
     }

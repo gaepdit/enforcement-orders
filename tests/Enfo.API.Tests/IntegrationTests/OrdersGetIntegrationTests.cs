@@ -463,7 +463,7 @@ namespace Enfo.API.Tests.IntegrationTests
 
             result.Result.Should().BeOfType<OkObjectResult>();
             var actionResult = result.Result as OkObjectResult;
-            actionResult.Value.Should().BeOfType<EnforcementOrderView>();
+            actionResult.Value.Should().BeOfType<EnforcementOrderDetailedView>();
             actionResult.StatusCode.Should().Be(200);
         }
 
@@ -480,7 +480,7 @@ namespace Enfo.API.Tests.IntegrationTests
             var value = ((await controller.Get(id).ConfigureAwait(false))
                 .Result as OkObjectResult).Value;
 
-            var expected = new EnforcementOrderView(
+            var expected = new EnforcementOrderDetailedView(
                 _orders.Single(e => e.Id == id));
 
             value.Should().BeEquivalentTo(expected);

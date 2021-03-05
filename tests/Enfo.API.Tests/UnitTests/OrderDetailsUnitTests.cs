@@ -63,7 +63,7 @@ namespace Enfo.API.Tests.UnitTests
 
             result.Result.Should().BeOfType<OkObjectResult>();
             var actionResult = result.Result as OkObjectResult;
-            actionResult.Value.Should().BeOfType<EnforcementOrderDetailedView>();
+            actionResult.Value.Should().BeOfType<EnforcementOrderAdminView>();
             actionResult.StatusCode.Should().Be(200);
         }
 
@@ -85,7 +85,7 @@ namespace Enfo.API.Tests.UnitTests
             var value = ((await controller.Details(id).ConfigureAwait(false))
                 .Result as OkObjectResult).Value;
 
-            var expected = new EnforcementOrderDetailedView(item);
+            var expected = new EnforcementOrderAdminView(item);
 
             value.Should().BeEquivalentTo(expected);
         }

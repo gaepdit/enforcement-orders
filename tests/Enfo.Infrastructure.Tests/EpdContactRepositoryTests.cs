@@ -1,27 +1,17 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Enfo.Domain.Entities;
 using Enfo.Repository.Mapping;
 using Enfo.Repository.Resources.EpdContact;
 using FluentAssertions;
 using Xunit;
+using static Enfo.Infrastructure.Tests.RepositoryHelperData;
 using static Enfo.Infrastructure.Tests.RepositoryHelper;
 
 namespace Enfo.Infrastructure.Tests
 {
     public class EpdContactRepositoryTests
     {
-        private readonly List<EpdContact> _contacts;
-        private readonly List<Address> _addresses;
-
-        public EpdContactRepositoryTests()
-        {
-            _addresses = RepositoryHelperData.GetAddresses().ToList();
-            _contacts = RepositoryHelperData.GetEpdContacts().ToList();
-        }
-
         // GetAsync
 
         [Theory]
@@ -29,11 +19,11 @@ namespace Enfo.Infrastructure.Tests
         [InlineData(2001)]
         public async Task Get_ReturnsItem(int id)
         {
-            using var repository = CreateRepositoryHelper().SeedEpdContactData().GetEpdContactRepository();
-            var item = await repository.GetAsync(id).ConfigureAwait(false);
+            using var repository = CreateRepositoryHelper().GetEpdContactRepository();
+            var item = await repository.GetAsync(id);
 
-            var epdContact = _contacts.Single(e => e.Id == id);
-            epdContact.Address = _addresses.Single(e => e.Id == epdContact.AddressId);
+            var epdContact = GetEpdContacts.Single(e => e.Id == id);
+            epdContact.Address = GetAddresses.Single(e => e.Id == epdContact.AddressId);
             var expected = new EpdContactView(epdContact);
 
             item.Should().BeEquivalentTo(expected);
@@ -42,8 +32,8 @@ namespace Enfo.Infrastructure.Tests
         [Fact]
         public async Task Get_GivenMissingId_ReturnsNull()
         {
-            using var repository = CreateRepositoryHelper().SeedEpdContactData().GetEpdContactRepository();
-            var item = await repository.GetAsync(-1).ConfigureAwait(false);
+            using var repository = CreateRepositoryHelper().GetEpdContactRepository();
+            var item = await repository.GetAsync(-1);
             item.Should().BeNull();
         }
 
@@ -52,12 +42,12 @@ namespace Enfo.Infrastructure.Tests
         [Fact]
         public async Task List_ByDefault_ReturnsAllActive()
         {
-            using var repository = CreateRepositoryHelper().SeedEpdContactData().GetEpdContactRepository();
-            var items = await repository.ListAsync().ConfigureAwait(false);
-            items.Should().HaveCount(_contacts.Count(e => e.Active));
+            using var repository = CreateRepositoryHelper().GetEpdContactRepository();
+            var items = await repository.ListAsync();
+            items.Should().HaveCount(GetEpdContacts.Count(e => e.Active));
 
-            var epdContact = _contacts.First(e => e.Active);
-            epdContact.Address = _addresses.Single(e => e.Id == epdContact.AddressId);
+            var epdContact = GetEpdContacts.First(e => e.Active);
+            epdContact.Address = GetAddresses.Single(e => e.Id == epdContact.AddressId);
             var expected = new EpdContactView(epdContact);
 
             items[0].Should().BeEquivalentTo(expected);
@@ -66,12 +56,12 @@ namespace Enfo.Infrastructure.Tests
         [Fact]
         public async Task List_WithInactive_ReturnsAll()
         {
-            using var repository = CreateRepositoryHelper().SeedEpdContactData().GetEpdContactRepository();
-            var items = await repository.ListAsync(true).ConfigureAwait(false);
-            items.Should().HaveCount(_contacts.Count);
+            using var repository = CreateRepositoryHelper().GetEpdContactRepository();
+            var items = await repository.ListAsync(true);
+            items.Should().HaveCount(GetEpdContacts.Count());
 
-            var epdContact = _contacts.First();
-            epdContact.Address = _addresses.Single(e => e.Id == epdContact.AddressId);
+            var epdContact = GetEpdContacts.First();
+            epdContact.Address = GetAddresses.Single(e => e.Id == epdContact.AddressId);
             var expected = new EpdContactView(epdContact);
 
             items[0].Should().BeEquivalentTo(expected);
@@ -93,7 +83,7 @@ namespace Enfo.Infrastructure.Tests
                 ContactName = "C. Patel",
             };
 
-            var repositoryHelper = CreateRepositoryHelper().SeedEpdContactData();
+            using var repositoryHelper = CreateRepositoryHelper();
 
             using (var repository = repositoryHelper.GetEpdContactRepository())
             {
@@ -103,7 +93,7 @@ namespace Enfo.Infrastructure.Tests
             using (var repository = repositoryHelper.GetEpdContactRepository())
             {
                 var epdContact = itemCreate.ToEpdContact();
-                epdContact.Address = _addresses.Single(e => e.Id == itemCreate.AddressId);
+                epdContact.Address = GetAddresses.Single(e => e.Id == itemCreate.AddressId);
                 epdContact.Id = itemId;
                 var expected = new EpdContactView(epdContact);
 
@@ -126,7 +116,7 @@ namespace Enfo.Infrastructure.Tests
 
             Func<Task> action = async () =>
             {
-                using var repository = CreateRepositoryHelper().SeedEpdContactData().GetEpdContactRepository();
+                using var repository = CreateRepositoryHelper().GetEpdContactRepository();
                 await repository.CreateAsync(itemCreate);
             };
 
@@ -149,7 +139,7 @@ namespace Enfo.Infrastructure.Tests
 
             Func<Task> action = async () =>
             {
-                using var repository = CreateRepositoryHelper().SeedEpdContactData().GetEpdContactRepository();
+                using var repository = CreateRepositoryHelper().GetEpdContactRepository();
                 await repository.CreateAsync(itemCreate);
             };
 
@@ -173,7 +163,7 @@ namespace Enfo.Infrastructure.Tests
 
             Func<Task> action = async () =>
             {
-                using var repository = CreateRepositoryHelper().SeedEpdContactData().GetEpdContactRepository();
+                using var repository = CreateRepositoryHelper().GetEpdContactRepository();
                 await repository.CreateAsync(itemCreate);
             };
 
@@ -187,7 +177,7 @@ namespace Enfo.Infrastructure.Tests
         [Fact]
         public async Task Update_SuccessfullyUpdatesItem()
         {
-            var itemId = _contacts.First(e => e.Active).Id;
+            var itemId = GetEpdContacts.First(e => e.Active).Id;
             var itemUpdate = new EpdContactUpdate()
             {
                 Email = null,
@@ -198,7 +188,7 @@ namespace Enfo.Infrastructure.Tests
                 ContactName = "C. Patel",
             };
 
-            var repositoryHelper = CreateRepositoryHelper().SeedEpdContactData();
+            using var repositoryHelper = CreateRepositoryHelper();
 
             using (var repository = repositoryHelper.GetEpdContactRepository())
             {
@@ -216,7 +206,7 @@ namespace Enfo.Infrastructure.Tests
         [Fact]
         public async Task Update_WithNoChanges_Succeeds()
         {
-            var original = _contacts.First(e => e.Active);
+            var original = GetEpdContacts.First(e => e.Active);
             var itemId = original.Id;
             var itemUpdate = new EpdContactUpdate()
             {
@@ -229,7 +219,7 @@ namespace Enfo.Infrastructure.Tests
                 ContactName = original.ContactName,
             };
 
-            var repositoryHelper = CreateRepositoryHelper().SeedEpdContactData();
+            using var repositoryHelper = CreateRepositoryHelper();
 
             using (var repository = repositoryHelper.GetEpdContactRepository())
             {
@@ -247,7 +237,7 @@ namespace Enfo.Infrastructure.Tests
         [Fact]
         public async Task Update_GivenNullName_ThrowsException()
         {
-            var itemId = _contacts.First(e => e.Active).Id;
+            var itemId = GetEpdContacts.First(e => e.Active).Id;
             var itemUpdate = new EpdContactUpdate()
             {
                 Email = null,
@@ -260,7 +250,7 @@ namespace Enfo.Infrastructure.Tests
 
             Func<Task> action = async () =>
             {
-                using var repository = CreateRepositoryHelper().SeedEpdContactData().GetEpdContactRepository();
+                using var repository = CreateRepositoryHelper().GetEpdContactRepository();
                 await repository.UpdateAsync(itemId, itemUpdate);
             };
 
@@ -271,7 +261,7 @@ namespace Enfo.Infrastructure.Tests
         [Fact]
         public async Task Update_GivenInvalidEmail_ThrowsException()
         {
-            var itemId = _contacts.First(e => e.Active).Id;
+            var itemId = GetEpdContacts.First(e => e.Active).Id;
             var itemUpdate = new EpdContactUpdate()
             {
                 Email = "abc",
@@ -284,7 +274,7 @@ namespace Enfo.Infrastructure.Tests
 
             Func<Task> action = async () =>
             {
-                using var repository = CreateRepositoryHelper().SeedEpdContactData().GetEpdContactRepository();
+                using var repository = CreateRepositoryHelper().GetEpdContactRepository();
                 await repository.UpdateAsync(itemId, itemUpdate);
             };
 
@@ -296,7 +286,7 @@ namespace Enfo.Infrastructure.Tests
         [Fact]
         public async Task Update_GivenInvalidTelephone_ThrowsException()
         {
-            var itemId = _contacts.First(e => e.Active).Id;
+            var itemId = GetEpdContacts.First(e => e.Active).Id;
             var itemUpdate = new EpdContactUpdate()
             {
                 Email = null,
@@ -309,7 +299,7 @@ namespace Enfo.Infrastructure.Tests
 
             Func<Task> action = async () =>
             {
-                using var repository = CreateRepositoryHelper().SeedEpdContactData().GetEpdContactRepository();
+                using var repository = CreateRepositoryHelper().GetEpdContactRepository();
                 await repository.UpdateAsync(itemId, itemUpdate);
             };
 
@@ -335,7 +325,7 @@ namespace Enfo.Infrastructure.Tests
 
             Func<Task> action = async () =>
             {
-                using var repository = CreateRepositoryHelper().SeedEpdContactData().GetEpdContactRepository();
+                using var repository = CreateRepositoryHelper().GetEpdContactRepository();
                 await repository.UpdateAsync(itemId, itemUpdate);
             };
 
@@ -343,21 +333,21 @@ namespace Enfo.Infrastructure.Tests
                 .WithMessage($"ID ({itemId}) not found. (Parameter 'id')")
                 .And.ParamName.Should().Be("id");
         }
-        
+
         // ExistsAsync
 
         [Fact]
         public async Task Exists_GivenExists_ReturnsTrue()
         {
-            using var repository = CreateRepositoryHelper().SeedEpdContactData().GetEpdContactRepository();
-            var result = await repository.ExistsAsync(_contacts[0].Id);
+            using var repository = CreateRepositoryHelper().GetEpdContactRepository();
+            var result = await repository.ExistsAsync(GetEpdContacts.First().Id);
             result.Should().BeTrue();
         }
 
         [Fact]
         public async Task Exists_GivenNotExists_ReturnsFalse()
         {
-            using var repository = CreateRepositoryHelper().SeedEpdContactData().GetEpdContactRepository();
+            using var repository = CreateRepositoryHelper().GetEpdContactRepository();
             var result = await repository.ExistsAsync(-1);
             result.Should().BeFalse();
         }

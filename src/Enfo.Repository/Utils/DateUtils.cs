@@ -1,6 +1,6 @@
 using System;
 
-namespace Enfo.Domain.Utils
+namespace Enfo.Repository.Utils
 {
     public static class DateUtils
     {
@@ -16,5 +16,8 @@ namespace Enfo.Domain.Utils
         public static DateTime GetNextWeekday(DateTime start, DayOfWeek day) =>
             // The (... + 7) % 7 ensures we end up with a value in the range [0, 6]
             start.AddDays(((int)day - (int)start.DayOfWeek + 7) % 7);
+
+        public static DateTime MostRecentMonday() =>
+            GetNextWeekday(DateTime.Today.AddDays(-6), DayOfWeek.Monday);
     }
 }

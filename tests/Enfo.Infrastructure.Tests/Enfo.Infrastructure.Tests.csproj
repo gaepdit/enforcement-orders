@@ -22,10 +22,4 @@
         <ProjectReference Include="..\..\src\Enfo.Repository\Enfo.Repository.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Compile Remove="WritableRepositoryTests.cs" />
-      <Compile Remove="ReadableRepositoryTests.cs" />
-      <Compile Remove="EnforcementOrderRepositoryTests.cs" />
-    </ItemGroup>
-
 </Project>

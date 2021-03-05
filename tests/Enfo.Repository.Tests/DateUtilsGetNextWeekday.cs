@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using FluentAssertions;
 using Xunit;
-using static Enfo.Domain.Utils.DateUtils;
+using static Enfo.Repository.Utils.DateUtils;
 
 namespace Enfo.Infrastructure.Tests
 {

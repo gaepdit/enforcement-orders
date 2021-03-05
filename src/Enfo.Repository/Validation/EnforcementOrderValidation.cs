@@ -6,9 +6,9 @@ namespace Enfo.Repository.Validation
 {
     public static class EnforcementOrderValidation
     {
-        public static ValidateResourceResult ValidateNewEnforcementOrder(EnforcementOrderCreate resource)
+        public static ResourceValidationResult ValidateNewEnforcementOrder(EnforcementOrderCreate resource)
         {
-            var result = new ValidateResourceResult();
+            var result = new ResourceValidationResult();
 
             if (resource.PublicationStatus != PublicationState.Published) return result;
 
@@ -67,11 +67,11 @@ namespace Enfo.Repository.Validation
             return result;
         }
 
-        public static ValidateResourceResult ValidateEnforcementOrderUpdate(
+        public static ResourceValidationResult ValidateEnforcementOrderUpdate(
             EnforcementOrder order,
             EnforcementOrderUpdate resource)
         {
-            var result = new ValidateResourceResult();
+            var result = new ResourceValidationResult();
 
             if (order.Deleted)
             {

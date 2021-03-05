@@ -32,9 +32,9 @@ namespace Enfo.API.Controllers
             // Specifications
             filter ??= new EnforcementOrderFilter();
 
-            bool onlyIfPublic = false;
+            bool onlyPublic = false;
             // TODO: Only authorized users can request Orders that are not public.
-            // bool onlyIfPublic = !User.LoggedIn;
+            // bool onlyPublic = !User.LoggedIn;
 
             // TODO: Only authorized users can request Orders with PublicationStatus other than "Published"
             // or deleted Orders
@@ -49,12 +49,12 @@ namespace Enfo.API.Controllers
 
             var countTask = _repository.CountEnforcementOrdersAsync(
                 filter.FacilityFilter, filter.County, filter.LegalAuth, filter.FromDate, filter.TillDate, filter.Status,
-                filter.PublicationStatus, filter.OrderNumber, filter.TextContains, onlyIfPublic, filter.Deleted)
+                filter.PublicationStatus, filter.OrderNumber, filter.TextContains, onlyPublic, filter.Deleted)
                 .ConfigureAwait(false);
 
             var itemsTask = _repository.FindEnforcementOrdersAsync(
                 filter.FacilityFilter, filter.County, filter.LegalAuth, filter.FromDate, filter.TillDate, filter.Status,
-                filter.PublicationStatus, filter.OrderNumber, filter.TextContains, onlyIfPublic, filter.Deleted,
+                filter.PublicationStatus, filter.OrderNumber, filter.TextContains, onlyPublic, filter.Deleted,
                 filter.SortOrder, pagination)
                 .ConfigureAwait(false);
 
@@ -67,41 +67,17 @@ namespace Enfo.API.Controllers
 
         // GET: api/EnforcementOrders/5
         [HttpGet("{id}")]
-        [ProducesResponseType(typeof(EnforcementOrderView), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<EnforcementOrderView>> Get(
-            [FromRoute] int id)
-        {
-            bool onlyIfPublic = false;
-            // TODO: Only authorized users can request Orders that are not public.
-            // bool onlyIfPublic = !User.LoggedIn;
-
-            var item = await _repository
-                .GetEnforcementOrder(id, onlyIfPublic)
-                .ConfigureAwait(false);
-
-            if (item is null)
-            {
-                return NotFound(id);
-            }
-
-            return Ok(new EnforcementOrderView(item));
-        }
-
-        // GET: api/EnforcementOrders/Details/5
-        //[Authorize]
-        [HttpGet("Details/{id}")]
         [ProducesResponseType(typeof(EnforcementOrderDetailedView), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<EnforcementOrderDetailedView>> Details(
+        public async Task<ActionResult<EnforcementOrderDetailedView>> Get(
             [FromRoute] int id)
         {
-            bool onlyIfPublic = false;
+            bool onlyPublic = false;
             // TODO: Only authorized users can request Orders that are not public.
-            // bool onlyIfPublic = !User.LoggedIn;
+            // bool onlyPublic = !User.LoggedIn;
 
             var item = await _repository
-                .GetEnforcementOrder(id, onlyIfPublic)
+                .GetEnforcementOrder(id, onlyPublic)
                 .ConfigureAwait(false);
 
             if (item is null)
@@ -110,6 +86,30 @@ namespace Enfo.API.Controllers
             }
 
             return Ok(new EnforcementOrderDetailedView(item));
+        }
+
+        // GET: api/EnforcementOrders/Details/5
+        //[Authorize]
+        [HttpGet("Details/{id}")]
+        [ProducesResponseType(typeof(EnforcementOrderAdminView), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<EnforcementOrderAdminView>> Details(
+            [FromRoute] int id)
+        {
+            bool onlyPublic = false;
+            // TODO: Only authorized users can request Orders that are not public.
+            // bool onlyPublic = !User.LoggedIn;
+
+            var item = await _repository
+                .GetEnforcementOrder(id, onlyPublic)
+                .ConfigureAwait(false);
+
+            if (item is null)
+            {
+                return NotFound(id);
+            }
+
+            return Ok(new EnforcementOrderAdminView(item));
         }
 
         // GET: api/EnforcementOrders?params
@@ -122,9 +122,9 @@ namespace Enfo.API.Controllers
             // Specifications
             filter ??= new EnforcementOrderFilter();
 
-            bool onlyIfPublic = false;
+            bool onlyPublic = false;
             // TODO: Only authorized users can request Orders that are not public.
-            // bool onlyIfPublic = !User.LoggedIn;
+            // bool onlyPublic = !User.LoggedIn;
 
             // TODO: Only authorized users can request Orders with PublicationStatus other than "Published"
             // or deleted Orders
@@ -138,7 +138,7 @@ namespace Enfo.API.Controllers
                 .CountEnforcementOrdersAsync(filter.FacilityFilter, filter.County,
                     filter.LegalAuth, filter.FromDate, filter.TillDate, filter.Status,
                     filter.PublicationStatus, filter.OrderNumber, filter.TextContains,
-                    onlyIfPublic, filter.Deleted)
+                    onlyPublic, filter.Deleted)
                 .ConfigureAwait(false));
         }
 

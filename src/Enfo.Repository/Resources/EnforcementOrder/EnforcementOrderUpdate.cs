@@ -10,16 +10,16 @@ namespace Enfo.Repository.Resources.EnforcementOrder
         // Common data elements
 
         [DisplayName("Facility")]
+        [Required(ErrorMessage = "Facility Name is required.")]
         [StringLength(205)]
-        [Required(ErrorMessage = "Facility Name is required")]
         public string FacilityName { get; set; }
 
+        [Required(ErrorMessage = "County Name is required.")]
         [StringLength(25)]
-        [Required(ErrorMessage = "County Name is required")]
         public string County { get; set; }
 
         [DisplayName("Legal Authority")]
-        [Required(ErrorMessage = "Legal Authority is required")]
+        [Required(ErrorMessage = "Legal Authority is required.")]
         public int LegalAuthorityId { get; set; }
 
         [DisplayName("Cause of Order")]
@@ -41,7 +41,7 @@ namespace Enfo.Repository.Resources.EnforcementOrder
         public PublicationState PublicationStatus { get; set; }
 
         [DisplayName("Order Number")]
-        [Required(ErrorMessage = "Order Number is required")]
+        [Required(ErrorMessage = "Order Number is required.")]
         [StringLength(50)]
         public string OrderNumber { get; set; }
 

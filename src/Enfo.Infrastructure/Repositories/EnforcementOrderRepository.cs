@@ -1,272 +1,218 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
-using Enfo.Domain.Entities;
 using Enfo.Infrastructure.Contexts;
 using Enfo.Repository.Repositories;
-using Enfo.Repository.PaginationSpec;
-using Enfo.Repository.Querying;
+using Enfo.Repository.Resources;
+using Enfo.Repository.Resources.EnforcementOrder;
+using Enfo.Repository.Specs;
+using Enfo.Repository.Utils;
+using Enfo.Repository.Validation;
 using Microsoft.EntityFrameworkCore;
-using static Enfo.Domain.Entities.EnforcementOrder;
-using static Enfo.Domain.Entities.Enums;
-using static Enfo.Domain.Utils.DateUtils;
-using static Enfo.Repository.Resources.EnforcementOrder.EnforcementOrderCreate;
 
 namespace Enfo.Infrastructure.Repositories
 {
-    public class EnforcementOrderRepository :  IEnforcementOrderRepository
+    public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
     {
         private readonly EnfoDbContext _context;
+
         public EnforcementOrderRepository(EnfoDbContext context) => _context = context;
 
-        public Task<EnforcementOrder> GetEnforcementOrder(int id, bool onlyIfPublic)
+        // public async Task<CreateEntityResult<EnforcementOrder>> CreateEnforcementOrderAsync(
+        //     NewEnforcementOrderType createAs, string cause, int? commentContactId, DateTime? commentPeriodClosesDate,
+        //     string county, string facilityName, DateTime? executedDate, DateTime? executedOrderPostedDate,
+        //     DateTime? hearingCommentPeriodClosesDate, int? hearingContactId, DateTime? hearingDate,
+        //     string hearingLocation, bool isHearingScheduled, int legalAuthorityId, string orderNumber,
+        //     DateTime? proposedOrderPostedDate, EnforcementOrder.PublicationState publicationStatus, string requirements,
+        //     decimal? settlementAmount)
+        // {
+        //     var result = ValidateNewEnforcementOrder(
+        //         createAs, cause, commentContactId, commentPeriodClosesDate, county, facilityName, executedDate,
+        //         executedOrderPostedDate, hearingCommentPeriodClosesDate, hearingContactId, hearingDate, hearingLocation,
+        //         isHearingScheduled, legalAuthorityId, orderNumber, proposedOrderPostedDate, publicationStatus,
+        //         requirements, settlementAmount);
+        //
+        //     if (await OrderNumberExists(orderNumber).ConfigureAwait(false))
+        //     {
+        //         result.AddErrorMessage("OrderNumber", "An Order with the same number already exists.");
+        //     }
+        //
+        //     if (result.Success)
+        //     {
+        //         Add(result.NewItem);
+        //         await CompleteAsync().ConfigureAwait(false);
+        //     }
+        //
+        //     return result;
+        // }
+        //
+        // public async Task<UpdateEntityResult> UpdateEnforcementOrderAsync(
+        //     int id,
+        //     string cause,
+        //     int? commentContactId,
+        //     DateTime? commentPeriodClosesDate,
+        //     string county,
+        //     string facilityName,
+        //     DateTime? executedDate,
+        //     DateTime? executedOrderPostedDate,
+        //     DateTime? hearingCommentPeriodClosesDate,
+        //     int? hearingContactId,
+        //     DateTime? hearingDate,
+        //     string hearingLocation,
+        //     bool isExecutedOrder,
+        //     bool isHearingScheduled,
+        //     int legalAuthorityId,
+        //     string orderNumber,
+        //     DateTime? proposedOrderPostedDate,
+        //     EnforcementOrder.PublicationState publicationStatus,
+        //     string requirements,
+        //     decimal? settlementAmount)
+        // {
+        //     var originalOrder = await GetAsync(id).ConfigureAwait(false);
+        //
+        //     var result = UpdateEnforcementOrder(originalOrder,
+        //         cause, commentContactId, commentPeriodClosesDate, county, facilityName, executedDate,
+        //         executedOrderPostedDate, hearingCommentPeriodClosesDate, hearingContactId, hearingDate, hearingLocation,
+        //         isExecutedOrder, isHearingScheduled, legalAuthorityId, orderNumber, proposedOrderPostedDate,
+        //         publicationStatus, requirements, settlementAmount);
+        //
+        //     if (await OrderNumberExists(orderNumber, id).ConfigureAwait(false))
+        //     {
+        //         result.AddErrorMessage("OrderNumber", "An Order with the same number already exists.");
+        //     }
+        //
+        //     if (result.Success)
+        //     {
+        //         await CompleteAsync().ConfigureAwait(false);
+        //     }
+        //
+        //     return result;
+        // }
+
+        public async Task<EnforcementOrderDetailedView> GetAsync(int id, bool onlyPublic = true)
         {
-            ISpecification<EnforcementOrder> spec = new TrueSpec<EnforcementOrder>();
+            var item = await _context.EnforcementOrders.AsNoTracking()
+                .Include(e => e.CommentContact)
+                .Include(e => e.HearingContact)
+                .Include(e => e.LegalAuthority)
+                .SingleOrDefaultAsync(e => e.Id == id).ConfigureAwait(false);
 
-            if (onlyIfPublic)
-                spec = spec.And(new IsPublicOrdersSpec());
+            if (item == null || (onlyPublic && !item.GetIsPublic()))
+                return null;
 
-            var include = new EnforcementOrderIncludeAll();
-
-            return GetAsync(id, spec, include);
+            return new EnforcementOrderDetailedView(item);
         }
 
-        public Task<IReadOnlyList<EnforcementOrder>> FindEnforcementOrdersAsync(
-            string FacilityFilter,
-            string County,
-            int? LegalAuth,
-            DateTime? FromDate,
-            DateTime? TillDate,
-            ActivityStatus Status,
-            PublicationStatus PublicationStatus,
-            string OrderNumber,
-            string TextContains,
-            bool onlyIfPublic,
-            bool Deleted,
-            EnforcementOrderSorting SortOrder,
-            Pagination pagination = null)
+        public async Task<EnforcementOrderAdminView> GetAdminViewAsync(int id)
         {
-            // Either deleted or active items are returned; not both.
-            ISpecification<EnforcementOrder> spec = new FilterOrdersByDeletedStatus(Deleted);
+            var item = (await _context.EnforcementOrders.AsNoTracking()
+                .Include(e => e.CommentContact)
+                .Include(e => e.HearingContact)
+                .Include(e => e.LegalAuthority)
+                .SingleOrDefaultAsync(e => e.Id == id).ConfigureAwait(false));
 
-            if (onlyIfPublic)
-                spec = spec.And(new IsPublicOrdersSpec());
-
-            if (!FacilityFilter.IsNullOrWhiteSpace())
-                spec = spec.And(new FilterOrdersByFacilityName(FacilityFilter));
-
-            if (!County.IsNullOrWhiteSpace())
-                spec = spec.And(new FilterOrdersByCounty(County));
-
-            if (LegalAuth.HasValue)
-                spec = spec.And(new FilterOrdersByLegalAuth(LegalAuth.Value));
-
-            if (FromDate.HasValue)
-                spec = spec.And(new FilterOrdersByStartDate(FromDate.Value, Status));
-
-            if (TillDate.HasValue)
-                spec = spec.And(new FilterOrdersByEndDate(TillDate.Value, Status));
-
-            if (Status != ActivityStatus.All)
-                spec = spec.And(new FilterOrdersByActivityStatus(Status));
-
-            if (PublicationStatus != PublicationStatus.All)
-                spec = spec.And(new FilterOrdersByPublicationStatus(PublicationStatus));
-
-            if (!OrderNumber.IsNullOrWhiteSpace())
-                spec = spec.And(new FilterOrdersByOrderNumber(OrderNumber));
-
-            if (!TextContains.IsNullOrWhiteSpace())
-                spec = spec.And(new FilterOrdersByText(TextContains));
-
-            // Sorting
-            var sorting = new SortEnforcementOrders(SortOrder);
-
-            // Including
-            var include = new EnforcementOrderIncludeLegalAuth();
-
-            return ListAsync(spec, pagination, sorting, include);
+            return item == null ? null : new EnforcementOrderAdminView(item);
         }
 
-        public Task<int> CountEnforcementOrdersAsync(
-            string FacilityFilter,
-            string County,
-            int? LegalAuth,
-            DateTime? FromDate,
-            DateTime? TillDate,
-            ActivityStatus Status,
-            PublicationStatus PublicationStatus,
-            string OrderNumber,
-            string TextContains,
-            bool onlyIfPublic,
-            bool Deleted)
+        public async Task<PaginatedResult<EnforcementOrderSummaryView>> ListAsync(
+            EnforcementOrderSpec spec, PaginationSpec paging)
         {
-            // Either deleted or active items are counted; not both.
-            ISpecification<EnforcementOrder> spec = new FilterOrdersByDeletedStatus(Deleted);
+            Guard.NotNull(spec, nameof(spec));
+            Guard.NotNull(paging, nameof(paging));
 
-            if (onlyIfPublic)
-                spec = spec.And(new IsPublicOrdersSpec());
+            var filteredItems = _context.EnforcementOrders.AsNoTracking()
+                .ApplySpecFilter(spec);
 
-            if (!FacilityFilter.IsNullOrWhiteSpace())
-                spec = spec.And(new FilterOrdersByFacilityName(FacilityFilter));
+            var items = await filteredItems
+                .ApplySorting(spec.SortOrder)
+                .Include(e => e.LegalAuthority)
+                .ApplyPagination(paging)
+                .Select(e => new EnforcementOrderSummaryView(e))
+                .ToListAsync().ConfigureAwait(false);
 
-            if (!County.IsNullOrWhiteSpace())
-                spec = spec.And(new FilterOrdersByCounty(County));
+            var count = await filteredItems.CountAsync().ConfigureAwait(false);
 
-            if (LegalAuth.HasValue)
-                spec = spec.And(new FilterOrdersByLegalAuth(LegalAuth.Value));
-
-            if (FromDate.HasValue)
-                spec = spec.And(new FilterOrdersByStartDate(FromDate.Value, Status));
-
-            if (TillDate.HasValue)
-                spec = spec.And(new FilterOrdersByEndDate(TillDate.Value, Status));
-
-            if (Status != ActivityStatus.All)
-                spec = spec.And(new FilterOrdersByActivityStatus(Status));
-
-            if (PublicationStatus != PublicationStatus.All)
-                spec = spec.And(new FilterOrdersByPublicationStatus(PublicationStatus));
-
-            if (!OrderNumber.IsNullOrWhiteSpace())
-                spec = spec.And(new FilterOrdersByOrderNumber(OrderNumber));
-
-            if (!TextContains.IsNullOrWhiteSpace())
-                spec = spec.And(new FilterOrdersByText(TextContains));
-
-            return CountAsync(spec);
+            return new PaginatedResult<EnforcementOrderSummaryView>(items, count, paging);
         }
 
-        public Task<IReadOnlyList<EnforcementOrder>> FindCurrentProposedEnforcementOrders()
+        public async Task<int> CountAsync(EnforcementOrderSpec spec) =>
+            await _context.EnforcementOrders.AsNoTracking()
+                .ApplySpecFilter(spec ?? new EnforcementOrderSpec())
+                .CountAsync().ConfigureAwait(false);
+
+        public async Task<bool> ExistsAsync(int id, bool onlyPublic = true)
         {
-            // Current Proposed are public proposed orders 
-            // (publication date in the past)
-            // with comment close date in the future
-            var spec = new IsPublicProposedOrderSpec()
-                .And(new FilterOrdersByCommentPeriod(DateTime.Today));
+            var item = await _context.EnforcementOrders.AsNoTracking()
+                .Include(e => e.CommentContact)
+                .Include(e => e.HearingContact)
+                .Include(e => e.LegalAuthority)
+                .SingleOrDefaultAsync(e => e.Id == id).ConfigureAwait(false);
 
-            var include = new EnforcementOrderIncludeLegalAuth();
-
-            return ListAsync(spec, inclusion: include);
+            return item != null && (!onlyPublic || item.GetIsPublic());
         }
 
-        public Task<IReadOnlyList<EnforcementOrder>> FindDraftEnforcementOrders()
+        public async Task<bool> OrderNumberExistsAsync(string orderNumber, int? ignoreId = null) =>
+            await _context.EnforcementOrders.AsNoTracking()
+                .AnyAsync(e => e.OrderNumber == orderNumber && e.Id != ignoreId)
+                .ConfigureAwait(false);
+
+        // Current Proposed are public proposed orders 
+        // (publication date in the past)
+        // with comment close date in the future
+        public async Task<IReadOnlyList<EnforcementOrderSummaryView>> ListCurrentProposedEnforcementOrdersAsync() =>
+            await _context.EnforcementOrders.AsNoTracking()
+                .FilterForCurrentProposed()
+                .ApplySorting(EnforcementOrderSpec.EnforcementOrderSorting.DateAsc)
+                .Include(e => e.LegalAuthority)
+                .Select(e => new EnforcementOrderSummaryView(e))
+                .ToListAsync().ConfigureAwait(false);
+
+        // Draft are orders with publication status set to Draft
+        public async Task<IReadOnlyList<EnforcementOrderSummaryView>> ListDraftEnforcementOrdersAsync() =>
+            await _context.EnforcementOrders.AsNoTracking()
+                .FilterForDrafts()
+                .ApplySorting(EnforcementOrderSpec.EnforcementOrderSorting.DateAsc)
+                .Include(e => e.LegalAuthority)
+                .Select(e => new EnforcementOrderSummaryView(e))
+                .ToListAsync().ConfigureAwait(false);
+
+        public async Task<IReadOnlyList<EnforcementOrderSummaryView>> ListPendingEnforcementOrdersAsync() =>
+            await _context.EnforcementOrders.AsNoTracking()
+                .FilterForPending()
+                .ApplySorting(EnforcementOrderSpec.EnforcementOrderSorting.DateAsc)
+                .Include(e => e.LegalAuthority)
+                .Select(e => new EnforcementOrderSummaryView(e))
+                .ToListAsync().ConfigureAwait(false);
+
+        public async Task<IReadOnlyList<EnforcementOrderSummaryView>> ListRecentlyExecutedEnforcementOrdersAsync() =>
+            await _context.EnforcementOrders.AsNoTracking()
+                .FilterForRecentlyExecuted()
+                .ApplySorting(EnforcementOrderSpec.EnforcementOrderSorting.DateAsc)
+                .Include(e => e.LegalAuthority)
+                .Select(e => new EnforcementOrderSummaryView(e))
+                .ToListAsync().ConfigureAwait(false);
+
+        public async Task<int> CreateAsync(EnforcementOrderCreate resource)
         {
-            // Draft are orders with publication status set to Draft
-            var spec = new FilterOrdersByPublicationStatus(PublicationStatus.Draft);
-
-            var include = new EnforcementOrderIncludeLegalAuth();
-
-            return ListAsync(spec, inclusion: include);
+            throw new NotImplementedException();
         }
 
-        public Task<IReadOnlyList<EnforcementOrder>> FindPendingEnforcementOrders()
+        public async Task<ResourceValidationResult> UpdateAsync(int id, EnforcementOrderUpdate resource)
         {
-            // Pending are public proposed or executed orders with 
-            // publication date after the current week
-            var lastPostedAfter = GetNextWeekday(DateTime.Today.AddDays(-6), DayOfWeek.Monday);
-
-            var spec = new IsPublicOrdersSpec()
-                .And(new FilterOrdersByLastPostedDate(lastPostedAfter));
-
-            var include = new EnforcementOrderIncludeLegalAuth();
-
-            return ListAsync(spec, inclusion: include);
+            throw new NotImplementedException();
         }
 
-        public Task<IReadOnlyList<EnforcementOrder>> FindRecentlyExecutedEnforcementOrders()
+        public async Task DeleteAsync(int id)
         {
-            // Recently Executed are public executed orders with 
-            // publication date within current week
-
-            // fromDate is most recent Monday
-            var fromDate = GetNextWeekday(DateTime.Today.AddDays(-6), DayOfWeek.Monday);
-
-            var spec = new IsPublicExecutedOrderSpec()
-                .And(new FilterOrdersByExecutedOrderPostedDate(fromDate, DateTime.Today));
-
-            var include = new EnforcementOrderIncludeLegalAuth();
-
-            return ListAsync(spec, inclusion: include);
+            throw new NotImplementedException();
         }
 
-        public async Task<bool> OrderNumberExists(string orderNumber,
-            int ignoreId = -1)
+        public async Task RestoreAsync(int id)
         {
-            return await _context.Set<EnforcementOrder>()
-            .AnyAsync(e => e.OrderNumber == orderNumber && e.Id != ignoreId)
-            .ConfigureAwait(false);
+            throw new NotImplementedException();
         }
 
-        public async Task<CreateEntityResult<EnforcementOrder>> CreateEnforcementOrderAsync(
-            NewEnforcementOrderType createAs, string cause, int? commentContactId, DateTime? commentPeriodClosesDate,
-            string county, string facilityName, DateTime? executedDate, DateTime? executedOrderPostedDate,
-            DateTime? hearingCommentPeriodClosesDate, int? hearingContactId, DateTime? hearingDate,
-            string hearingLocation, bool isHearingScheduled, int legalAuthorityId, string orderNumber,
-            DateTime? proposedOrderPostedDate, PublicationState publicationStatus, string requirements,
-            decimal? settlementAmount)
-        {
-            var result = ValidateNewEnforcementOrder(
-                createAs, cause, commentContactId, commentPeriodClosesDate, county, facilityName, executedDate,
-                executedOrderPostedDate, hearingCommentPeriodClosesDate, hearingContactId, hearingDate, hearingLocation,
-                isHearingScheduled, legalAuthorityId, orderNumber, proposedOrderPostedDate, publicationStatus,
-                requirements, settlementAmount);
-
-            if (await OrderNumberExists(orderNumber).ConfigureAwait(false))
-            {
-                result.AddErrorMessage("OrderNumber", "An Order with the same number already exists.");
-            }
-
-            if (result.Success)
-            {
-                Add(result.NewItem);
-                await CompleteAsync().ConfigureAwait(false);
-            }
-
-            return result;
-        }
-
-        public async Task<UpdateEntityResult> UpdateEnforcementOrderAsync(
-            int id,
-            string cause,
-            int? commentContactId,
-            DateTime? commentPeriodClosesDate,
-            string county,
-            string facilityName,
-            DateTime? executedDate,
-            DateTime? executedOrderPostedDate,
-            DateTime? hearingCommentPeriodClosesDate,
-            int? hearingContactId,
-            DateTime? hearingDate,
-            string hearingLocation,
-            bool isExecutedOrder,
-            bool isHearingScheduled,
-            int legalAuthorityId,
-            string orderNumber,
-            DateTime? proposedOrderPostedDate,
-            PublicationState publicationStatus,
-            string requirements,
-            decimal? settlementAmount)
-        {
-            var originalOrder = await GetAsync(id).ConfigureAwait(false);
-
-            var result = UpdateEnforcementOrder(originalOrder,
-                cause, commentContactId, commentPeriodClosesDate, county, facilityName, executedDate,
-                executedOrderPostedDate, hearingCommentPeriodClosesDate, hearingContactId, hearingDate, hearingLocation,
-                isExecutedOrder, isHearingScheduled, legalAuthorityId, orderNumber, proposedOrderPostedDate,
-                publicationStatus, requirements, settlementAmount);
-
-            if (await OrderNumberExists(orderNumber, id).ConfigureAwait(false))
-            {
-                result.AddErrorMessage("OrderNumber", "An Order with the same number already exists.");
-            }
-
-            if (result.Success)
-            {
-                await CompleteAsync().ConfigureAwait(false);
-            }
-
-            return result;
-        }
+        public void Dispose() => _context.Dispose();
     }
 }

@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Enfo.Infrastructure.Contexts;
 using Enfo.Repository.Mapping;
 using Enfo.Repository.Repositories;
 using Enfo.Repository.Resources;
-using Enfo.Repository.Resources.Address;
 using Enfo.Repository.Resources.EpdContact;
 using Enfo.Repository.Utils;
 using Microsoft.EntityFrameworkCore;
@@ -28,17 +26,13 @@ namespace Enfo.Infrastructure.Repositories
             return item == null ? null : new EpdContactView(item);
         }
 
-        public async Task<IReadOnlyList<EpdContactView>> ListAsync(bool includeInactive)
-        {
-            var things = _context.EpdContacts.AsNoTracking()
+        public async Task<IReadOnlyList<EpdContactView>> ListAsync(bool includeInactive) =>
+            await _context.EpdContacts.AsNoTracking()
                 .Include(e => e.Address)
                 .Where(e => e.Active || includeInactive)
-                .OrderBy(e => e.Id);
-            var morthings = things
-                .Select(e => new EpdContactView(e));
-            return await morthings.ToListAsync().ConfigureAwait(false);
-        }
-
+                .OrderBy(e => e.Id)
+                .Select(e => new EpdContactView(e))
+                .ToListAsync().ConfigureAwait(false);
 
         public async Task<int> CreateAsync(EpdContactCreate resource)
         {
@@ -76,7 +70,7 @@ namespace Enfo.Infrastructure.Repositories
             await _context.SaveChangesAsync().ConfigureAwait(false);
         }
 
-        public async Task<bool> ExistsAsync(int id) => 
+        public async Task<bool> ExistsAsync(int id) =>
             await _context.EpdContacts.AnyAsync(e => e.Id == id).ConfigureAwait(false);
 
         public void Dispose() => _context.Dispose();

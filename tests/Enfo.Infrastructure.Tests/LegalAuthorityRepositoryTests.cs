@@ -8,14 +8,12 @@ using Enfo.Repository.Resources.LegalAuthority;
 using FluentAssertions;
 using Xunit;
 using static Enfo.Infrastructure.Tests.RepositoryHelper;
+using static Enfo.Infrastructure.Tests.RepositoryHelperData;
 
 namespace Enfo.Infrastructure.Tests
 {
     public class LegalAuthorityRepositoryTests
     {
-        private readonly List<LegalAuthority> _authorities;
-        public LegalAuthorityRepositoryTests() => _authorities = RepositoryHelperData.GetLegalAuthorities().ToList();
-
         // GetAsync
 
         [Theory]
@@ -23,16 +21,16 @@ namespace Enfo.Infrastructure.Tests
         [InlineData(2)]
         public async Task Get_ReturnsItem(int id)
         {
-            using var repository = CreateRepositoryHelper().SeedLegalAuthorityData().GetLegalAuthorityRepository();
-            var item = await repository.GetAsync(id).ConfigureAwait(false);
-            item.Should().BeEquivalentTo(new LegalAuthorityView(_authorities.Single(e => e.Id == id)));
+            using var repository = CreateRepositoryHelper().GetLegalAuthorityRepository();
+            var item = await repository.GetAsync(id);
+            item.Should().BeEquivalentTo(new LegalAuthorityView(GetLegalAuthorities.Single(e => e.Id == id)));
         }
 
         [Fact]
         public async Task Get_GivenMissingId_ReturnsNull()
         {
-            using var repository = CreateRepositoryHelper().SeedLegalAuthorityData().GetLegalAuthorityRepository();
-            var item = await repository.GetAsync(-1).ConfigureAwait(false);
+            using var repository = CreateRepositoryHelper().GetLegalAuthorityRepository();
+            var item = await repository.GetAsync(-1);
             item.Should().BeNull();
         }
 
@@ -41,19 +39,19 @@ namespace Enfo.Infrastructure.Tests
         [Fact]
         public async Task List_ByDefault_ReturnsAllActive()
         {
-            using var repository = CreateRepositoryHelper().SeedLegalAuthorityData().GetLegalAuthorityRepository();
-            var items = await repository.ListAsync().ConfigureAwait(false);
-            items.Should().HaveCount(_authorities.Count(e => e.Active));
-            items[0].Should().BeEquivalentTo(new LegalAuthorityView(_authorities.First(e => e.Active)));
+            using var repository = CreateRepositoryHelper().GetLegalAuthorityRepository();
+            var items = await repository.ListAsync();
+            items.Should().HaveCount(GetLegalAuthorities.Count(e => e.Active));
+            items[0].Should().BeEquivalentTo(new LegalAuthorityView(GetLegalAuthorities.First(e => e.Active)));
         }
 
         [Fact]
         public async Task List_WithInactive_ReturnsAll()
         {
-            using var repository = CreateRepositoryHelper().SeedLegalAuthorityData().GetLegalAuthorityRepository();
-            var items = await repository.ListAsync(true).ConfigureAwait(false);
-            items.Should().HaveCount(_authorities.Count);
-            items[0].Should().BeEquivalentTo(new LegalAuthorityView(_authorities.First()));
+            using var repository = CreateRepositoryHelper().GetLegalAuthorityRepository();
+            var items = await repository.ListAsync(true);
+            items.Should().HaveCount(GetLegalAuthorities.Count());
+            items[0].Should().BeEquivalentTo(new LegalAuthorityView(GetLegalAuthorities.First()));
         }
 
         // CreateAsync
@@ -64,8 +62,8 @@ namespace Enfo.Infrastructure.Tests
             int itemId;
             var itemCreate = new LegalAuthorityCreate() {AuthorityName = "New Item"};
 
-            var repositoryHelper = CreateRepositoryHelper().SeedLegalAuthorityData();
-            
+            using var repositoryHelper = CreateRepositoryHelper();
+
             using (var repository = repositoryHelper.GetLegalAuthorityRepository())
             {
                 itemId = await repository.CreateAsync(itemCreate);
@@ -86,7 +84,7 @@ namespace Enfo.Infrastructure.Tests
 
             Func<Task> action = async () =>
             {
-                using var repository = CreateRepositoryHelper().SeedLegalAuthorityData().GetLegalAuthorityRepository();
+                using var repository = CreateRepositoryHelper().GetLegalAuthorityRepository();
                 await repository.CreateAsync(itemCreate);
             };
 
@@ -99,10 +97,10 @@ namespace Enfo.Infrastructure.Tests
         [Fact]
         public async Task Update_SuccessfullyUpdatesItem()
         {
-            var itemId = _authorities.First(e => e.Active).Id;
+            var itemId = GetLegalAuthorities.First(e => e.Active).Id;
             var itemUpdate = new LegalAuthorityUpdate() {AuthorityName = "New Name"};
 
-            var repositoryHelper = CreateRepositoryHelper().SeedLegalAuthorityData();
+            using var repositoryHelper = CreateRepositoryHelper();
 
             using (var repository = repositoryHelper.GetLegalAuthorityRepository())
             {
@@ -119,11 +117,11 @@ namespace Enfo.Infrastructure.Tests
         [Fact]
         public async Task Update_WithNoChanges_Succeeds()
         {
-            var original = _authorities.First(e => e.Active);
+            var original = GetLegalAuthorities.First(e => e.Active);
             var itemId = original.Id;
             var itemUpdate = new LegalAuthorityUpdate() {AuthorityName = original.AuthorityName};
 
-            var repositoryHelper = CreateRepositoryHelper().SeedLegalAuthorityData();
+            using var repositoryHelper = CreateRepositoryHelper();
 
             using (var repository = repositoryHelper.GetLegalAuthorityRepository())
             {
@@ -140,12 +138,12 @@ namespace Enfo.Infrastructure.Tests
         [Fact]
         public async Task Update_GivenNullStreet_ThrowsException()
         {
-            var itemId = _authorities.First(e => e.Active).Id;
+            var itemId = GetLegalAuthorities.First(e => e.Active).Id;
             var itemUpdate = new LegalAuthorityUpdate() {AuthorityName = null};
 
             Func<Task> action = async () =>
             {
-                using var repository = CreateRepositoryHelper().SeedLegalAuthorityData().GetLegalAuthorityRepository();
+                using var repository = CreateRepositoryHelper().GetLegalAuthorityRepository();
                 await repository.UpdateAsync(itemId, itemUpdate);
             };
 
@@ -161,7 +159,7 @@ namespace Enfo.Infrastructure.Tests
 
             Func<Task> action = async () =>
             {
-                using var repository = CreateRepositoryHelper().SeedLegalAuthorityData().GetLegalAuthorityRepository();
+                using var repository = CreateRepositoryHelper().GetLegalAuthorityRepository();
                 await repository.UpdateAsync(itemId, itemUpdate);
             };
 
@@ -175,15 +173,15 @@ namespace Enfo.Infrastructure.Tests
         [Fact]
         public async Task Exists_GivenExists_ReturnsTrue()
         {
-            using var repository = CreateRepositoryHelper().SeedLegalAuthorityData().GetLegalAuthorityRepository();
-            var result = await repository.ExistsAsync(_authorities[0].Id);
+            using var repository = CreateRepositoryHelper().GetLegalAuthorityRepository();
+            var result = await repository.ExistsAsync(GetLegalAuthorities.First().Id);
             result.Should().BeTrue();
         }
 
         [Fact]
         public async Task Exists_GivenNotExists_ReturnsFalse()
         {
-            using var repository = CreateRepositoryHelper().SeedLegalAuthorityData().GetLegalAuthorityRepository();
+            using var repository = CreateRepositoryHelper().GetLegalAuthorityRepository();
             var result = await repository.ExistsAsync(-1);
             result.Should().BeFalse();
         }
