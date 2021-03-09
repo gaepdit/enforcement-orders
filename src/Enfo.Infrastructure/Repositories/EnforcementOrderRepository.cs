@@ -9,7 +9,6 @@ using Enfo.Repository.Resources;
 using Enfo.Repository.Resources.EnforcementOrder;
 using Enfo.Repository.Specs;
 using Enfo.Repository.Utils;
-using Enfo.Repository.Validation;
 using Microsoft.EntityFrameworkCore;
 using static Enfo.Repository.Validation.EnforcementOrderValidation;
 
@@ -65,11 +64,6 @@ namespace Enfo.Infrastructure.Repositories
 
             return new PaginatedResult<EnforcementOrderSummaryView>(items, count, paging);
         }
-
-        public async Task<int> CountAsync(EnforcementOrderSpec spec) =>
-            await _context.EnforcementOrders.AsNoTracking()
-                .ApplySpecFilter(spec ?? new EnforcementOrderSpec())
-                .CountAsync().ConfigureAwait(false);
 
         public async Task<bool> ExistsAsync(int id, bool onlyPublic = true)
         {

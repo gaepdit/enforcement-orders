@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Enfo.Repository.Resources;
 using Enfo.Repository.Resources.EnforcementOrder;
 using Enfo.Repository.Specs;
-using Enfo.Repository.Validation;
 
 namespace Enfo.Repository.Repositories
 {
@@ -12,11 +11,7 @@ namespace Enfo.Repository.Repositories
     {
         Task<EnforcementOrderDetailedView> GetAsync(int id, bool onlyPublic = true);
         Task<EnforcementOrderAdminView> GetAdminViewAsync(int id);
-
-        Task<PaginatedResult<EnforcementOrderSummaryView>> ListAsync(
-            EnforcementOrderSpec spec, PaginationSpec paging);
-
-        Task<int> CountAsync(EnforcementOrderSpec spec);
+        Task<PaginatedResult<EnforcementOrderSummaryView>> ListAsync(EnforcementOrderSpec spec, PaginationSpec paging);
         Task<bool> ExistsAsync(int id, bool onlyPublic = true);
         Task<bool> OrderNumberExistsAsync(string orderNumber, int? ignoreId = null);
         Task<IReadOnlyList<EnforcementOrderSummaryView>> ListCurrentProposedEnforcementOrdersAsync();

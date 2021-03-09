@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Enfo.Domain.Entities;
@@ -185,54 +185,6 @@ namespace Enfo.Infrastructure.Tests
             result.PageNumber.Should().Be(1);
             result.Items[0].Should().BeEquivalentTo(
                 GetEnforcementOrderSummaryView(expectedList[0].Id));
-        }
-
-        // CountAsync
-
-        [Fact]
-        public async Task Count_ByDefault_CountsOnlyPublic()
-        {
-            using var repository = CreateRepositoryHelper().GetEnforcementOrderRepository();
-            (await repository.CountAsync(new EnforcementOrderSpec()))
-                .Should().Be(GetEnforcementOrders.Count(e => e.GetIsPublic()));
-        }
-
-        [Fact]
-        public async Task Count_WithSpecShowDeleted_CountsOnlyDeleted()
-        {
-            var spec = new EnforcementOrderSpec {ShowDeleted = true};
-
-            using var repository = CreateRepositoryHelper().GetEnforcementOrderRepository();
-            (await repository.CountAsync(spec))
-                .Should().Be(GetEnforcementOrders.Count(e => e.Deleted));
-        }
-
-        [Fact]
-        public async Task Count_IncludeNonPublic_CountsAllActive()
-        {
-            var spec = new EnforcementOrderSpec {OnlyPublic = false};
-
-            using var repository = CreateRepositoryHelper().GetEnforcementOrderRepository();
-            (await repository.CountAsync(spec))
-                .Should().Be(GetEnforcementOrders.Count(e => !e.Deleted));
-        }
-
-        [Fact]
-        public async Task Count_WithFacilityNameSpec_CountsMatches()
-        {
-            // NOTE: Sqlite, used for these tests, is case-sensitive by default
-            // so case-insensitive testing is not possible. SQL Server is
-            // case-insensitive by default.
-            var spec = new EnforcementOrderSpec
-            {
-                FacilityFilter = GetEnforcementOrders.First(e => !e.Deleted).FacilityName
-            };
-
-            using var repository = CreateRepositoryHelper().GetEnforcementOrderRepository();
-            (await repository.CountAsync(spec))
-                .Should().Be(GetEnforcementOrders.Count(e =>
-                    !e.Deleted
-                    && string.Equals(e.FacilityName, spec.FacilityFilter, StringComparison.InvariantCulture)));
         }
 
         // ExistsAsync
