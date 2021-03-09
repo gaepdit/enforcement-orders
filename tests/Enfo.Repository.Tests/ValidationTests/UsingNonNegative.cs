@@ -3,7 +3,7 @@ using Xunit;
 
 namespace Enfo.Repository.Tests.ValidationTests
 {
-    public class UsingNonNegativeAttribute
+    public class UsingNonNegative
     {
         [Fact]
         public void PassesValidationGivenPositiveValue()

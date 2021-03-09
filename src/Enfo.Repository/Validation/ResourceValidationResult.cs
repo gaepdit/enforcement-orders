@@ -5,8 +5,8 @@ namespace Enfo.Repository.Validation
     public class ResourceValidationResult
     {
         public bool IsValid { get; private set; } = true;
-        public Dictionary<string, string> ErrorMessages { get; } = new Dictionary<string, string>();
-        
+        public Dictionary<string, string> ErrorMessages { get; } = new();
+
         public void AddErrorMessage(string key, string message)
         {
             IsValid = false;

@@ -81,8 +81,7 @@ namespace Enfo.Infrastructure.Repositories
                 .AnyAsync(e => e.OrderNumber == orderNumber && e.Id != ignoreId)
                 .ConfigureAwait(false);
 
-        // Current Proposed are public proposed orders 
-        // (publication date in the past)
+        // Current Proposed are public proposed orders (publication date in the past)
         // with comment close date in the future
         public async Task<IReadOnlyList<EnforcementOrderSummaryView>> ListCurrentProposedEnforcementOrdersAsync() =>
             await _context.EnforcementOrders.AsNoTracking()

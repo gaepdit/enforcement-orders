@@ -1,14 +1,15 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using Enfo.Repository.Resources.EpdContact;
 using Enfo.Repository.Utils;
+using JetBrains.Annotations;
 
 namespace Enfo.Repository.Resources.EnforcementOrder
 {
     public class EnforcementOrderDetailedView : EnforcementOrderSummaryView
     {
-        public EnforcementOrderDetailedView(Domain.Entities.EnforcementOrder item) : base(item)
+        public EnforcementOrderDetailedView([NotNull] Domain.Entities.EnforcementOrder item) : base(item)
         {
             Guard.NotNull(item, nameof(item));
 

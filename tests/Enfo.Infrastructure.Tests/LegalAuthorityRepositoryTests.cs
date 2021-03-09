@@ -1,8 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Enfo.Domain.Entities;
 using Enfo.Repository.Mapping;
 using Enfo.Repository.Resources.LegalAuthority;
 using FluentAssertions;
@@ -71,7 +69,9 @@ namespace Enfo.Infrastructure.Tests
 
             using (var repository = repositoryHelper.GetLegalAuthorityRepository())
             {
-                var expected = new LegalAuthorityView(itemCreate.ToLegalAuthority()) {Id = itemId};
+                var item = itemCreate.ToLegalAuthority();
+                item.Id = itemId;
+                var expected = new LegalAuthorityView(item);
                 (await repository.GetAsync(itemId))
                     .Should().BeEquivalentTo(expected);
             }

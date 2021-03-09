@@ -75,7 +75,9 @@ namespace Enfo.Infrastructure.Tests
 
             using (var repository = repositoryHelper.GetAddressRepository())
             {
-                var expected = new AddressView(itemCreate.ToAddress()) {Id = itemId};
+                var item = itemCreate.ToAddress();
+                item.Id = itemId;
+                var expected = new AddressView(item);
                 (await repository.GetAsync(itemId))
                     .Should().BeEquivalentTo(expected);
             }

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Enfo.Domain.Entities;
@@ -177,7 +177,7 @@ namespace Enfo.Infrastructure.Tests
                 .ThenBy(e => e.FacilityName.Trim().Trim('\n', '\r', '\t'))
                 .Where(e =>
                     !e.Deleted
-                    && string.Equals(e.FacilityName, spec.FacilityFilter, StringComparison.InvariantCulture))
+                    && string.Equals(e.FacilityName, spec.FacilityFilter, StringComparison.Ordinal))
                 .ToList();
 
             result.CurrentCount.Should().Be(expectedList.Count);
@@ -226,7 +226,7 @@ namespace Enfo.Infrastructure.Tests
         public async Task OrderNumberExists_GivenExists_ReturnsTrue()
         {
             using var repository = CreateRepositoryHelper().GetEnforcementOrderRepository();
-            (await repository.OrderNumberExistsAsync(GetEnforcementOrders[0].OrderNumber))
+            (await repository.OrderNumberExistsAsync(GetEnforcementOrders.First().OrderNumber))
                 .Should().BeTrue();
         }
 
@@ -242,7 +242,7 @@ namespace Enfo.Infrastructure.Tests
         public async Task OrderNumberExists_GivenExistsAndIgnore_ReturnsFalse()
         {
             using var repository = CreateRepositoryHelper().GetEnforcementOrderRepository();
-            (await repository.OrderNumberExistsAsync(GetEnforcementOrders[0].OrderNumber, GetEnforcementOrders[0].Id))
+            (await repository.OrderNumberExistsAsync(GetEnforcementOrders.First().OrderNumber, GetEnforcementOrders.First().Id))
                 .Should().BeFalse();
         }
 
@@ -314,31 +314,6 @@ namespace Enfo.Infrastructure.Tests
         }
 
         // Write Methods
-
-        private readonly EnforcementOrder _oldSampleOrder = new EnforcementOrder
-        {
-            Cause = "Integer feugiat scelerisque varius morbi enim nunc faucibus a.",
-            CommentContactId = 2004,
-            CommentPeriodClosesDate = new DateTime(2012, 11, 15),
-            County = "Liberty",
-            Deleted = false,
-            ExecutedDate = new DateTime(1998, 06, 29),
-            ExecutedOrderPostedDate = new DateTime(1998, 07, 06),
-            FacilityName = "A diam maecenas",
-            HearingCommentPeriodClosesDate = new DateTime(2012, 11, 21),
-            HearingContactId = 2004,
-            HearingDate = new DateTime(2012, 11, 15),
-            HearingLocation = "venenatis urna cursus in aliquam sem",
-            IsExecutedOrder = true,
-            IsHearingScheduled = true,
-            IsProposedOrder = true,
-            LegalAuthorityId = 7,
-            OrderNumber = "EPD-NEW-9999",
-            ProposedOrderPostedDate = new DateTime(2012, 10, 16),
-            PublicationStatus = EnforcementOrder.PublicationState.Published,
-            Requirements = "Duis ut diam quam nulla porttitor massa id neque.",
-            SettlementAmount = 2000
-        };
 
         // CreateAsync
 

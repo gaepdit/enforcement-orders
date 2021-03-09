@@ -1,12 +1,13 @@
-﻿using System;
+﻿using System.ComponentModel;
 using Enfo.Domain.Entities;
 using Enfo.Repository.Resources.EnforcementOrder;
+using JetBrains.Annotations;
 
 namespace Enfo.Repository.Validation
 {
     public static class EnforcementOrderValidation
     {
-        public static ResourceValidationResult ValidateNewEnforcementOrder(EnforcementOrderCreate resource)
+        public static ResourceValidationResult ValidateNewEnforcementOrder([NotNull] EnforcementOrderCreate resource)
         {
             var result = new ResourceValidationResult();
 
@@ -43,7 +44,8 @@ namespace Enfo.Repository.Validation
                     break;
                 }
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new InvalidEnumArgumentException(nameof(resource.CreateAs), (int) resource.CreateAs,
+                        typeof(EnforcementOrderCreate.NewEnforcementOrderType));
             }
 
             if (!resource.IsHearingScheduled) return result;
@@ -68,8 +70,8 @@ namespace Enfo.Repository.Validation
         }
 
         public static ResourceValidationResult ValidateEnforcementOrderUpdate(
-            EnforcementOrder order,
-            EnforcementOrderUpdate resource)
+            [NotNull] EnforcementOrder order,
+            [NotNull] EnforcementOrderUpdate resource)
         {
             var result = new ResourceValidationResult();
 
@@ -87,7 +89,7 @@ namespace Enfo.Repository.Validation
             }
 
             if (resource.PublicationStatus != PublicationState.Published) return result;
-            
+
             // Proposed order info cannot be removed from an existing order.
             if (order.IsProposedOrder)
             {
@@ -115,7 +117,7 @@ namespace Enfo.Repository.Validation
             }
 
             if (!resource.IsHearingScheduled) return result;
-                
+
             if (!resource.HearingDate.HasValue)
                 result.AddErrorMessage("HearingDate", "A hearing date is required if a hearing is scheduled.");
 

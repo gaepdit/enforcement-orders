@@ -6,9 +6,9 @@ namespace Enfo.Infrastructure.Tests
 {
     public static class RepositoryHelperData
     {
-        public static IEnumerable<Address> GetAddresses = new List<Address>
+        public static readonly IEnumerable<Address> GetAddresses = new List<Address>
         {
-            new Address
+            new()
             {
                 Id = 2000,
                 Active = true,
@@ -18,7 +18,7 @@ namespace Enfo.Infrastructure.Tests
                 Street = "4244 International Parkway",
                 Street2 = "Suite 120",
             },
-            new Address
+            new()
             {
                 Id = 2001,
                 Active = false,
@@ -30,15 +30,15 @@ namespace Enfo.Infrastructure.Tests
             },
         };
 
-        public static IEnumerable<LegalAuthority> GetLegalAuthorities = new List<LegalAuthority>
+        public static readonly IEnumerable<LegalAuthority> GetLegalAuthorities = new List<LegalAuthority>
         {
-            new LegalAuthority {Id = 1, Active = true, AuthorityName = "Air Quality Act",},
-            new LegalAuthority {Id = 2, Active = true, AuthorityName = "Asbestos Safety Act",},
+            new() {Id = 1, Active = true, AuthorityName = "Air Quality Act",},
+            new() {Id = 2, Active = true, AuthorityName = "Asbestos Safety Act",},
         };
 
-        public static IEnumerable<EpdContact> GetEpdContacts = new List<EpdContact>
+        public static readonly IEnumerable<EpdContact> GetEpdContacts = new List<EpdContact>
         {
-            new EpdContact
+            new()
             {
                 Id = 2000,
                 Active = true,
@@ -49,7 +49,7 @@ namespace Enfo.Infrastructure.Tests
                 Telephone = null,
                 Title = "Chief, Air Protection Branch",
             },
-            new EpdContact
+            new()
             {
                 Id = 2001,
                 Active = false,
@@ -62,9 +62,9 @@ namespace Enfo.Infrastructure.Tests
             },
         };
 
-        public static List<EnforcementOrder> GetEnforcementOrders = new List<EnforcementOrder>
+        public static readonly IEnumerable<EnforcementOrder> GetEnforcementOrders = new List<EnforcementOrder>
         {
-            new EnforcementOrder
+            new()
             {
                 Id = 27,
                 Cause = "Nulla pellentesque dignissim enim sit.",
@@ -90,7 +90,7 @@ namespace Enfo.Infrastructure.Tests
                     "oȝlīque ūrbǣnitas id, pro te commune scrīptorem? Fæcilis quǣēstiō has eǽ, id tinċiduƿÞ perseqūeris prō! Nam āccumsǣn forensibus cotidīēqūe cu.",
                 SettlementAmount = 5000
             },
-            new EnforcementOrder
+            new()
             {
                 Id = 58310,
                 Cause = "Mollis nunc sed id semper.",
@@ -122,7 +122,7 @@ namespace Enfo.Infrastructure.Tests
                     "ultrices dui.",
                 SettlementAmount = 25000
             },
-            new EnforcementOrder
+            new()
             {
                 Id = 58312,
                 Cause = "Mollis nunc sed id semper.",
@@ -154,7 +154,7 @@ namespace Enfo.Infrastructure.Tests
                     "justo nec ultrices dui.",
                 SettlementAmount = 25000
             },
-            new EnforcementOrder
+            new()
             {
                 Id = 71625,
                 Cause = "Arcu non odio euismod lacinia at quis risus.",

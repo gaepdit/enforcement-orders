@@ -6,6 +6,6 @@ namespace Enfo.Domain.Entities
     {
         [Required]
         [StringLength(20)]
-        public string CountyName { get; set; }
+        public string CountyName { get; init; }
     }
 }

@@ -1,17 +1,15 @@
-﻿using System;
 using System.ComponentModel;
 using Enfo.Domain.Entities;
 using Enfo.Repository.Resources.EnforcementOrder;
-using Enfo.Repository.Resources.EpdContact;
-using Enfo.Repository.Resources.LegalAuthority;
 using Enfo.Repository.Utils;
+using JetBrains.Annotations;
 using static Enfo.Repository.Resources.EnforcementOrder.EnforcementOrderCreate;
 
 namespace Enfo.Repository.Mapping
 {
     public static class EnforcementOrderMapping
     {
-        public static EnforcementOrder ToEnforcementOrder(this EnforcementOrderCreate resource)
+        public static EnforcementOrder ToEnforcementOrder([NotNull] this EnforcementOrderCreate resource)
         {
             Guard.NotNull(resource, nameof(resource));
 
@@ -49,7 +47,7 @@ namespace Enfo.Repository.Mapping
             };
         }
 
-        public static void UpdateFrom(this EnforcementOrder order, EnforcementOrderUpdate resource)
+        public static void UpdateFrom([NotNull] this EnforcementOrder order, [NotNull] EnforcementOrderUpdate resource)
         {
             Guard.NotNull(order, nameof(order));
             Guard.NotNull(resource, nameof(resource));

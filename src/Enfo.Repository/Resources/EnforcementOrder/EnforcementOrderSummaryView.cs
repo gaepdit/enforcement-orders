@@ -1,13 +1,14 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using Enfo.Repository.Resources.LegalAuthority;
 using Enfo.Repository.Utils;
+using JetBrains.Annotations;
 
 namespace Enfo.Repository.Resources.EnforcementOrder
 {
     public class EnforcementOrderSummaryView
     {
-        public EnforcementOrderSummaryView(Domain.Entities.EnforcementOrder item)
+        public EnforcementOrderSummaryView([NotNull] Domain.Entities.EnforcementOrder item)
         {
             Guard.NotNull(item, nameof(item));
 

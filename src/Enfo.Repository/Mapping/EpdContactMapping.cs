@@ -1,13 +1,13 @@
-﻿using Enfo.Domain.Entities;
-using Enfo.Repository.Resources.Address;
+using Enfo.Domain.Entities;
 using Enfo.Repository.Resources.EpdContact;
 using Enfo.Repository.Utils;
+using JetBrains.Annotations;
 
 namespace Enfo.Repository.Mapping
 {
     public static class EpdContactMapping
     {
-        public static EpdContact ToEpdContact(this EpdContactCreate resource)
+        public static EpdContact ToEpdContact([NotNull] this EpdContactCreate resource)
         {
             Guard.NotNull(resource, nameof(resource));
 
@@ -22,7 +22,7 @@ namespace Enfo.Repository.Mapping
             };
         }
 
-        public static void UpdateFrom(this EpdContact item, EpdContactUpdate resource)
+        public static void UpdateFrom([NotNull] this EpdContact item, [NotNull] EpdContactUpdate resource)
         {
             Guard.NotNull(item, nameof(item));
             Guard.NotNull(resource, nameof(resource));

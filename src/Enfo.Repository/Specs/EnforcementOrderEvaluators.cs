@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using Enfo.Domain.Entities;
+using JetBrains.Annotations;
 using static Enfo.Repository.Specs.EnforcementOrderSpec;
 
 namespace Enfo.Repository.Specs
@@ -7,9 +8,8 @@ namespace Enfo.Repository.Specs
     public static class EnforcementOrderEvaluators
     {
         public static IQueryable<EnforcementOrder> ApplySpecFilter(
-            this IQueryable<EnforcementOrder> query, EnforcementOrderSpec spec) =>
-            query
-                .FilterByFacility(spec.FacilityFilter)
+            [NotNull] this IQueryable<EnforcementOrder> query, [NotNull] EnforcementOrderSpec spec) =>
+            query.FilterByFacility(spec.FacilityFilter)
                 .FilterByCounty(spec.County)
                 .FilterByLegalAuth(spec.LegalAuthId)
                 .FilterByStartDate(spec.FromDate, spec.Status)
@@ -22,7 +22,7 @@ namespace Enfo.Repository.Specs
                 .FilterByIsDeleted(spec.ShowDeleted);
 
         public static IOrderedQueryable<EnforcementOrder> ApplySorting(
-            this IQueryable<EnforcementOrder> query, EnforcementOrderSorting sorting) =>
+            [NotNull] this IQueryable<EnforcementOrder> query, EnforcementOrderSorting sorting) =>
             sorting switch
             {
                 EnforcementOrderSorting.DateAsc =>
@@ -41,7 +41,7 @@ namespace Enfo.Repository.Specs
             };
 
         public static IQueryable<EnforcementOrder> ApplyPagination(
-            this IQueryable<EnforcementOrder> query, PaginationSpec paging) =>
+            [NotNull] this IQueryable<EnforcementOrder> query, [NotNull] PaginationSpec paging) =>
             query.Skip(paging.Skip).Take(paging.Take);
     }
 }

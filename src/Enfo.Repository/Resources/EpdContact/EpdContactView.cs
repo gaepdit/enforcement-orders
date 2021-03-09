@@ -1,13 +1,13 @@
 using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 using Enfo.Repository.Resources.Address;
 using Enfo.Repository.Utils;
+using JetBrains.Annotations;
 
 namespace Enfo.Repository.Resources.EpdContact
 {
     public class EpdContactView
     {
-        public EpdContactView(Domain.Entities.EpdContact item)
+        public EpdContactView([NotNull] Domain.Entities.EpdContact item)
         {
             Guard.NotNull(item, nameof(item));
 
@@ -21,16 +21,16 @@ namespace Enfo.Repository.Resources.EpdContact
             Email = item.Email;
         }
 
-        public int Id { get; set; }
-        public bool Active { get; set; }
+        public int Id { get; }
+        public bool Active { get; }
 
         [DisplayName("Contact Name")]
-        public string ContactName { get; set; }
+        public string ContactName { get; }
 
-        public string Title { get; set; }
-        public string Organization { get; set; }
-        public AddressView Address { get; set; }
-        public string Telephone { get; set; }
-        public string Email { get; set; }
+        public string Title { get; }
+        public string Organization { get; }
+        public AddressView Address { get; }
+        public string Telephone { get; }
+        public string Email { get; }
     }
 }

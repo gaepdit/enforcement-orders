@@ -1,12 +1,13 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using Enfo.Repository.Utils;
+using JetBrains.Annotations;
 
 namespace Enfo.Repository.Resources.EnforcementOrder
 {
     public class EnforcementOrderAdminView : EnforcementOrderDetailedView
     {
-        public EnforcementOrderAdminView(Domain.Entities.EnforcementOrder item) : base(item)
+        public EnforcementOrderAdminView([NotNull] Domain.Entities.EnforcementOrder item) : base(item)
         {
             Guard.NotNull(item, nameof(item));
 

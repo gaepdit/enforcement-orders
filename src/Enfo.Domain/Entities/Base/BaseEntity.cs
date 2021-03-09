@@ -1,6 +1,6 @@
 ﻿namespace Enfo.Domain.Entities
 {
-    public abstract class BaseEntity : IBaseEntity
+    public abstract class BaseEntity
     {
         public int Id { get; set; }
 

@@ -1,12 +1,13 @@
-﻿using Enfo.Domain.Entities;
+using Enfo.Domain.Entities;
 using Enfo.Repository.Resources.Address;
 using Enfo.Repository.Utils;
+using JetBrains.Annotations;
 
 namespace Enfo.Repository.Mapping
 {
     public static class AddressMapping
     {
-        public static Address ToAddress(this AddressCreate resource)
+        public static Address ToAddress([NotNull] this AddressCreate resource)
         {
             Guard.NotNull(resource, nameof(resource));
 
@@ -20,7 +21,7 @@ namespace Enfo.Repository.Mapping
             };
         }
 
-        public static void UpdateFrom(this Address item, AddressUpdate resource)
+        public static void UpdateFrom([NotNull] this Address item, [NotNull] AddressUpdate resource)
         {
             Guard.NotNull(item, nameof(item));
             Guard.NotNull(resource, nameof(resource));

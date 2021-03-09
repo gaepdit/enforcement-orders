@@ -1,11 +1,12 @@
 using System.ComponentModel;
 using Enfo.Repository.Utils;
+using JetBrains.Annotations;
 
 namespace Enfo.Repository.Resources.Address
 {
     public class AddressView
     {
-        public AddressView(Domain.Entities.Address item)
+        public AddressView([NotNull] Domain.Entities.Address item)
         {
             Guard.NotNull(item, nameof(item));
 
@@ -18,19 +19,19 @@ namespace Enfo.Repository.Resources.Address
             Street2 = item.Street2;
         }
 
-        public int Id { get; set; }
-        public bool Active { get; set; }
+        public int Id { get; }
+        public bool Active { get; }
 
         [DisplayName("Street Address")]
-        public string Street { get; set; }
+        public string Street { get; }
 
         [DisplayName("Apt / Suite / Other")]
-        public string Street2 { get; set; }
+        public string Street2 { get; }
 
-        public string City { get; set; }
-        public string State { get; set; } = "GA";
+        public string City { get; }
+        public string State { get; }
 
         [DisplayName("Postal Code")]
-        public string PostalCode { get; set; }
+        public string PostalCode { get; }
     }
 }

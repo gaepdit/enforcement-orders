@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Enfo.Repository.Specs;
 using Enfo.Repository.Utils;
+using JetBrains.Annotations;
 
 namespace Enfo.Repository.Resources
 {
@@ -12,7 +13,7 @@ namespace Enfo.Repository.Resources
         public int PageNumber { get; }
         public int PageSize { get; }
         
-        public PaginatedResult(IEnumerable<T> items, int totalCount, PaginationSpec paging)
+        public PaginatedResult([NotNull] IEnumerable<T> items, int totalCount, [NotNull] PaginationSpec paging)
         {
             Guard.NotNull(paging, nameof(paging));
             

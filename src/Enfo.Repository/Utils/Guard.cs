@@ -1,9 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 using Enfo.Domain.Utils;
-using Enfo.Repository.Resources.Address;
 
 namespace Enfo.Repository.Utils
 {
@@ -80,19 +79,16 @@ namespace Enfo.Repository.Utils
             return value;
         }
 
-        // ReSharper disable once ParameterOnlyUsedForPreconditionCheck.Global
-        public static string RegexMatch(string value, string parameterName, string pattern)
+        public static void RegexMatch(string value, string parameterName, string pattern)
         {
             NotNull(pattern, nameof(pattern));
 
-            if (value == null) return null;
+            if (value == null) return;
 
             if (!Regex.IsMatch(value, pattern))
             {
                 throw new ArgumentException($"Value ({value}) is not valid.", parameterName);
             }
-
-            return value;
         }
     }
 }
