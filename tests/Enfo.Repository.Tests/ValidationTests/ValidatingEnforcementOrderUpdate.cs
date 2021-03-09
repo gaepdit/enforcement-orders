@@ -63,7 +63,7 @@ namespace Enfo.Repository.Tests.ValidationTests
         [Fact]
         public void SucceedsGivenValidUpdates()
         {
-            ValidateEnforcementOrderUpdate(_order, _orderUpdate).Success.Should().BeTrue();
+            ValidateEnforcementOrderUpdate(_order, _orderUpdate).IsValid.Should().BeTrue();
         }
 
         [Fact]
@@ -73,7 +73,7 @@ namespace Enfo.Repository.Tests.ValidationTests
 
             var result = ValidateEnforcementOrderUpdate(_order, _orderUpdate);
 
-            result.Success.Should().BeFalse();
+            result.IsValid.Should().BeFalse();
             result.ErrorMessages.Should().NotBeEmpty()
                 .And.HaveCount(1)
                 .And.ContainKey("Id");
@@ -88,7 +88,7 @@ namespace Enfo.Repository.Tests.ValidationTests
 
             var result = ValidateEnforcementOrderUpdate(_order, _orderUpdate);
 
-            result.Success.Should().BeTrue();
+            result.IsValid.Should().BeTrue();
             result.ErrorMessages.Should().BeEmpty();
         }
 
@@ -106,7 +106,7 @@ namespace Enfo.Repository.Tests.ValidationTests
 
             var result = ValidateEnforcementOrderUpdate(_order, _orderUpdate);
 
-            result.Success.Should().BeFalse();
+            result.IsValid.Should().BeFalse();
             result.ErrorMessages.Should().NotBeEmpty()
                 .And.HaveCount(1)
                 .And.ContainKey("IsExecutedOrder");
@@ -120,7 +120,7 @@ namespace Enfo.Repository.Tests.ValidationTests
 
             var result = ValidateEnforcementOrderUpdate(_order, _orderUpdate);
 
-            result.Success.Should().BeFalse();
+            result.IsValid.Should().BeFalse();
             result.ErrorMessages.Should().NotBeEmpty()
                 .And.HaveCount(2)
                 .And.ContainKeys("ExecutedDate", "ExecutedOrderPostedDate");
@@ -133,7 +133,7 @@ namespace Enfo.Repository.Tests.ValidationTests
 
             var result = ValidateEnforcementOrderUpdate(_order, _orderUpdate);
 
-            result.Success.Should().BeTrue();
+            result.IsValid.Should().BeTrue();
             result.ErrorMessages.Should().BeEmpty();
         }
 
@@ -147,7 +147,7 @@ namespace Enfo.Repository.Tests.ValidationTests
 
             var result = ValidateEnforcementOrderUpdate(_order, _orderUpdate);
 
-            result.Success.Should().BeFalse();
+            result.IsValid.Should().BeFalse();
             result.ErrorMessages.Should().NotBeEmpty()
                 .And.HaveCount(4)
                 .And.ContainKeys(

@@ -393,6 +393,8 @@ namespace Enfo.Infrastructure.Tests
         // Sample data for create
         private readonly EnforcementOrderCreate _sampleCreate = new EnforcementOrderCreate
         {
+            Cause = "Cause of order",
+            Requirements = "Requirements of order",
             FacilityName = "abc",
             County = "Fulton",
             LegalAuthorityId = GetLegalAuthorities.First().Id,
@@ -417,8 +419,12 @@ namespace Enfo.Infrastructure.Tests
 
             using (var repository = repositoryHelper.GetEnforcementOrderRepository())
             {
-                var expected = FillNavigationProperties(_sampleCreate.ToEnforcementOrder());
-                (await repository.GetAsync(newId)).Should().BeEquivalentTo(expected);
+                var order = _sampleCreate.ToEnforcementOrder();
+                order.Id = newId;
+                var expected = new EnforcementOrderDetailedView(FillNavigationProperties(order));
+
+                var item = await repository.GetAsync(newId, false);
+                item.Should().BeEquivalentTo(expected);
             }
         }
 
@@ -434,7 +440,7 @@ namespace Enfo.Infrastructure.Tests
             };
 
             (await action.Should().ThrowAsync<ArgumentException>())
-                .And.ParamName.Should().Be(nameof(_sampleCreate.OrderNumber));
+                .And.ParamName.Should().Be("resource");
         }
 
         // UpdateAsync
@@ -502,7 +508,8 @@ namespace Enfo.Infrastructure.Tests
             };
 
             (await action.Should().ThrowAsync<ArgumentException>())
-                .WithMessage($"ID ({itemId}) is deleted. (Parameter 'id')");
+                .WithMessage("Id: A deleted Enforcement Order cannot be modified. (Parameter 'resource')")
+                .And.ParamName.Should().Be("resource");
         }
 
         [Fact]
@@ -521,7 +528,7 @@ namespace Enfo.Infrastructure.Tests
             };
 
             (await action.Should().ThrowAsync<ArgumentException>())
-                .And.ParamName.Should().Be(nameof(_sampleCreate.OrderNumber));
+                .And.ParamName.Should().Be("resource");
         }
 
         // DeleteAsync

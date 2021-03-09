@@ -11,7 +11,7 @@ namespace Enfo.Repository.Tests.ValidationTests
         {
             var result = new ResourceValidationResult();
 
-            result.Success.Should().BeTrue();
+            result.IsValid.Should().BeTrue();
             result.ErrorMessages.Should().BeEmpty();
         }
 
@@ -24,7 +24,7 @@ namespace Enfo.Repository.Tests.ValidationTests
             var result = new ResourceValidationResult();
             result.AddErrorMessage(key, message);
 
-            result.Success.Should().BeFalse();
+            result.IsValid.Should().BeFalse();
             result.ErrorMessages.Should().HaveCount(1)
                 .And.ContainKey(key);
         }

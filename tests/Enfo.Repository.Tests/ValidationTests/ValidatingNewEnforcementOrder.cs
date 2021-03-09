@@ -35,7 +35,7 @@ namespace Enfo.Repository.Tests.ValidationTests
         {
             var result = ValidateNewEnforcementOrder(_order);
 
-            result.Success.Should().BeTrue();
+            result.IsValid.Should().BeTrue();
             result.ErrorMessages.Should().BeEmpty();
         }
 
@@ -48,7 +48,7 @@ namespace Enfo.Repository.Tests.ValidationTests
 
             var result = ValidateNewEnforcementOrder(_order);
 
-            result.Success.Should().BeFalse();
+            result.IsValid.Should().BeFalse();
             result.ErrorMessages.Should().NotBeEmpty()
                 .And.HaveCount(3)
                 .And.ContainKeys(

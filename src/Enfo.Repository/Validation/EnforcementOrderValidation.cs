@@ -75,7 +75,7 @@ namespace Enfo.Repository.Validation
 
             if (order.Deleted)
             {
-                result.AddErrorMessage("Id", "A deleted Enforcement Order cannot be modified");
+                result.AddErrorMessage("Id", "A deleted Enforcement Order cannot be modified.");
                 return result;
             }
 

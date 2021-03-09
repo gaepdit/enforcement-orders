@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Enfo.Infrastructure.Contexts;
+using Enfo.Repository.Mapping;
 using Enfo.Repository.Repositories;
 using Enfo.Repository.Resources;
 using Enfo.Repository.Resources.EnforcementOrder;
@@ -10,85 +11,14 @@ using Enfo.Repository.Specs;
 using Enfo.Repository.Utils;
 using Enfo.Repository.Validation;
 using Microsoft.EntityFrameworkCore;
+using static Enfo.Repository.Validation.EnforcementOrderValidation;
 
 namespace Enfo.Infrastructure.Repositories
 {
     public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
     {
         private readonly EnfoDbContext _context;
-
         public EnforcementOrderRepository(EnfoDbContext context) => _context = context;
-
-        // public async Task<CreateEntityResult<EnforcementOrder>> CreateEnforcementOrderAsync(
-        //     NewEnforcementOrderType createAs, string cause, int? commentContactId, DateTime? commentPeriodClosesDate,
-        //     string county, string facilityName, DateTime? executedDate, DateTime? executedOrderPostedDate,
-        //     DateTime? hearingCommentPeriodClosesDate, int? hearingContactId, DateTime? hearingDate,
-        //     string hearingLocation, bool isHearingScheduled, int legalAuthorityId, string orderNumber,
-        //     DateTime? proposedOrderPostedDate, EnforcementOrder.PublicationState publicationStatus, string requirements,
-        //     decimal? settlementAmount)
-        // {
-        //     var result = ValidateNewEnforcementOrder(
-        //         createAs, cause, commentContactId, commentPeriodClosesDate, county, facilityName, executedDate,
-        //         executedOrderPostedDate, hearingCommentPeriodClosesDate, hearingContactId, hearingDate, hearingLocation,
-        //         isHearingScheduled, legalAuthorityId, orderNumber, proposedOrderPostedDate, publicationStatus,
-        //         requirements, settlementAmount);
-        //
-        //     if (await OrderNumberExists(orderNumber).ConfigureAwait(false))
-        //     {
-        //         result.AddErrorMessage("OrderNumber", "An Order with the same number already exists.");
-        //     }
-        //
-        //     if (result.Success)
-        //     {
-        //         Add(result.NewItem);
-        //         await CompleteAsync().ConfigureAwait(false);
-        //     }
-        //
-        //     return result;
-        // }
-        //
-        // public async Task<UpdateEntityResult> UpdateEnforcementOrderAsync(
-        //     int id,
-        //     string cause,
-        //     int? commentContactId,
-        //     DateTime? commentPeriodClosesDate,
-        //     string county,
-        //     string facilityName,
-        //     DateTime? executedDate,
-        //     DateTime? executedOrderPostedDate,
-        //     DateTime? hearingCommentPeriodClosesDate,
-        //     int? hearingContactId,
-        //     DateTime? hearingDate,
-        //     string hearingLocation,
-        //     bool isExecutedOrder,
-        //     bool isHearingScheduled,
-        //     int legalAuthorityId,
-        //     string orderNumber,
-        //     DateTime? proposedOrderPostedDate,
-        //     EnforcementOrder.PublicationState publicationStatus,
-        //     string requirements,
-        //     decimal? settlementAmount)
-        // {
-        //     var originalOrder = await GetAsync(id).ConfigureAwait(false);
-        //
-        //     var result = UpdateEnforcementOrder(originalOrder,
-        //         cause, commentContactId, commentPeriodClosesDate, county, facilityName, executedDate,
-        //         executedOrderPostedDate, hearingCommentPeriodClosesDate, hearingContactId, hearingDate, hearingLocation,
-        //         isExecutedOrder, isHearingScheduled, legalAuthorityId, orderNumber, proposedOrderPostedDate,
-        //         publicationStatus, requirements, settlementAmount);
-        //
-        //     if (await OrderNumberExists(orderNumber, id).ConfigureAwait(false))
-        //     {
-        //         result.AddErrorMessage("OrderNumber", "An Order with the same number already exists.");
-        //     }
-        //
-        //     if (result.Success)
-        //     {
-        //         await CompleteAsync().ConfigureAwait(false);
-        //     }
-        //
-        //     return result;
-        // }
 
         public async Task<EnforcementOrderDetailedView> GetAsync(int id, bool onlyPublic = true)
         {
@@ -195,22 +125,79 @@ namespace Enfo.Infrastructure.Repositories
 
         public async Task<int> CreateAsync(EnforcementOrderCreate resource)
         {
-            throw new NotImplementedException();
+            Guard.NotNull(resource, nameof(resource));
+
+            var validationResult = ValidateNewEnforcementOrder(resource);
+
+            if (await OrderNumberExistsAsync(resource.OrderNumber).ConfigureAwait(false))
+            {
+                validationResult.AddErrorMessage("OrderNumber",
+                    $"An Order with the same number ({resource.OrderNumber}) already exists.");
+            }
+
+            if (!validationResult.IsValid)
+            {
+                throw new ArgumentException(validationResult.ErrorMessages.DictionaryToString(), nameof(resource));
+            }
+
+            var item = resource.ToEnforcementOrder();
+            await _context.EnforcementOrders.AddAsync(item).ConfigureAwait(false);
+            await _context.SaveChangesAsync().ConfigureAwait(false);
+            return item.Id;
         }
 
-        public async Task<ResourceValidationResult> UpdateAsync(int id, EnforcementOrderUpdate resource)
+        public async Task UpdateAsync(int id, EnforcementOrderUpdate resource)
         {
-            throw new NotImplementedException();
+            Guard.NotNull(resource, nameof(resource));
+
+            var item = await _context.EnforcementOrders.FindAsync(id).ConfigureAwait(false);
+
+            if (item == null)
+            {
+                throw new ArgumentException($"ID ({id}) not found.", nameof(id));
+            }
+
+            var validationResult = ValidateEnforcementOrderUpdate(item, resource);
+
+            if (await OrderNumberExistsAsync(resource.OrderNumber, id).ConfigureAwait(false))
+            {
+                validationResult.AddErrorMessage("OrderNumber",
+                    $"An Order with the same number ({resource.OrderNumber}) already exists.");
+            }
+
+            if (!validationResult.IsValid)
+            {
+                throw new ArgumentException(validationResult.ErrorMessages.DictionaryToString(), nameof(resource));
+            }
+
+            item.UpdateFrom(resource);
+            await _context.SaveChangesAsync().ConfigureAwait(false);
         }
 
         public async Task DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            var item = await _context.EnforcementOrders.FindAsync(id).ConfigureAwait(false);
+
+            if (item == null)
+            {
+                throw new ArgumentException($"ID ({id}) not found.", nameof(id));
+            }
+
+            item.Deleted = true;
+            await _context.SaveChangesAsync().ConfigureAwait(false);
         }
 
         public async Task RestoreAsync(int id)
         {
-            throw new NotImplementedException();
+            var item = await _context.EnforcementOrders.FindAsync(id).ConfigureAwait(false);
+
+            if (item == null)
+            {
+                throw new ArgumentException($"ID ({id}) not found.", nameof(id));
+            }
+
+            item.Deleted = false;
+            await _context.SaveChangesAsync().ConfigureAwait(false);
         }
 
         public void Dispose() => _context.Dispose();

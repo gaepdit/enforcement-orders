@@ -31,11 +31,13 @@ namespace Enfo.Repository.Resources.EnforcementOrder
 
         [DisplayName("Cause of Order")]
         [DataType(DataType.MultilineText)]
+        [Required(ErrorMessage = "Cause of Order is required.")]
         [StringLength(3990)]
         public string Cause { get; set; }
 
         [DisplayName("Requirements of Order")]
         [DataType(DataType.MultilineText)]
+        [Required(ErrorMessage = "Requirements of Order is required.")]
         [StringLength(3990)]
         public string Requirements { get; set; }
 

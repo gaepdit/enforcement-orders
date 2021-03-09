@@ -24,7 +24,7 @@ namespace Enfo.Repository.Repositories
         Task<IReadOnlyList<EnforcementOrderSummaryView>> ListPendingEnforcementOrdersAsync();
         Task<IReadOnlyList<EnforcementOrderSummaryView>> ListRecentlyExecutedEnforcementOrdersAsync();
         Task<int> CreateAsync(EnforcementOrderCreate resource);
-        Task<ResourceValidationResult> UpdateAsync(int id, EnforcementOrderUpdate resource);
+        Task UpdateAsync(int id, EnforcementOrderUpdate resource);
         Task DeleteAsync(int id);
         Task RestoreAsync(int id);
     }
