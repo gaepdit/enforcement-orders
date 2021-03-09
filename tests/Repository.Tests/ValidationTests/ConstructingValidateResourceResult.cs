@@ -2,7 +2,7 @@ using Enfo.Repository.Validation;
 using FluentAssertions;
 using Xunit;
 
-namespace Enfo.Repository.Tests.ValidationTests
+namespace Repository.Tests.ValidationTests
 {
     public class ConstructingValidateResourceResult
     {

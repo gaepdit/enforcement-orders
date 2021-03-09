@@ -6,7 +6,7 @@ using Enfo.Repository.Repositories;
 using Microsoft.EntityFrameworkCore;
 using TestSupport.EfHelpers;
 
-namespace Enfo.Infrastructure.Tests
+namespace Infrastructure.Tests
 {
     public sealed class RepositoryHelper : IDisposable
     {

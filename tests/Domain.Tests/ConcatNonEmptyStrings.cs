@@ -3,7 +3,7 @@ using Enfo.Domain.Utils;
 using FluentAssertions;
 using Xunit;
 
-namespace Enfo.Domain.Tests
+namespace Domain.Tests
 {
     public class ConcatNonEmptyStrings
     {

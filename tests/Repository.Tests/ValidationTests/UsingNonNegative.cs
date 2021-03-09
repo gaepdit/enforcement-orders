@@ -1,7 +1,8 @@
+using Enfo.Repository.Validation;
 using FluentAssertions;
 using Xunit;
 
-namespace Enfo.Repository.Tests.ValidationTests
+namespace Repository.Tests.ValidationTests
 {
     public class UsingNonNegative
     {
@@ -10,7 +11,7 @@ namespace Enfo.Repository.Tests.ValidationTests
         {
             const decimal value = 20M;
 
-            var validation = new Validation.NonNegativeAttribute();
+            var validation = new NonNegativeAttribute();
             validation.IsValid(value).Should().BeTrue();
         }
 
@@ -19,7 +20,7 @@ namespace Enfo.Repository.Tests.ValidationTests
         {
             const decimal value = 0M;
 
-            var validation = new Validation.NonNegativeAttribute();
+            var validation = new NonNegativeAttribute();
             validation.IsValid(value).Should().BeTrue();
         }
 
@@ -28,7 +29,7 @@ namespace Enfo.Repository.Tests.ValidationTests
         {
             const decimal value = -20M;
 
-            var validation = new Validation.NonNegativeAttribute();
+            var validation = new NonNegativeAttribute();
             validation.IsValid(value).Should().BeFalse();
         }
     }

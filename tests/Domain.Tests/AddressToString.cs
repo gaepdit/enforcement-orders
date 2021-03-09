@@ -2,7 +2,7 @@ using Enfo.Domain.Entities;
 using FluentAssertions;
 using Xunit;
 
-namespace Enfo.Domain.Tests
+namespace Domain.Tests
 {
     public class AddressToString
     {

@@ -5,7 +5,7 @@ using FluentAssertions;
 using Xunit;
 using static Enfo.Domain.Data.DomainData;
 
-namespace Enfo.Infrastructure.Tests
+namespace Infrastructure.Tests
 {
     public class CountyRepositoryTests
     {

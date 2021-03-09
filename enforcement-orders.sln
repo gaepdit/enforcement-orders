@@ -15,11 +15,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{D402A373
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Enfo.API.Tests", "tests\Enfo.API.Tests\Enfo.API.Tests.csproj", "{78974291-74C6-415F-8510-23F68D1369CC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Enfo.Domain.Tests", "tests\Enfo.Domain.Tests\Enfo.Domain.Tests.csproj", "{6F3D811B-3C85-4243-9DF4-5D8025766377}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain.Tests", "tests\Domain.Tests\Domain.Tests.csproj", "{6F3D811B-3C85-4243-9DF4-5D8025766377}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Enfo.Infrastructure.Tests", "tests\Enfo.Infrastructure.Tests\Enfo.Infrastructure.Tests.csproj", "{9D9AED72-FBB1-4337-A635-2DC991DEFBAE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.Tests", "tests\Infrastructure.Tests\Infrastructure.Tests.csproj", "{9D9AED72-FBB1-4337-A635-2DC991DEFBAE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Enfo.Repository.Tests", "tests\Enfo.Repository.Tests\Enfo.Repository.Tests.csproj", "{D4B08051-3D9F-413F-9FC6-98CEEB441364}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Repository.Tests", "tests\Repository.Tests\Repository.Tests.csproj", "{D4B08051-3D9F-413F-9FC6-98CEEB441364}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

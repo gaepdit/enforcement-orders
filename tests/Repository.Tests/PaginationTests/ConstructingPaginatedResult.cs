@@ -5,7 +5,7 @@ using Enfo.Repository.Specs;
 using FluentAssertions;
 using Xunit;
 
-namespace Enfo.Repository.Tests.PaginationTests
+namespace Repository.Tests.PaginationTests
 {
     [SuppressMessage("ReSharper", "ObjectCreationAsStatement")]
     [SuppressMessage("ReSharper", "CA1806")]

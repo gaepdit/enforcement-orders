@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Enfo.Domain.Entities;
 
-namespace Enfo.Infrastructure.Tests
+namespace Infrastructure.Tests
 {
     public static class RepositoryHelperData
     {

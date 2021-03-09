@@ -4,7 +4,7 @@ using FluentAssertions;
 using Xunit;
 using static Enfo.Repository.Validation.EnforcementOrderValidation;
 
-namespace Enfo.Repository.Tests.ValidationTests
+namespace Repository.Tests.ValidationTests
 {
     public class ValidatingNewEnforcementOrder
     {

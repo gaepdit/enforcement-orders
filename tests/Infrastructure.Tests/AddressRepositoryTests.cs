@@ -5,10 +5,10 @@ using Enfo.Repository.Mapping;
 using Enfo.Repository.Resources.Address;
 using FluentAssertions;
 using Xunit;
-using static Enfo.Infrastructure.Tests.RepositoryHelper;
-using static Enfo.Infrastructure.Tests.RepositoryHelperData;
+using static Infrastructure.Tests.RepositoryHelper;
+using static Infrastructure.Tests.RepositoryHelperData;
 
-namespace Enfo.Infrastructure.Tests
+namespace Infrastructure.Tests
 {
     public class AddressRepositoryTests
     {

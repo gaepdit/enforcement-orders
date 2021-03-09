@@ -4,7 +4,7 @@ using FluentAssertions;
 using Xunit;
 using static Enfo.Repository.Utils.DateUtils;
 
-namespace Enfo.Infrastructure.Tests
+namespace Repository.Tests
 {
     public class DateUtilsGetNextWeekday
     {

@@ -8,10 +8,10 @@ using Enfo.Repository.Specs;
 using FluentAssertions;
 using Xunit;
 using static Enfo.Repository.Utils.DateUtils;
-using static Enfo.Infrastructure.Tests.RepositoryHelper;
-using static Enfo.Infrastructure.Tests.RepositoryHelperData;
+using static Infrastructure.Tests.RepositoryHelper;
+using static Infrastructure.Tests.RepositoryHelperData;
 
-namespace Enfo.Infrastructure.Tests
+namespace Infrastructure.Tests
 {
     public class EnforcementOrderRepositoryTests
     {
