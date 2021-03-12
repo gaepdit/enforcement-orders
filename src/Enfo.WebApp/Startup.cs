@@ -2,6 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Enfo.Infrastructure.Contexts;
+using Enfo.Infrastructure.Repositories;
+using Enfo.Repository.Repositories;
+using Enfo.WebApp.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Identity.Web;
 using Microsoft.Identity.Web.UI;
@@ -11,6 +15,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -29,17 +34,31 @@ namespace Enfo.WebApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
-                .AddMicrosoftIdentityWebApp(Configuration.GetSection("AzureAd"));
+            services.AddDbContext<EnfoDbContext>(opts =>
+                {
+                    const string connectionString =
+                        "Server=(localdb)\\mssqllocaldb;Database=enfo-temp;Trusted_Connection=True;MultipleActiveResultSets=true";
+                    opts.UseSqlServer(connectionString);
+                }
+            );
 
-            services.AddAuthorization(options =>
-            {
-                // By default, all incoming requests will be authorized according to the default policy
-                options.FallbackPolicy = options.DefaultPolicy;
-            });
+            // services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
+            //     .AddMicrosoftIdentityWebApp(Configuration.GetSection("AzureAd"));
+
+            // services.AddAuthorization(options =>
+            // {
+            //     // By default, all incoming requests will be authorized according to the default policy
+            //     options.FallbackPolicy = options.DefaultPolicy;
+            // });
             services.AddRazorPages()
                 .AddMvcOptions(options => { })
                 .AddMicrosoftIdentityUI();
+
+            // Configure dependencies
+            services.AddScoped<ILegalAuthorityRepository, LegalAuthorityRepository>();
+
+            // Set up database
+            services.AddHostedService<MigratorHostedService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -61,8 +80,8 @@ namespace Enfo.WebApp
 
             app.UseRouting();
 
-            app.UseAuthentication();
-            app.UseAuthorization();
+            // app.UseAuthentication();
+            // app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

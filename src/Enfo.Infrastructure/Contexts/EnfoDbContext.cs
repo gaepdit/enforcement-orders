@@ -30,12 +30,6 @@ namespace Enfo.Infrastructure.Contexts
             builder.Entity<IdentityUserLogin<Guid>>().ToTable("AppUserLogins");
             builder.Entity<IdentityUserRole<Guid>>().ToTable("AppUserRoles");
             builder.Entity<IdentityUserToken<Guid>>().ToTable("AppUserTokens");
-
-            // TODO: move to data migration scripts
-            // Seed production data
-            // builder.Entity<LegalAuthority>().HasData(DomainData.GetLegalAuthorities());
-            // builder.Entity<Address>().HasData(DomainData.GetAddresses());
-            // builder.Entity<EpdContact>().HasData(DomainData.GetEpdContacts());
         }
     }
 }
