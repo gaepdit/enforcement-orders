@@ -6,11 +6,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="EfCore.TestSupport" Version="3.2.0"/>
-        <PackageReference Include="FluentAssertions" Version="5.10.3"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.7"/>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.1"/>
-        <PackageReference Include="xunit" Version="2.4.1"/>
+        <PackageReference Include="EfCore.TestSupport" Version="5.0.0" />
+        <PackageReference Include="FluentAssertions" Version="5.10.3" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.4" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.1" />
+        <PackageReference Include="xunit" Version="2.4.1" />
         <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -18,8 +18,8 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\src\Enfo.Infrastructure\Enfo.Infrastructure.csproj"/>
-        <ProjectReference Include="..\..\src\Enfo.Repository\Enfo.Repository.csproj"/>
+        <ProjectReference Include="..\..\src\Enfo.Infrastructure\Enfo.Infrastructure.csproj" />
+        <ProjectReference Include="..\..\src\Enfo.Repository\Enfo.Repository.csproj" />
     </ItemGroup>
 
 </Project>
