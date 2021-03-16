@@ -459,7 +459,7 @@ EnfoSqliteDatabase\.db
 EnfoSqliteDatabase\.db-*
 
 # Build artifacts
-artifacts/
+**/wwwroot/dist/
 
 # Server settings files
 appsettings\.Production\.json

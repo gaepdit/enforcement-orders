@@ -24,24 +24,26 @@ namespace Enfo.WebApp
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
+        public Startup(IConfiguration configuration, IWebHostEnvironment env) =>
+            (Configuration, Environment) = (configuration, env);
 
-        public IConfiguration Configuration { get; }
+        private IConfiguration Configuration { get; }
+        private IWebHostEnvironment Environment { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Configure database
             services.AddDbContext<EnfoDbContext>(opts =>
                 {
-                    const string connectionString =
-                        "Server=(localdb)\\mssqllocaldb;Database=enfo-temp;Trusted_Connection=True;MultipleActiveResultSets=true";
-                    opts.UseSqlServer(connectionString);
+                    opts.UseSqlServer(
+                        Environment.IsDevelopment()
+                            ? "Server=(localdb)\\mssqllocaldb;Database=enfo-temp;Trusted_Connection=True;MultipleActiveResultSets=true"
+                            : Configuration.GetConnectionString("DefaultConnection"));
                 }
             );
 
+            // Configure authentication
             // services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
             //     .AddMicrosoftIdentityWebApp(Configuration.GetSection("AzureAd"));
 
@@ -50,11 +52,23 @@ namespace Enfo.WebApp
             //     // By default, all incoming requests will be authorized according to the default policy
             //     options.FallbackPolicy = options.DefaultPolicy;
             // });
-            services.AddRazorPages()
-                .AddMvcOptions(options => { })
-                .AddMicrosoftIdentityUI();
+            // services.AddDataProtection().PersistKeysToFileSystem(new DirectoryInfo(_dataProtectionKeysFolder));
 
-            // Configure dependencies
+            // Configure UI
+            services.AddRazorPages();
+                // .AddMicrosoftIdentityUI();
+
+            // Configure HSTS
+            // services.AddHsts(opts => opts.MaxAge = TimeSpan.FromDays(365 * 2));
+
+            // Configure Raygun
+            // services.AddRaygun(Configuration, new RaygunMiddlewareSettings
+            //     {ClientProvider = new RaygunClientProvider()});
+
+            // Configure data repositories
+            services.AddScoped<IAddressRepository, AddressRepository>();
+            services.AddScoped<IEnforcementOrderRepository, EnforcementOrderRepository>();
+            services.AddScoped<IEpdContactRepository, EpdContactRepository>();
             services.AddScoped<ILegalAuthorityRepository, LegalAuthorityRepository>();
 
             // Set up database
@@ -71,7 +85,6 @@ namespace Enfo.WebApp
             else
             {
                 app.UseExceptionHandler("/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 

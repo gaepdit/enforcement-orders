@@ -25,7 +25,6 @@ namespace Enfo.WebApp.Services
             // Create a new scope to retrieve scoped services
             using var scope = _serviceProvider.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<EnfoDbContext>();
-            // var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
             var env = scope.ServiceProvider.GetRequiredService<IWebHostEnvironment>();
 
             if (env.IsDevelopment())
@@ -38,13 +37,8 @@ namespace Enfo.WebApp.Services
                 await context.SeedTempDataAsync(cancellationToken);
 
                 // Initialize roles
-                // foreach (var role in UserRoles.AllRoles)
-                // {
-                //     if (!await context.Roles.AnyAsync(e => e.Name == role, cancellationToken))
-                //     {
-                //         await roleManager.CreateAsync(new IdentityRole<Guid>(role));
-                //     }
-                // }
+                // var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
+                // await roleManager.CreateAsync(new IdentityRole<Guid>("OrderAdministrator"));
             }
             else
             {

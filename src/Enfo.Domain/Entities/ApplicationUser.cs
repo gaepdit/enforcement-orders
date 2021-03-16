@@ -21,19 +21,10 @@ namespace Enfo.Domain.Entities
         public bool Active { get; set; } = true;
 
         // Generated fields
-        public string FullName
-        {
-            get
-            {
-                return String.Join(" ", new[] { FirstName, LastName }.Where(s => !string.IsNullOrEmpty(s)));
-            }
-        }
-        public string SortableFullName
-        {
-            get
-            {
-                return String.Join(", ", new[] { LastName, FirstName }.Where(s => !string.IsNullOrEmpty(s)));
-            }
-        }
+        public string FullName =>
+            string.Join(" ", new[] {FirstName, LastName}.Where(s => !string.IsNullOrEmpty(s)));
+
+        public string SortableFullName =>
+            string.Join(", ", new[] {LastName, FirstName}.Where(s => !string.IsNullOrEmpty(s)));
     }
 }
