@@ -1,5 +1,0 @@
-# robots.txt file should be placed in root directory on Dev/UAT servers
-# DO NOT place on Production server
-
-User-agent: *
-Disallow: /
