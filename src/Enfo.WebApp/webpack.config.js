@@ -27,17 +27,17 @@ module.exports = {
             {test: /\.(png|jpe?g|gif)$/i, loader: 'file-loader'},
             {test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, loader: 'file-loader'},
             {
-                test: /\.(woff|woff2)$/,
+                test: /\.(woff|woff2)$/i,
                 loader: 'url-loader',
                 options: {prefix: 'font', limit: 5000}
             },
             {
-                test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
+                test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/i,
                 loader: 'url-loader',
                 options: {limit: 10000, 'mimetype': 'application/octet-stream'}
             },
             {
-                test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
+                test: /\.svg(\?v=\d+\.\d+\.\d+)?$/i,
                 loader: 'file-loader'
             }
         ]

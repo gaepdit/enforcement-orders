@@ -3,8 +3,10 @@
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
         <UserSecretsId>aspnet-Enfo.WebApp-A834A848-D8DF-4E5F-B1E2-7EE74113BF3E</UserSecretsId>
+        <WebRoot>wwwroot\</WebRoot>
+        <DefaultItemExcludes>$(DefaultItemExcludes);node_modules\**</DefaultItemExcludes>
     </PropertyGroup>
-
+    
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.4" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="5.0.4" />
@@ -23,5 +25,29 @@
             <DependentUpon>appsettings.json</DependentUpon>
         </Content>
     </ItemGroup>
-    
+
+    <Target Name="NpmInstall" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('node_modules') ">
+        <!-- Ensure Node.js is installed -->
+        <Exec Command="node --version" ContinueOnError="true">
+            <Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
+        </Exec>
+        <Error Condition="'$(ErrorCode)' != '0'" Text="Node.js is required to build and run this project. To continue, please install Node.js from https://nodejs.org/, and then restart your command prompt or IDE." />
+        <!-- Ensure pnpm is installed -->
+        <Exec Command="pnpm --version" ContinueOnError="true">
+            <Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
+        </Exec>
+        <Error Condition="'$(ErrorCode)' != '0'" Text="This project is configured to use pnpm (instead of npm). To continue, please install pnpm or reconfigure to use npm." />
+        <Message Importance="high" Text="Restoring dependencies using 'pnpm'. This may take several minutes..." />
+        <Exec Command="pnpm install" />
+    </Target>
+
+    <Target Name="NpmRunBuild" BeforeTargets="Build" DependsOnTargets="NpmInstall">
+        <Message Importance="high" Text="Running npm build task (webpack)..." />
+        <Exec Command="pnpm run build" />
+    </Target>
+
+    <Target Name="NpmClean" BeforeTargets="Clean">
+        <RemoveDir Directories="$(WebRoot)dist" />
+    </Target>
+
 </Project>
