@@ -758,6 +758,20 @@ a.gaepd-file_item:hover, a.gaepd-file_item:focus {
     }
 }
 
+/* 
+Bugfixes from platform update
+ */
+
+@media screen and (min-width: 951px) {
+    .usa-navbar {
+        height: 10.3rem;
+    }
+}
+
+/*
+Print stylesheets
+*/
+
 @media not print {
     .gaepd-printonly {
         display: none;
