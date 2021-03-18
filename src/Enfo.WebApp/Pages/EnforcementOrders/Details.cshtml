@@ -1,0 +1,128 @@
+﻿@page "{id}"
+@model Enfo.WebApp.Pages.EnforcementOrders.Details
+
+@{
+    ViewData["Title"] = $"Enforcement Order {Model.Item.OrderNumber}";
+}
+<h2>
+    @ViewData["Title"]
+    @* @if (User.IsInRole("OrderAdministrator")) *@
+    @* { *@
+    @*     <a asp-page="Edit" asp-route-id="@Model.Item..Id" class="btn btn-sm btn-outline-primary">Edit</a> *@
+    @* } *@
+</h2>
+
+<partial name="_AlertPartial" for="Message" />
+
+<table class="gaepd-table-compact gaepd-table-rowheadings gaepd-table-autowidth">
+    <tbody>
+    <tr>
+        <th scope="row">@Html.DisplayNameFor(m => m.Item.FacilityName)</th>
+        <td>@Html.DisplayFor(m => m.Item.FacilityName)</td>
+    </tr>
+    <tr>
+        <th scope="row">@Html.DisplayNameFor(m => m.Item.County)</th>
+        <td>@Html.DisplayFor(m => m.Item.County) County</td>
+    </tr>
+    <tr>
+        <th scope="row">@Html.DisplayNameFor(m => m.Item.Cause)</th>
+        <td>@Html.DisplayFor(m => m.Item.Cause)</td>
+    </tr>
+    <tr>
+        <th scope="row">@Html.DisplayNameFor(m => m.Item.Requirements)</th>
+        <td>@Html.DisplayFor(m => m.Item.Requirements)</td>
+    </tr>
+    <tr>
+        <th scope="row">@(Model.Item.IsExecutedOrder ? "" : "Proposed ")@Html.DisplayNameFor(m => m.Item.SettlementAmount)</th>
+        <td>@Html.DisplayFor(m => m.Item.SettlementAmount)</td>
+    </tr>
+    <tr>
+        <th scope="row">@Html.DisplayNameFor(m => m.Item.LegalAuthority)</th>
+        <td>@Html.DisplayFor(m => m.Item.LegalAuthority.AuthorityName)</td>
+    </tr>
+
+    @if (Model.Item.IsPublicProposedOrder)
+    {
+        <tr>
+            <th scope="row">@Html.DisplayNameFor(m => m.Item.ProposedOrderPostedDate)</th>
+            <td>@Html.DisplayFor(m => m.Item.ProposedOrderPostedDate)</td>
+        </tr>
+        <tr>
+            <th scope="row">@Html.DisplayNameFor(m => m.Item.CommentPeriodClosesDate)</th>
+            <td>@Html.DisplayFor(m => m.Item.CommentPeriodClosesDate)</td>
+        </tr>
+        @if (Model.Item.CommentPeriodClosesDate.HasValue
+            && Model.Item.CommentPeriodClosesDate.Value >= DateTime.Today
+            && Model.Item.CommentContact != null)
+        {
+            <tr>
+                <th scope="row">@Html.DisplayNameFor(m => m.Item.CommentContact)</th>
+                <td>
+                    @Html.DisplayFor(m => m.Item.CommentContact.ContactName)<br />
+                    @Html.DisplayFor(m => m.Item.CommentContact.Title)<br />
+                    @Html.DisplayFor(m => m.Item.CommentContact.Organization)<br />
+                    @if (Model.Item.CommentContact.Address != null)
+                    {
+                        @Model.Item.CommentContact.Address.ToString()<br />
+                    }
+                    @if (Model.Item.CommentContact.Email != null)
+                    {
+                        <br />
+                        <a href="mailto:@Html.DisplayFor(m => m.Item.CommentContact.Email)">@Html.DisplayFor(m => m.Item.CommentContact.Email)</a>
+                    }
+                    <br />@Html.DisplayFor(m => m.Item.CommentContact.Telephone)
+                </td>
+            </tr>
+        }
+    }
+
+    @if (Model.Item.IsPublicExecutedOrder)
+    {
+        <tr>
+            <th scope="row">@Html.DisplayNameFor(m => m.Item.ExecutedDate)</th>
+            <td>@Html.DisplayFor(m => m.Item.ExecutedDate)</td>
+        </tr>
+    }
+
+    @if (Model.Item.IsHearingScheduled)
+    {
+        <tr>
+            <th scope="row">@Html.DisplayNameFor(m => m.Item.IsHearingScheduled)</th>
+            <td>
+            <p>
+                <em>@Html.DisplayNameFor(m => m.Item.HearingDate)</em><br />
+                @Html.DisplayFor(m => m.Item.HearingDate)
+            </p>
+            <p>
+                <em>@Html.DisplayNameFor(m => m.Item.HearingLocation)</em><br />
+                @Html.DisplayFor(m => m.Item.HearingLocation)
+            </p>
+            <p>
+                <em>@Html.DisplayNameFor(m => m.Item.HearingCommentPeriodClosesDate)</em><br />
+                @Html.DisplayFor(m => m.Item.HearingCommentPeriodClosesDate)
+            </p>
+            @if (Model.Item.HearingCommentPeriodClosesDate.HasValue
+                && Model.Item.HearingCommentPeriodClosesDate.Value >= DateTime.Today
+                && Model.Item.HearingContact != null)
+            {
+                <p>
+                    <em>@Html.DisplayNameFor(m => m.Item.HearingContact)</em><br />
+                    @Html.DisplayFor(m => m.Item.HearingContact.ContactName)<br />
+                    @Html.DisplayFor(m => m.Item.HearingContact.Title)<br />
+                    @Html.DisplayFor(m => m.Item.HearingContact.Organization)<br />
+                    @if (Model.Item.HearingContact.Address != null)
+                    {
+                        @Model.Item.HearingContact.Address.ToString()<br />
+                    }
+                    @if (Model.Item.HearingContact.Email != null)
+                    {
+                        <br />
+                        <a href="mailto:@Html.DisplayFor(m => m.Item.HearingContact.Email)">@Html.DisplayFor(m => m.Item.HearingContact.Email)</a>
+                    }
+                    <br />@Html.DisplayFor(m => m.Item.HearingContact.Telephone)
+                </p>
+            }
+        </tr>
+    }
+    </tbody>
+</table>
