@@ -1,9 +1,6 @@
 ﻿// JS dependencies
 import 'jquery';
-import 'jquery-ui/ui/widgets/datepicker';
-import 'jquery-ui-timepicker-addon';
+import 'uswds';
 
 // CSS dependencies
-import 'jquery-ui/themes/base/core.css';
-import 'jquery-ui/themes/base/datepicker.css';
-import 'jquery-ui-timepicker-addon/dist/jquery-ui-timepicker-addon.min.css';
+import 'uswds/dist/css/uswds.min.css';

@@ -7,7 +7,11 @@ module.exports = {
             dependOn: 'vendor',
             import: './Client/main.js'
         },
-        vendor: './Client/vendor.js'
+        vendor: './Client/vendor.js',
+        vendorTimepicker: {
+            dependOn: 'vendor',
+            import: './Client/vendor-timepicker.js'
+        },
     },
     output: {
         filename: '[name].bundle.js',

@@ -13,6 +13,7 @@
         <link rel="stylesheet" href="https://georgia.gov/profiles/georgiagov/modules/custom/gagov_external_blocks/css/gagov_external_blocks-topper.css" />
         <link rel="stylesheet" href="https://georgia.gov/profiles/georgiagov/modules/custom/gagov_external_blocks/css/gagov_external_blocks-footer.css" />
     </environment>
+    @await RenderSectionAsync("Scripts", required: false)
 </head>
 <body>
 <a class="usa-skipnav" href="#main-content">Skip to main content</a>
@@ -80,7 +81,5 @@
         <script type="text/javascript" src="https://georgia.gov/gagov_external_blocks/footer"></script>
     </environment>
 </div>
-
-@await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

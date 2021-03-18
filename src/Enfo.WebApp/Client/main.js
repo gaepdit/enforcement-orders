@@ -1,6 +1,5 @@
 ﻿// Custom JS
-import 'uswds';
+// (none)
 
 // Custom CSS
-import 'uswds/dist/css/uswds.min.css';
 import './site.css';
