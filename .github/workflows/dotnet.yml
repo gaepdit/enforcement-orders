@@ -8,9 +8,8 @@ on:
 
 jobs:
   build:
-
+    if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v2
       - name: Set up .NET
