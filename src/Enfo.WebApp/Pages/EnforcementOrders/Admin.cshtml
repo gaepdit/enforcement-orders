@@ -1,25 +1,33 @@
 ﻿@page "{id}"
-@using Enfo.Repository
-@model Enfo.WebApp.Pages.EnforcementOrders.Details
+@using Enfo.WebApp.Models
+@model Enfo.WebApp.Pages.EnforcementOrders.Admin
 
 @{
     ViewData["Title"] = $"Enforcement Order {Model.Item.OrderNumber}";
 }
+
 <partial name="_AlertPartial" for="Message" />
 
 <h2>
     @ViewData["Title"]
 </h2>
 
-@if (User.IsInRole(UserRoles.OrderAdministrator))
+<div class="gaepd-noprint">
+    <a asp-page="Details" asp-route-id="@Model.Item.Id" class="btn btn-sm btn-outline-primary">Go to public view</a>
+</div>
+
+@if (Model.Item.Deleted)
 {
-    <div class="gaepd-noprint">
-        <a asp-page="Admin" asp-route-id="@Model.Item.Id" class="btn btn-sm btn-outline-primary">Go to admin view</a>
-    </div>
+    @await Html.PartialAsync("_AlertPartial", new DisplayMessage(Context.Warning,
+        "This enforcement order has been deleted and will not be displayed to the public.", false))
 }
 
 <table class="gaepd-table-compact gaepd-table-rowheadings gaepd-table-autowidth">
     <tbody>
+    <tr>
+        <th scope="row">@Html.DisplayNameFor(m => m.Item.PublicationStatus)</th>
+        <td>@Html.DisplayFor(m => m.Item.PublicationStatus)</td>
+    </tr>
     <tr>
         <th scope="row">@Html.DisplayNameFor(m => m.Item.FacilityName)</th>
         <td>@Html.DisplayFor(m => m.Item.FacilityName)</td>
@@ -45,7 +53,7 @@
         <td>@Html.DisplayFor(m => m.Item.LegalAuthority.AuthorityName)</td>
     </tr>
 
-    @if (Model.Item.IsPublicProposedOrder)
+    @if (Model.Item.IsProposedOrder)
     {
         <tr>
             <th scope="row">@Html.DisplayNameFor(m => m.Item.ProposedOrderPostedDate)</th>
@@ -55,13 +63,11 @@
             <th scope="row">@Html.DisplayNameFor(m => m.Item.CommentPeriodClosesDate)</th>
             <td>@Html.DisplayFor(m => m.Item.CommentPeriodClosesDate)</td>
         </tr>
-        @if (Model.Item.CommentPeriodClosesDate.HasValue
-            && Model.Item.CommentPeriodClosesDate.Value >= DateTime.Today
-            && Model.Item.CommentContact != null)
-        {
-            <tr>
-                <th scope="row">@Html.DisplayNameFor(m => m.Item.CommentContact)</th>
-                <td>
+        <tr>
+            <th scope="row">@Html.DisplayNameFor(m => m.Item.CommentContact)</th>
+            <td>
+                @if (Model.Item.CommentContact != null)
+                {
                     @Html.DisplayFor(m => m.Item.CommentContact.ContactName)<br />
                     @Html.DisplayFor(m => m.Item.CommentContact.Title)<br />
                     @Html.DisplayFor(m => m.Item.CommentContact.Organization)<br />
@@ -72,15 +78,17 @@
                     @if (Model.Item.CommentContact.Email != null)
                     {
                         <br />
-                        <a href="mailto:@Html.DisplayFor(m => m.Item.CommentContact.Email)">@Html.DisplayFor(m => m.Item.CommentContact.Email)</a>
+                        <a href="mailto:@(Model.Item.CommentContact.Email)">@Html.DisplayFor(m => m.Item.CommentContact.Email)</a>
+                        <br />
                     }
-                    <br />@Html.DisplayFor(m => m.Item.CommentContact.Telephone)
-                </td>
-            </tr>
-        }
+                    <br />
+                    @Html.DisplayFor(m => m.Item.CommentContact.Telephone)
+                }
+            </td>
+        </tr>
     }
 
-    @if (Model.Item.IsPublicExecutedOrder)
+    @if (Model.Item.IsExecutedOrder)
     {
         <tr>
             <th scope="row">@Html.DisplayNameFor(m => m.Item.ExecutedDate)</th>
@@ -105,12 +113,10 @@
                 <em>@Html.DisplayNameFor(m => m.Item.HearingCommentPeriodClosesDate)</em><br />
                 @Html.DisplayFor(m => m.Item.HearingCommentPeriodClosesDate)
             </p>
-            @if (Model.Item.HearingCommentPeriodClosesDate.HasValue
-                && Model.Item.HearingCommentPeriodClosesDate.Value >= DateTime.Today
-                && Model.Item.HearingContact != null)
-            {
-                <p>
-                    <em>@Html.DisplayNameFor(m => m.Item.HearingContact)</em><br />
+            <p>
+                <em>@Html.DisplayNameFor(m => m.Item.HearingContact)</em><br />
+                @if (Model.Item.HearingContact != null)
+                {
                     @Html.DisplayFor(m => m.Item.HearingContact.ContactName)<br />
                     @Html.DisplayFor(m => m.Item.HearingContact.Title)<br />
                     @Html.DisplayFor(m => m.Item.HearingContact.Organization)<br />
@@ -123,10 +129,23 @@
                         <br />
                         <a href="mailto:@Html.DisplayFor(m => m.Item.HearingContact.Email)">@Html.DisplayFor(m => m.Item.HearingContact.Email)</a>
                     }
-                    <br />@Html.DisplayFor(m => m.Item.HearingContact.Telephone)
-                </p>
-            }
+                    <br />
+                    @Html.DisplayFor(m => m.Item.HearingContact.Telephone)
+                }
+            </p>
         </tr>
     }
     </tbody>
 </table>
+
+<div>
+    @if (Model.Item.Deleted)
+    {
+        <a asp-page="Restore" asp-route-id="@Model.Item.Id" class="usa-button usa-button-secondary">Restore deleted order</a>
+    }
+    else
+    {
+        <a asp-page="Edit" asp-route-id="@Model.Item.Id" class="usa-button usa-button-outline">Edit</a>
+        <a asp-page="Delete" asp-route-id="@Model.Item.Id" class="usa-button usa-button-secondary">Delete</a>
+    }
+</div>

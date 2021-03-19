@@ -27,7 +27,8 @@
 
 ## Redirects
 
-* `/` redirects to `/EnforcementOrders` or `/Dashboard` if logged in
+* `/` redirects to `/EnforcementOrders` if not logged in
+* `/` redirects to `/Dashboard` if logged in
 * `/Orders/*` redirects to `/EnforcementOrders/*`
 
 ## Menu

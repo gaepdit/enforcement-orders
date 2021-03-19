@@ -3,19 +3,14 @@
 @if (Model != null)
 {
     <div class="usa-alert @Model.AlertClass">
-        <button type="button" class="usa-button  usa-button-gray gaepd-button-closealert" aria-label="Close alert" onclick="this.parentNode.outerHTML = '';">
-            <span aria-hidden="true">×</span>
-        </button>
+        @if (Model.ShowCloseButton)
+        {
+            <button type="button" class="usa-button  usa-button-gray gaepd-button-closealert" aria-label="Close alert" onclick="this.parentNode.outerHTML = '';">
+                <span aria-hidden="true">×</span>
+            </button>
+        }
         <div class="usa-alert-body">
             <p class="usa-alert-text">@Model.Message</p>
         </div>
-    </div>
-    
-    <div class="alert @Model.AlertClass alert-dismissible fade show" role="alert">
-        @Model.Message
-
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
     </div>
 }

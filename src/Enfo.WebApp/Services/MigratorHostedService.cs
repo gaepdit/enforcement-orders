@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Enfo.Infrastructure.Contexts;
+using Enfo.Repository;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -38,7 +39,13 @@ namespace Enfo.WebApp.Services
 
                 // Initialize roles
                 // var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
-                // await roleManager.CreateAsync(new IdentityRole<Guid>("OrderAdministrator"));
+                // foreach (var role in UserRoles.AllRoles)
+                // {
+                //     if (!await context.Roles.AnyAsync(e => e.Name == role, cancellationToken))
+                //     {
+                //         await roleManager.CreateAsync(new IdentityRole<Guid>(role));
+                //     }
+                // }
             }
             else
             {
