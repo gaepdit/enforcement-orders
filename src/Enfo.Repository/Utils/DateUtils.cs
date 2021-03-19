@@ -15,7 +15,7 @@ namespace Enfo.Repository.Utils
         /// <remarks>http://stackoverflow.com/a/6346190/212978</remarks>
         public static DateTime GetNextWeekday(DateTime start, DayOfWeek day) =>
             // The (... + 7) % 7 ensures we end up with a value in the range [0, 6]
-            start.AddDays(((int)day - (int)start.DayOfWeek + 7) % 7);
+            start.AddDays(((int) day - (int) start.DayOfWeek + 7) % 7);
 
         public static DateTime MostRecentMonday() =>
             GetNextWeekday(DateTime.Today.AddDays(-6), DayOfWeek.Monday);

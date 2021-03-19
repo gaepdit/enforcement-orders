@@ -1,4 +1,4 @@
-﻿@page "{id}"
+@page "{id}"
 @using Enfo.Repository
 @model Enfo.WebApp.Pages.EnforcementOrders.Details
 
@@ -7,16 +7,15 @@
 }
 <partial name="_AlertPartial" for="Message" />
 
-<h2>
-    @ViewData["Title"]
-</h2>
+<h2>@ViewData["Title"]</h2>
 
-@if (User.IsInRole(UserRoles.OrderAdministrator))
-{
-    <div class="gaepd-noprint">
+@* TODO: Auth *@
+@* @if (User?.Identity?.IsAuthenticated == true) *@
+@* { *@
+     <div class="gaepd-noprint">
         <a asp-page="Admin" asp-route-id="@Model.Item.Id" class="btn btn-sm btn-outline-primary">Go to admin view</a>
     </div>
-}
+@* } *@
 
 <table class="gaepd-table-compact gaepd-table-rowheadings gaepd-table-autowidth">
     <tbody>

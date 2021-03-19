@@ -27,15 +27,15 @@ namespace Enfo.Repository.Specs
             {
                 EnforcementOrderSorting.DateAsc =>
                     query.OrderBy(e => e.ExecutedDate ?? e.ProposedOrderPostedDate)
-                        .ThenBy(e => e.FacilityName.Trim().Trim('\n', '\r', '\t')),
+                        .ThenBy(e => e.FacilityName),
                 EnforcementOrderSorting.DateDesc =>
                     query.OrderByDescending(e => e.ExecutedDate ?? e.ProposedOrderPostedDate)
-                        .ThenBy(e => e.FacilityName.Trim().Trim('\n', '\r', '\t')),
+                        .ThenBy(e => e.FacilityName),
                 EnforcementOrderSorting.FacilityDesc =>
-                    query.OrderBy(e => e.FacilityName.Trim().Trim('\n', '\r', '\t'))
+                    query.OrderBy(e => e.FacilityName)
                         .ThenBy(e => e.ExecutedDate ?? e.ProposedOrderPostedDate),
                 EnforcementOrderSorting.FacilityAsc =>
-                    query.OrderByDescending(e => e.FacilityName.Trim().Trim('\n', '\r', '\t'))
+                    query.OrderByDescending(e => e.FacilityName)
                         .ThenBy(e => e.ExecutedDate ?? e.ProposedOrderPostedDate),
                 _ => query.OrderBy(e => 1)
             };

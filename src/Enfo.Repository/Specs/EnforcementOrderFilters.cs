@@ -14,14 +14,14 @@ namespace Enfo.Repository.Specs
             string facilityFilter) =>
             string.IsNullOrWhiteSpace(facilityFilter)
                 ? query
-                : query.Where(e => e.FacilityName.Contains(facilityFilter.Trim()));
+                : query.Where(e => e.FacilityName.Contains(facilityFilter));
 
         public static IQueryable<EnforcementOrder> FilterByCounty(
             [NotNull] this IQueryable<EnforcementOrder> query,
             string county) =>
             string.IsNullOrWhiteSpace(county)
                 ? query
-                : query.Where(e => e.FacilityName.Contains(county.Trim()));
+                : query.Where(e => e.FacilityName.Contains(county));
 
         public static IQueryable<EnforcementOrder> FilterByLegalAuth(
             [NotNull] this IQueryable<EnforcementOrder> query,
@@ -85,14 +85,14 @@ namespace Enfo.Repository.Specs
             string orderNumber) =>
             string.IsNullOrWhiteSpace(orderNumber)
                 ? query
-                : query.Where(e => e.OrderNumber.Contains(orderNumber.Trim()));
+                : query.Where(e => e.OrderNumber.Contains(orderNumber));
 
         public static IQueryable<EnforcementOrder> FilterByText(
             [NotNull] this IQueryable<EnforcementOrder> query,
             string text) =>
             string.IsNullOrWhiteSpace(text)
                 ? query
-                : query.Where(e => e.Cause.Contains(text.Trim()) || e.Requirements.Contains(text.Trim()));
+                : query.Where(e => e.Cause.Contains(text) || e.Requirements.Contains(text));
 
         private static IQueryable<EnforcementOrder> FilterByCommentPeriod(
             [NotNull] this IQueryable<EnforcementOrder> query,

@@ -117,8 +117,8 @@ namespace Enfo.WebApp.Services
                 CommentPeriodClosesDate = null,
                 County = "Bulloch",
                 Deleted = false,
-                ExecutedDate = new DateTime(1998, 06, 10),
-                ExecutedOrderPostedDate = new DateTime(1998, 06, 15),
+                ExecutedDate = DateTime.Today,
+                ExecutedOrderPostedDate = DateTime.Today,
                 FacilityName = "Diam donec adipiscing",
                 HearingCommentPeriodClosesDate = null,
                 HearingDate = null,
@@ -140,7 +140,7 @@ namespace Enfo.WebApp.Services
                 Id = 58310,
                 Cause = "Mollis nunc sed id semper.",
                 CommentContactId = 2001,
-                CommentPeriodClosesDate = new DateTime(2012, 11, 15),
+                CommentPeriodClosesDate = DateTime.Today.AddDays(7),
                 County = "Stephens",
                 Deleted = true,
                 ExecutedDate = null,
@@ -155,7 +155,39 @@ namespace Enfo.WebApp.Services
                 IsProposedOrder = true,
                 LegalAuthorityId = 2,
                 OrderNumber = "EPD-SW-WQ-111",
-                ProposedOrderPostedDate = new DateTime(2012, 10, 16),
+                ProposedOrderPostedDate = DateTime.Today.AddDays(-7),
+                PublicationStatus = EnforcementOrder.PublicationState.Published,
+                Requirements =
+                    "Suspendisse potenti nullam ac tortor vitae purus faucibus ornare suspendisse. Magna fermentum iaculis eu non diam phasellus " +
+                    "vestibulum. Imperdiet proin fermentum leo vel. Et ligula ullamcorper malesuada proin libero nunc consequat interdum varius. Neque gravida " +
+                    "in fermentum et sollicitudin ac orci phasellus. Nunc sed blandit libero volutpat. Nisl rhoncus mattis rhoncus urna. Varius sit amet mattis " +
+                    "vulputate enim nulla aliquet porttitor. Consectetur adipiscing elit pellentesque habitant morbi tristique. Ante metus dictum at tempor commodo " +
+                    "ullamcorper a. Morbi tristique senectus et netus et malesuada fames ac turpis. Velit ut tortor pretium viverra suspendisse potenti. In arcu " +
+                    "cursus euismod quis. Nulla malesuada pellentesque elit eget gravida cum sociis natoque penatibus. Mattis rhoncus urna neque viverra justo nec " +
+                    "ultrices dui.",
+                SettlementAmount = 25000
+            },
+            new()
+            {
+                Id = 58311,
+                Cause = "Mollis nunc sed id semper.",
+                CommentContactId = 2001,
+                CommentPeriodClosesDate = DateTime.Today.AddDays(7),
+                County = "Stephens",
+                Deleted = false,
+                ExecutedDate = null,
+                ExecutedOrderPostedDate = null,
+                FacilityName = "Tempor orci dapibus",
+                HearingCommentPeriodClosesDate = new DateTime(2012, 11, 21),
+                HearingContactId = 2000,
+                HearingDate = new DateTime(2012, 11, 15),
+                HearingLocation = "venenatis urna cursus eget nunc scelerisque viverra mauris in aliquam sem",
+                IsExecutedOrder = false,
+                IsHearingScheduled = true,
+                IsProposedOrder = true,
+                LegalAuthorityId = 2,
+                OrderNumber = "EPD-SW-WQ-111",
+                ProposedOrderPostedDate = DateTime.Today.AddDays(-7),
                 PublicationStatus = EnforcementOrder.PublicationState.Published,
                 Requirements =
                     "Suspendisse potenti nullam ac tortor vitae purus faucibus ornare suspendisse. Magna fermentum iaculis eu non diam phasellus " +

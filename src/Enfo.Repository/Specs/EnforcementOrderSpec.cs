@@ -72,5 +72,13 @@ namespace Enfo.Repository.Specs
         }
 
         public EnforcementOrderSorting SortOrder { get; set; } = EnforcementOrderSorting.DateDesc;
+
+        public void TrimAll()
+        {
+            County = County.Trim();
+            FacilityFilter = FacilityFilter.Trim();
+            OrderNumber = OrderNumber.Trim();
+            TextContains = TextContains.Trim();
+        }
     }
 }

@@ -10,6 +10,7 @@ using Enfo.Repository.Resources.EnforcementOrder;
 using Enfo.Repository.Specs;
 using Enfo.Repository.Utils;
 using Microsoft.EntityFrameworkCore;
+using static Enfo.Repository.Specs.EnforcementOrderSpec;
 using static Enfo.Repository.Validation.EnforcementOrderValidation;
 
 namespace Enfo.Infrastructure.Repositories
@@ -50,6 +51,7 @@ namespace Enfo.Infrastructure.Repositories
             Guard.NotNull(spec, nameof(spec));
             Guard.NotNull(paging, nameof(paging));
 
+            spec.TrimAll();
             var filteredItems = _context.EnforcementOrders.AsNoTracking()
                 .ApplySpecFilter(spec);
 
@@ -78,7 +80,7 @@ namespace Enfo.Infrastructure.Repositories
 
         public async Task<bool> OrderNumberExistsAsync(string orderNumber, int? ignoreId = null) =>
             await _context.EnforcementOrders.AsNoTracking()
-                .AnyAsync(e => e.OrderNumber == orderNumber && e.Id != ignoreId)
+                .AnyAsync(e => e.OrderNumber == orderNumber && !e.Deleted && e.Id != ignoreId)
                 .ConfigureAwait(false);
 
         // Current Proposed are public proposed orders (publication date in the past)
@@ -86,7 +88,7 @@ namespace Enfo.Infrastructure.Repositories
         public async Task<IReadOnlyList<EnforcementOrderSummaryView>> ListCurrentProposedEnforcementOrdersAsync() =>
             await _context.EnforcementOrders.AsNoTracking()
                 .FilterForCurrentProposed()
-                .ApplySorting(EnforcementOrderSpec.EnforcementOrderSorting.DateAsc)
+                .ApplySorting(EnforcementOrderSorting.DateAsc)
                 .Include(e => e.LegalAuthority)
                 .Select(e => new EnforcementOrderSummaryView(e))
                 .ToListAsync().ConfigureAwait(false);
@@ -95,23 +97,27 @@ namespace Enfo.Infrastructure.Repositories
         public async Task<IReadOnlyList<EnforcementOrderSummaryView>> ListDraftEnforcementOrdersAsync() =>
             await _context.EnforcementOrders.AsNoTracking()
                 .FilterForDrafts()
-                .ApplySorting(EnforcementOrderSpec.EnforcementOrderSorting.DateAsc)
+                .ApplySorting(EnforcementOrderSorting.DateAsc)
                 .Include(e => e.LegalAuthority)
                 .Select(e => new EnforcementOrderSummaryView(e))
                 .ToListAsync().ConfigureAwait(false);
 
+        // Pending are public proposed or executed orders with 
+        // publication date after the current week
         public async Task<IReadOnlyList<EnforcementOrderSummaryView>> ListPendingEnforcementOrdersAsync() =>
             await _context.EnforcementOrders.AsNoTracking()
                 .FilterForPending()
-                .ApplySorting(EnforcementOrderSpec.EnforcementOrderSorting.DateAsc)
+                .ApplySorting(EnforcementOrderSorting.DateAsc)
                 .Include(e => e.LegalAuthority)
                 .Select(e => new EnforcementOrderSummaryView(e))
                 .ToListAsync().ConfigureAwait(false);
 
+        // Recently Executed are public executed orders with 
+        // publication date within current week
         public async Task<IReadOnlyList<EnforcementOrderSummaryView>> ListRecentlyExecutedEnforcementOrdersAsync() =>
             await _context.EnforcementOrders.AsNoTracking()
                 .FilterForRecentlyExecuted()
-                .ApplySorting(EnforcementOrderSpec.EnforcementOrderSorting.DateAsc)
+                .ApplySorting(EnforcementOrderSorting.DateAsc)
                 .Include(e => e.LegalAuthority)
                 .Select(e => new EnforcementOrderSummaryView(e))
                 .ToListAsync().ConfigureAwait(false);

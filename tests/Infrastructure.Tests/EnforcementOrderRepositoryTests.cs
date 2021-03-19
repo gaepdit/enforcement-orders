@@ -121,7 +121,7 @@ namespace Infrastructure.Tests
             result.Items[0].Should().BeEquivalentTo(
                 GetEnforcementOrderSummaryView(GetEnforcementOrders
                     .OrderByDescending(e => e.ExecutedDate ?? e.ProposedOrderPostedDate)
-                    .ThenBy(e => e.FacilityName.Trim().Trim('\n', '\r', '\t'))
+                    .ThenBy(e => e.FacilityName)
                     .First(e => e.GetIsPublic()).Id));
         }
 
@@ -139,7 +139,7 @@ namespace Infrastructure.Tests
             result.Items[0].Should().BeEquivalentTo(
                 GetEnforcementOrderSummaryView(GetEnforcementOrders
                     .OrderByDescending(e => e.ExecutedDate ?? e.ProposedOrderPostedDate)
-                    .ThenBy(e => e.FacilityName.Trim().Trim('\n', '\r', '\t'))
+                    .ThenBy(e => e.FacilityName)
                     .First(e => e.Deleted).Id));
         }
 
@@ -157,7 +157,7 @@ namespace Infrastructure.Tests
             result.Items[0].Should().BeEquivalentTo(
                 GetEnforcementOrderSummaryView(GetEnforcementOrders
                     .OrderByDescending(e => e.ExecutedDate ?? e.ProposedOrderPostedDate)
-                    .ThenBy(e => e.FacilityName.Trim().Trim('\n', '\r', '\t'))
+                    .ThenBy(e => e.FacilityName)
                     .First(e => !e.Deleted).Id));
         }
 
@@ -174,7 +174,7 @@ namespace Infrastructure.Tests
 
             var expectedList = GetEnforcementOrders
                 .OrderByDescending(e => e.ExecutedDate ?? e.ProposedOrderPostedDate)
-                .ThenBy(e => e.FacilityName.Trim().Trim('\n', '\r', '\t'))
+                .ThenBy(e => e.FacilityName)
                 .Where(e =>
                     !e.Deleted
                     && string.Equals(e.FacilityName, spec.FacilityFilter, StringComparison.Ordinal))

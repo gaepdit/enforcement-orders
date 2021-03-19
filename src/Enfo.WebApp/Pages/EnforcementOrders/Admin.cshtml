@@ -1,5 +1,6 @@
 ﻿@page "{id}"
 @using Enfo.WebApp.Models
+@using Enfo.Repository
 @model Enfo.WebApp.Pages.EnforcementOrders.Admin
 
 @{
@@ -8,9 +9,7 @@
 
 <partial name="_AlertPartial" for="Message" />
 
-<h2>
-    @ViewData["Title"]
-</h2>
+<h2>@ViewData["Title"]</h2>
 
 <div class="gaepd-noprint">
     <a asp-page="Details" asp-route-id="@Model.Item.Id" class="btn btn-sm btn-outline-primary">Go to public view</a>
@@ -138,14 +137,18 @@
     </tbody>
 </table>
 
-<div>
-    @if (Model.Item.Deleted)
-    {
-        <a asp-page="Restore" asp-route-id="@Model.Item.Id" class="usa-button usa-button-secondary">Restore deleted order</a>
-    }
-    else
-    {
-        <a asp-page="Edit" asp-route-id="@Model.Item.Id" class="usa-button usa-button-outline">Edit</a>
-        <a asp-page="Delete" asp-route-id="@Model.Item.Id" class="usa-button usa-button-secondary">Delete</a>
-    }
-</div>
+@* TODO: Auth *@
+@* @if (User.IsInRole(UserRoles.OrderAdministrator)) *@
+@* { *@
+     <div>
+        @if (Model.Item.Deleted)
+        {
+            <a asp-page="Restore" asp-route-id="@Model.Item.Id" class="usa-button usa-button-secondary">Restore deleted order</a>
+        }
+        else
+        {
+            <a asp-page="Edit" asp-route-id="@Model.Item.Id" class="usa-button usa-button-secondary">Edit</a>
+            <a asp-page="Delete" asp-route-id="@Model.Item.Id" class="usa-button usa-button-red">Delete</a>
+        }
+    </div>
+@* } *@
