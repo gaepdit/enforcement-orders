@@ -12,8 +12,8 @@ namespace Enfo.WebApp.Pages.Admin
     {
         public IReadOnlyList<EnforcementOrderSummaryView> CurrentProposedOrders { get; private set; }
         public IReadOnlyList<EnforcementOrderSummaryView> RecentExecutedOrders { get; private set; }
-        public IReadOnlyList<EnforcementOrderSummaryView> PendingOrders { get; private set; }
-        public IReadOnlyList<EnforcementOrderSummaryView> DraftOrders { get; private set; }
+        public IReadOnlyList<EnforcementOrderAdminSummaryView> PendingOrders { get; private set; }
+        public IReadOnlyList<EnforcementOrderAdminSummaryView> DraftOrders { get; private set; }
         public DisplayMessage Message { get; private set; }
 
         private readonly IEnforcementOrderRepository _repository;

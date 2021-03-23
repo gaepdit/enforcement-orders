@@ -16,14 +16,17 @@ namespace Infrastructure.Tests
     public class EnforcementOrderRepositoryTests
     {
         // Data helpers
-        private static EnforcementOrderDetailedView GetEnforcementOrderView(int id) =>
-            new EnforcementOrderDetailedView(FillNavigationProperties(GetEnforcementOrders.Single(e => e.Id == id)));
-
-        private static EnforcementOrderDetailedView GetEnforcementOrderAdminView(int id) =>
-            new EnforcementOrderAdminView(FillNavigationProperties(GetEnforcementOrders.Single(e => e.Id == id)));
+        private static EnforcementOrderDetailedView GetEnforcementOrderDetailedView(int id) =>
+            new(FillNavigationProperties(GetEnforcementOrders.Single(e => e.Id == id)));
 
         private static EnforcementOrderSummaryView GetEnforcementOrderSummaryView(int id) =>
-            new EnforcementOrderSummaryView(FillNavigationProperties(GetEnforcementOrders.Single(e => e.Id == id)));
+            new(FillNavigationProperties(GetEnforcementOrders.Single(e => e.Id == id)));
+
+        private static EnforcementOrderAdminView GetEnforcementOrderAdminView(int id) =>
+            new(FillNavigationProperties(GetEnforcementOrders.Single(e => e.Id == id)));
+
+        private static EnforcementOrderAdminSummaryView GetEnforcementOrderAdminSummaryView(int id) =>
+            new(FillNavigationProperties(GetEnforcementOrders.Single(e => e.Id == id)));
 
         private static EnforcementOrder FillNavigationProperties(EnforcementOrder order)
         {
@@ -49,7 +52,7 @@ namespace Infrastructure.Tests
 
             using var repository = CreateRepositoryHelper().GetEnforcementOrderRepository();
             (await repository.GetAsync(itemId))
-                .Should().BeEquivalentTo(GetEnforcementOrderView(itemId));
+                .Should().BeEquivalentTo(GetEnforcementOrderDetailedView(itemId));
         }
 
         [Fact]
@@ -75,7 +78,7 @@ namespace Infrastructure.Tests
 
             using var repository = CreateRepositoryHelper().GetEnforcementOrderRepository();
             (await repository.GetAsync(itemId, false))
-                .Should().BeEquivalentTo(GetEnforcementOrderView(itemId));
+                .Should().BeEquivalentTo(GetEnforcementOrderDetailedView(itemId));
         }
 
         // GetAdminViewAsync
@@ -242,7 +245,8 @@ namespace Infrastructure.Tests
         public async Task OrderNumberExists_GivenExistsAndIgnore_ReturnsFalse()
         {
             using var repository = CreateRepositoryHelper().GetEnforcementOrderRepository();
-            (await repository.OrderNumberExistsAsync(GetEnforcementOrders.First().OrderNumber, GetEnforcementOrders.First().Id))
+            (await repository.OrderNumberExistsAsync(GetEnforcementOrders.First().OrderNumber,
+                    GetEnforcementOrders.First().Id))
                 .Should().BeFalse();
         }
 
@@ -273,7 +277,7 @@ namespace Infrastructure.Tests
             result.Count.Should().Be(GetEnforcementOrders.Count(e =>
                 !e.Deleted && e.PublicationStatus == EnforcementOrder.PublicationState.Draft));
             result[0].Should().BeEquivalentTo(
-                GetEnforcementOrderSummaryView(GetEnforcementOrders.First(e =>
+                GetEnforcementOrderAdminSummaryView(GetEnforcementOrders.First(e =>
                     !e.Deleted && e.PublicationStatus == EnforcementOrder.PublicationState.Draft).Id));
         }
 
@@ -291,7 +295,7 @@ namespace Infrastructure.Tests
             result.Count.Should().Be(GetEnforcementOrders.Count(e =>
                 (e.GetIsPublicProposedOrder || e.GetIsPublicExecutedOrder)
                 && e.GetLastPostedDate > MostRecentMonday()));
-            result[0].Should().BeEquivalentTo(GetEnforcementOrderSummaryView(order.Id));
+            result[0].Should().BeEquivalentTo(GetEnforcementOrderAdminSummaryView(order.Id));
         }
 
         // ListRecentlyExecutedEnforcementOrders
@@ -318,7 +322,7 @@ namespace Infrastructure.Tests
         // CreateAsync
 
         // Sample data for create
-        private readonly EnforcementOrderCreate _sampleCreate = new EnforcementOrderCreate
+        private readonly EnforcementOrderCreate _sampleCreate = new()
         {
             Cause = "Cause of order",
             Requirements = "Requirements of order",
@@ -341,7 +345,7 @@ namespace Infrastructure.Tests
 
             var newId = await repository.CreateAsync(_sampleCreate);
             repositoryHelper.ClearChangeTracker();
-            
+
             var order = _sampleCreate.ToEnforcementOrder();
             order.Id = newId;
             var expected = new EnforcementOrderDetailedView(FillNavigationProperties(order));
@@ -368,7 +372,7 @@ namespace Infrastructure.Tests
         // UpdateAsync
 
         // Sample data for update
-        private static EnforcementOrderUpdate NewSampleUpdate(EnforcementOrder order) => new EnforcementOrderUpdate
+        private static EnforcementOrderUpdate NewSampleUpdate(EnforcementOrder order) => new()
         {
             Cause = order.Cause,
             County = order.County,

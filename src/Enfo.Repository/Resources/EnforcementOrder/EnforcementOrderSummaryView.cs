@@ -16,7 +16,7 @@ namespace Enfo.Repository.Resources.EnforcementOrder
             Id = item.Id;
             FacilityName = item.FacilityName;
             County = item.County;
-            LegalAuthority = new LegalAuthorityView(item.LegalAuthority);
+            LegalAuthority = item.LegalAuthority == null ? null : new LegalAuthorityView(item.LegalAuthority);
             OrderNumber = item.OrderNumber;
             IsPublicProposedOrder = item.GetIsPublicProposedOrder;
             IsProposedOrder = IsPublicProposedOrder && item.IsProposedOrder;

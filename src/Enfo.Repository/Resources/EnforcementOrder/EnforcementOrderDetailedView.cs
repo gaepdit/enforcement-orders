@@ -26,7 +26,11 @@ namespace Enfo.Repository.Resources.EnforcementOrder
             HearingDate = item.HearingDate;
             HearingLocation = item.HearingLocation;
             HearingCommentPeriodClosesDate = item.HearingCommentPeriodClosesDate;
-            HearingContact = item.HearingContact == null ? null : new EpdContactView(item.HearingContact);
+            HearingContact = item.HearingContactId.HasValue &&
+                item.HearingCommentPeriodClosesDate.HasValue &&
+                item.HearingCommentPeriodClosesDate >= DateTime.Today
+                    ? new EpdContactView(item.HearingContact)
+                    : null;
         }
 
         // Common data elements

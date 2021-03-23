@@ -8,7 +8,7 @@ namespace Repository.Tests.ValidationTests
 {
     public class ValidatingNewEnforcementOrder
     {
-        private readonly EnforcementOrderCreate _order = new EnforcementOrderCreate()
+        private readonly EnforcementOrderCreate _order = new()
         {
             Cause = "Integer feugiat scelerisque varius morbi enim nunc faucibus.",
             CommentContactId = 2004,

@@ -95,22 +95,22 @@ namespace Enfo.Infrastructure.Repositories
                 .ToListAsync().ConfigureAwait(false);
 
         // Draft are orders with publication status set to Draft
-        public async Task<IReadOnlyList<EnforcementOrderSummaryView>> ListDraftEnforcementOrdersAsync() =>
+        public async Task<IReadOnlyList<EnforcementOrderAdminSummaryView>> ListDraftEnforcementOrdersAsync() =>
             await _context.EnforcementOrders.AsNoTracking()
                 .FilterForDrafts()
                 .ApplySorting(EnforcementOrderSorting.DateAsc)
                 .Include(e => e.LegalAuthority)
-                .Select(e => new EnforcementOrderSummaryView(e))
+                .Select(e => new EnforcementOrderAdminSummaryView(e))
                 .ToListAsync().ConfigureAwait(false);
 
         // Pending are public proposed or executed orders with 
         // publication date after the current week
-        public async Task<IReadOnlyList<EnforcementOrderSummaryView>> ListPendingEnforcementOrdersAsync() =>
+        public async Task<IReadOnlyList<EnforcementOrderAdminSummaryView>> ListPendingEnforcementOrdersAsync() =>
             await _context.EnforcementOrders.AsNoTracking()
                 .FilterForPending()
                 .ApplySorting(EnforcementOrderSorting.DateAsc)
                 .Include(e => e.LegalAuthority)
-                .Select(e => new EnforcementOrderSummaryView(e))
+                .Select(e => new EnforcementOrderAdminSummaryView(e))
                 .ToListAsync().ConfigureAwait(false);
 
         // Recently Executed are public executed orders with 

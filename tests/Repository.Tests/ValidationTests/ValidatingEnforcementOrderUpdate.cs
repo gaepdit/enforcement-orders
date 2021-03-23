@@ -9,7 +9,7 @@ namespace Repository.Tests.ValidationTests
 {
     public class ValidatingEnforcementOrderUpdate
     {
-        private readonly EnforcementOrder _order = new EnforcementOrder
+        private readonly EnforcementOrder _order = new()
         {
             Cause = "Integer feugiat scelerisque varius morbi enim nunc faucibus a.",
             CommentContactId = 2004,
@@ -36,7 +36,7 @@ namespace Repository.Tests.ValidationTests
             SettlementAmount = 2000,
         };
 
-        private readonly EnforcementOrderUpdate _orderUpdate = new EnforcementOrderUpdate()
+        private readonly EnforcementOrderUpdate _orderUpdate = new()
         {
             Cause = "Integer feugiat scelerisque varius morbi enim nunc faucibus a.",
             CommentContactId = 2004,

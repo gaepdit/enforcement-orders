@@ -15,8 +15,8 @@ namespace Enfo.Repository.Repositories
         Task<bool> ExistsAsync(int id, bool onlyPublic = true);
         Task<bool> OrderNumberExistsAsync(string orderNumber, int? ignoreId = null);
         Task<IReadOnlyList<EnforcementOrderSummaryView>> ListCurrentProposedEnforcementOrdersAsync();
-        Task<IReadOnlyList<EnforcementOrderSummaryView>> ListDraftEnforcementOrdersAsync();
-        Task<IReadOnlyList<EnforcementOrderSummaryView>> ListPendingEnforcementOrdersAsync();
+        Task<IReadOnlyList<EnforcementOrderAdminSummaryView>> ListDraftEnforcementOrdersAsync();
+        Task<IReadOnlyList<EnforcementOrderAdminSummaryView>> ListPendingEnforcementOrdersAsync();
         Task<IReadOnlyList<EnforcementOrderSummaryView>> ListRecentlyExecutedEnforcementOrdersAsync();
         Task<int> CreateAsync(EnforcementOrderCreate resource);
         Task UpdateAsync(int id, EnforcementOrderUpdate resource);

@@ -149,7 +149,7 @@
                                 <i>@item.County County</i>
                             </th>
                             <td class="gaepd-tablecell-alignright">
-                                @(item.LastPostedDate?.ToString(DisplayFormats.FormatDateShort) ?? "error")
+                                @(item.PendingPublicationDate?.ToString(DisplayFormats.FormatDateShort) ?? "error")
                             </td>
                             <td class="gaepd-tablecell-nolabel">
                                 <a asp-page="Details" asp-route-id="@item.Id">View</a>
