@@ -1,16 +1,16 @@
 # ENFO UI Specification
 
-* Public dashboard `/EnforcementOrders`
+* Public dashboard `/`
 * Admin dashboard `/Admin`
 * Find `/Find/{string}`
-* Enforcement orders search `/EnforcementOrders/Search`
-    * Public view `/EnforcementOrders/Details/{id}`
-    * Admin view `/EnforcementOrders/Admin/{id}`
-    * Current proposed orders `/EnforcementOrders/CurrentProposed`
-    * Recently executed orders `/EnforcementOrders/RecentExecuted`
-    * Create `/EnforcementOrders/Create`
-    * Edit `/EnforcementOrders/Edit/{id}`
-    * Delete `/EnforcementOrders/Delete/{id}`
+* Enforcement orders search `/Search`
+    * Public view `/Details/{id}`
+    * Admin view `/Admin/Details/{id}`
+    * Current proposed orders `/CurrentProposed`
+    * Recently executed orders `/RecentExecuted`
+    * Create `/Admin/Create`
+    * Edit `/Admin/Edit/{id}`
+    * Delete `/Admin/Delete/{id}`
 * Site maintenance `/Maintenance`
     * Addresses list `/Maintenance/Addresses`
         * Create `/Maintenance/Addresses/Create`
@@ -28,9 +28,7 @@
 
 ## Redirects
 
-* `/` redirects to `/EnforcementOrders` if not logged in
-* `/` redirects to `/Dashboard` if logged in
-* `/Orders/*` redirects to `/EnforcementOrders/*`
+* `/Orders/*` redirects to `/*`
 
 ## Menu
 
@@ -38,6 +36,7 @@ Public:
 
 * 🏠 (Public dashboard)
 * Search
+* Admin
 
 User:
 

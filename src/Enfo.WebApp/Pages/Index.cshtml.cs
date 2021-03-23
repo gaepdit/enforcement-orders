@@ -1,22 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+using Enfo.Repository.Repositories;
+using Enfo.Repository.Resources.EnforcementOrder;
+using Enfo.WebApp.Extensions;
+using Enfo.WebApp.Models;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Logging;
 
 namespace Enfo.WebApp.Pages
 {
-    public class IndexModel : PageModel
+    public class Index : PageModel
     {
-        private readonly ILogger<IndexModel> _logger;
+        public IReadOnlyList<EnforcementOrderSummaryView> CurrentProposedOrders { get; private set; }
+        public IReadOnlyList<EnforcementOrderSummaryView> RecentExecutedOrders { get; private set; }
+        public DisplayMessage Message { get; private set; }
 
-        public IndexModel(ILogger<IndexModel> logger)
+        private readonly IEnforcementOrderRepository _repository;
+        public Index(IEnforcementOrderRepository repository) => _repository = repository;
+
+        public async Task OnGet()
         {
-            _logger = logger;
+            CurrentProposedOrders = await _repository.ListCurrentProposedEnforcementOrdersAsync();
+            RecentExecutedOrders = await _repository.ListRecentlyExecutedEnforcementOrdersAsync();
+            Message = TempData?.GetDisplayMessage();
         }
-
-        public void OnGet() { }
     }
 }

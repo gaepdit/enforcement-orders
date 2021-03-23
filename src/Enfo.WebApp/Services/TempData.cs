@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Enfo.Domain.Entities;
 using Enfo.Infrastructure.Contexts;
+using Enfo.Repository.Utils;
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 
@@ -111,14 +112,38 @@ namespace Enfo.WebApp.Services
         {
             new()
             {
+                Id = 1,
+                Cause = "Arcu non odio euismod lacinia at quis risus.",
+                CommentContactId = null,
+                CommentPeriodClosesDate = null,
+                County = "Fannin",
+                Deleted = false,
+                ExecutedDate = DateTime.Today.AddDays(-14),
+                ExecutedOrderPostedDate = DateTime.Today.AddDays(-12),
+                FacilityName = "Odio tempor orci",
+                HearingCommentPeriodClosesDate = null,
+                HearingDate = null,
+                HearingLocation = "",
+                IsExecutedOrder = true,
+                IsHearingScheduled = false,
+                IsProposedOrder = true,
+                LegalAuthorityId = 2,
+                OrderNumber = "EPD-WP-3854",
+                ProposedOrderPostedDate = new DateTime(2019, 03, 18),
+                PublicationStatus = EnforcementOrder.PublicationState.Published,
+                Requirements = "Vitae sapien pellentesque habitant morbi tristique. Felis bibendum ut tristique.",
+                SettlementAmount = 1800
+            },
+            new()
+            {
                 Id = 27,
                 Cause = "Nulla pellentesque dignissim enim sit.",
                 CommentContactId = 2000,
                 CommentPeriodClosesDate = null,
                 County = "Bulloch",
                 Deleted = false,
-                ExecutedDate = DateTime.Today,
-                ExecutedOrderPostedDate = DateTime.Today,
+                ExecutedDate = DateUtils.MostRecentMonday().AddDays(1),
+                ExecutedOrderPostedDate = DateUtils.MostRecentMonday().AddDays(7),
                 FacilityName = "Diam donec adipiscing",
                 HearingCommentPeriodClosesDate = null,
                 HearingDate = null,

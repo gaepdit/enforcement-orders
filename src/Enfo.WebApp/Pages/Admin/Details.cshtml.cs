@@ -6,11 +6,13 @@ using Enfo.WebApp.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace Enfo.WebApp.Pages.EnforcementOrders
+namespace Enfo.WebApp.Pages.Admin
 {
+    // TODO: Auth
+    // [Authorize(Roles = UserRoles.OrderAdministrator)]
     public class Details : PageModel
     {
-        public EnforcementOrderDetailedView Item { get; private set; }
+        public EnforcementOrderAdminView Item { get; private set; }
         public DisplayMessage Message { get; private set; }
 
         private readonly IEnforcementOrderRepository _repository;
@@ -20,7 +22,7 @@ namespace Enfo.WebApp.Pages.EnforcementOrders
         {
             if (id == null) return NotFound("Order ID not found.");
 
-            Item = await _repository.GetAsync(id.Value);
+            Item = await _repository.GetAdminViewAsync(id.Value);
 
             if (Item == null) return NotFound("Order ID not found.");
 

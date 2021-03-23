@@ -1,6 +1,6 @@
 @page "{id}"
 @using Enfo.Repository
-@model Enfo.WebApp.Pages.EnforcementOrders.Details
+@model Enfo.WebApp.Pages.Details
 
 @{
     ViewData["Title"] = $"Enforcement Order {Model.Item.OrderNumber}";
@@ -13,7 +13,7 @@
 @* @if (User?.Identity?.IsAuthenticated == true) *@
 @* { *@
      <div class="gaepd-noprint">
-        <a asp-page="Admin" asp-route-id="@Model.Item.Id" class="btn btn-sm btn-outline-primary">Go to admin view</a>
+        <a asp-page="/Admin/Details" asp-route-id="@Model.Item.Id" class="btn btn-sm btn-outline-primary">Go to admin view</a>
     </div>
 @* } *@
 
@@ -84,6 +84,10 @@
         <tr>
             <th scope="row">@Html.DisplayNameFor(m => m.Item.ExecutedDate)</th>
             <td>@Html.DisplayFor(m => m.Item.ExecutedDate)</td>
+        </tr>
+        <tr>
+            <th scope="row">@Html.DisplayNameFor(m => m.Item.ExecutedOrderPostedDate)</th>
+            <td>@Html.DisplayFor(m => m.Item.ExecutedOrderPostedDate)</td>
         </tr>
     }
 

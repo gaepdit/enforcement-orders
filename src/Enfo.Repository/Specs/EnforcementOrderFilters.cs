@@ -94,10 +94,9 @@ namespace Enfo.Repository.Specs
                 ? query
                 : query.Where(e => e.Cause.Contains(text) || e.Requirements.Contains(text));
 
-        private static IQueryable<EnforcementOrder> FilterByCommentPeriod(
-            [NotNull] this IQueryable<EnforcementOrder> query,
-            DateTime commentPeriodClosesAfter) =>
-            query.Where(e => e.CommentPeriodClosesDate >= commentPeriodClosesAfter);
+        private static IQueryable<EnforcementOrder> FilterForOpenCommentPeriod(
+            [NotNull] this IQueryable<EnforcementOrder> query) =>
+            query.Where(e => e.CommentPeriodClosesDate >= DateTime.Today);
 
         public static IQueryable<EnforcementOrder> FilterByIsPublic(
             [NotNull] this IQueryable<EnforcementOrder> query,
@@ -141,22 +140,30 @@ namespace Enfo.Repository.Specs
         // with comment close date in the future
         public static IQueryable<EnforcementOrder> FilterForCurrentProposed(
             [NotNull] this IQueryable<EnforcementOrder> query) =>
-            query.FilterForPublicProposed()
-                .FilterByCommentPeriod(DateTime.Today);
+            query.FilterForPublicProposed().FilterForOpenCommentPeriod();
 
         // Draft are orders with publication status set to Draft
+        // or are missing publication dates
         public static IQueryable<EnforcementOrder> FilterForDrafts(
             [NotNull] this IQueryable<EnforcementOrder> query) =>
             query.FilterByIsDeleted(false)
-                .FilterByPublicationStatus(PublicationState.Draft);
+                .Where(e =>
+                    e.PublicationStatus == EnforcementOrder.PublicationState.Draft
+                    || ((e.IsExecutedOrder && !e.ExecutedOrderPostedDate.HasValue)
+                        || (e.IsProposedOrder && !e.ProposedOrderPostedDate.HasValue))
+                );
 
         // Pending are public proposed or executed orders with 
         // publication date after the current week
         public static IQueryable<EnforcementOrder> FilterForPending(
             [NotNull] this IQueryable<EnforcementOrder> query) =>
-            query.FilterByIsPublic(true)
-                .Where(e => e.ExecutedDate > MostRecentMonday()
-                    || e.ProposedOrderPostedDate > MostRecentMonday());
+            query.FilterByIsDeleted(false)
+                .Where(e =>
+                    e.PublicationStatus == EnforcementOrder.PublicationState.Published
+                    && (e.IsExecutedOrder && e.ExecutedOrderPostedDate.HasValue && e.ExecutedDate > MostRecentMonday())
+                    || (e.IsProposedOrder && e.ProposedOrderPostedDate.HasValue &&
+                        e.ProposedOrderPostedDate > MostRecentMonday())
+                );
 
         // Recently Executed are public executed orders with 
         // publication date within current week
@@ -164,6 +171,6 @@ namespace Enfo.Repository.Specs
             [NotNull] this IQueryable<EnforcementOrder> query) =>
             query.FilterForPublicExecuted()
                 .Where(e => e.ExecutedOrderPostedDate >= MostRecentMonday()
-                    && e.ExecutedOrderPostedDate <= DateTime.Today);
+                    && e.ExecutedOrderPostedDate <= MostRecentMonday().AddDays(7));
     }
 }

@@ -24,6 +24,7 @@ namespace Enfo.Repository.Resources.EnforcementOrder
             IsPublicExecutedOrder = item.GetIsPublicExecutedOrder;
             IsExecutedOrder = IsPublicExecutedOrder && item.IsExecutedOrder;
             ExecutedDate = IsPublicExecutedOrder ? item.ExecutedDate : null;
+            ExecutedOrderPostedDate = IsPublicExecutedOrder ? item.ExecutedOrderPostedDate : null;
         }
 
         public int Id { get; }
@@ -40,8 +41,6 @@ namespace Enfo.Repository.Resources.EnforcementOrder
 
         [DisplayName("Order Number")]
         public string OrderNumber { get; }
-        
-        public DateTime? LastPostedDate => ExecutedDate ?? ProposedOrderPostedDate;
 
         // Proposed orders
 
@@ -65,5 +64,13 @@ namespace Enfo.Repository.Resources.EnforcementOrder
 
         [DisplayName("Date Executed")]
         public DateTime? ExecutedDate { get; }
+
+        [DisplayName("Publication Date For Executed Order")]
+        public DateTime? ExecutedOrderPostedDate { get; set; }
+
+        // Calculated properties
+
+        public DateTime? LastPostedDate => ExecutedDate ?? ProposedOrderPostedDate;
+        public bool IsPublic => IsPublicExecutedOrder || IsPublicProposedOrder;
     }
 }

@@ -1,7 +1,6 @@
 ﻿@page "{id}"
 @using Enfo.WebApp.Models
-@using Enfo.Repository
-@model Enfo.WebApp.Pages.EnforcementOrders.Admin
+@model Enfo.WebApp.Pages.Admin.Details
 
 @{
     ViewData["Title"] = $"Enforcement Order {Model.Item.OrderNumber}";
@@ -9,11 +8,21 @@
 
 <partial name="_AlertPartial" for="Message" />
 
-<h2>@ViewData["Title"]</h2>
+<h2>
+    <i>Admin View:</i>
+    @ViewData["Title"]
+</h2>
 
-<div class="gaepd-noprint">
-    <a asp-page="Details" asp-route-id="@Model.Item.Id" class="btn btn-sm btn-outline-primary">Go to public view</a>
-</div>
+@if (Model.Item.IsPublic)
+{
+    <div class="gaepd-noprint">
+        <a asp-page="/Details" asp-route-id="@Model.Item.Id" class="btn btn-sm btn-outline-primary">Go to public view</a>
+    </div>
+}
+else
+{
+    <div>This Order is not yet publicly viewable.</div>
+}
 
 @if (Model.Item.Deleted)
 {
@@ -93,6 +102,10 @@
             <th scope="row">@Html.DisplayNameFor(m => m.Item.ExecutedDate)</th>
             <td>@Html.DisplayFor(m => m.Item.ExecutedDate)</td>
         </tr>
+        <tr>
+            <th scope="row">@Html.DisplayNameFor(m => m.Item.ExecutedOrderPostedDate)</th>
+            <td>@Html.DisplayFor(m => m.Item.ExecutedOrderPostedDate)</td>
+        </tr>
     }
 
     @if (Model.Item.IsHearingScheduled)
@@ -140,15 +153,15 @@
 @* TODO: Auth *@
 @* @if (User.IsInRole(UserRoles.OrderAdministrator)) *@
 @* { *@
-     <div>
-        @if (Model.Item.Deleted)
-        {
-            <a asp-page="Restore" asp-route-id="@Model.Item.Id" class="usa-button usa-button-secondary">Restore deleted order</a>
-        }
-        else
-        {
-            <a asp-page="Edit" asp-route-id="@Model.Item.Id" class="usa-button usa-button-secondary">Edit</a>
-            <a asp-page="Delete" asp-route-id="@Model.Item.Id" class="usa-button usa-button-red">Delete</a>
-        }
-    </div>
+<div>
+    @if (Model.Item.Deleted)
+    {
+        <a asp-page="Restore" asp-route-id="@Model.Item.Id" class="usa-button usa-button-secondary">Restore deleted order</a>
+    }
+    else
+    {
+        <a asp-page="Edit" asp-route-id="@Model.Item.Id" class="usa-button usa-button-secondary">Edit</a>
+        <a asp-page="Delete" asp-route-id="@Model.Item.Id" class="usa-button usa-button-red">Delete</a>
+    }
+</div>
 @* } *@
