@@ -19,7 +19,9 @@ namespace Infrastructure.Tests
             _context.Database.EnsureCreated();
         }
 
-        public static RepositoryHelper CreateRepositoryHelper() => new RepositoryHelper();
+        public static RepositoryHelper CreateRepositoryHelper() => new();
+
+        public void ClearChangeTracker() => _context.ChangeTracker.Clear();
 
         private void SeedAddressData()
         {

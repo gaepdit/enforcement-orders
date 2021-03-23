@@ -75,10 +75,10 @@ namespace Enfo.Repository.Specs
 
         public void TrimAll()
         {
-            County = County.Trim();
-            FacilityFilter = FacilityFilter.Trim();
-            OrderNumber = OrderNumber.Trim();
-            TextContains = TextContains.Trim();
+            County = County?.Trim();
+            FacilityFilter = FacilityFilter?.Trim();
+            OrderNumber = OrderNumber?.Trim();
+            TextContains = TextContains?.Trim();
         }
     }
 }

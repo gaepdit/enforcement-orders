@@ -84,21 +84,17 @@ namespace Infrastructure.Tests
             };
 
             using var repositoryHelper = CreateRepositoryHelper();
+            using var repository = repositoryHelper.GetEpdContactRepository();
 
-            using (var repository = repositoryHelper.GetEpdContactRepository())
-            {
-                itemId = await repository.CreateAsync(itemCreate);
-            }
+            itemId = await repository.CreateAsync(itemCreate);
+            repositoryHelper.ClearChangeTracker();
 
-            using (var repository = repositoryHelper.GetEpdContactRepository())
-            {
-                var epdContact = itemCreate.ToEpdContact();
-                epdContact.Address = GetAddresses.Single(e => e.Id == itemCreate.AddressId);
-                epdContact.Id = itemId;
-                var expected = new EpdContactView(epdContact);
+            var epdContact = itemCreate.ToEpdContact();
+            epdContact.Address = GetAddresses.Single(e => e.Id == itemCreate.AddressId);
+            epdContact.Id = itemId;
+            var expected = new EpdContactView(epdContact);
 
-                (await repository.GetAsync(itemId)).Should().BeEquivalentTo(expected);
-            }
+            (await repository.GetAsync(itemId)).Should().BeEquivalentTo(expected);
         }
 
         [Fact]
@@ -189,18 +185,14 @@ namespace Infrastructure.Tests
             };
 
             using var repositoryHelper = CreateRepositoryHelper();
+            using var repository = repositoryHelper.GetEpdContactRepository();
 
-            using (var repository = repositoryHelper.GetEpdContactRepository())
-            {
-                await repository.UpdateAsync(itemId, itemUpdate);
-            }
+            await repository.UpdateAsync(itemId, itemUpdate);
+            repositoryHelper.ClearChangeTracker();
 
-            using (var repository = repositoryHelper.GetEpdContactRepository())
-            {
-                var item = await repository.GetAsync(itemId);
-                item.Organization.Should().Be(itemUpdate.Organization);
-                item.ContactName.Should().Be(itemUpdate.ContactName);
-            }
+            var item = await repository.GetAsync(itemId);
+            item.Organization.Should().Be(itemUpdate.Organization);
+            item.ContactName.Should().Be(itemUpdate.ContactName);
         }
 
         [Fact]
@@ -220,18 +212,14 @@ namespace Infrastructure.Tests
             };
 
             using var repositoryHelper = CreateRepositoryHelper();
+            using var repository = repositoryHelper.GetEpdContactRepository();
 
-            using (var repository = repositoryHelper.GetEpdContactRepository())
-            {
-                await repository.UpdateAsync(itemId, itemUpdate);
-            }
+            await repository.UpdateAsync(itemId, itemUpdate);
+            repositoryHelper.ClearChangeTracker();
 
-            using (var repository = repositoryHelper.GetEpdContactRepository())
-            {
-                var item = await repository.GetAsync(itemId);
-                item.Organization.Should().Be(itemUpdate.Organization);
-                item.ContactName.Should().Be(itemUpdate.ContactName);
-            }
+            var item = await repository.GetAsync(itemId);
+            item.Organization.Should().Be(itemUpdate.Organization);
+            item.ContactName.Should().Be(itemUpdate.ContactName);
         }
 
         [Fact]

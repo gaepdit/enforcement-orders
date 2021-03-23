@@ -57,7 +57,6 @@ namespace Infrastructure.Tests
         [Fact]
         public async Task Create_AddsNewItem()
         {
-            int itemId;
             var itemCreate = new AddressCreate()
             {
                 City = "Atlanta",
@@ -67,20 +66,16 @@ namespace Infrastructure.Tests
             };
 
             using var repositoryHelper = CreateRepositoryHelper();
+            using var repository = repositoryHelper.GetAddressRepository();
+            
+            var itemId = await repository.CreateAsync(itemCreate);
+            repositoryHelper.ClearChangeTracker();
 
-            using (var repository = repositoryHelper.GetAddressRepository())
-            {
-                itemId = await repository.CreateAsync(itemCreate);
-            }
-
-            using (var repository = repositoryHelper.GetAddressRepository())
-            {
-                var item = itemCreate.ToAddress();
-                item.Id = itemId;
-                var expected = new AddressView(item);
-                (await repository.GetAsync(itemId))
-                    .Should().BeEquivalentTo(expected);
-            }
+            var item = itemCreate.ToAddress();
+            item.Id = itemId;
+            var expected = new AddressView(item);
+            (await repository.GetAsync(itemId))
+                .Should().BeEquivalentTo(expected);
         }
 
         [Fact]
@@ -142,17 +137,13 @@ namespace Infrastructure.Tests
             };
 
             using var repositoryHelper = CreateRepositoryHelper();
-
-            using (var repository = repositoryHelper.GetAddressRepository())
-            {
-                await repository.UpdateAsync(itemId, itemUpdate);
-            }
-
-            using (var repository = repositoryHelper.GetAddressRepository())
-            {
-                var item = await repository.GetAsync(itemId);
-                item.Should().BeEquivalentTo(itemUpdate);
-            }
+            using var repository = repositoryHelper.GetAddressRepository();
+            
+            await repository.UpdateAsync(itemId, itemUpdate);
+            repositoryHelper.ClearChangeTracker();
+                
+            var item = await repository.GetAsync(itemId);
+            item.Should().BeEquivalentTo(itemUpdate);
         }
 
         [Fact]
@@ -171,17 +162,13 @@ namespace Infrastructure.Tests
             };
 
             using var repositoryHelper = CreateRepositoryHelper();
+            using var repository = repositoryHelper.GetAddressRepository();
 
-            using (var repository = repositoryHelper.GetAddressRepository())
-            {
-                await repository.UpdateAsync(itemId, itemUpdate);
-            }
+            await repository.UpdateAsync(itemId, itemUpdate);
+            repositoryHelper.ClearChangeTracker();
 
-            using (var repository = repositoryHelper.GetAddressRepository())
-            {
-                var item = await repository.GetAsync(itemId);
-                item.Should().BeEquivalentTo(new AddressView(original));
-            }
+            var item = await repository.GetAsync(itemId);
+            item.Should().BeEquivalentTo(new AddressView(original));
         }
 
         [Fact]

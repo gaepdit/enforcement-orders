@@ -57,24 +57,19 @@ namespace Infrastructure.Tests
         [Fact]
         public async Task Create_AddsNewItem()
         {
-            int itemId;
             var itemCreate = new LegalAuthorityCreate() {AuthorityName = "New Item"};
 
             using var repositoryHelper = CreateRepositoryHelper();
+            using var repository = repositoryHelper.GetLegalAuthorityRepository();
 
-            using (var repository = repositoryHelper.GetLegalAuthorityRepository())
-            {
-                itemId = await repository.CreateAsync(itemCreate);
-            }
+            var itemId = await repository.CreateAsync(itemCreate);
+            repositoryHelper.ClearChangeTracker();
 
-            using (var repository = repositoryHelper.GetLegalAuthorityRepository())
-            {
-                var item = itemCreate.ToLegalAuthority();
-                item.Id = itemId;
-                var expected = new LegalAuthorityView(item);
-                (await repository.GetAsync(itemId))
-                    .Should().BeEquivalentTo(expected);
-            }
+            var item = itemCreate.ToLegalAuthority();
+            item.Id = itemId;
+            var expected = new LegalAuthorityView(item);
+            (await repository.GetAsync(itemId))
+                .Should().BeEquivalentTo(expected);
         }
 
         [Fact]
@@ -101,17 +96,13 @@ namespace Infrastructure.Tests
             var itemUpdate = new LegalAuthorityUpdate() {AuthorityName = "New Name"};
 
             using var repositoryHelper = CreateRepositoryHelper();
+            using var repository = repositoryHelper.GetLegalAuthorityRepository();
 
-            using (var repository = repositoryHelper.GetLegalAuthorityRepository())
-            {
-                await repository.UpdateAsync(itemId, itemUpdate);
-            }
+            await repository.UpdateAsync(itemId, itemUpdate);
+            repositoryHelper.ClearChangeTracker();
 
-            using (var repository = repositoryHelper.GetLegalAuthorityRepository())
-            {
-                var item = await repository.GetAsync(itemId);
-                item.Should().BeEquivalentTo(itemUpdate);
-            }
+            var item = await repository.GetAsync(itemId);
+            item.Should().BeEquivalentTo(itemUpdate);
         }
 
         [Fact]
@@ -122,17 +113,13 @@ namespace Infrastructure.Tests
             var itemUpdate = new LegalAuthorityUpdate() {AuthorityName = original.AuthorityName};
 
             using var repositoryHelper = CreateRepositoryHelper();
+            using var repository = repositoryHelper.GetLegalAuthorityRepository();
 
-            using (var repository = repositoryHelper.GetLegalAuthorityRepository())
-            {
-                await repository.UpdateAsync(itemId, itemUpdate);
-            }
+            await repository.UpdateAsync(itemId, itemUpdate);
+            repositoryHelper.ClearChangeTracker();
 
-            using (var repository = repositoryHelper.GetLegalAuthorityRepository())
-            {
-                var item = await repository.GetAsync(itemId);
-                item.Should().BeEquivalentTo(new LegalAuthorityView(original));
-            }
+            var item = await repository.GetAsync(itemId);
+            item.Should().BeEquivalentTo(new LegalAuthorityView(original));
         }
 
         [Fact]

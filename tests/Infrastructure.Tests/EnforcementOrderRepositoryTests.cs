@@ -336,23 +336,18 @@ namespace Infrastructure.Tests
         [Fact]
         public async Task Create_AddsNewItem()
         {
-            int newId;
             using var repositoryHelper = CreateRepositoryHelper();
+            using var repository = repositoryHelper.GetEnforcementOrderRepository();
 
-            using (var repository = repositoryHelper.GetEnforcementOrderRepository())
-            {
-                newId = await repository.CreateAsync(_sampleCreate);
-            }
+            var newId = await repository.CreateAsync(_sampleCreate);
+            repositoryHelper.ClearChangeTracker();
+            
+            var order = _sampleCreate.ToEnforcementOrder();
+            order.Id = newId;
+            var expected = new EnforcementOrderDetailedView(FillNavigationProperties(order));
 
-            using (var repository = repositoryHelper.GetEnforcementOrderRepository())
-            {
-                var order = _sampleCreate.ToEnforcementOrder();
-                order.Id = newId;
-                var expected = new EnforcementOrderDetailedView(FillNavigationProperties(order));
-
-                var item = await repository.GetAsync(newId, false);
-                item.Should().BeEquivalentTo(expected);
-            }
+            var item = await repository.GetAsync(newId, false);
+            item.Should().BeEquivalentTo(expected);
         }
 
         [Fact]
@@ -409,16 +404,12 @@ namespace Infrastructure.Tests
             itemUpdate.Cause = "abc";
 
             using var repositoryHelper = CreateRepositoryHelper();
+            using var repository = repositoryHelper.GetEnforcementOrderRepository();
 
-            using (var repository = repositoryHelper.GetEnforcementOrderRepository())
-            {
-                await repository.UpdateAsync(itemId, itemUpdate);
-            }
+            await repository.UpdateAsync(itemId, itemUpdate);
+            repositoryHelper.ClearChangeTracker();
 
-            using (var repository = repositoryHelper.GetEnforcementOrderRepository())
-            {
-                (await repository.GetAsync(itemId)).Cause.Should().Be("abc");
-            }
+            (await repository.GetAsync(itemId)).Cause.Should().Be("abc");
         }
 
         [Fact]
@@ -466,17 +457,13 @@ namespace Infrastructure.Tests
             var itemId = GetEnforcementOrders.First(e => !e.Deleted).Id;
 
             using var repositoryHelper = CreateRepositoryHelper();
+            using var repository = repositoryHelper.GetEnforcementOrderRepository();
 
-            using (var repository = repositoryHelper.GetEnforcementOrderRepository())
-            {
-                await repository.DeleteAsync(itemId);
-            }
+            await repository.DeleteAsync(itemId);
+            repositoryHelper.ClearChangeTracker();
 
-            using (var repository = repositoryHelper.GetEnforcementOrderRepository())
-            {
-                (await repository.GetAdminViewAsync(itemId))
-                    .Deleted.Should().BeTrue();
-            }
+            (await repository.GetAdminViewAsync(itemId))
+                .Deleted.Should().BeTrue();
         }
 
         [Fact]
@@ -485,17 +472,13 @@ namespace Infrastructure.Tests
             var itemId = GetEnforcementOrders.First(e => e.Deleted).Id;
 
             using var repositoryHelper = CreateRepositoryHelper();
+            using var repository = repositoryHelper.GetEnforcementOrderRepository();
 
-            using (var repository = repositoryHelper.GetEnforcementOrderRepository())
-            {
-                await repository.DeleteAsync(itemId);
-            }
+            await repository.DeleteAsync(itemId);
+            repositoryHelper.ClearChangeTracker();
 
-            using (var repository = repositoryHelper.GetEnforcementOrderRepository())
-            {
-                (await repository.GetAdminViewAsync(itemId))
-                    .Deleted.Should().BeTrue();
-            }
+            (await repository.GetAdminViewAsync(itemId))
+                .Deleted.Should().BeTrue();
         }
 
         // RestoreAsync
@@ -506,17 +489,13 @@ namespace Infrastructure.Tests
             var itemId = GetEnforcementOrders.First(e => e.Deleted).Id;
 
             using var repositoryHelper = CreateRepositoryHelper();
+            using var repository = repositoryHelper.GetEnforcementOrderRepository();
 
-            using (var repository = repositoryHelper.GetEnforcementOrderRepository())
-            {
-                await repository.RestoreAsync(itemId);
-            }
+            await repository.RestoreAsync(itemId);
+            repositoryHelper.ClearChangeTracker();
 
-            using (var repository = repositoryHelper.GetEnforcementOrderRepository())
-            {
-                (await repository.GetAdminViewAsync(itemId))
-                    .Deleted.Should().BeFalse();
-            }
+            (await repository.GetAdminViewAsync(itemId))
+                .Deleted.Should().BeFalse();
         }
 
         [Fact]
@@ -525,17 +504,13 @@ namespace Infrastructure.Tests
             var itemId = GetEnforcementOrders.First(e => !e.Deleted).Id;
 
             using var repositoryHelper = CreateRepositoryHelper();
+            using var repository = repositoryHelper.GetEnforcementOrderRepository();
 
-            using (var repository = repositoryHelper.GetEnforcementOrderRepository())
-            {
-                await repository.RestoreAsync(itemId);
-            }
+            await repository.RestoreAsync(itemId);
+            repositoryHelper.ClearChangeTracker();
 
-            using (var repository = repositoryHelper.GetEnforcementOrderRepository())
-            {
-                (await repository.GetAdminViewAsync(itemId))
-                    .Deleted.Should().BeFalse();
-            }
+            (await repository.GetAdminViewAsync(itemId))
+                .Deleted.Should().BeFalse();
         }
     }
 }
