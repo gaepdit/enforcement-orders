@@ -17,7 +17,7 @@ namespace Enfo.Repository.Resources.EnforcementOrder
             Requirements = item.Requirements;
             SettlementAmount = item.SettlementAmount;
             CommentContact = item.CommentContactId.HasValue &&
-                item.GetIsPublicProposedOrder() &&
+                item.GetIsPublicProposedOrder &&
                 item.CommentPeriodClosesDate.HasValue &&
                 item.CommentPeriodClosesDate >= DateTime.Today
                     ? new EpdContactView(item.CommentContact)

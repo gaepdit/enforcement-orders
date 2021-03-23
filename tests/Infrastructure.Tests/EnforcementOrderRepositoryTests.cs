@@ -45,7 +45,7 @@ namespace Infrastructure.Tests
         [Fact]
         public async Task Get_ReturnsItem()
         {
-            var itemId = GetEnforcementOrders.First(e => e.GetIsPublic()).Id;
+            var itemId = GetEnforcementOrders.First(e => e.GetIsPublic).Id;
 
             using var repository = CreateRepositoryHelper().GetEnforcementOrderRepository();
             (await repository.GetAsync(itemId))
@@ -62,7 +62,7 @@ namespace Infrastructure.Tests
         [Fact]
         public async Task Get_GivenNonpublicOrder_ReturnsNull()
         {
-            var itemId = GetEnforcementOrders.First(e => !e.GetIsPublic()).Id;
+            var itemId = GetEnforcementOrders.First(e => !e.GetIsPublic).Id;
 
             using var repository = CreateRepositoryHelper().GetEnforcementOrderRepository();
             (await repository.GetAsync(itemId)).Should().BeNull();
@@ -71,7 +71,7 @@ namespace Infrastructure.Tests
         [Fact]
         public async Task Get_GivenNonpublicOrderButAllowed_ReturnsItem()
         {
-            var itemId = GetEnforcementOrders.First(e => !e.GetIsPublic()).Id;
+            var itemId = GetEnforcementOrders.First(e => !e.GetIsPublic).Id;
 
             using var repository = CreateRepositoryHelper().GetEnforcementOrderRepository();
             (await repository.GetAsync(itemId, false))
@@ -83,7 +83,7 @@ namespace Infrastructure.Tests
         [Fact]
         public async Task GetAdminView_ReturnsItem()
         {
-            var itemId = GetEnforcementOrders.First(e => e.GetIsPublic()).Id;
+            var itemId = GetEnforcementOrders.First(e => e.GetIsPublic).Id;
 
             using var repository = CreateRepositoryHelper().GetEnforcementOrderRepository();
             (await repository.GetAdminViewAsync(itemId))
@@ -100,7 +100,7 @@ namespace Infrastructure.Tests
         [Fact]
         public async Task GetAdminView_GivenNonpublicOrder_ReturnsItem()
         {
-            var itemId = GetEnforcementOrders.First(e => !e.GetIsPublic()).Id;
+            var itemId = GetEnforcementOrders.First(e => !e.GetIsPublic).Id;
 
             using var repository = CreateRepositoryHelper().GetEnforcementOrderRepository();
             (await repository.GetAdminViewAsync(itemId))
@@ -115,14 +115,14 @@ namespace Infrastructure.Tests
             using var repository = CreateRepositoryHelper().GetEnforcementOrderRepository();
             var result = await repository.ListAsync(new EnforcementOrderSpec(), new PaginationSpec());
 
-            result.CurrentCount.Should().Be(GetEnforcementOrders.Count(e => e.GetIsPublic()));
-            result.Items.Should().HaveCount(GetEnforcementOrders.Count(e => e.GetIsPublic()));
+            result.CurrentCount.Should().Be(GetEnforcementOrders.Count(e => e.GetIsPublic));
+            result.Items.Should().HaveCount(GetEnforcementOrders.Count(e => e.GetIsPublic));
             result.PageNumber.Should().Be(1);
             result.Items[0].Should().BeEquivalentTo(
                 GetEnforcementOrderSummaryView(GetEnforcementOrders
                     .OrderByDescending(e => e.ExecutedDate ?? e.ProposedOrderPostedDate)
                     .ThenBy(e => e.FacilityName)
-                    .First(e => e.GetIsPublic()).Id));
+                    .First(e => e.GetIsPublic).Id));
         }
 
         [Fact]
@@ -192,7 +192,7 @@ namespace Infrastructure.Tests
         [Fact]
         public async Task Exists_GivenExists_ReturnsTrue()
         {
-            var itemId = GetEnforcementOrders.First(e => e.GetIsPublic()).Id;
+            var itemId = GetEnforcementOrders.First(e => e.GetIsPublic).Id;
             using var repository = CreateRepositoryHelper().GetEnforcementOrderRepository();
             (await repository.ExistsAsync(itemId)).Should().BeTrue();
         }
@@ -207,7 +207,7 @@ namespace Infrastructure.Tests
         [Fact]
         public async Task Exists_GivenNonpublic_ReturnsFalse()
         {
-            var itemId = GetEnforcementOrders.First(e => !e.GetIsPublic()).Id;
+            var itemId = GetEnforcementOrders.First(e => !e.GetIsPublic).Id;
             using var repository = CreateRepositoryHelper().GetEnforcementOrderRepository();
             (await repository.ExistsAsync(itemId)).Should().BeFalse();
         }
@@ -215,7 +215,7 @@ namespace Infrastructure.Tests
         [Fact]
         public async Task Exists_GivenNonpublicButAllowed_ReturnsTrue()
         {
-            var itemId = GetEnforcementOrders.First(e => !e.GetIsPublic()).Id;
+            var itemId = GetEnforcementOrders.First(e => !e.GetIsPublic).Id;
             using var repository = CreateRepositoryHelper().GetEnforcementOrderRepository();
             (await repository.ExistsAsync(itemId, false)).Should().BeTrue();
         }
@@ -251,14 +251,14 @@ namespace Infrastructure.Tests
         [Fact]
         public async Task ListCurrentProposedEnforcementOrders_ReturnsCorrectly()
         {
-            var order = GetEnforcementOrders.First(e => e.GetIsPublic() && e.IsProposedOrder);
+            var order = GetEnforcementOrders.First(e => e.GetIsPublic && e.IsProposedOrder);
             order.CommentPeriodClosesDate = DateTime.Today.AddDays(1);
 
             using var repository = CreateRepositoryHelper().GetEnforcementOrderRepository();
             var result = await repository.ListCurrentProposedEnforcementOrdersAsync();
 
             result.Count.Should().Be(GetEnforcementOrders.Count(e =>
-                e.GetIsPublic() && e.IsProposedOrder && e.CommentPeriodClosesDate >= DateTime.Today));
+                e.GetIsPublic && e.IsProposedOrder && e.CommentPeriodClosesDate >= DateTime.Today));
             result[0].Should().BeEquivalentTo(GetEnforcementOrderSummaryView(order.Id));
         }
 
@@ -282,15 +282,15 @@ namespace Infrastructure.Tests
         [Fact]
         public async Task ListPendingEnforcementOrders_ReturnsCorrectly()
         {
-            var order = GetEnforcementOrders.First(e => e.GetIsPublicProposedOrder() || e.GetIsPublicExecutedOrder());
+            var order = GetEnforcementOrders.First(e => e.GetIsPublicProposedOrder || e.GetIsPublicExecutedOrder);
             order.ExecutedDate = DateTime.Today.AddDays(8);
 
             using var repository = CreateRepositoryHelper().GetEnforcementOrderRepository();
             var result = await repository.ListPendingEnforcementOrdersAsync();
 
             result.Count.Should().Be(GetEnforcementOrders.Count(e =>
-                (e.GetIsPublicProposedOrder() || e.GetIsPublicExecutedOrder())
-                && e.GetLastPostedDate() > MostRecentMonday()));
+                (e.GetIsPublicProposedOrder || e.GetIsPublicExecutedOrder)
+                && e.GetLastPostedDate > MostRecentMonday()));
             result[0].Should().BeEquivalentTo(GetEnforcementOrderSummaryView(order.Id));
         }
 
@@ -299,7 +299,7 @@ namespace Infrastructure.Tests
         [Fact]
         public async Task ListRecentlyExecutedEnforcementOrders_ReturnsCorrectly()
         {
-            var order = GetEnforcementOrders.First(e => e.GetIsPublicExecutedOrder());
+            var order = GetEnforcementOrders.First(e => e.GetIsPublicExecutedOrder);
             order.ExecutedOrderPostedDate = MostRecentMonday();
 
             using var repository = CreateRepositoryHelper().GetEnforcementOrderRepository();
@@ -307,7 +307,7 @@ namespace Infrastructure.Tests
 
             result.Count.Should().Be(
                 GetEnforcementOrders.Count(e =>
-                    e.GetIsPublicExecutedOrder()
+                    e.GetIsPublicExecutedOrder
                     && e.ExecutedOrderPostedDate >= MostRecentMonday()
                     && e.ExecutedOrderPostedDate <= DateTime.Today));
             result[0].Should().BeEquivalentTo(GetEnforcementOrderSummaryView(order.Id));

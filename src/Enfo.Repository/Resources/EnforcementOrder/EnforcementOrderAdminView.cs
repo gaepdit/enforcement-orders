@@ -1,4 +1,3 @@
-using System;
 using System.ComponentModel;
 using Enfo.Repository.Utils;
 using JetBrains.Annotations;
@@ -13,7 +12,6 @@ namespace Enfo.Repository.Resources.EnforcementOrder
 
             Deleted = item.Deleted;
             PublicationStatus = GetResourcePublicationState(item.PublicationStatus);
-            LastPostedDate = item.GetLastPostedDate();
         }
 
         private static PublicationState GetResourcePublicationState(
@@ -30,8 +28,5 @@ namespace Enfo.Repository.Resources.EnforcementOrder
 
         [DisplayName("Progress")]
         public PublicationState PublicationStatus { get; }
-
-        [DisplayName("Last Posted Date")]
-        public DateTime? LastPostedDate { get; }
     }
 }

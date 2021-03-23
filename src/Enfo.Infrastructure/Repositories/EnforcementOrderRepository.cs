@@ -28,7 +28,7 @@ namespace Enfo.Infrastructure.Repositories
                 .Include(e => e.LegalAuthority)
                 .SingleOrDefaultAsync(e => e.Id == id).ConfigureAwait(false);
 
-            if (item == null || (onlyPublic && !item.GetIsPublic()))
+            if (item == null || (onlyPublic && !item.GetIsPublic))
                 return null;
 
             return new EnforcementOrderDetailedView(item);
@@ -52,6 +52,7 @@ namespace Enfo.Infrastructure.Repositories
             Guard.NotNull(paging, nameof(paging));
 
             spec.TrimAll();
+
             var filteredItems = _context.EnforcementOrders.AsNoTracking()
                 .ApplySpecFilter(spec);
 
@@ -75,7 +76,7 @@ namespace Enfo.Infrastructure.Repositories
                 .Include(e => e.LegalAuthority)
                 .SingleOrDefaultAsync(e => e.Id == id).ConfigureAwait(false);
 
-            return item != null && (!onlyPublic || item.GetIsPublic());
+            return item != null && (!onlyPublic || item.GetIsPublic);
         }
 
         public async Task<bool> OrderNumberExistsAsync(string orderNumber, int? ignoreId = null) =>

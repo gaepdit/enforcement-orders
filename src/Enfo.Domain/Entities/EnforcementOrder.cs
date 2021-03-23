@@ -50,15 +50,10 @@ namespace Enfo.Domain.Entities
         [StringLength(50)]
         public string OrderNumber { get; set; }
 
-        public DateTime? GetLastPostedDate()
-        {
-            return ExecutedDate ?? ProposedOrderPostedDate;
-        }
-
-        public bool GetIsPublic()
-        {
-            return GetIsPublicExecutedOrder() || GetIsPublicProposedOrder();
-        }
+        // Calculated properties
+        
+        public DateTime? GetLastPostedDate => ExecutedDate ?? ProposedOrderPostedDate;
+        public bool GetIsPublic => GetIsPublicExecutedOrder || GetIsPublicProposedOrder;
 
         // Proposed orders
 
@@ -75,16 +70,14 @@ namespace Enfo.Domain.Entities
         [Column(TypeName = "Date")]
         public DateTime? ProposedOrderPostedDate { get; set; }
 
-        public bool GetIsPublicProposedOrder()
-        {
-            return (
-                !Deleted
-                && PublicationStatus == PublicationState.Published
-                && IsProposedOrder
-                && ProposedOrderPostedDate.HasValue
-                && ProposedOrderPostedDate.Value <= DateTime.Today
-            );
-        }
+        public bool GetIsPublicProposedOrder =>
+        (
+            !Deleted
+            && PublicationStatus == PublicationState.Published
+            && IsProposedOrder
+            && ProposedOrderPostedDate.HasValue
+            && ProposedOrderPostedDate.Value <= DateTime.Today
+        );
 
         // Executed orders
 
@@ -98,16 +91,14 @@ namespace Enfo.Domain.Entities
         [Column(TypeName = "Date")]
         public DateTime? ExecutedOrderPostedDate { get; set; }
 
-        public bool GetIsPublicExecutedOrder()
-        {
-            return (
-                !Deleted
-                && PublicationStatus == PublicationState.Published
-                && IsExecutedOrder
-                && ExecutedOrderPostedDate.HasValue
-                && ExecutedOrderPostedDate.Value <= DateTime.Today
-            );
-        }
+        public bool GetIsPublicExecutedOrder =>
+        (
+            !Deleted
+            && PublicationStatus == PublicationState.Published
+            && IsExecutedOrder
+            && ExecutedOrderPostedDate.HasValue
+            && ExecutedOrderPostedDate.Value <= DateTime.Today
+        );
 
         // Hearing info
 

@@ -17,13 +17,13 @@ namespace Enfo.Repository.Resources.EnforcementOrder
             County = item.County;
             LegalAuthority = new LegalAuthorityView(item.LegalAuthority);
             OrderNumber = item.OrderNumber;
-            IsPublicProposedOrder = item.GetIsPublicProposedOrder();
-            IsProposedOrder = item.GetIsPublicProposedOrder() && item.IsProposedOrder;
-            CommentPeriodClosesDate = item.GetIsPublicProposedOrder() ? item.CommentPeriodClosesDate : null;
-            ProposedOrderPostedDate = item.GetIsPublicProposedOrder() ? item.ProposedOrderPostedDate : null;
-            IsPublicExecutedOrder = item.GetIsPublicExecutedOrder();
-            IsExecutedOrder = item.GetIsPublicExecutedOrder() && item.IsExecutedOrder;
-            ExecutedDate = item.GetIsPublicExecutedOrder() ? item.ExecutedDate : null;
+            IsPublicProposedOrder = item.GetIsPublicProposedOrder;
+            IsProposedOrder = IsPublicProposedOrder && item.IsProposedOrder;
+            CommentPeriodClosesDate = IsPublicProposedOrder ? item.CommentPeriodClosesDate : null;
+            ProposedOrderPostedDate = IsPublicProposedOrder ? item.ProposedOrderPostedDate : null;
+            IsPublicExecutedOrder = item.GetIsPublicExecutedOrder;
+            IsExecutedOrder = IsPublicExecutedOrder && item.IsExecutedOrder;
+            ExecutedDate = IsPublicExecutedOrder ? item.ExecutedDate : null;
         }
 
         public int Id { get; }
