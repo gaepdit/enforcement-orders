@@ -1,7 +1,8 @@
 # ENFO UI Specification
 
 * Public dashboard `/EnforcementOrders`
-* Admin dashboard `/AdminDashboard`
+* Admin dashboard `/Admin`
+* Find `/Find/{string}`
 * Enforcement orders search `/EnforcementOrders/Search`
     * Public view `/EnforcementOrders/Details/{id}`
     * Admin view `/EnforcementOrders/Admin/{id}`
@@ -37,7 +38,6 @@ Public:
 
 * 🏠 (Public dashboard)
 * Search
-* Admin
 
 User:
 

@@ -23,8 +23,8 @@ namespace Enfo.Infrastructure.Repositories
         public async Task<EnforcementOrderDetailedView> GetAsync(int id, bool onlyPublic = true)
         {
             var item = await _context.EnforcementOrders.AsNoTracking()
-                .Include(e => e.CommentContact)
-                .Include(e => e.HearingContact)
+                .Include(e => e.CommentContact).ThenInclude(e => e.Address)
+                .Include(e => e.HearingContact).ThenInclude(e => e.Address)
                 .Include(e => e.LegalAuthority)
                 .SingleOrDefaultAsync(e => e.Id == id).ConfigureAwait(false);
 
@@ -37,8 +37,8 @@ namespace Enfo.Infrastructure.Repositories
         public async Task<EnforcementOrderAdminView> GetAdminViewAsync(int id)
         {
             var item = (await _context.EnforcementOrders.AsNoTracking()
-                .Include(e => e.CommentContact)
-                .Include(e => e.HearingContact)
+                .Include(e => e.CommentContact).ThenInclude(e => e.Address)
+                .Include(e => e.HearingContact).ThenInclude(e => e.Address)
                 .Include(e => e.LegalAuthority)
                 .SingleOrDefaultAsync(e => e.Id == id).ConfigureAwait(false));
 

@@ -40,6 +40,8 @@ namespace Enfo.Repository.Resources.EnforcementOrder
 
         [DisplayName("Order Number")]
         public string OrderNumber { get; }
+        
+        public DateTime? LastPostedDate => ExecutedDate ?? ProposedOrderPostedDate;
 
         // Proposed orders
 

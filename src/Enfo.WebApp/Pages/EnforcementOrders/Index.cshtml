@@ -41,7 +41,7 @@
         </p>
     </div>
     <div class="usa-width-one-half">
-        @if (Model.CurrentProposedOrders == null || !Model.CurrentProposedOrders.Any())
+        @if (Model.CurrentProposedOrders == null || Model.CurrentProposedOrders.Count == 0)
         {
             <p>
                 <b>No Current Proposed Orders</b>
@@ -53,7 +53,7 @@
                 <thead>
                 <tr>
                     <th scope="col">Facility</th>
-                    <th scope="col" colspan="2">Order Details</th>
+                    <th scope="col" colspan="2">Date Comment Period Closes</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -65,19 +65,7 @@
                             <i>@enfo.County County</i>
                         </th>
                         <td>
-                            @if (enfo.CommentPeriodClosesDate.HasValue)
-                            {
-                                @if (enfo.CommentPeriodClosesDate.Value >= DateTime.Today)
-                                {
-                                    <text>Comment period closes: </text>
-                                    @enfo.CommentPeriodClosesDate.Value.ToString("dd‑MMM‑yyyy")
-                                }
-                                else
-                                {
-                                    <text>Comment period closed: </text>
-                                    @enfo.CommentPeriodClosesDate.Value.ToString("dd‑MMM‑yyyy")
-                                }
-                            }
+                            @(enfo.CommentPeriodClosesDate?.ToString("dd‑MMM‑yyyy") ?? "not entered")
                         </td>
                         <td>
                             <a asp-page="Details" asp-route-id="@enfo.Id">View</a>
@@ -102,7 +90,7 @@
         </p>
     </div>
     <div class="usa-width-one-half">
-        @if (Model.RecentExecutedOrders == null || !Model.RecentExecutedOrders.Any())
+        @if (Model.RecentExecutedOrders == null || Model.RecentExecutedOrders.Count == 0)
         {
             <p>
                 <b>No Current Executed Orders</b>
