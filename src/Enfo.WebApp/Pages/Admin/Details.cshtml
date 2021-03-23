@@ -21,7 +21,7 @@
 }
 else
 {
-    <div>This Order is not yet publicly viewable.</div>
+    <div>This Order is not publicly viewable.</div>
 }
 
 @if (Model.Item.Deleted)
@@ -89,8 +89,11 @@ else
                         <a href="mailto:@(Model.Item.CommentContact.Email)">@Html.DisplayFor(m => m.Item.CommentContact.Email)</a>
                         <br />
                     }
-                    <br />
-                    @Html.DisplayFor(m => m.Item.CommentContact.Telephone)
+                    @if (Model.Item.CommentContact.Telephone != null)
+                    {
+                        <br />
+                        @Html.DisplayFor(m => m.Item.CommentContact.Telephone)
+                    }
                 }
             </td>
         </tr>
@@ -143,6 +146,10 @@ else
                     }
                     <br />
                     @Html.DisplayFor(m => m.Item.HearingContact.Telephone)
+                }
+                else
+                {
+                    <text>N/A</text>
                 }
             </p>
         </tr>

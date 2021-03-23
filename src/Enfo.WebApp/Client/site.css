@@ -173,6 +173,7 @@ table caption {
 
 .gaepd-table-compact {
     margin-top: 1em;
+    width: 100%;
 }
 
 .gaepd-table-compact th, .gaepd-table-compact td {
@@ -884,6 +885,7 @@ Print stylesheets
 
     .gaepd-table-compact {
         margin: 1em 0;
+        width: 100%;
     }
 
     .gaepd-table-compact table th,

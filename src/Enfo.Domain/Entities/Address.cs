@@ -26,14 +26,5 @@ namespace Enfo.Domain.Entities
 
         [StringLength(10)]
         public string PostalCode { get; set; }
-
-        public override string ToString() => CompileAddressString();
-
-        private string CompileAddressString(string lineSeparator = ", ")
-        {
-            string cityState = new[] {City, State}.ConcatNonEmptyStrings(", ");
-            string cityStateZip = new[] {cityState, PostalCode}.ConcatNonEmptyStrings(" ");
-            return new[] {Street, Street2, cityStateZip}.ConcatNonEmptyStrings(lineSeparator);
-        }
     }
 }

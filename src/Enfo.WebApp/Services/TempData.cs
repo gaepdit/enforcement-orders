@@ -136,6 +136,30 @@ namespace Enfo.WebApp.Services
             },
             new()
             {
+                Id = 2,
+                Cause = "Arcu non odio euismod lacinia at quis risus.",
+                CommentContactId = null,
+                CommentPeriodClosesDate = null,
+                County = "Fannin",
+                Deleted = false,
+                ExecutedDate = DateTime.Today.AddDays(-14),
+                ExecutedOrderPostedDate = DateUtils.MostRecentMonday(),
+                FacilityName = "Odio tempor orci",
+                HearingCommentPeriodClosesDate = null,
+                HearingDate = null,
+                HearingLocation = "",
+                IsExecutedOrder = true,
+                IsHearingScheduled = false,
+                IsProposedOrder = false,
+                LegalAuthorityId = 2,
+                OrderNumber = "EPD-WP-3854",
+                ProposedOrderPostedDate = null,
+                PublicationStatus = EnforcementOrder.PublicationState.Published,
+                Requirements = "Vitae sapien pellentesque habitant morbi tristique. Felis bibendum ut tristique.",
+                SettlementAmount = 1.5m
+            },
+            new()
+            {
                 Id = 27,
                 Cause = "Nulla pellentesque dignissim enim sit.",
                 CommentContactId = 2000,

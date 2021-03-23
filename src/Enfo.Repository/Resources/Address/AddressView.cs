@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using Enfo.Domain.Utils;
 using Enfo.Repository.Utils;
 using JetBrains.Annotations;
 
@@ -33,5 +34,12 @@ namespace Enfo.Repository.Resources.Address
 
         [DisplayName("Postal Code")]
         public string PostalCode { get; }
+
+        public override string ToString()
+        {
+            var cityState = new[] {City, State}.ConcatNonEmptyStrings(", ");
+            var cityStateZip = new[] {cityState, PostalCode}.ConcatNonEmptyStrings(" ");
+            return new[] {Street, Street2, cityStateZip}.ConcatNonEmptyStrings(", ");
+        }
     }
 }

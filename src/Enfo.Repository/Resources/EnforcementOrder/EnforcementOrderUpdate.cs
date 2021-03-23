@@ -49,7 +49,7 @@ namespace Enfo.Repository.Resources.EnforcementOrder
 
         [DisplayName("Date Comment Period Closes")]
         [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:d}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = DisplayFormats.FormatDateEdit, ApplyFormatInEditMode = true)]
         public DateTime? CommentPeriodClosesDate { get; set; }
 
         [DisplayName("Send Comments To")]
@@ -57,7 +57,7 @@ namespace Enfo.Repository.Resources.EnforcementOrder
 
         [DisplayName("Publication Date For Proposed Order")]
         [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:d}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = DisplayFormats.FormatDateEdit, ApplyFormatInEditMode = true)]
         public DateTime? ProposedOrderPostedDate { get; set; }
 
         // Executed orders
@@ -67,12 +67,12 @@ namespace Enfo.Repository.Resources.EnforcementOrder
 
         [DisplayName("Date Executed")]
         [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:d}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = DisplayFormats.FormatDateEdit, ApplyFormatInEditMode = true)]
         public DateTime? ExecutedDate { get; set; }
 
         [DisplayName("Publication Date For Executed Order")]
         [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:d}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = DisplayFormats.FormatDateEdit, ApplyFormatInEditMode = true)]
         public DateTime? ExecutedOrderPostedDate { get; set; }
 
         // Hearing info
@@ -82,7 +82,7 @@ namespace Enfo.Repository.Resources.EnforcementOrder
 
         [DisplayName("Hearing Date/Time")]
         [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:g}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = DisplayFormats.FormatDateEdit, ApplyFormatInEditMode = true)]
         public DateTime? HearingDate { get; set; }
 
         [DisplayName("Hearing Location")]
@@ -92,7 +92,7 @@ namespace Enfo.Repository.Resources.EnforcementOrder
 
         [DisplayName("Date Hearing Comment Period Closes")]
         [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:d}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = DisplayFormats.FormatDateEdit, ApplyFormatInEditMode = true)]
         public DateTime? HearingCommentPeriodClosesDate { get; set; }
 
         [DisplayName("Hearing Information Contact")]

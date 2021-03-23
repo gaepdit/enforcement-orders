@@ -21,11 +21,8 @@ namespace Enfo.WebApp.Pages.Admin
         public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null) return NotFound("Order ID not found.");
-
             Item = await _repository.GetAdminViewAsync(id.Value);
-
             if (Item == null) return NotFound("Order ID not found.");
-
             Message = TempData?.GetDisplayMessage();
             return Page();
         }

@@ -1,8 +1,9 @@
 using Enfo.Domain.Entities;
+using Enfo.Repository.Resources.Address;
 using FluentAssertions;
 using Xunit;
 
-namespace Domain.Tests
+namespace Repository.Tests
 {
     public class AddressToString
     {
@@ -17,7 +18,9 @@ namespace Domain.Tests
                 PostalCode = "10101"
             };
 
-            address.ToString().Should().Be("123 Any Street, New York, NY 10101");
+            var addressView = new AddressView(address);
+
+            addressView.ToString().Should().Be("123 Any Street, New York, NY 10101");
         }
 
         [Fact]
@@ -31,7 +34,9 @@ namespace Domain.Tests
                 PostalCode = "10101"
             };
 
-            address.ToString().Should().Be("123 Any Street, Suite 404, Atlanta, GA 10101");
+            var addressView = new AddressView(address);
+
+            addressView.ToString().Should().Be("123 Any Street, Suite 404, Atlanta, GA 10101");
         }
 
         [Fact]
@@ -43,7 +48,9 @@ namespace Domain.Tests
                 PostalCode = "ABC"
             };
 
-            address.ToString().Should().Be("GA ABC");
+            var addressView = new AddressView(address);
+
+            addressView.ToString().Should().Be("GA ABC");
         }
     }
 }

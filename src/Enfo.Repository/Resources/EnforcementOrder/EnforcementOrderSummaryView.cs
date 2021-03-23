@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using Enfo.Repository.Resources.LegalAuthority;
 using Enfo.Repository.Utils;
 using JetBrains.Annotations;
@@ -50,9 +51,11 @@ namespace Enfo.Repository.Resources.EnforcementOrder
         public bool IsProposedOrder { get; }
 
         [DisplayName("Date Comment Period Closes")]
+        [DisplayFormat(DataFormatString = DisplayFormats.FormatDateShortComposite)]
         public DateTime? CommentPeriodClosesDate { get; }
 
         [DisplayName("Publication Date For Proposed Order")]
+        [DisplayFormat(DataFormatString = DisplayFormats.FormatDateShortComposite)]
         public DateTime? ProposedOrderPostedDate { get; }
 
         // Executed orders
@@ -63,14 +66,18 @@ namespace Enfo.Repository.Resources.EnforcementOrder
         public bool IsExecutedOrder { get; }
 
         [DisplayName("Date Executed")]
+        [DisplayFormat(DataFormatString = DisplayFormats.FormatDateShortComposite)]
         public DateTime? ExecutedDate { get; }
 
         [DisplayName("Publication Date For Executed Order")]
-        public DateTime? ExecutedOrderPostedDate { get; set; }
+        [DisplayFormat(DataFormatString = DisplayFormats.FormatDateShortComposite)]
+        public DateTime? ExecutedOrderPostedDate { get; }
 
         // Calculated properties
 
+        [DisplayFormat(DataFormatString = DisplayFormats.FormatDateShortComposite)]
         public DateTime? LastPostedDate => ExecutedDate ?? ProposedOrderPostedDate;
+
         public bool IsPublic => IsPublicExecutedOrder || IsPublicProposedOrder;
     }
 }
