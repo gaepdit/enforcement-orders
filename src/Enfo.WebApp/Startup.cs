@@ -24,24 +24,16 @@ namespace Enfo.WebApp
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration, IWebHostEnvironment env) =>
-            (Configuration, Environment) = (configuration, env);
+        public Startup(IConfiguration configuration) => Configuration = configuration;
 
         private IConfiguration Configuration { get; }
-        private IWebHostEnvironment Environment { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             // Configure database
             services.AddDbContext<EnfoDbContext>(opts =>
-                {
-                    opts.UseSqlServer(
-                        Environment.IsDevelopment()
-                            ? "Server=(localdb)\\mssqllocaldb;Database=enfo-temp;Trusted_Connection=True;MultipleActiveResultSets=true"
-                            : Configuration.GetConnectionString("DefaultConnection"));
-                }
-            );
+                opts.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             // Configure authentication
             // services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
