@@ -36,41 +36,22 @@
         <legend>Status</legend>
         <ul class="usa-unstyled-list">
             <li>
-                <input type="radio"
+                <input type="radio" name="Status" value="All" id="Status-All"
                        @if (Model.Spec.Status == ActivityState.All)
-                       {
-                           <text> checked</text>
-                       }
-                       name="@nameof(Model.Spec.Status)" value="@ActivityState.All.ToString()"
-                       id="@nameof(Model.Spec.Status)-@ActivityState.All.ToString()">
-                <label for="@nameof(Model.Spec.Status)-@ActivityState.All.ToString()">
-                    All Orders
-                </label>
+                       {<text> checked</text>}>
+                <label for="Status-All">All Orders</label>
             </li>
             <li>
-                <input type="radio"
+                <input type="radio" name="Status" value="Proposed" id="Status-Proposed"
                        @if (Model.Spec.Status == ActivityState.Proposed)
-                       {
-                           <text> checked</text>
-                       }
-                       name="@nameof(Model.Spec.Status)" value="@ActivityState.Proposed.ToString()"
-                       id="@nameof(Model.Spec.Status)-@ActivityState.Proposed.ToString()">
-                <label for="@nameof(Model.Spec.Status)-@ActivityState.Proposed.ToString()">
-                    Proposed orders only
-                </label>
+                       {<text> checked</text>}>
+                <label for="Status-Proposed">Proposed orders only</label>
             </li>
             <li>
-                <input type="radio"
+                <input type="radio" name="Status" value="Executed" id="Status-Executed"
                        @if (Model.Spec.Status == ActivityState.Executed)
-                       {
-                           <text> checked</text>
-                       }
-                       name="@nameof(Model.Spec.Status)" value="@ActivityState.Executed.ToString()"
-                       id="@nameof(Model.Spec.Status)-@ActivityState.Executed.ToString()">
-                <label for="@nameof(Model.Spec.Status)-@ActivityState.Executed.ToString()">
-
-                    Executed orders only
-                </label>
+                       {<text> checked</text>}>
+                <label for="Status-Executed">Executed orders only</label>
             </li>
         </ul>
     </fieldset>

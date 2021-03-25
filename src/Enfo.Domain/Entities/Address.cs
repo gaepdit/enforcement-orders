@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using Enfo.Domain.Utils;
 
 namespace Enfo.Domain.Entities
 {
