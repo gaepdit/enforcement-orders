@@ -1,40 +1,39 @@
 ﻿using System.Linq;
 using Enfo.Domain.Entities;
 using JetBrains.Annotations;
-using static Enfo.Repository.Specs.EnforcementOrderSpec;
 
 namespace Enfo.Repository.Specs
 {
     public static class EnforcementOrderEvaluators
     {
         public static IQueryable<EnforcementOrder> ApplySpecFilter(
-            [NotNull] this IQueryable<EnforcementOrder> query, [NotNull] EnforcementOrderSpec spec) =>
-            query.FilterByFacility(spec.FacilityFilter)
-                .FilterByCounty(spec.County)
-                .FilterByLegalAuth(spec.LegalAuthId)
-                .FilterByStartDate(spec.FromDate, spec.Status)
-                .FilterByEndDate(spec.TillDate, spec.Status)
-                .FilterByActivityStatus(spec.Status)
-                .FilterByPublicationStatus(spec.PublicationStatus)
-                .FilterByOrderNumber(spec.OrderNumber)
-                .FilterByText(spec.TextContains)
-                .FilterByIsPublic(spec.OnlyPublic)
-                .FilterByIsDeleted(spec.ShowDeleted);
+            [NotNull] this IQueryable<EnforcementOrder> query, [NotNull] EnforcementOrderAdminSpec adminSpec) =>
+            query.FilterByFacility(adminSpec.FacilityFilter)
+                .FilterByCounty(adminSpec.County)
+                .FilterByLegalAuth(adminSpec.LegalAuthId)
+                .FilterByStartDate(adminSpec.FromDate, adminSpec.Status)
+                .FilterByEndDate(adminSpec.TillDate, adminSpec.Status)
+                .FilterByActivityStatus(adminSpec.Status)
+                .FilterByPublicationStatus(adminSpec.PublicationStatus)
+                .FilterByOrderNumber(adminSpec.OrderNumber)
+                .FilterByText(adminSpec.TextContains)
+                .FilterByIsPublic(adminSpec.OnlyPublic)
+                .FilterByIsDeleted(adminSpec.ShowDeleted);
 
         public static IOrderedQueryable<EnforcementOrder> ApplySorting(
-            [NotNull] this IQueryable<EnforcementOrder> query, EnforcementOrderSorting sorting) =>
+            [NotNull] this IQueryable<EnforcementOrder> query, OrderSorting sorting) =>
             sorting switch
             {
-                EnforcementOrderSorting.DateAsc =>
+                OrderSorting.DateAsc =>
                     query.OrderBy(e => e.ExecutedDate ?? e.ProposedOrderPostedDate)
                         .ThenBy(e => e.FacilityName),
-                EnforcementOrderSorting.DateDesc =>
+                OrderSorting.DateDesc =>
                     query.OrderByDescending(e => e.ExecutedDate ?? e.ProposedOrderPostedDate)
                         .ThenBy(e => e.FacilityName),
-                EnforcementOrderSorting.FacilityDesc =>
+                OrderSorting.FacilityDesc =>
                     query.OrderBy(e => e.FacilityName)
                         .ThenBy(e => e.ExecutedDate ?? e.ProposedOrderPostedDate),
-                EnforcementOrderSorting.FacilityAsc =>
+                OrderSorting.FacilityAsc =>
                     query.OrderByDescending(e => e.FacilityName)
                         .ThenBy(e => e.ExecutedDate ?? e.ProposedOrderPostedDate),
                 _ => query.OrderBy(e => 1)

@@ -1,0 +1,202 @@
+﻿@page
+@using Enfo.Repository.Resources.EnforcementOrder
+@using Enfo.Repository.Specs
+@model Enfo.WebApp.Pages.Search
+
+@{
+    ViewData["Title"] = "Search Enforcement Orders";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form method="get" class="usa-form-large" asp-fragment="search-results">
+    <div asp-validation-summary="ModelOnly" class="usa-alert usa-alert-error" role="alert"></div>
+    <fieldset class="usa-fieldset-inputs">
+        <legend>Details</legend>
+        <label asp-for="Spec.FacilityFilter"></label>
+        <input asp-for="Spec.FacilityFilter" name="@nameof(Model.Spec.FacilityFilter)" />
+
+        <label asp-for="Spec.County"></label>
+        <select asp-for="Spec.County" asp-items="Search.CountiesSelectList" name="@nameof(Model.Spec.County)"
+                class="custom-select">
+            <option value="">(any)</option>
+        </select>
+
+        <label asp-for="Spec.OrderNumber">Order Number</label>
+        <input asp-for="Spec.OrderNumber" name="@nameof(Model.Spec.OrderNumber)" />
+
+        <label asp-for="Spec.LegalAuthId"></label>
+        <select asp-for="Spec.LegalAuthId" asp-items="Model.LegalAuthoritiesSelectList" name="@nameof(Model.Spec.LegalAuthId)"
+                class="custom-select">
+            <option value="">(any)</option>
+        </select>
+    </fieldset>
+
+    <fieldset class="usa-fieldset-inputs">
+        <legend>Status</legend>
+        <ul class="usa-unstyled-list">
+            <li>
+                <input type="radio"
+                       @if (Model.Spec.Status == ActivityState.All)
+                       {
+                           <text> checked</text>
+                       }
+                       name="@nameof(Model.Spec.Status)" value="@ActivityState.All.ToString()"
+                       id="@nameof(Model.Spec.Status)-@ActivityState.All.ToString()">
+                <label for="@nameof(Model.Spec.Status)-@ActivityState.All.ToString()">
+                    All Orders
+                </label>
+            </li>
+            <li>
+                <input type="radio"
+                       @if (Model.Spec.Status == ActivityState.Proposed)
+                       {
+                           <text> checked</text>
+                       }
+                       name="@nameof(Model.Spec.Status)" value="@ActivityState.Proposed.ToString()"
+                       id="@nameof(Model.Spec.Status)-@ActivityState.Proposed.ToString()">
+                <label for="@nameof(Model.Spec.Status)-@ActivityState.Proposed.ToString()">
+                    Proposed orders only
+                </label>
+            </li>
+            <li>
+                <input type="radio"
+                       @if (Model.Spec.Status == ActivityState.Executed)
+                       {
+                           <text> checked</text>
+                       }
+                       name="@nameof(Model.Spec.Status)" value="@ActivityState.Executed.ToString()"
+                       id="@nameof(Model.Spec.Status)-@ActivityState.Executed.ToString()">
+                <label for="@nameof(Model.Spec.Status)-@ActivityState.Executed.ToString()">
+
+                    Executed orders only
+                </label>
+            </li>
+        </ul>
+    </fieldset>
+
+    <div class="usa-grid-full">
+        <fieldset class="usa-input-grid usa-input-grid-small">
+            <legend>Date from</legend>
+            <input type="datetime" asp-for="Spec.FromDate" name="@nameof(Model.Spec.FromDate)"
+                   class="date-picker usa-input-medium" />
+            <span asp-validation-for="Spec.FromDate" class="usa-input-error-message"></span>
+        </fieldset>
+
+        <fieldset class="usa-input-grid usa-input-grid-small">
+            <legend>Date until</legend>
+            <input type="datetime" asp-for="Spec.TillDate" name="@nameof(Model.Spec.TillDate)"
+                   class="date-picker usa-input-medium" />
+            <span asp-validation-for="Spec.TillDate" class="usa-input-error-message"></span>
+        </fieldset>
+    </div>
+
+    <div class="gaepd-buttonrow">
+        <input type="hidden" name="handler" value="search" />
+        <button id="SearchButton" type="submit">Search</button>
+        <a asp-page="Search" class="usa-button usa-button-secondary">Clear Form</a>
+    </div>
+</form>
+
+@if (Model.ShowResults)
+{
+    <div id="search-results">
+        @if (Model.OrdersList.CurrentCount == 0)
+        {
+            <h3>No results found.</h3>
+        }
+        else
+        {
+            <partial name="_PaginationNav" model="(Model.OrdersList, Model.Spec.AsRouteValues)" />
+
+            <table class="usa-table-borderless gaepd-table-responsive">
+                <caption>
+                    Total results: @Model.OrdersList.TotalCount
+                    @if (Model.OrdersList.TotalPages > 1)
+                    {
+                        <br />
+                        @($"Showing results {Model.OrdersList.FirstItemIndex} – {Model.OrdersList.LastItemIndex}")
+                    }
+                </caption>
+                <thead>
+                <tr>
+                    <th scope="col" class="gaepd-sortable"
+                        @if (Model.Spec.SortOrder == OrderSorting.FacilityAsc)
+                        {
+                            @:aria-sort="ascending"
+                        }
+                        else if (Model.Spec.SortOrder == OrderSorting.FacilityDesc)
+                        {
+                            @:aria-sort="descending"
+                        }
+                        data-label="Sort by">
+                        <a asp-fragment="search-results" asp-all-route-data="Model.Spec.AsRouteValues" asp-route-handler="search"
+                           asp-route-SortOrder="@(Model.Spec.SortOrder == OrderSorting.FacilityAsc ? OrderSorting.FacilityDesc : OrderSorting.FacilityAsc)">
+                            Facility
+                        </a>
+                    </th>
+                    <th scope="col">Order</th>
+                    <th scope="col" colspan="2" class="gaepd-sortable"
+                        @if (Model.Spec.SortOrder == OrderSorting.DateAsc)
+                        {
+                            @:aria-sort="ascending"
+                        }
+                        else if (Model.Spec.SortOrder == OrderSorting.DateDesc)
+                        {
+                            @:aria-sort="descending"
+                        }
+                        data-label="Sort by">
+                        <a asp-fragment="search-results" asp-all-route-data="Model.Spec.AsRouteValues" asp-route-handler="search"
+                           asp-route-SortOrder="@(Model.Spec.SortOrder == OrderSorting.DateAsc ? OrderSorting.DateDesc : OrderSorting.DateAsc)">
+                            Status/Date
+                        </a>
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (EnforcementOrderSummaryView enfo in Model.OrdersList.Items)
+                {
+                    <tr>
+                        <th scope="row" data-label="Facility">
+                            @enfo.FacilityName <br />
+                            <i>@enfo.County County</i>
+                        </th>
+                        <td data-label="Order">
+                            @Html.DisplayFor(modelItem => enfo.OrderNumber)<br />
+                            <i>@Html.DisplayFor(m => enfo.LegalAuthority.AuthorityName)</i>
+                        </td>
+                        <td data-label="Status/Date">
+                            @if (enfo.IsExecutedOrder)
+                            {
+                                <b>Executed&nbsp;On</b><br />
+                                @Html.DisplayFor(m => enfo.ExecutedDate)
+                            }
+                            else if (enfo.IsProposedOrder)
+                            {
+                                <b>Proposed&nbsp;On</b><br />
+                                @Html.DisplayFor(m => enfo.ProposedOrderPostedDate)
+                            }
+                            else
+                            {
+                                <b>error</b>
+                            }
+                        </td>
+                        <td class="gaepd-tablecell-nolabel">
+                            <a asp-page="/Details" asp-route-id="@enfo.Id">View</a>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+
+            <partial name="_PaginationNav" model="(Model.OrdersList, Model.Spec.AsRouteValues)" />
+        }
+    </div>
+}
+
+@section ScriptFiles
+{
+    <link rel="stylesheet" href="~/dist/datepicker.css" asp-append-version="true" />
+    <script src="~/dist/datepicker.bundle.js" asp-append-version="true" type="text/javascript" defer></script>
+    <script src="~/dist/searchForm.bundle.js" asp-append-version="true" type="text/javascript" defer></script>
+}

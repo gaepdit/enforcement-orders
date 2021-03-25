@@ -1,30 +1,32 @@
 # ENFO UI Specification
 
 * Public dashboard `/`
-* Admin dashboard `/Admin`
-* Find `/Find/{string}`
 * Enforcement orders search `/Search`
-    * Public view `/Details/{id}`
+* Find `/Find/{string}`
+* View `/Details/{id}`
+* Current proposed orders `/CurrentProposed`
+* Recently executed orders `/RecentExecuted`
+* Admin dashboard `/Admin`
+    * Admin search `/Admin/Search`
     * Admin view `/Admin/Details/{id}`
-    * Current proposed orders `/CurrentProposed`
-    * Recently executed orders `/RecentExecuted`
     * Create `/Admin/Create`
     * Edit `/Admin/Edit/{id}`
     * Delete `/Admin/Delete/{id}`
-* Site maintenance `/Maintenance`
-    * Addresses list `/Maintenance/Addresses`
-        * Create `/Maintenance/Addresses/Create`
-        * Edit `/Maintenance/Addresses/Edit/{id}`
-    * EPD Contacts list `/Maintenance/EpdContacts`
-        * Create `/Maintenance/EpdContacts/Create`
-        * Edit `/Maintenance/EpdContacts/Edit/{id}`
-    * Legal Authorities list `/Maintenance/LegalAuthorities`
-        * Create `/Maintenance/LegalAuthorities/Create`
-        * Edit `/Maintenance/LegalAuthorities/Edit/{id}`
+    * Restore `/Admin/Restore/{id}`
+* Site maintenance `/Admin/Maintenance`
+    * Addresses list `/Admin/Maintenance/Addresses`
+        * Create `/Admin/Maintenance/Addresses/Create`
+        * Edit `/Admin/Maintenance/Addresses/Edit/{id}`
+    * EPD Contacts list `/Admin/Maintenance/EpdContacts`
+        * Create `/Admin/Maintenance/EpdContacts/Create`
+        * Edit `/Admin/Maintenance/EpdContacts/Edit/{id}`
+    * Legal Authorities list `/Admin/Maintenance/LegalAuthorities`
+        * Create `/Admin/Maintenance/LegalAuthorities/Create`
+        * Edit `/Admin/Maintenance/LegalAuthorities/Edit/{id}`
 * Account profile `/Account`
-* Users list `/Users`
-    * View user profile `/Users/Details/{id}`
-    * Edit user profile `/Users/Edit/{id}`
+* Users list `/Admin/Users`
+    * View user profile `/Admin/Users/Details/{id}`
+    * Edit user profile `/Admin/Users/Edit/{id}`
 
 ## Redirects
 

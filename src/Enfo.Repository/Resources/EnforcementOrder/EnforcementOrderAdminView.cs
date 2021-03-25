@@ -14,7 +14,6 @@ namespace Enfo.Repository.Resources.EnforcementOrder
         {
             Guard.NotNull(item, nameof(item));
 
-            Deleted = item.Deleted;
             PublicationStatus = GetResourcePublicationState(item.PublicationStatus);
             Cause = item.Cause;
             Requirements = item.Requirements;
@@ -46,8 +45,6 @@ namespace Enfo.Repository.Resources.EnforcementOrder
                 _ => throw new InvalidEnumArgumentException(nameof(status), (int) status,
                     typeof(Domain.Entities.EnforcementOrder.PublicationState))
             };
-
-        public bool Deleted { get; }
 
         [DisplayName("Progress")]
         public PublicationState PublicationStatus { get; }

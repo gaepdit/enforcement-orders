@@ -2,35 +2,34 @@
 using System.Linq;
 using Enfo.Domain.Entities;
 using JetBrains.Annotations;
-using static Enfo.Repository.Specs.EnforcementOrderSpec;
 using static Enfo.Repository.Utils.DateUtils;
 
 namespace Enfo.Repository.Specs
 {
     public static class EnforcementOrderFilters
     {
-        public static IQueryable<EnforcementOrder> FilterByFacility(
+        internal static IQueryable<EnforcementOrder> FilterByFacility(
             [NotNull] this IQueryable<EnforcementOrder> query,
             string facilityFilter) =>
             string.IsNullOrWhiteSpace(facilityFilter)
                 ? query
                 : query.Where(e => e.FacilityName.Contains(facilityFilter));
 
-        public static IQueryable<EnforcementOrder> FilterByCounty(
+        internal static IQueryable<EnforcementOrder> FilterByCounty(
             [NotNull] this IQueryable<EnforcementOrder> query,
             string county) =>
             string.IsNullOrWhiteSpace(county)
                 ? query
-                : query.Where(e => e.FacilityName.Contains(county));
+                : query.Where(e => e.County.Contains(county));
 
-        public static IQueryable<EnforcementOrder> FilterByLegalAuth(
+        internal static IQueryable<EnforcementOrder> FilterByLegalAuth(
             [NotNull] this IQueryable<EnforcementOrder> query,
             int? legalAuthId) =>
             legalAuthId.HasValue
                 ? query.Where(e => e.LegalAuthorityId == legalAuthId)
                 : query;
 
-        public static IQueryable<EnforcementOrder> FilterByStartDate(
+        internal static IQueryable<EnforcementOrder> FilterByStartDate(
             [NotNull] this IQueryable<EnforcementOrder> query,
             DateTime? fromDate, ActivityState status) =>
             fromDate.HasValue
@@ -44,7 +43,7 @@ namespace Enfo.Repository.Specs
                 }
                 : query;
 
-        public static IQueryable<EnforcementOrder> FilterByEndDate(
+        internal static IQueryable<EnforcementOrder> FilterByEndDate(
             [NotNull] this IQueryable<EnforcementOrder> query,
             DateTime? tillDate, ActivityState status) =>
             tillDate.HasValue
@@ -58,7 +57,7 @@ namespace Enfo.Repository.Specs
                 }
                 : query;
 
-        public static IQueryable<EnforcementOrder> FilterByActivityStatus(
+        internal static IQueryable<EnforcementOrder> FilterByActivityStatus(
             [NotNull] this IQueryable<EnforcementOrder> query,
             ActivityState status) =>
             status switch
@@ -68,7 +67,7 @@ namespace Enfo.Repository.Specs
                 _ => query
             };
 
-        public static IQueryable<EnforcementOrder> FilterByPublicationStatus(
+        internal static IQueryable<EnforcementOrder> FilterByPublicationStatus(
             [NotNull] this IQueryable<EnforcementOrder> query,
             PublicationState status) =>
             status switch
@@ -80,14 +79,14 @@ namespace Enfo.Repository.Specs
                 _ => query
             };
 
-        public static IQueryable<EnforcementOrder> FilterByOrderNumber(
+        internal static IQueryable<EnforcementOrder> FilterByOrderNumber(
             [NotNull] this IQueryable<EnforcementOrder> query,
             string orderNumber) =>
             string.IsNullOrWhiteSpace(orderNumber)
                 ? query
                 : query.Where(e => e.OrderNumber.Contains(orderNumber));
 
-        public static IQueryable<EnforcementOrder> FilterByText(
+        internal static IQueryable<EnforcementOrder> FilterByText(
             [NotNull] this IQueryable<EnforcementOrder> query,
             string text) =>
             string.IsNullOrWhiteSpace(text)
@@ -101,15 +100,17 @@ namespace Enfo.Repository.Specs
         public static IQueryable<EnforcementOrder> FilterByIsPublic(
             [NotNull] this IQueryable<EnforcementOrder> query,
             bool onlyPublic) =>
-            onlyPublic
-                ? query.Where(e =>
-                    !e.Deleted
-                    && e.PublicationStatus == EnforcementOrder.PublicationState.Published
-                    && (e.IsExecutedOrder && e.ExecutedOrderPostedDate.HasValue
-                        && e.ExecutedOrderPostedDate.Value <= DateTime.Today
-                        || (e.IsProposedOrder && e.ProposedOrderPostedDate.HasValue
-                            && e.ProposedOrderPostedDate.Value <= DateTime.Today)))
-                : query;
+            onlyPublic ? query.FilterForOnlyPublic() : query;
+
+        public static IQueryable<EnforcementOrder> FilterForOnlyPublic(
+            [NotNull] this IQueryable<EnforcementOrder> query) =>
+            query.Where(e =>
+                !e.Deleted
+                && e.PublicationStatus == EnforcementOrder.PublicationState.Published
+                && (e.IsExecutedOrder && e.ExecutedOrderPostedDate.HasValue
+                    && e.ExecutedOrderPostedDate.Value <= DateTime.Today
+                    || (e.IsProposedOrder && e.ProposedOrderPostedDate.HasValue
+                        && e.ProposedOrderPostedDate.Value <= DateTime.Today)));
 
         private static IQueryable<EnforcementOrder> FilterForPublicProposed(
             [NotNull] this IQueryable<EnforcementOrder> query) =>
@@ -130,7 +131,7 @@ namespace Enfo.Repository.Specs
                 && e.ExecutedOrderPostedDate.Value <= DateTime.Today);
 
         // Either deleted or active items are returned; not both.
-        public static IQueryable<EnforcementOrder> FilterByIsDeleted(
+        internal static IQueryable<EnforcementOrder> FilterByIsDeleted(
             [NotNull] this IQueryable<EnforcementOrder> query,
             bool showDeleted) =>
             query.Where(e => e.Deleted == showDeleted);
@@ -141,6 +142,14 @@ namespace Enfo.Repository.Specs
         public static IQueryable<EnforcementOrder> FilterForCurrentProposed(
             [NotNull] this IQueryable<EnforcementOrder> query) =>
             query.FilterForPublicProposed().FilterForOpenCommentPeriod();
+
+        // Recently Executed are public executed orders with 
+        // publication date within current week
+        public static IQueryable<EnforcementOrder> FilterForRecentlyExecuted(
+            [NotNull] this IQueryable<EnforcementOrder> query) =>
+            query.FilterForPublicExecuted()
+                .Where(e => e.ExecutedOrderPostedDate >= MostRecentMonday()
+                    && e.ExecutedOrderPostedDate <= MostRecentMonday().AddDays(7));
 
         // Draft are orders with publication status set to Draft
         // or are missing publication dates
@@ -164,13 +173,5 @@ namespace Enfo.Repository.Specs
                     || (e.IsProposedOrder && e.ProposedOrderPostedDate.HasValue &&
                         e.ProposedOrderPostedDate > MostRecentMonday())
                 );
-
-        // Recently Executed are public executed orders with 
-        // publication date within current week
-        public static IQueryable<EnforcementOrder> FilterForRecentlyExecuted(
-            [NotNull] this IQueryable<EnforcementOrder> query) =>
-            query.FilterForPublicExecuted()
-                .Where(e => e.ExecutedOrderPostedDate >= MostRecentMonday()
-                    && e.ExecutedOrderPostedDate <= MostRecentMonday().AddDays(7));
     }
 }

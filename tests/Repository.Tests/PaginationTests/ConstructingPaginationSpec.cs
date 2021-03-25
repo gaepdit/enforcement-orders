@@ -11,21 +11,10 @@ namespace Repository.Tests.PaginationTests
     public class ConstructingPaginationSpec
     {
         [Fact]
-        public void ReturnsDefaultPaging()
-        {
-            var pagination = new PaginationSpec();
-
-            pagination.PageSize.Should().Be(20);
-            pagination.PageNumber.Should().Be(1);
-            pagination.Take.Should().Be(20);
-            pagination.Skip.Should().Be(0);
-        }
-
-        [Fact]
         public void ReturnsWithPagingGivenPositiveInputs()
         {
-            const int pageSize = 10;
             const int pageNumber = 2;
+            const int pageSize = 10;
 
             var pagination = new PaginationSpec(pageNumber, pageSize);
 
@@ -38,8 +27,8 @@ namespace Repository.Tests.PaginationTests
         [Fact]
         public void ThrowsExceptionGivenZeroPageSize()
         {
-            const int pageSize = 0;
             const int pageNumber = 2;
+            const int pageSize = 0;
 
             Action action = () => new PaginationSpec(pageNumber, pageSize);
             action.Should().Throw<ArgumentException>()
@@ -49,8 +38,8 @@ namespace Repository.Tests.PaginationTests
         [Fact]
         public void ThrowsExceptionGivenZeroPageNum()
         {
-            const int pageSize = 20;
             const int pageNumber = 0;
+            const int pageSize = 20;
 
             Action action = () => new PaginationSpec(pageNumber, pageSize);
             action.Should().Throw<ArgumentException>()

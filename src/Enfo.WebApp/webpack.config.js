@@ -3,15 +3,12 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
     entry: {
-        main: {
-            dependOn: 'vendor',
-            import: './Client/main.js'
-        },
         vendor: './Client/vendor.js',
-        vendorTimepicker: {
+        datepicker: {
             dependOn: 'vendor',
-            import: './Client/vendor-timepicker.js'
+            import: './Client/datepicker.js'
         },
+        searchForm: './Client/searchForm.js',
     },
     output: {
         filename: '[name].bundle.js',
@@ -23,11 +20,22 @@ module.exports = {
     module: {
         rules: [
             {
+                test: require.resolve('jquery'),
+                loader: 'expose-loader',
+                options: {exposes: ['$', 'jQuery']}
+            },
+            {
                 test: /\.css$/i,
                 use: [MiniCssExtractPlugin.loader, 'css-loader']
             },
-            {test: /\.(png|jpe?g|gif)$/i, loader: 'file-loader'},
-            {test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, loader: 'file-loader'},
+            {
+                test: /\.(png|jpe?g|gif)$/i,
+                loader: 'file-loader'
+            },
+            {
+                test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
+                loader: 'file-loader'
+            },
             {
                 test: /\.(woff|woff2)$/i,
                 loader: 'url-loader',

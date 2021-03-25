@@ -10,6 +10,7 @@ using Xunit;
 using static Enfo.Repository.Utils.DateUtils;
 using static Infrastructure.Tests.RepositoryHelper;
 using static Infrastructure.Tests.RepositoryHelperData;
+using PublicationState = Enfo.Repository.Resources.EnforcementOrder.PublicationState;
 
 namespace Infrastructure.Tests
 {
@@ -71,16 +72,6 @@ namespace Infrastructure.Tests
             (await repository.GetAsync(itemId)).Should().BeNull();
         }
 
-        [Fact]
-        public async Task Get_GivenNonpublicOrderButAllowed_ReturnsItem()
-        {
-            var itemId = GetEnforcementOrders.First(e => !e.GetIsPublic).Id;
-
-            using var repository = CreateRepositoryHelper().GetEnforcementOrderRepository();
-            (await repository.GetAsync(itemId, false))
-                .Should().BeEquivalentTo(GetEnforcementOrderDetailedView(itemId));
-        }
-
         // GetAdminViewAsync
 
         [Fact]
@@ -116,7 +107,7 @@ namespace Infrastructure.Tests
         public async Task List_ByDefault_ReturnsOnlyPublic()
         {
             using var repository = CreateRepositoryHelper().GetEnforcementOrderRepository();
-            var result = await repository.ListAsync(new EnforcementOrderSpec(), new PaginationSpec());
+            var result = await repository.ListAsync(new EnforcementOrderSpec(), new PaginationSpec(1, 20));
 
             result.CurrentCount.Should().Be(GetEnforcementOrders.Count(e => e.GetIsPublic));
             result.Items.Should().HaveCount(GetEnforcementOrders.Count(e => e.GetIsPublic));
@@ -129,42 +120,6 @@ namespace Infrastructure.Tests
         }
 
         [Fact]
-        public async Task List_WithSpecShowDeleted_ReturnsOnlyDeleted()
-        {
-            var spec = new EnforcementOrderSpec {ShowDeleted = true};
-
-            using var repository = CreateRepositoryHelper().GetEnforcementOrderRepository();
-            var result = await repository.ListAsync(spec, new PaginationSpec());
-
-            result.CurrentCount.Should().Be(GetEnforcementOrders.Count(e => e.Deleted));
-            result.Items.Should().HaveCount(GetEnforcementOrders.Count(e => e.Deleted));
-            result.PageNumber.Should().Be(1);
-            result.Items[0].Should().BeEquivalentTo(
-                GetEnforcementOrderSummaryView(GetEnforcementOrders
-                    .OrderByDescending(e => e.ExecutedDate ?? e.ProposedOrderPostedDate)
-                    .ThenBy(e => e.FacilityName)
-                    .First(e => e.Deleted).Id));
-        }
-
-        [Fact]
-        public async Task List_IncludeNonPublic_ReturnsAllActive()
-        {
-            var spec = new EnforcementOrderSpec {OnlyPublic = false};
-
-            using var repository = CreateRepositoryHelper().GetEnforcementOrderRepository();
-            var result = await repository.ListAsync(spec, new PaginationSpec());
-
-            result.CurrentCount.Should().Be(GetEnforcementOrders.Count(e => !e.Deleted));
-            result.Items.Should().HaveCount(GetEnforcementOrders.Count(e => !e.Deleted));
-            result.PageNumber.Should().Be(1);
-            result.Items[0].Should().BeEquivalentTo(
-                GetEnforcementOrderSummaryView(GetEnforcementOrders
-                    .OrderByDescending(e => e.ExecutedDate ?? e.ProposedOrderPostedDate)
-                    .ThenBy(e => e.FacilityName)
-                    .First(e => !e.Deleted).Id));
-        }
-
-        [Fact]
         public async Task List_WithFacilityNameSpec_ReturnsMatches()
         {
             var spec = new EnforcementOrderSpec
@@ -173,7 +128,7 @@ namespace Infrastructure.Tests
             };
 
             using var repository = CreateRepositoryHelper().GetEnforcementOrderRepository();
-            var result = await repository.ListAsync(spec, new PaginationSpec());
+            var result = await repository.ListAsync(spec, new PaginationSpec(1, 20));
 
             var expectedList = GetEnforcementOrders
                 .OrderByDescending(e => e.ExecutedDate ?? e.ProposedOrderPostedDate)
@@ -188,6 +143,92 @@ namespace Infrastructure.Tests
             result.PageNumber.Should().Be(1);
             result.Items[0].Should().BeEquivalentTo(
                 GetEnforcementOrderSummaryView(expectedList[0].Id));
+        }
+
+        // ListAdminAsync
+
+        [Fact]
+        public async Task ListAdmin_ByDefault_ReturnsNonDeleted()
+        {
+            using var repository = CreateRepositoryHelper().GetEnforcementOrderRepository();
+            var result = await repository.ListAdminAsync(new EnforcementOrderAdminSpec(), new PaginationSpec(1, 20));
+
+            result.CurrentCount.Should().Be(GetEnforcementOrders.Count(e => !e.Deleted));
+            result.Items.Should().HaveCount(GetEnforcementOrders.Count(e => !e.Deleted));
+            result.PageNumber.Should().Be(1);
+            result.Items[0].Should().BeEquivalentTo(
+                GetEnforcementOrderAdminSummaryView(GetEnforcementOrders
+                    .OrderByDescending(e => e.ExecutedDate ?? e.ProposedOrderPostedDate)
+                    .ThenBy(e => e.FacilityName)
+                    .First(e => !e.Deleted).Id));
+        }
+
+        [Fact]
+        public async Task ListAdmin_WithSpecShowDeleted_ReturnsOnlyDeleted()
+        {
+            var spec = new EnforcementOrderAdminSpec {ShowDeleted = true};
+
+            using var repository = CreateRepositoryHelper().GetEnforcementOrderRepository();
+            var result = await repository.ListAdminAsync(spec, new PaginationSpec(1, 20));
+
+            result.CurrentCount.Should().Be(GetEnforcementOrders.Count(e => e.Deleted));
+            result.Items.Should().HaveCount(GetEnforcementOrders.Count(e => e.Deleted));
+            result.PageNumber.Should().Be(1);
+            result.Items[0].Should().BeEquivalentTo(
+                GetEnforcementOrderAdminSummaryView(GetEnforcementOrders
+                    .OrderByDescending(e => e.ExecutedDate ?? e.ProposedOrderPostedDate)
+                    .ThenBy(e => e.FacilityName)
+                    .First(e => e.Deleted).Id));
+        }
+
+        [Fact]
+        public async Task ListAdmin_WithFacilityNameSpec_ReturnsMatches()
+        {
+            var spec = new EnforcementOrderAdminSpec
+            {
+                FacilityFilter = GetEnforcementOrders.First(e => !e.Deleted).FacilityName
+            };
+
+            using var repository = CreateRepositoryHelper().GetEnforcementOrderRepository();
+            var result = await repository.ListAdminAsync(spec, new PaginationSpec(1, 20));
+
+            var expectedList = GetEnforcementOrders
+                .OrderByDescending(e => e.ExecutedDate ?? e.ProposedOrderPostedDate)
+                .ThenBy(e => e.FacilityName)
+                .Where(e => !e.Deleted
+                    && string.Equals(e.FacilityName, spec.FacilityFilter, StringComparison.Ordinal))
+                .ToList();
+
+            result.CurrentCount.Should().Be(expectedList.Count);
+            result.Items.Should().HaveCount(expectedList.Count);
+            result.PageNumber.Should().Be(1);
+            result.Items[0].Should().BeEquivalentTo(
+                GetEnforcementOrderAdminSummaryView(expectedList[0].Id));
+        }
+
+        [Fact]
+        public async Task ListAdmin_WithTextMatchSpec_ReturnsMatches()
+        {
+            var spec = new EnforcementOrderAdminSpec
+            {
+                TextContains = GetEnforcementOrders.First(e => !e.Deleted).Cause.Substring(0, 4).ToLowerInvariant()
+            };
+
+            using var repository = CreateRepositoryHelper().GetEnforcementOrderRepository();
+            var result = await repository.ListAdminAsync(spec, new PaginationSpec(1, 20));
+
+            var expectedList = GetEnforcementOrders
+                .OrderByDescending(e => e.ExecutedDate ?? e.ProposedOrderPostedDate)
+                .ThenBy(e => e.FacilityName)
+                .Where(e => !e.Deleted
+                    && (e.Cause.Contains(spec.TextContains) || e.Requirements.Contains(spec.TextContains)))
+                .ToList();
+
+            result.CurrentCount.Should().Be(expectedList.Count);
+            result.Items.Should().HaveCount(expectedList.Count);
+            result.PageNumber.Should().Be(1);
+            result.Items[0].Should().BeEquivalentTo(
+                GetEnforcementOrderAdminSummaryView(expectedList[0].Id));
         }
 
         // ExistsAsync
@@ -348,9 +389,9 @@ namespace Infrastructure.Tests
 
             var order = _sampleCreate.ToEnforcementOrder();
             order.Id = newId;
-            var expected = new EnforcementOrderDetailedView(FillNavigationProperties(order));
+            var expected = new EnforcementOrderAdminView(FillNavigationProperties(order));
 
-            var item = await repository.GetAsync(newId, false);
+            var item = await repository.GetAdminViewAsync(newId);
             item.Should().BeEquivalentTo(expected);
         }
 

@@ -10,8 +10,8 @@ using Enfo.Repository.Resources.EnforcementOrder;
 using Enfo.Repository.Specs;
 using Enfo.Repository.Utils;
 using Microsoft.EntityFrameworkCore;
-using static Enfo.Repository.Specs.EnforcementOrderSpec;
 using static Enfo.Repository.Validation.EnforcementOrderValidation;
+using PublicationState = Enfo.Repository.Specs.PublicationState;
 
 namespace Enfo.Infrastructure.Repositories
 {
@@ -20,18 +20,16 @@ namespace Enfo.Infrastructure.Repositories
         private readonly EnfoDbContext _context;
         public EnforcementOrderRepository(EnfoDbContext context) => _context = context;
 
-        public async Task<EnforcementOrderDetailedView> GetAsync(int id, bool onlyPublic = true)
+        public async Task<EnforcementOrderDetailedView> GetAsync(int id)
         {
             var item = await _context.EnforcementOrders.AsNoTracking()
+                .FilterForOnlyPublic()
                 .Include(e => e.CommentContact).ThenInclude(e => e.Address)
                 .Include(e => e.HearingContact).ThenInclude(e => e.Address)
                 .Include(e => e.LegalAuthority)
                 .SingleOrDefaultAsync(e => e.Id == id).ConfigureAwait(false);
 
-            if (item == null || (onlyPublic && !item.GetIsPublic))
-                return null;
-
-            return new EnforcementOrderDetailedView(item);
+            return item == null ? null : new EnforcementOrderDetailedView(item);
         }
 
         public async Task<EnforcementOrderAdminView> GetAdminViewAsync(int id)
@@ -53,11 +51,27 @@ namespace Enfo.Infrastructure.Repositories
 
             spec.TrimAll();
 
+            var adminSpec = new EnforcementOrderAdminSpec()
+            {
+                County = spec.County,
+                Status = spec.Status,
+                FacilityFilter = spec.FacilityFilter,
+                FromDate = spec.FromDate,
+                OnlyPublic = true,
+                OrderNumber = spec.OrderNumber,
+                PublicationStatus = PublicationState.Published,
+                ShowDeleted = false,
+                SortOrder = spec.SortOrder,
+                TextContains = null,
+                TillDate = spec.TillDate,
+                LegalAuthId = spec.LegalAuthId,
+            };
+
             var filteredItems = _context.EnforcementOrders.AsNoTracking()
-                .ApplySpecFilter(spec);
+                .ApplySpecFilter(adminSpec);
 
             var items = await filteredItems
-                .ApplySorting(spec.SortOrder)
+                .ApplySorting(adminSpec.SortOrder)
                 .Include(e => e.LegalAuthority)
                 .ApplyPagination(paging)
                 .Select(e => new EnforcementOrderSummaryView(e))
@@ -66,6 +80,29 @@ namespace Enfo.Infrastructure.Repositories
             var count = await filteredItems.CountAsync().ConfigureAwait(false);
 
             return new PaginatedResult<EnforcementOrderSummaryView>(items, count, paging);
+        }
+
+        public async Task<PaginatedResult<EnforcementOrderAdminSummaryView>> ListAdminAsync(
+            EnforcementOrderAdminSpec spec, PaginationSpec paging)
+        {
+            Guard.NotNull(spec, nameof(spec));
+            Guard.NotNull(paging, nameof(paging));
+
+            spec.TrimAll();
+
+            var filteredItems = _context.EnforcementOrders.AsNoTracking()
+                .ApplySpecFilter(spec);
+
+            var items = await filteredItems
+                .ApplySorting(spec.SortOrder)
+                .Include(e => e.LegalAuthority)
+                .ApplyPagination(paging)
+                .Select(e => new EnforcementOrderAdminSummaryView(e))
+                .ToListAsync().ConfigureAwait(false);
+
+            var count = await filteredItems.CountAsync().ConfigureAwait(false);
+
+            return new PaginatedResult<EnforcementOrderAdminSummaryView>(items, count, paging);
         }
 
         public async Task<bool> ExistsAsync(int id, bool onlyPublic = true)
@@ -89,7 +126,17 @@ namespace Enfo.Infrastructure.Repositories
         public async Task<IReadOnlyList<EnforcementOrderSummaryView>> ListCurrentProposedEnforcementOrdersAsync() =>
             await _context.EnforcementOrders.AsNoTracking()
                 .FilterForCurrentProposed()
-                .ApplySorting(EnforcementOrderSorting.DateAsc)
+                .ApplySorting(OrderSorting.DateAsc)
+                .Include(e => e.LegalAuthority)
+                .Select(e => new EnforcementOrderSummaryView(e))
+                .ToListAsync().ConfigureAwait(false);
+
+        // Recently Executed are public executed orders with 
+        // publication date within current week
+        public async Task<IReadOnlyList<EnforcementOrderSummaryView>> ListRecentlyExecutedEnforcementOrdersAsync() =>
+            await _context.EnforcementOrders.AsNoTracking()
+                .FilterForRecentlyExecuted()
+                .ApplySorting(OrderSorting.DateAsc)
                 .Include(e => e.LegalAuthority)
                 .Select(e => new EnforcementOrderSummaryView(e))
                 .ToListAsync().ConfigureAwait(false);
@@ -98,7 +145,7 @@ namespace Enfo.Infrastructure.Repositories
         public async Task<IReadOnlyList<EnforcementOrderAdminSummaryView>> ListDraftEnforcementOrdersAsync() =>
             await _context.EnforcementOrders.AsNoTracking()
                 .FilterForDrafts()
-                .ApplySorting(EnforcementOrderSorting.DateAsc)
+                .ApplySorting(OrderSorting.DateAsc)
                 .Include(e => e.LegalAuthority)
                 .Select(e => new EnforcementOrderAdminSummaryView(e))
                 .ToListAsync().ConfigureAwait(false);
@@ -108,19 +155,9 @@ namespace Enfo.Infrastructure.Repositories
         public async Task<IReadOnlyList<EnforcementOrderAdminSummaryView>> ListPendingEnforcementOrdersAsync() =>
             await _context.EnforcementOrders.AsNoTracking()
                 .FilterForPending()
-                .ApplySorting(EnforcementOrderSorting.DateAsc)
+                .ApplySorting(OrderSorting.DateAsc)
                 .Include(e => e.LegalAuthority)
                 .Select(e => new EnforcementOrderAdminSummaryView(e))
-                .ToListAsync().ConfigureAwait(false);
-
-        // Recently Executed are public executed orders with 
-        // publication date within current week
-        public async Task<IReadOnlyList<EnforcementOrderSummaryView>> ListRecentlyExecutedEnforcementOrdersAsync() =>
-            await _context.EnforcementOrders.AsNoTracking()
-                .FilterForRecentlyExecuted()
-                .ApplySorting(EnforcementOrderSorting.DateAsc)
-                .Include(e => e.LegalAuthority)
-                .Select(e => new EnforcementOrderSummaryView(e))
                 .ToListAsync().ConfigureAwait(false);
 
         public async Task<int> CreateAsync(EnforcementOrderCreate resource)

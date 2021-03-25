@@ -55,20 +55,6 @@ form.usa-section {
     height: auto;
 }
 
-.ui-timepicker-select {
-    -moz-appearance: menulist;
-    -webkit-appearance: menulist;
-    appearance: menulist;
-}
-
-.ui-timepicker li {
-    line-height: 1;
-}
-
-.ui-timepicker-standard {
-    font-size: .9em;
-}
-
 /* 
 GeorgiaGov Interactive 
 Web Standards and Guidelines » 6.0 Brand Standards » 6.2 Shared Elements
@@ -173,7 +159,6 @@ table caption {
 
 .gaepd-table-compact {
     margin-top: 1em;
-    width: 100%;
 }
 
 .gaepd-table-compact th, .gaepd-table-compact td {
@@ -463,8 +448,8 @@ hr {
 .gaepd-buttonrow [type=button],
 .gaepd-buttonrow [type=submit] {
     display: inline-block;
-    margin-bottom: 1.5em;
-    margin-top: 2.5rem;
+    margin-top: 0;
+    margin-bottom: 0;
 }
 
 .gaepd-button-inline-action {
@@ -760,13 +745,21 @@ a.gaepd-file_item:hover, a.gaepd-file_item:focus {
 }
 
 /* 
-Bugfixes from platform update
+Bugfixes for bugs introduced when updating USWDS from 1.2.1 to 1.6.x
  */
 
 @media screen and (min-width: 951px) {
     .usa-navbar {
         height: 10.3rem;
     }
+}
+
+table {
+    min-width: 100%;
+}
+
+.usa-table-borderless thead th {
+    background-color: #f1f1f1;
 }
 
 /*
@@ -885,7 +878,6 @@ Print stylesheets
 
     .gaepd-table-compact {
         margin: 1em 0;
-        width: 100%;
     }
 
     .gaepd-table-compact table th,

@@ -13,12 +13,14 @@ namespace Enfo.Repository.Resources.EnforcementOrder
             Guard.NotNull(item, nameof(item));
 
             Id = item.Id;
+            Deleted = item.Deleted;
             FacilityName = item.FacilityName;
             County = item.County;
             PendingPublicationDate = item.ExecutedDate ?? item.ProposedOrderPostedDate;
         }
 
         public int Id { get; }
+        public bool Deleted { get; }
 
         [DisplayName("Facility")]
         public string FacilityName { get; }
