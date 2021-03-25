@@ -2,11 +2,11 @@
 
 * Public dashboard `/`
 * Enforcement orders search `/Search`
-* Find `/Find/{string}`
 * View `/Details/{id}`
 * Current proposed orders `/CurrentProposed`
 * Recently executed orders `/RecentExecuted`
 * Admin dashboard `/Admin`
+    * Admin quick search `/Admin {find}`
     * Admin search `/Admin/Search`
     * Admin view `/Admin/Details/{id}`
     * Create `/Admin/Create`

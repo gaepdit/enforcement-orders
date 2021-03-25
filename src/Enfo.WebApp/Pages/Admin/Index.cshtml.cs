@@ -2,8 +2,10 @@
 using System.Threading.Tasks;
 using Enfo.Repository.Repositories;
 using Enfo.Repository.Resources.EnforcementOrder;
+using Enfo.Repository.Specs;
 using Enfo.WebApp.Extensions;
 using Enfo.WebApp.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Enfo.WebApp.Pages.Admin
@@ -26,6 +28,21 @@ namespace Enfo.WebApp.Pages.Admin
             PendingOrders = await _repository.ListPendingEnforcementOrdersAsync();
             DraftOrders = await _repository.ListDraftEnforcementOrdersAsync();
             Message = TempData?.GetDisplayMessage();
+        }
+
+        public async Task<IActionResult> OnGetFindAsync(string find)
+        {
+            if (string.IsNullOrWhiteSpace(find)) return Page();
+
+            var spec = new EnforcementOrderAdminSpec {OrderNumber = find};
+            var orders = await _repository.ListAdminAsync(spec, new PaginationSpec(1, 1));
+
+            if (orders.TotalCount == 1 && orders.Items[0] != null)
+            {
+                return RedirectToPage("Details", new {((EnforcementOrderAdminSummaryView) orders.Items[0]).Id});
+            }
+
+            return RedirectToPage("/Admin/Search", "search", new {OrderNumber = find}, "search-results");
         }
     }
 }

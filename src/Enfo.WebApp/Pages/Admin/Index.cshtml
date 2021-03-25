@@ -12,7 +12,8 @@
 <form method="get" class="usa-search usa-search-big" asp-page="Find">
     <h3>Quick Search</h3>
     <div role="search">
-        <input name="order" type="search" placeholder="Order Number" class="gaepd-input-medium-large" />
+        <input type="hidden" name="handler" value="find" />
+        <input name="find" type="search" placeholder="Order Number" class="gaepd-input-medium-large" />
         <button type="submit">
             <span class="usa-search-submit-text">Find</span>
         </button>
