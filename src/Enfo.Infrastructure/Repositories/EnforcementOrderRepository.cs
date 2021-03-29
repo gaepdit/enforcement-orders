@@ -135,12 +135,14 @@ namespace Enfo.Infrastructure.Repositories
 
         // Recently Executed are public executed orders with 
         // publication date within current week
-        public async Task<IReadOnlyList<EnforcementOrderSummaryView>> ListRecentlyExecutedEnforcementOrdersAsync() =>
+        public async Task<IReadOnlyList<EnforcementOrderDetailedView>> ListRecentlyExecutedEnforcementOrdersAsync() =>
             await _context.EnforcementOrders.AsNoTracking()
                 .FilterForRecentlyExecuted()
                 .ApplySorting(OrderSorting.DateAsc)
+                .Include(e => e.CommentContact).ThenInclude(e => e.Address)
+                .Include(e => e.HearingContact).ThenInclude(e => e.Address)
                 .Include(e => e.LegalAuthority)
-                .Select(e => new EnforcementOrderSummaryView(e))
+                .Select(e => new EnforcementOrderDetailedView(e))
                 .ToListAsync().ConfigureAwait(false);
 
         // Draft are orders with publication status set to Draft
