@@ -1,15 +1,17 @@
 ﻿using System.Threading.Tasks;
+using Enfo.Repository;
 using Enfo.Repository.Repositories;
 using Enfo.Repository.Resources.EnforcementOrder;
 using Enfo.WebApp.Extensions;
 using Enfo.WebApp.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Enfo.WebApp.Pages.Admin
 {
     // TODO: Auth
-    // [Authorize(Roles = UserRoles.OrderAdministrator)]
+    // [Authorize(Roles = UserRole.OrderAdministrator)]
     public class Details : PageModel
     {
         public EnforcementOrderAdminView Item { get; private set; }

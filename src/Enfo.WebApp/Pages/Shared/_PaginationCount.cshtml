@@ -1,0 +1,9 @@
+﻿@model Enfo.Repository.Resources.IPaginatedResult
+<div class="gaepd-pagination-count">
+    Total results: @Model.TotalCount
+    @if (Model.TotalPages > 1)
+    {
+        <br />
+        @($"Showing results {Model.FirstItemIndex} – {Model.LastItemIndex}")
+    }
+</div>

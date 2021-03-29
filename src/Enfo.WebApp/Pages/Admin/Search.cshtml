@@ -1,21 +1,20 @@
-@page
+﻿@page
 @using Enfo.Repository.Resources.EnforcementOrder
 @using Enfo.Repository.Specs
-@model Enfo.WebApp.Pages.Search
+@using PublicationState = Enfo.Repository.Specs.PublicationState
+@model Enfo.WebApp.Pages.Admin.Search
 
 @{
     ViewData["Title"] = "Search Enforcement Orders";
 }
 
-<h2>@ViewData["Title"]</h2>
+<h2>
+    <i>Admin:</i> @ViewData["Title"]
+</h2>
 
-@* TODO: Auth *@
-@* @if (User?.Identity?.IsAuthenticated == true) *@
-@* { *@
 <div class="gaepd-noprint">
-    <a asp-page="/Admin/Search" class="gaepd-no-visited">Go to admin search</a>
+    <a asp-page="/Search" class="gaepd-no-visited">Go to public search</a>
 </div>
-@* } *@
 
 <div class="gaepd-container-light">
     <form method="get" class="usa-form-large" asp-fragment="search-results">
@@ -31,6 +30,9 @@
                 <option value="">(any)</option>
             </select>
 
+            <label asp-for="Spec.Text"></label>
+            <input asp-for="Spec.Text" name="@nameof(Model.Spec.Text)" />
+
             <label asp-for="Spec.OrderNumber">Order Number</label>
             <input asp-for="Spec.OrderNumber" name="@nameof(Model.Spec.OrderNumber)" />
 
@@ -41,39 +43,65 @@
             </select>
         </fieldset>
 
-        <fieldset class="usa-fieldset-inputs">
-            <legend>Status</legend>
-            <ul class="usa-unstyled-list">
-                <li>
-                    <input type="radio" name="Status" value="All" id="Status-All"
-                           @if (Model.Spec.Status == ActivityState.All)
-                           {<text> checked</text>}>
-                    <label for="Status-All">All Orders</label>
-                </li>
-                <li>
-                    <input type="radio" name="Status" value="Proposed" id="Status-Proposed"
-                           @if (Model.Spec.Status == ActivityState.Proposed)
-                           {<text> checked</text>}>
-                    <label for="Status-Proposed">Proposed orders only</label>
-                </li>
-                <li>
-                    <input type="radio" name="Status" value="Executed" id="Status-Executed"
-                           @if (Model.Spec.Status == ActivityState.Executed)
-                           {<text> checked</text>}>
-                    <label for="Status-Executed">Executed orders only</label>
-                </li>
-            </ul>
-        </fieldset>
+        <div class="usa-grid-full">
+            <fieldset class="usa-fieldset-inputs usa-width-one-half">
+                <legend>Status</legend>
+                <ul class="usa-unstyled-list">
+                    <li>
+                        <input type="radio" name="Status" value="All" id="Status-All"
+                               @if (Model.Spec.Status == ActivityState.All)
+                               {<text> checked</text>}>
+                        <label for="Status-All">All Orders</label>
+                    </li>
+                    <li>
+                        <input type="radio" name="Status" value="Proposed" id="Status-Proposed"
+                               @if (Model.Spec.Status == ActivityState.Proposed)
+                               {<text> checked</text>}>
+                        <label for="Status-Proposed">Proposed orders only</label>
+                    </li>
+                    <li>
+                        <input type="radio" name="Status" value="Executed" id="Status-Executed"
+                               @if (Model.Spec.Status == ActivityState.Executed)
+                               {<text> checked</text>}>
+                        <label for="Status-Executed">Executed orders only</label>
+                    </li>
+                </ul>
+            </fieldset>
+
+            <fieldset class="usa-fieldset-inputs usa-width-one-half">
+                <legend>Progress</legend>
+                <ul class="usa-unstyled-list">
+                    <li>
+                        <input type="radio" name="Progress" value="All" id="Progress-All"
+                               @if (Model.Spec.Progress == PublicationState.All)
+                               {<text> checked</text>}>
+                        <label for="Progress-All">All</label>
+                    </li>
+                    <li>
+                        <input type="radio" name="Progress" value="Published" id="Progress-Published"
+                               @if (Model.Spec.Progress == PublicationState.Published)
+                               {<text> checked</text>}>
+                        <label for="Progress-Published">Published</label>
+                    </li>
+                    <li>
+                        <input type="radio" name="Progress" value="Draft" id="Progress-Draft"
+                               @if (Model.Spec.Progress == PublicationState.Draft)
+                               {<text> checked</text>}>
+                        <label for="Progress-Draft">Draft</label>
+                    </li>
+                </ul>
+            </fieldset>
+        </div>
 
         <div class="usa-grid-full">
-            <fieldset class="usa-input-grid usa-input-grid-small">
+            <fieldset class="usa-fieldset-inputs usa-width-one-half">
                 <legend>Date from</legend>
                 <input type="datetime" asp-for="Spec.FromDate" name="@nameof(Model.Spec.FromDate)"
                        class="date-picker usa-input-medium" />
                 <span asp-validation-for="Spec.FromDate" class="usa-input-error-message"></span>
             </fieldset>
 
-            <fieldset class="usa-input-grid usa-input-grid-small">
+            <fieldset class="usa-fieldset-inputs usa-width-one-half usa-input-grid-small">
                 <legend>Date until</legend>
                 <input type="datetime" asp-for="Spec.TillDate" name="@nameof(Model.Spec.TillDate)"
                        class="date-picker usa-input-medium" />
@@ -85,6 +113,12 @@
             <input type="hidden" name="handler" value="search" />
             <button id="SearchButton" type="submit">Search</button>
             <a asp-page="Search" class="usa-button usa-button-secondary">Clear Form</a>
+            @* TODO: Auth *@
+            @* @if (User.IsInRole(UserRole.OrderAdministrator)) *@
+            @* { *@
+            <input type="checkbox" id="Spec_ShowDeleted" name="ShowDeleted" value="true" checked="@Model.Spec.ShowDeleted">
+            <label asp-for="Spec.ShowDeleted"></label>
+            @* } *@
         </div>
     </form>
 </div>
@@ -137,7 +171,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                @foreach (EnforcementOrderSummaryView enfo in Model.OrdersList.Items)
+                @foreach (EnforcementOrderAdminSummaryView enfo in Model.OrdersList.Items)
                 {
                     <tr>
                         <th scope="row" data-label="Facility">
@@ -165,7 +199,7 @@
                             }
                         </td>
                         <td class="gaepd-tablecell-nolabel">
-                            <a asp-page="/Details" asp-route-id="@enfo.Id">View</a>
+                            <a asp-page="Details" asp-route-id="@enfo.Id">View</a>
                         </td>
                     </tr>
                 }

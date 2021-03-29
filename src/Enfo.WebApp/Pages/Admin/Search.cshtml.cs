@@ -8,11 +8,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace Enfo.WebApp.Pages
+namespace Enfo.WebApp.Pages.Admin
 {
     public class Search : PageModel
     {
-        public EnforcementOrderSpec Spec { get; set; }
+        public EnforcementOrderAdminSpec Spec { get; set; }
         public IPaginatedResult OrdersList { get; private set; }
         public bool ShowResults { get; private set; }
 
@@ -28,15 +28,15 @@ namespace Enfo.WebApp.Pages
 
         public async Task OnGetAsync()
         {
-            Spec = new EnforcementOrderSpec();
+            Spec = new EnforcementOrderAdminSpec();
             LegalAuthoritiesSelectList = await GetLegalAuthoritiesSelectList();
         }
 
-        public async Task OnGetSearchAsync(EnforcementOrderSpec spec, [FromQuery] int p = 1)
+        public async Task OnGetSearchAsync(EnforcementOrderAdminSpec spec, [FromQuery] int p = 1)
         {
             spec.TrimAll();
             Spec = spec;
-            OrdersList = await _repository.ListAsync(spec, new PaginationSpec(p, App.PageSize));
+            OrdersList = await _repository.ListAdminAsync(spec, new PaginationSpec(p, App.PageSize));
             LegalAuthoritiesSelectList = await GetLegalAuthoritiesSelectList();
             ShowResults = true;
         }

@@ -7,17 +7,27 @@ namespace Enfo.Repository.Specs
     public static class EnforcementOrderEvaluators
     {
         public static IQueryable<EnforcementOrder> ApplySpecFilter(
+            [NotNull] this IQueryable<EnforcementOrder> query, [NotNull] EnforcementOrderSpec spec) =>
+            query.FilterForOnlyPublic()
+                .FilterByFacility(spec.Facility)
+                .FilterByCounty(spec.County)
+                .FilterByLegalAuth(spec.LegalAuth)
+                .FilterByStartDate(spec.FromDate, spec.Status)
+                .FilterByEndDate(spec.TillDate, spec.Status)
+                .FilterByActivityStatus(spec.Status)
+                .FilterByOrderNumber(spec.OrderNumber);
+        
+        public static IQueryable<EnforcementOrder> ApplyAdminSpecFilter(
             [NotNull] this IQueryable<EnforcementOrder> query, [NotNull] EnforcementOrderAdminSpec adminSpec) =>
-            query.FilterByFacility(adminSpec.FacilityFilter)
+            query.FilterByFacility(adminSpec.Facility)
                 .FilterByCounty(adminSpec.County)
-                .FilterByLegalAuth(adminSpec.LegalAuthId)
+                .FilterByLegalAuth(adminSpec.LegalAuth)
                 .FilterByStartDate(adminSpec.FromDate, adminSpec.Status)
                 .FilterByEndDate(adminSpec.TillDate, adminSpec.Status)
                 .FilterByActivityStatus(adminSpec.Status)
-                .FilterByPublicationStatus(adminSpec.PublicationStatus)
+                .FilterByPublicationStatus(adminSpec.Progress)
                 .FilterByOrderNumber(adminSpec.OrderNumber)
-                .FilterByText(adminSpec.TextContains)
-                .FilterByIsPublic(adminSpec.OnlyPublic)
+                .FilterByText(adminSpec.Text)
                 .FilterByIsDeleted(adminSpec.ShowDeleted);
 
         public static IOrderedQueryable<EnforcementOrder> ApplySorting(

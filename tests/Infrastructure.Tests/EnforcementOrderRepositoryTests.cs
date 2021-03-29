@@ -124,7 +124,7 @@ namespace Infrastructure.Tests
         {
             var spec = new EnforcementOrderSpec
             {
-                FacilityFilter = GetEnforcementOrders.First(e => !e.Deleted).FacilityName
+                Facility = GetEnforcementOrders.First(e => !e.Deleted).FacilityName
             };
 
             using var repository = CreateRepositoryHelper().GetEnforcementOrderRepository();
@@ -135,7 +135,7 @@ namespace Infrastructure.Tests
                 .ThenBy(e => e.FacilityName)
                 .Where(e =>
                     !e.Deleted
-                    && string.Equals(e.FacilityName, spec.FacilityFilter, StringComparison.Ordinal))
+                    && string.Equals(e.FacilityName, spec.Facility, StringComparison.Ordinal))
                 .ToList();
 
             result.CurrentCount.Should().Be(expectedList.Count);
@@ -186,7 +186,7 @@ namespace Infrastructure.Tests
         {
             var spec = new EnforcementOrderAdminSpec
             {
-                FacilityFilter = GetEnforcementOrders.First(e => !e.Deleted).FacilityName
+                Facility = GetEnforcementOrders.First(e => !e.Deleted).FacilityName
             };
 
             using var repository = CreateRepositoryHelper().GetEnforcementOrderRepository();
@@ -196,7 +196,7 @@ namespace Infrastructure.Tests
                 .OrderByDescending(e => e.ExecutedDate ?? e.ProposedOrderPostedDate)
                 .ThenBy(e => e.FacilityName)
                 .Where(e => !e.Deleted
-                    && string.Equals(e.FacilityName, spec.FacilityFilter, StringComparison.Ordinal))
+                    && string.Equals(e.FacilityName, spec.Facility, StringComparison.Ordinal))
                 .ToList();
 
             result.CurrentCount.Should().Be(expectedList.Count);
@@ -211,7 +211,7 @@ namespace Infrastructure.Tests
         {
             var spec = new EnforcementOrderAdminSpec
             {
-                TextContains = GetEnforcementOrders.First(e => !e.Deleted).Cause.Substring(0, 4).ToLowerInvariant()
+                Text = GetEnforcementOrders.First(e => !e.Deleted).Cause.Substring(0, 4).ToLowerInvariant()
             };
 
             using var repository = CreateRepositoryHelper().GetEnforcementOrderRepository();
@@ -221,7 +221,7 @@ namespace Infrastructure.Tests
                 .OrderByDescending(e => e.ExecutedDate ?? e.ProposedOrderPostedDate)
                 .ThenBy(e => e.FacilityName)
                 .Where(e => !e.Deleted
-                    && (e.Cause.Contains(spec.TextContains) || e.Requirements.Contains(spec.TextContains)))
+                    && (e.Cause.Contains(spec.Text) || e.Requirements.Contains(spec.Text)))
                 .ToList();
 
             result.CurrentCount.Should().Be(expectedList.Count);

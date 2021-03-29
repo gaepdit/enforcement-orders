@@ -9,12 +9,12 @@ namespace Enfo.Repository.Specs
     public class EnforcementOrderAdminSpec
     {
         [DisplayName("Facility")]
-        public string FacilityFilter { get; set; }
+        public string Facility { get; set; }
 
         public string County { get; set; }
 
         [DisplayName("Legal Authority")]
-        public int? LegalAuthId { get; set; }
+        public int? LegalAuth { get; set; }
 
         [DisplayName("Beginning Date")]
         [DisplayFormat(DataFormatString = DisplayFormats.FormatDateEdit, ApplyFormatInEditMode = true)]
@@ -28,43 +28,41 @@ namespace Enfo.Repository.Specs
         public ActivityState Status { get; set; } = ActivityState.All;
 
         [DisplayName("Progress")]
-        public PublicationState PublicationStatus { get; set; } = PublicationState.All;
+        public PublicationState Progress { get; set; } = PublicationState.All;
 
         [DisplayName("Order Number")]
         public string OrderNumber { get; set; }
 
         [DisplayName("Cause or Requirements")]
-        public string TextContains { get; set; }
+        public string Text { get; set; }
 
         // Either deleted or active items are returned; not both.
-        [DisplayName("Include deleted records")]
+        [DisplayName("Show deleted records")]
         public bool ShowDeleted { get; set; }
 
-        public bool OnlyPublic { get; set; }
-
-        public OrderSorting SortOrder { get; set; } = OrderSorting.DateDesc;
+        public OrderSorting Sort { get; set; } = OrderSorting.DateDesc;
 
         public void TrimAll()
         {
             County = County?.Trim();
-            FacilityFilter = FacilityFilter?.Trim();
+            Facility = Facility?.Trim();
             OrderNumber = OrderNumber?.Trim();
-            TextContains = TextContains?.Trim();
+            Text = Text?.Trim();
         }
 
         public IDictionary<string, string> AsRouteValues => new Dictionary<string, string>()
         {
-            {nameof(FacilityFilter), FacilityFilter},
+            {nameof(Facility), Facility},
             {nameof(County), County},
-            {nameof(LegalAuthId), LegalAuthId?.ToString()},
+            {nameof(LegalAuth), LegalAuth?.ToString()},
             {nameof(FromDate), FromDate?.ToString()},
             {nameof(TillDate), TillDate?.ToString()},
             {nameof(Status), Status.ToString()},
-            {nameof(PublicationStatus), PublicationStatus.ToString()},
+            {nameof(Progress), Progress.ToString()},
             {nameof(OrderNumber), OrderNumber},
-            {nameof(TextContains), TextContains},
+            {nameof(Text), Text},
             {nameof(ShowDeleted), ShowDeleted.ToString()},
-            {nameof(SortOrder), SortOrder.ToString()},
+            {nameof(Sort), Sort.ToString()},
         };
     }
 }

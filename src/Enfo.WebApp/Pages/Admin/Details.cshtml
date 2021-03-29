@@ -9,14 +9,13 @@
 <partial name="_AlertPartial" for="Message" />
 
 <h2>
-    <i>Admin View:</i>
-    @ViewData["Title"]
+    <i>Admin View:</i> @ViewData["Title"]
 </h2>
 
 @if (Model.Item.IsPublic)
 {
     <div class="gaepd-noprint">
-        <a asp-page="/Details" asp-route-id="@Model.Item.Id" class="btn btn-sm btn-outline-primary">Go to public view</a>
+        <a asp-page="/Details" asp-route-id="@Model.Item.Id">Go to public view</a>
     </div>
 }
 else
@@ -158,7 +157,7 @@ else
 </table>
 
 @* TODO: Auth *@
-@* @if (User.IsInRole(UserRoles.OrderAdministrator)) *@
+@* @if (User.IsInRole(UserRole.OrderAdministrator)) *@
 @* { *@
 <div>
     @if (Model.Item.Deleted)

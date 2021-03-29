@@ -1,4 +1,4 @@
-﻿/* USWDS modifications and additions copied from gaepdit-wds */
+/* USWDS modifications and additions copied from gaepdit-wds */
 
 .usa-grid,
 .usa-grid-full {
@@ -15,9 +15,18 @@ input[type="radio"] + label {
     margin-top: 1rem;
 }
 
+a.gaepd-no-visited {
+    color: #0071bc;
+}
+
 form.usa-section {
     padding-top: 0;
     padding-bottom: 3rem;
+}
+
+.gaepd-container-light {
+    background-color: #f8f8f8;
+    padding: 0 1.5rem;
 }
 
 .usa-search [type=search],
@@ -326,6 +335,12 @@ hr {
     background-color: #ff7800;
 }
 
+.gaepd-pagination-count {
+    font-size: .9em;
+    padding-top: 1.5rem;
+    border-top: 1px solid #dddddd;
+}
+
 .gaepd-pagination {
     font-size: .9em;
     overflow: hidden;
@@ -333,6 +348,10 @@ hr {
     position: relative;
     text-align: center;
     width: 100%;
+}
+
+.gaepd-pagination + table {
+    margin-top: 0;
 }
 
 .gaepd-pagination > * {
@@ -406,13 +425,7 @@ hr {
 
 @media (max-width: 600px) {
     .gaepd-pagination-inner {
-        width: 20rem;
-    }
-}
-
-@media (min-width: 1201px) {
-    .gaepd-pagination-inner {
-        width: 40rem;
+        min-width: 20rem;
     }
 }
 
@@ -445,8 +458,8 @@ hr {
 }
 
 .gaepd-buttonrow .usa-button,
-.gaepd-buttonrow [type=button],
-.gaepd-buttonrow [type=submit] {
+.gaepd-buttonrow input,
+.gaepd-buttonrow label {
     display: inline-block;
     margin-top: 0;
     margin-bottom: 0;
@@ -519,10 +532,6 @@ hr {
     }
 }
 
-input.gaepd-input-medium-large {
-    /* stylelint-disable-line selector-no-qualifying-type */
-}
-
 @media screen and (min-width: 600px) {
     input.gaepd-input-medium-large {
         max-width: 18rem;
@@ -576,85 +585,6 @@ h3 em {
     color: #112e51;
 }
 
-.js .gaepd-form-fileupload input {
-    width: 0.1px;
-    height: 0.1px;
-    opacity: 0;
-    overflow: hidden;
-    position: absolute;
-    z-index: -1;
-}
-
-.js .gaepd-form-fileupload button {
-    display: none;
-}
-
-.gaepd-form-fileupload label {
-    display: block;
-    width: 100%;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    cursor: pointer;
-    overflow: hidden;
-    margin: 0 1em 0 0;
-}
-
-.no-js .gaepd-form-fileupload label {
-    display: none;
-}
-
-.gaepd-form-fileupload input:focus + label,
-.gaepd-form-fileupload input.has-focus + label,
-.gaepd-form-fileupload input + label:hover {
-    box-shadow: 0 0 3px #3e94cf, 0 0 7px #3e94cf;
-}
-
-.gaepd-form-fileupload kbd,
-.gaepd-form-fileupload span {
-    display: block;
-    width: 100%;
-    padding: 1rem 2rem;
-    margin: 0;
-}
-
-.gaepd-form-fileupload kbd {
-    font-weight: normal;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-    border-radius: 0.3rem 0.3rem 0 0;
-}
-
-.gaepd-form-fileupload span {
-    border-radius: 0 0 0.3rem 0.3rem;
-}
-
-.gaepd-form-fileupload button {
-    display: inline-block;
-    margin-top: 0;
-    margin-bottom: 0;
-    vertical-align: top;
-}
-
-@media (min-width: 481px) {
-    .gaepd-form-fileupload label,
-    .gaepd-form-fileupload kbd,
-    .gaepd-form-fileupload span {
-        display: inline-block;
-        vertical-align: top;
-        width: auto;
-    }
-
-    .gaepd-form-fileupload kbd {
-        width: 200px;
-        border-radius: 0.3rem 0 0 0.3rem;
-    }
-
-    .gaepd-form-fileupload span {
-        border-radius: 0 0.3rem 0.3rem 0;
-    }
-}
-
 svg:not(:root).gaepd-svgicon {
     overflow: visible;
 }
@@ -670,78 +600,6 @@ svg:not(:root) {
     vertical-align: middle;
     width: 1.5em;
     height: 1.5em;
-}
-
-.gaepd-file-link {
-    color: #112e51;
-}
-
-.gaepd-file-link img {
-    vertical-align: middle;
-    margin-right: 0.5rem;
-}
-
-.gaepd-file-link svg {
-    margin-right: 0.5rem;
-}
-
-a.gaepd-file-link {
-    text-decoration: none;
-    display: block;
-    padding: 1rem 0.5rem;
-    border-radius: 2px;
-    color: #112e51;
-}
-
-a.gaepd-file-link:hover, a.gaepd-file-link:focus {
-    box-shadow: inset 0 0 0 2px #205493;
-}
-
-.gaepd-file_item svg {
-    height: 90px;
-    margin-left: 1rem;
-}
-
-.gaepd-file_item-img {
-    flex-shrink: 0;
-    margin-right: 1rem;
-    height: 90px;
-}
-
-.gaepd-file_item-body {
-    width: 100%;
-    -ms-word-break: break-all;
-    word-break: break-word;
-}
-
-a.gaepd-file_item {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    padding: 1rem 0.5rem;
-    margin-bottom: 0.5em;
-    margin-right: 1%;
-    text-decoration: none;
-    border-radius: 2px;
-    color: #205493;
-    box-shadow: inset 0 0 0 2px #dce4ef;
-}
-
-a.gaepd-file_item:hover, a.gaepd-file_item:focus {
-    box-shadow: inset 0 0 0 2px #205493;
-}
-
-@media screen and (min-width: 600px) {
-    a.gaepd-file_item {
-        float: left;
-        width: 49%;
-    }
-}
-
-@media screen and (min-width: 951px) {
-    a.gaepd-file_item {
-        width: 32%;
-    }
 }
 
 /* 

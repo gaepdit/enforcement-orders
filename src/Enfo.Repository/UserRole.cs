@@ -22,18 +22,24 @@ namespace Enfo.Repository
 
         // Roles
         // These are the strings that are stored in the database. Avoid modifying these strings.
-        public static UserRole OrderAdministrator { get; } = new(
-            "OrderAdministrator", "Order Administrator",
+        public const string OrderAdministrator = "OrderAdministrator";
+
+        public static UserRole OrderAdministratorRole { get; } = new(
+            OrderAdministrator, "Order Administrator",
             "Users with the Order Administrator role are able to add and edit " +
             "enforcement orders.");
 
-        public static UserRole UserMaintenance { get; } = new(
-            "UserMaintenance", "User Maintenance",
+        public const string UserMaintenance = "UserMaintenance";
+
+        public static UserRole UserMaintenanceRole { get; } = new(
+            UserMaintenance, "User Maintenance",
             "Users with the User Maintenance role are able to add and remove " +
             "roles for other users.");
 
-        public static UserRole SiteMaintenance { get; } = new(
-            "SiteMaintenance", "Site Maintenance",
+        public const string SiteMaintenance = "SiteMaintenance";
+
+        public static UserRole SiteMaintenanceRole { get; } = new(
+            SiteMaintenance, "Site Maintenance",
             "Users with the Site Maintenance role are able to update values in " +
             "lookup tables (drop-down lists).");
     }

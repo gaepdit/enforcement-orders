@@ -9,7 +9,7 @@ namespace Enfo.Repository.Specs
     public class EnforcementOrderSpec
     {
         [DisplayName("Facility")]
-        public string FacilityFilter { get; set; }
+        public string Facility { get; set; }
 
         public string County { get; set; }
 
@@ -17,7 +17,7 @@ namespace Enfo.Repository.Specs
         public string OrderNumber { get; set; }
 
         [DisplayName("Legal Authority")]
-        public int? LegalAuthId { get; set; }
+        public int? LegalAuth { get; set; }
 
         [DisplayName("Beginning Date")]
         [DisplayFormat(DataFormatString = DisplayFormats.FormatDateEdit, ApplyFormatInEditMode = true)]
@@ -30,26 +30,26 @@ namespace Enfo.Repository.Specs
         [DisplayName("Enforcement Order Status")]
         public ActivityState Status { get; set; } = ActivityState.All;
 
-        public OrderSorting SortOrder { get; set; } = OrderSorting.DateDesc;
+        public OrderSorting Sort { get; set; } = OrderSorting.DateDesc;
 
         public EnforcementOrderSpec TrimAll()
         {
             County = County?.Trim();
-            FacilityFilter = FacilityFilter?.Trim();
+            Facility = Facility?.Trim();
             OrderNumber = OrderNumber?.Trim();
             return this;
         }
 
         public IDictionary<string, string> AsRouteValues => new Dictionary<string, string>()
         {
-            {nameof(FacilityFilter), FacilityFilter},
+            {nameof(Facility), Facility},
             {nameof(County), County},
-            {nameof(LegalAuthId), LegalAuthId?.ToString()},
+            {nameof(LegalAuth), LegalAuth?.ToString()},
             {nameof(FromDate), FromDate?.ToString()},
             {nameof(TillDate), TillDate?.ToString()},
             {nameof(Status), Status.ToString()},
             {nameof(OrderNumber), OrderNumber},
-            {nameof(SortOrder), SortOrder.ToString()},
+            {nameof(Sort), Sort.ToString()},
         };
     }
 }

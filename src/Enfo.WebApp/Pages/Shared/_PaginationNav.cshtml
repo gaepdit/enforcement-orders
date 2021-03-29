@@ -2,64 +2,62 @@
 
 @if (Model.Paging.TotalPages > 1)
 {
-    <nav aria-label="Search results pages">
-        <div class="gaepd-pagination">
-            @if (Model.Paging.HasPreviousPage)
+    <nav aria-label="Search results pages" class="gaepd-pagination">
+        @if (Model.Paging.HasPreviousPage)
+        {
+            <a asp-fragment="search-results" asp-all-route-data="Model.RouteValues"
+               asp-route-p="@(Model.Paging.PageNumber - 1)" asp-route-handler="search"
+               class="gaepd-pagination-prev">
+                Previous
+            </a>
+        }
+        else
+        {
+            <span class="gaepd-pagination-prev gaepd-pagination-disabled" title="Previous">Prev</span>
+        }
+
+        <div class="gaepd-pagination-inner">
+            @if (Model.Paging.PageNumber > 3)
             {
-                <a asp-fragment="search-results" asp-all-route-data="Model.RouteValues"
-                   asp-route-p="@(Model.Paging.PageNumber - 1)" asp-route-handler="search"
-                   class="gaepd-pagination-prev">
-                    Previous
-                </a>
+                <span>…</span>
             }
-            else
+
+            @for (var i = Math.Max(1, Model.Paging.PageNumber - 2);
+                i <= Math.Min(Model.Paging.PageNumber + 2, Model.Paging.TotalPages);
+                i++)
             {
-                <span class="gaepd-pagination-prev gaepd-pagination-disabled" title="Previous">Prev</span>
+                @if (i == Model.Paging.PageNumber)
+                {
+                    <a class="gaepd-pagination-active">
+                        @i <span class="usa-sr-only">(current)</span>
+                    </a>
+                }
+                else
+                {
+                    <a asp-fragment="search-results" asp-all-route-data="@Model.RouteValues"
+                       asp-route-p="@i" asp-route-handler="search">
+                        @i
+                    </a>
+                }
             }
 
-            <div class="gaepd-pagination-inner">
-                @if (Model.Paging.PageNumber > 3)
-                {
-                    <span>…</span>
-                }
-
-                @for (var i = Math.Max(1, Model.Paging.PageNumber - 2);
-                    i <= Math.Min(Model.Paging.PageNumber + 2, Model.Paging.TotalPages);
-                    i++)
-                {
-                    @if (i == Model.Paging.PageNumber)
-                    {
-                        <a class="gaepd-pagination-active">
-                            @i <span class="usa-sr-only">(current)</span>
-                        </a>
-                    }
-                    else
-                    {
-                        <a asp-fragment="search-results" asp-all-route-data="@Model.RouteValues"
-                           asp-route-p="@i" asp-route-handler="search">
-                            @i
-                        </a>
-                    }
-                }
-
-                @if (Model.Paging.TotalPages - Model.Paging.PageNumber > 2)
-                {
-                    <span>…</span>
-                }
-            </div>
-
-            @if (Model.Paging.HasNextPage)
+            @if (Model.Paging.TotalPages - Model.Paging.PageNumber > 2)
             {
-                <a asp-fragment="search-results" asp-all-route-data="@Model.RouteValues"
-                   asp-route-p="@(Model.Paging.PageNumber + 1)" asp-route-handler="search"
-                   class="gaepd-pagination-next">
-                    Next
-                </a>
-            }
-            else
-            {
-                <span class="gaepd-pagination-next gaepd-pagination-disabled" title="Next">Next</span>
+                <span>…</span>
             }
         </div>
+
+        @if (Model.Paging.HasNextPage)
+        {
+            <a asp-fragment="search-results" asp-all-route-data="@Model.RouteValues"
+               asp-route-p="@(Model.Paging.PageNumber + 1)" asp-route-handler="search"
+               class="gaepd-pagination-next">
+                Next
+            </a>
+        }
+        else
+        {
+            <span class="gaepd-pagination-next gaepd-pagination-disabled" title="Next">Next</span>
+        }
     </nav>
 }

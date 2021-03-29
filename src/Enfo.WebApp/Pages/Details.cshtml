@@ -11,9 +11,9 @@
 @* TODO: Auth *@
 @* @if (User?.Identity?.IsAuthenticated == true) *@
 @* { *@
-     <div class="gaepd-noprint">
-        <a asp-page="/Admin/Details" asp-route-id="@Model.Item.Id" class="btn btn-sm btn-outline-primary">Go to admin view</a>
-    </div>
+<div class="gaepd-noprint">
+    <a asp-page="/Admin/Details" asp-route-id="@Model.Item.Id">Go to admin view</a>
+</div>
 @* } *@
 
 <table class="gaepd-table-compact gaepd-table-rowheadings gaepd-table-autowidth">

@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using Enfo.Repository.Resources.LegalAuthority;
 using Enfo.Repository.Utils;
 using JetBrains.Annotations;
 
@@ -16,7 +17,12 @@ namespace Enfo.Repository.Resources.EnforcementOrder
             Deleted = item.Deleted;
             FacilityName = item.FacilityName;
             County = item.County;
-            PendingPublicationDate = item.ExecutedDate ?? item.ProposedOrderPostedDate;
+            LegalAuthority = item.LegalAuthority == null ? null : new LegalAuthorityView(item.LegalAuthority);
+            OrderNumber = item.OrderNumber;
+            IsProposedOrder = item.IsProposedOrder;
+            ProposedOrderPostedDate = item.ProposedOrderPostedDate;
+            IsExecutedOrder = item.IsExecutedOrder;
+            ExecutedDate = item.ExecutedDate;
         }
 
         public int Id { get; }
@@ -27,7 +33,31 @@ namespace Enfo.Repository.Resources.EnforcementOrder
 
         public string County { get; }
 
+        [DisplayName("Legal Authority")]
+        public LegalAuthorityView LegalAuthority { get; }
+
+        [DisplayName("Order Number")]
+        public string OrderNumber { get; }
+
         [DisplayFormat(DataFormatString = DisplayFormats.FormatDateShortComposite)]
-        public DateTime? PendingPublicationDate { get; }
+        public DateTime? PendingPublicationDate => ExecutedDate ?? ProposedOrderPostedDate;
+
+        // Proposed orders
+
+        [DisplayName("Proposed Order Public Noticed")]
+        public bool IsProposedOrder { get; }
+
+        [DisplayName("Publication Date For Proposed Order")]
+        [DisplayFormat(DataFormatString = DisplayFormats.FormatDateShortComposite)]
+        public DateTime? ProposedOrderPostedDate { get; }
+
+        // Executed orders
+
+        [DisplayName("Enforcement Order Executed")]
+        public bool IsExecutedOrder { get; }
+
+        [DisplayName("Date Executed")]
+        [DisplayFormat(DataFormatString = DisplayFormats.FormatDateShortComposite)]
+        public DateTime? ExecutedDate { get; }
     }
 }

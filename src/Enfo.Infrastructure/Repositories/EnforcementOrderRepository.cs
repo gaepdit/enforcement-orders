@@ -49,29 +49,11 @@ namespace Enfo.Infrastructure.Repositories
             Guard.NotNull(spec, nameof(spec));
             Guard.NotNull(paging, nameof(paging));
 
-            spec.TrimAll();
-
-            var adminSpec = new EnforcementOrderAdminSpec()
-            {
-                County = spec.County,
-                Status = spec.Status,
-                FacilityFilter = spec.FacilityFilter,
-                FromDate = spec.FromDate,
-                OnlyPublic = true,
-                OrderNumber = spec.OrderNumber,
-                PublicationStatus = PublicationState.Published,
-                ShowDeleted = false,
-                SortOrder = spec.SortOrder,
-                TextContains = null,
-                TillDate = spec.TillDate,
-                LegalAuthId = spec.LegalAuthId,
-            };
-
             var filteredItems = _context.EnforcementOrders.AsNoTracking()
-                .ApplySpecFilter(adminSpec);
+                .ApplySpecFilter(spec);
 
             var items = await filteredItems
-                .ApplySorting(adminSpec.SortOrder)
+                .ApplySorting(spec.Sort)
                 .Include(e => e.LegalAuthority)
                 .ApplyPagination(paging)
                 .Select(e => new EnforcementOrderSummaryView(e))
@@ -88,13 +70,11 @@ namespace Enfo.Infrastructure.Repositories
             Guard.NotNull(spec, nameof(spec));
             Guard.NotNull(paging, nameof(paging));
 
-            spec.TrimAll();
-
             var filteredItems = _context.EnforcementOrders.AsNoTracking()
-                .ApplySpecFilter(spec);
+                .ApplyAdminSpecFilter(spec);
 
             var items = await filteredItems
-                .ApplySorting(spec.SortOrder)
+                .ApplySorting(spec.Sort)
                 .Include(e => e.LegalAuthority)
                 .ApplyPagination(paging)
                 .Select(e => new EnforcementOrderAdminSummaryView(e))
