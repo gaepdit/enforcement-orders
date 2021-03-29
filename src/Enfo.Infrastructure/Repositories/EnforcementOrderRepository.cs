@@ -123,12 +123,14 @@ namespace Enfo.Infrastructure.Repositories
 
         // Current Proposed are public proposed orders (publication date in the past)
         // with comment close date in the future
-        public async Task<IReadOnlyList<EnforcementOrderSummaryView>> ListCurrentProposedEnforcementOrdersAsync() =>
+        public async Task<IReadOnlyList<EnforcementOrderDetailedView>> ListCurrentProposedEnforcementOrdersAsync() =>
             await _context.EnforcementOrders.AsNoTracking()
                 .FilterForCurrentProposed()
                 .ApplySorting(OrderSorting.DateAsc)
+                .Include(e => e.CommentContact).ThenInclude(e => e.Address)
+                .Include(e => e.HearingContact).ThenInclude(e => e.Address)
                 .Include(e => e.LegalAuthority)
-                .Select(e => new EnforcementOrderSummaryView(e))
+                .Select(e => new EnforcementOrderDetailedView(e))
                 .ToListAsync().ConfigureAwait(false);
 
         // Recently Executed are public executed orders with 
