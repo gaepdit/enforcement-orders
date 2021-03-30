@@ -21,7 +21,7 @@ namespace Enfo.WebApp.Pages.Admin
         private readonly IEnforcementOrderRepository _repository;
         public Index(IEnforcementOrderRepository repository) => _repository = repository;
 
-        public async Task OnGet()
+        public async Task OnGetAsync()
         {
             CurrentProposedOrders = await _repository.ListCurrentProposedEnforcementOrdersAsync();
             RecentExecutedOrders = await _repository.ListRecentlyExecutedEnforcementOrdersAsync();
@@ -32,7 +32,7 @@ namespace Enfo.WebApp.Pages.Admin
 
         public async Task<IActionResult> OnGetFindAsync(string find)
         {
-            if (string.IsNullOrWhiteSpace(find)) return Page();
+            if (string.IsNullOrWhiteSpace(find)) return RedirectToPage("Index");
 
             var spec = new EnforcementOrderAdminSpec {OrderNumber = find};
             var orders = await _repository.ListAdminAsync(spec, new PaginationSpec(1, 1));

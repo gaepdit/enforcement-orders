@@ -20,11 +20,11 @@ namespace Enfo.WebApp.Pages
         public static SelectList CountiesSelectList => new(DomainData.Counties);
         public SelectList LegalAuthoritiesSelectList { get; private set; }
 
-        private readonly IEnforcementOrderRepository _repository;
+        private readonly IEnforcementOrderRepository _order;
         private readonly ILegalAuthorityRepository _legalAuthority;
 
-        public Search(IEnforcementOrderRepository repository, ILegalAuthorityRepository legalAuthority) =>
-            (_repository, _legalAuthority) = (repository, legalAuthority);
+        public Search(IEnforcementOrderRepository order, ILegalAuthorityRepository legalAuthority) =>
+            (_order, _legalAuthority) = (order, legalAuthority);
 
         public async Task OnGetAsync()
         {
@@ -36,7 +36,7 @@ namespace Enfo.WebApp.Pages
         {
             spec.TrimAll();
             Spec = spec;
-            OrdersList = await _repository.ListAsync(spec, new PaginationSpec(p, App.PageSize));
+            OrdersList = await _order.ListAsync(spec, new PaginationSpec(p, App.PageSize));
             LegalAuthoritiesSelectList = await GetLegalAuthoritiesSelectList();
             ShowResults = true;
         }

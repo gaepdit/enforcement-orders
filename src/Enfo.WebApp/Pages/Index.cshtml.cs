@@ -17,7 +17,7 @@ namespace Enfo.WebApp.Pages
         private readonly IEnforcementOrderRepository _repository;
         public Index(IEnforcementOrderRepository repository) => _repository = repository;
 
-        public async Task OnGet()
+        public async Task OnGetAsync()
         {
             CurrentProposedOrders = await _repository.ListCurrentProposedEnforcementOrdersAsync();
             RecentExecutedOrders = await _repository.ListRecentlyExecutedEnforcementOrdersAsync();
