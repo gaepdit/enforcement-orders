@@ -5,6 +5,7 @@ using Enfo.Repository.Resources.EnforcementOrder;
 using Enfo.Repository.Specs;
 using Enfo.WebApp.Extensions;
 using Enfo.WebApp.Models;
+using JetBrains.Annotations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -21,6 +22,7 @@ namespace Enfo.WebApp.Pages.Admin
         private readonly IEnforcementOrderRepository _repository;
         public Index(IEnforcementOrderRepository repository) => _repository = repository;
 
+        [UsedImplicitly]
         public async Task OnGetAsync()
         {
             CurrentProposedOrders = await _repository.ListCurrentProposedEnforcementOrdersAsync();
@@ -30,6 +32,7 @@ namespace Enfo.WebApp.Pages.Admin
             Message = TempData?.GetDisplayMessage();
         }
 
+        [UsedImplicitly]
         public async Task<IActionResult> OnGetFindAsync(string find)
         {
             if (string.IsNullOrWhiteSpace(find)) return RedirectToPage("Index");

@@ -4,6 +4,7 @@ using Enfo.Repository.Repositories;
 using Enfo.Repository.Resources.EnforcementOrder;
 using Enfo.WebApp.Extensions;
 using Enfo.WebApp.Models;
+using JetBrains.Annotations;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Enfo.WebApp.Pages
@@ -17,6 +18,7 @@ namespace Enfo.WebApp.Pages
         private readonly IEnforcementOrderRepository _repository;
         public Index(IEnforcementOrderRepository repository) => _repository = repository;
 
+        [UsedImplicitly]
         public async Task OnGetAsync()
         {
             CurrentProposedOrders = await _repository.ListCurrentProposedEnforcementOrdersAsync();

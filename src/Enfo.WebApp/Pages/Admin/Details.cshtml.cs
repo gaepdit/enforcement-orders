@@ -4,6 +4,7 @@ using Enfo.Repository.Repositories;
 using Enfo.Repository.Resources.EnforcementOrder;
 using Enfo.WebApp.Extensions;
 using Enfo.WebApp.Models;
+using JetBrains.Annotations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -20,6 +21,7 @@ namespace Enfo.WebApp.Pages.Admin
         private readonly IEnforcementOrderRepository _repository;
         public Details(IEnforcementOrderRepository repository) => _repository = repository;
 
+        [UsedImplicitly]
         public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null) return NotFound("Order ID not found.");

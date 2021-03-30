@@ -1,0 +1,24 @@
+﻿@page
+@model Enfo.WebApp.Pages.Admin.Maintenance.Index
+
+@{
+    ViewData["Title"] = "Site Maintenance";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<p>Select a drop-down list to edit.</p>
+
+<nav aria-label="Secondary navigation" class="usa-sidenav-list">
+    <ul class="usa-sidenav-sub_list">
+        <li>
+            <a asp-page="Address/Index">@MaintenanceOptions.Address</a>
+        </li>
+        <li>
+            <a asp-page="Contact/Index">@MaintenanceOptions.EpdContact</a>
+        </li>
+        <li>
+            <a asp-page="LegalAuthority/Index">@MaintenanceOptions.LegalAuthority</a>
+        </li>
+    </ul>
+</nav>

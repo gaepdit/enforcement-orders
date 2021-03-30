@@ -14,15 +14,15 @@
     * Delete `/Admin/Delete/{id}`
     * Restore `/Admin/Restore/{id}`
 * Site maintenance `/Admin/Maintenance`
-    * Addresses list `/Admin/Maintenance/Addresses`
-        * Create `/Admin/Maintenance/Addresses/Create`
-        * Edit `/Admin/Maintenance/Addresses/Edit/{id}`
-    * EPD Contacts list `/Admin/Maintenance/EpdContacts`
-        * Create `/Admin/Maintenance/EpdContacts/Create`
-        * Edit `/Admin/Maintenance/EpdContacts/Edit/{id}`
-    * Legal Authorities list `/Admin/Maintenance/LegalAuthorities`
-        * Create `/Admin/Maintenance/LegalAuthorities/Create`
-        * Edit `/Admin/Maintenance/LegalAuthorities/Edit/{id}`
+    * EPD Addresses list `/Admin/Maintenance/Address`
+        * Create `/Admin/Maintenance/Address/Create`
+        * Edit `/Admin/Maintenance/Address/Edit/{id}`
+    * EPD Contacts list `/Admin/Maintenance/Contact`
+        * Create `/Admin/Maintenance/Contact/Create`
+        * Edit `/Admin/Maintenance/Contact/Edit/{id}`
+    * Legal Authorities list `/Admin/Maintenance/LegalAuthority`
+        * Create `/Admin/Maintenance/LegalAuthority/Create`
+        * Edit `/Admin/Maintenance/LegalAuthority/Edit/{id}`
 * Account profile `/Account`
 * Users list `/Admin/Users`
     * View user profile `/Admin/Users/Details/{id}`

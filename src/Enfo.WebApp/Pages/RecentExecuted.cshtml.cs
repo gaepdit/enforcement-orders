@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Enfo.Repository.Repositories;
 using Enfo.Repository.Resources.EnforcementOrder;
+using JetBrains.Annotations;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Enfo.WebApp.Pages
@@ -13,6 +14,7 @@ namespace Enfo.WebApp.Pages
         private readonly IEnforcementOrderRepository _repository;
         public RecentExecuted(IEnforcementOrderRepository repository) => _repository = repository;
 
+        [UsedImplicitly]
         public async Task OnGetAsync() => Orders = await _repository.ListRecentlyExecutedEnforcementOrdersAsync();
     }
 }

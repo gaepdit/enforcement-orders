@@ -4,6 +4,7 @@ using Enfo.Repository.Repositories;
 using Enfo.Repository.Resources;
 using Enfo.Repository.Resources.LegalAuthority;
 using Enfo.Repository.Specs;
+using JetBrains.Annotations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -26,12 +27,14 @@ namespace Enfo.WebApp.Pages.Admin
         public Search(IEnforcementOrderRepository repository, ILegalAuthorityRepository legalAuthority) =>
             (_repository, _legalAuthority) = (repository, legalAuthority);
 
+        [UsedImplicitly]
         public async Task OnGetAsync()
         {
             Spec = new EnforcementOrderAdminSpec();
             LegalAuthoritiesSelectList = await GetLegalAuthoritiesSelectList();
         }
 
+        [UsedImplicitly]
         public async Task OnGetSearchAsync(EnforcementOrderAdminSpec spec, [FromQuery] int p = 1)
         {
             spec.TrimAll();
