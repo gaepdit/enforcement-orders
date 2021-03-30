@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using Enfo.Domain.Entities;
 
-namespace Infrastructure.Tests
+namespace TestHelpers
 {
-    public static class RepositoryHelperData
+    public static class DataHelper
     {
         public static readonly IEnumerable<Address> GetAddresses = new List<Address>
         {

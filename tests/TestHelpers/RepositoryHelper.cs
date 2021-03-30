@@ -6,7 +6,7 @@ using Enfo.Repository.Repositories;
 using Microsoft.EntityFrameworkCore;
 using TestSupport.EfHelpers;
 
-namespace Infrastructure.Tests
+namespace TestHelpers
 {
     public sealed class RepositoryHelper : IDisposable
     {
@@ -26,34 +26,34 @@ namespace Infrastructure.Tests
         private void SeedAddressData()
         {
             if (_context.Addresses.Any()) return;
-            _context.Addresses.AddRange(RepositoryHelperData.GetAddresses);
+            _context.Addresses.AddRange(DataHelper.GetAddresses);
             _context.SaveChanges();
         }
 
         private void SeedLegalAuthorityData()
         {
             if (_context.LegalAuthorities.Any()) return;
-            _context.LegalAuthorities.AddRange(RepositoryHelperData.GetLegalAuthorities);
+            _context.LegalAuthorities.AddRange(DataHelper.GetLegalAuthorities);
             _context.SaveChanges();
         }
 
         private void SeedEpdContactData()
         {
             if (_context.EpdContacts.Any()) return;
-            if (!_context.Addresses.Any()) _context.Addresses.AddRange(RepositoryHelperData.GetAddresses);
-            _context.EpdContacts.AddRange(RepositoryHelperData.GetEpdContacts);
+            if (!_context.Addresses.Any()) _context.Addresses.AddRange(DataHelper.GetAddresses);
+            _context.EpdContacts.AddRange(DataHelper.GetEpdContacts);
             _context.SaveChanges();
         }
 
         private void SeedEnforcementOrderData()
         {
             if (_context.EnforcementOrders.Any()) return;
-            if (!_context.Addresses.Any()) _context.Addresses.AddRange(RepositoryHelperData.GetAddresses);
-            if (!_context.EpdContacts.Any()) _context.EpdContacts.AddRange(RepositoryHelperData.GetEpdContacts);
+            if (!_context.Addresses.Any()) _context.Addresses.AddRange(DataHelper.GetAddresses);
+            if (!_context.EpdContacts.Any()) _context.EpdContacts.AddRange(DataHelper.GetEpdContacts);
             if (!_context.LegalAuthorities.Any())
-                _context.LegalAuthorities.AddRange(RepositoryHelperData.GetLegalAuthorities);
+                _context.LegalAuthorities.AddRange(DataHelper.GetLegalAuthorities);
             _context.SaveChanges();
-            _context.EnforcementOrders.AddRange(RepositoryHelperData.GetEnforcementOrders);
+            _context.EnforcementOrders.AddRange(DataHelper.GetEnforcementOrders);
             _context.SaveChanges();
         }
 

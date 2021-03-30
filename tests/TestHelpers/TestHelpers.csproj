@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="EfCore.TestSupport" Version="5.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\src\Enfo.Domain\Enfo.Domain.csproj" />
+        <ProjectReference Include="..\..\src\Enfo.Infrastructure\Enfo.Infrastructure.csproj" />
+        <ProjectReference Include="..\..\src\Enfo.Repository\Enfo.Repository.csproj" />
+    </ItemGroup>
+
+</Project>

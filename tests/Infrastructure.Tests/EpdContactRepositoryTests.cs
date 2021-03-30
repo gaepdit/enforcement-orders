@@ -5,8 +5,8 @@ using Enfo.Repository.Mapping;
 using Enfo.Repository.Resources.EpdContact;
 using FluentAssertions;
 using Xunit;
-using static Infrastructure.Tests.RepositoryHelperData;
-using static Infrastructure.Tests.RepositoryHelper;
+using static TestHelpers.DataHelper;
+using static TestHelpers.RepositoryHelper;
 
 namespace Infrastructure.Tests
 {

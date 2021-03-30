@@ -13,6 +13,6 @@ namespace Enfo.WebApp.Pages
         private readonly IEnforcementOrderRepository _repository;
         public RecentExecuted(IEnforcementOrderRepository repository) => _repository = repository;
 
-        public async Task OnGet() => Orders = await _repository.ListRecentlyExecutedEnforcementOrdersAsync();
+        public async Task OnGetAsync() => Orders = await _repository.ListRecentlyExecutedEnforcementOrdersAsync();
     }
 }

@@ -8,42 +8,15 @@ using Enfo.Repository.Specs;
 using FluentAssertions;
 using Xunit;
 using static Enfo.Repository.Utils.DateUtils;
-using static Infrastructure.Tests.RepositoryHelper;
-using static Infrastructure.Tests.RepositoryHelperData;
+using static TestHelpers.DataHelper;
+using static TestHelpers.RepositoryHelper;
+using static TestHelpers.ResourceHelper;
 using PublicationState = Enfo.Repository.Resources.EnforcementOrder.PublicationState;
 
 namespace Infrastructure.Tests
 {
     public class EnforcementOrderRepositoryTests
     {
-        // Data helpers
-        private static EnforcementOrderDetailedView GetEnforcementOrderDetailedView(int id) =>
-            new(FillNavigationProperties(GetEnforcementOrders.Single(e => e.Id == id)));
-
-        private static EnforcementOrderSummaryView GetEnforcementOrderSummaryView(int id) =>
-            new(FillNavigationProperties(GetEnforcementOrders.Single(e => e.Id == id)));
-
-        private static EnforcementOrderAdminView GetEnforcementOrderAdminView(int id) =>
-            new(FillNavigationProperties(GetEnforcementOrders.Single(e => e.Id == id)));
-
-        private static EnforcementOrderAdminSummaryView GetEnforcementOrderAdminSummaryView(int id) =>
-            new(FillNavigationProperties(GetEnforcementOrders.Single(e => e.Id == id)));
-
-        private static EnforcementOrder FillNavigationProperties(EnforcementOrder order)
-        {
-            order.LegalAuthority = GetLegalAuthorities.SingleOrDefault(e => e.Id == order.LegalAuthorityId);
-            order.CommentContact = GetEpdContacts.SingleOrDefault(e => e.Id == order.CommentContactId);
-            if (order.CommentContact != null)
-                order.CommentContact.Address =
-                    GetAddresses.SingleOrDefault(e => e.Id == order.CommentContact.AddressId);
-            order.HearingContact = GetEpdContacts.SingleOrDefault(e => e.Id == order.HearingContactId);
-            if (order.HearingContact != null)
-                order.HearingContact.Address =
-                    GetAddresses.SingleOrDefault(e => e.Id == order.HearingContact.AddressId);
-
-            return order;
-        }
-
         // GetAsync
 
         [Fact]

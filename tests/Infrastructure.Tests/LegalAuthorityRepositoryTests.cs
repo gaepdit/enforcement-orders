@@ -5,8 +5,8 @@ using Enfo.Repository.Mapping;
 using Enfo.Repository.Resources.LegalAuthority;
 using FluentAssertions;
 using Xunit;
-using static Infrastructure.Tests.RepositoryHelper;
-using static Infrastructure.Tests.RepositoryHelperData;
+using static TestHelpers.DataHelper;
+using static TestHelpers.RepositoryHelper;
 
 namespace Infrastructure.Tests
 {
