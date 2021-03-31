@@ -27,7 +27,6 @@ namespace Enfo.Repository.Mapping
             Guard.NotNull(item, nameof(item));
             Guard.NotNull(resource, nameof(resource));
 
-            item.Active = resource.Active;
             item.AddressId = resource.AddressId;
             item.ContactName = resource.ContactName;
             item.Email = resource.Email;
@@ -35,5 +34,16 @@ namespace Enfo.Repository.Mapping
             item.Telephone = resource.Telephone;
             item.Title = resource.Title;
         }
+        
+        public static EpdContactUpdate ToEpdContactUpdate(EpdContactView item) =>
+            new()
+            {
+                AddressId = item.Address.Id,
+                ContactName = item.ContactName,
+                Email = item.Email,
+                Organization = item.Organization,
+                Telephone = item.Telephone,
+                Title = item.Title,
+            };
     }
 }

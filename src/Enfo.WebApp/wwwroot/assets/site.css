@@ -19,6 +19,10 @@ a.gaepd-no-visited {
     color: #0071bc;
 }
 
+.text-nowrap {
+    white-space: nowrap !important;
+}
+
 form.usa-section {
     padding-top: 0;
     padding-bottom: 3rem;

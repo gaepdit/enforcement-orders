@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Enfo.Domain.Entities;
+using Enfo.Repository.Resources.Address;
 using Enfo.Repository.Resources.EnforcementOrder;
+using Enfo.Repository.Resources.EpdContact;
 using Enfo.Repository.Resources.LegalAuthority;
 using static TestHelpers.DataHelper;
 
@@ -27,7 +29,7 @@ namespace TestHelpers
 
         public static EnforcementOrderAdminSummaryView GetEnforcementOrderAdminSummaryView(int id) =>
             new(FillNavigationProperties(GetEnforcementOrders.Single(e => e.Id == id)));
-        
+
         public static List<EnforcementOrderAdminSummaryView> GetEnforcementOrderAdminSummaryViewList() =>
             GetEnforcementOrders.Select(e => GetEnforcementOrderAdminSummaryView(e.Id)).ToList();
 
@@ -49,7 +51,13 @@ namespace TestHelpers
             return order;
         }
 
-        // Legal Authorities
+        // Maintenance
+
+        public static List<AddressView> GetAddressViewList() =>
+            GetAddresses.Select(e => new AddressView(e)).ToList();
+
+        public static List<EpdContactView> GetEpdContactViewList() =>
+            GetEpdContacts.Select(e => new EpdContactView(e)).ToList();
 
         public static List<LegalAuthorityView> GetLegalAuthorityViewList() =>
             GetLegalAuthorities.Select(e => new LegalAuthorityView(e)).ToList();

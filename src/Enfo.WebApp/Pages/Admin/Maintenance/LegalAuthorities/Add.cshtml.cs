@@ -7,7 +7,7 @@ using JetBrains.Annotations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthority
+namespace Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthorities
 {
     public class Add : PageModel
     {

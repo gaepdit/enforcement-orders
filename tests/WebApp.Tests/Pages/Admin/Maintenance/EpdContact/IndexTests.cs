@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
 using Enfo.Repository.Repositories;
-using Enfo.Repository.Resources.LegalAuthority;
+using Enfo.Repository.Resources.EpdContact;
 using Enfo.WebApp.Extensions;
 using Enfo.WebApp.Models;
-using Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthorities;
+using Enfo.WebApp.Pages.Admin.Maintenance.EpdContacts;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,15 +13,15 @@ using Xunit;
 using Xunit.Extensions.AssertExtensions;
 using static TestHelpers.ResourceHelper;
 
-namespace WebApp.Tests.Pages.Admin.Maintenance.LegalAuthority
+namespace WebApp.Tests.Pages.Admin.Maintenance.EpdContact
 {
     public class IndexTests
     {
         [Fact]
         public async Task OnGet_ReturnsWithOrder()
         {
-            var list = GetLegalAuthorityViewList();
-            var repo = new Mock<ILegalAuthorityRepository>();
+            var list = GetEpdContactViewList();
+            var repo = new Mock<IEpdContactRepository>();
             repo.Setup(l => l.ListAsync(true)).ReturnsAsync(list);
             var page = new Index(repo.Object);
 
@@ -34,7 +34,7 @@ namespace WebApp.Tests.Pages.Admin.Maintenance.LegalAuthority
         [Fact]
         public async Task SetDisplayMessage_ReturnsWithDisplayMessage()
         {
-            var repo = new Mock<ILegalAuthorityRepository> {DefaultValue = DefaultValue.Mock};
+            var repo = new Mock<IEpdContactRepository> {DefaultValue = DefaultValue.Mock};
 
             // Initialize Page TempData
             var httpContext = new DefaultHttpContext();
@@ -51,8 +51,8 @@ namespace WebApp.Tests.Pages.Admin.Maintenance.LegalAuthority
         [Fact]
         public async Task OnPost_ReturnsRedirectWithDisplayMessage()
         {
-            var item = GetLegalAuthorityViewList()[0];
-            var repo = new Mock<ILegalAuthorityRepository> {DefaultValue = DefaultValue.Mock};
+            var item = GetEpdContactViewList()[0];
+            var repo = new Mock<IEpdContactRepository> {DefaultValue = DefaultValue.Mock};
             repo.Setup(l => l.GetAsync(It.IsAny<int>()))
                 .ReturnsAsync(item);
 
@@ -64,7 +64,7 @@ namespace WebApp.Tests.Pages.Admin.Maintenance.LegalAuthority
             var result = await page.OnPostAsync(item.Id);
 
             var expected = new DisplayMessage(Context.Success,
-                $"{item.AuthorityName} successfully {(item.Active ? "deactivated" : "restored")}.");
+                $"Contact successfully {(item.Active ? "deactivated" : "restored")}.");
             page.TempData?.GetDisplayMessage().Should().BeEquivalentTo(expected);
 
             result.Should().BeOfType<RedirectToPageResult>();
@@ -74,7 +74,7 @@ namespace WebApp.Tests.Pages.Admin.Maintenance.LegalAuthority
         [Fact]
         public async Task OnPost_GivenNullId_ReturnsBadRequest()
         {
-            var repo = new Mock<ILegalAuthorityRepository> {DefaultValue = DefaultValue.Mock};
+            var repo = new Mock<IEpdContactRepository> {DefaultValue = DefaultValue.Mock};
             var page = new Index(repo.Object);
 
             var result = await page.OnPostAsync(null);
@@ -85,9 +85,9 @@ namespace WebApp.Tests.Pages.Admin.Maintenance.LegalAuthority
         [Fact]
         public async Task OnPost_GivenInvalidId_ReturnsNotFound()
         {
-            var repo = new Mock<ILegalAuthorityRepository> {DefaultValue = DefaultValue.Mock};
+            var repo = new Mock<IEpdContactRepository> {DefaultValue = DefaultValue.Mock};
             repo.Setup(l => l.GetAsync(It.IsAny<int>()))
-                .ReturnsAsync(null as LegalAuthorityView);
+                .ReturnsAsync(null as EpdContactView);
             var page = new Index(repo.Object);
 
             var result = await page.OnPostAsync(1);

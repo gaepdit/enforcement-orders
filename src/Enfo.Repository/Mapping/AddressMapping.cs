@@ -26,12 +26,21 @@ namespace Enfo.Repository.Mapping
             Guard.NotNull(item, nameof(item));
             Guard.NotNull(resource, nameof(resource));
 
-            item.Active = resource.Active;
             item.City = resource.City;
             item.PostalCode = resource.PostalCode;
             item.State = resource.State;
             item.Street = resource.Street;
             item.Street2 = resource.Street2;
         }
+
+        public static AddressUpdate ToAddressUpdate(AddressView item) =>
+            new()
+            {
+                City = item.City,
+                PostalCode = item.PostalCode,
+                State = item.State,
+                Street = item.Street,
+                Street2 = item.Street2,
+            };
     }
 }

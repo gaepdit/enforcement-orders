@@ -5,6 +5,7 @@ using Enfo.Repository.Mapping;
 using Enfo.Repository.Resources.Address;
 using FluentAssertions;
 using Xunit;
+using Xunit.Extensions.AssertExtensions;
 using static TestHelpers.DataHelper;
 using static TestHelpers.RepositoryHelper;
 
@@ -153,7 +154,6 @@ namespace Infrastructure.Tests
             var itemId = original.Id;
             var itemUpdate = new AddressUpdate()
             {
-                Active = original.Active,
                 City = original.City,
                 PostalCode = original.PostalCode,
                 State = original.State,
@@ -235,6 +235,84 @@ namespace Infrastructure.Tests
             {
                 using var repository = CreateRepositoryHelper().GetAddressRepository();
                 await repository.UpdateAsync(itemId, itemUpdate);
+            };
+
+            (await action.Should().ThrowAsync<ArgumentException>())
+                .WithMessage($"ID ({itemId}) not found. (Parameter 'id')")
+                .And.ParamName.Should().Be("id");
+        }
+
+        // UpdateStatusAsync
+
+        [Fact]
+        public async Task UpdateStatusToInactive_GivenActive_Succeeds()
+        {
+            var itemId = GetAddresses.First(e => e.Active).Id;
+
+            using var repositoryHelper = CreateRepositoryHelper();
+            using var repository = repositoryHelper.GetAddressRepository();
+
+            await repository.UpdateStatusAsync(itemId, false);
+            repositoryHelper.ClearChangeTracker();
+
+            var item = await repository.GetAsync(itemId);
+            item.Active.ShouldBeFalse();
+        }
+
+        [Fact]
+        public async Task UpdateStatusToInactive_GivenInactive_Succeeds()
+        {
+            var itemId = GetAddresses.First(e => !e.Active).Id;
+
+            using var repositoryHelper = CreateRepositoryHelper();
+            using var repository = repositoryHelper.GetAddressRepository();
+
+            await repository.UpdateStatusAsync(itemId, false);
+            repositoryHelper.ClearChangeTracker();
+
+            var item = await repository.GetAsync(itemId);
+            item.Active.ShouldBeFalse();
+        }
+
+        [Fact]
+        public async Task UpdateStatusToActive_GivenActive_Succeeds()
+        {
+            var itemId = GetAddresses.First(e => e.Active).Id;
+
+            using var repositoryHelper = CreateRepositoryHelper();
+            using var repository = repositoryHelper.GetAddressRepository();
+
+            await repository.UpdateStatusAsync(itemId, true);
+            repositoryHelper.ClearChangeTracker();
+
+            var item = await repository.GetAsync(itemId);
+            item.Active.ShouldBeTrue();
+        }
+
+        [Fact]
+        public async Task UpdateStatusToActive_GivenInactive_Succeeds()
+        {
+            var itemId = GetAddresses.First(e => !e.Active).Id;
+
+            using var repositoryHelper = CreateRepositoryHelper();
+            using var repository = repositoryHelper.GetAddressRepository();
+
+            await repository.UpdateStatusAsync(itemId, true);
+            repositoryHelper.ClearChangeTracker();
+
+            var item = await repository.GetAsync(itemId);
+            item.Active.ShouldBeTrue();
+        }
+
+        [Fact]
+        public async Task UpdateStatusToInactive_GivenInvalidId_ThrowsException()
+        {
+            const int itemId = -1;
+
+            Func<Task> action = async () =>
+            {
+                using var repository = CreateRepositoryHelper().GetAddressRepository();
+                await repository.UpdateStatusAsync(itemId, true);
             };
 
             (await action.Should().ThrowAsync<ArgumentException>())

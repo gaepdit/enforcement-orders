@@ -31,5 +31,14 @@ namespace Enfo.Repository.Resources.EpdContact
         [StringLength(100)]
         [RegularExpression(ResourceRegex.Email, ErrorMessage = "Provide a valid email address.")]
         public string Email { get; set; }
+        
+        public void TrimAll()
+        {
+            ContactName = ContactName?.Trim();
+            Title = Title?.Trim();
+            Organization = Organization?.Trim();
+            Telephone = Telephone?.Trim();
+            Email = Email?.Trim();
+        }
     }
 }

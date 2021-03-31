@@ -9,6 +9,6 @@ namespace Enfo.Repository.Resources.LegalAuthority
         [DisplayName("Legal Authority Name")]
         public string AuthorityName { get; set; }
 
-        public void TrimAll() => AuthorityName = AuthorityName.Trim();
+        public void TrimAll() => AuthorityName = AuthorityName?.Trim();
     }
 }

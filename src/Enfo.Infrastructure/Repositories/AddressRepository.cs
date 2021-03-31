@@ -68,6 +68,14 @@ namespace Enfo.Infrastructure.Repositories
             await _context.SaveChangesAsync().ConfigureAwait(false);
         }
 
+        public async Task UpdateStatusAsync(int id, bool newActiveStatus)
+        {
+            var item = await _context.Addresses.FindAsync(id);
+            if (item == null) throw new ArgumentException($"ID ({id}) not found.", nameof(id));
+            item.Active = newActiveStatus;
+            await _context.SaveChangesAsync();
+        }
+
         public async Task<bool> ExistsAsync(int id) =>
             await _context.Addresses.AnyAsync(e => e.Id == id).ConfigureAwait(false);
 

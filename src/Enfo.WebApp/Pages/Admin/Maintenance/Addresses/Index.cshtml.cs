@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Enfo.Repository.Repositories;
-using Enfo.Repository.Resources.LegalAuthority;
+using Enfo.Repository.Resources.Address;
 using Enfo.WebApp.Extensions;
 using Enfo.WebApp.Models;
 using JetBrains.Annotations;
@@ -9,18 +9,19 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
-namespace Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthority
+namespace Enfo.WebApp.Pages.Admin.Maintenance.Addresses
 {
     public class Index : PageModel
     {
-        public IReadOnlyList<LegalAuthorityView> Items { get; private set; }
-        public static MaintenanceOption ThisOption { get; } = MaintenanceOption.LegalAuthority;
+        public IReadOnlyList<AddressView> Items { get; private set; }
+        public static MaintenanceOption ThisOption { get; } = MaintenanceOption.Address;
         public DisplayMessage Message { get; private set; }
+
         [TempData]
         public int NewId { get; set; }
 
-        private readonly ILegalAuthorityRepository _repository;
-        public Index(ILegalAuthorityRepository repository) => _repository = repository;
+        private readonly IAddressRepository _repository;
+        public Index(IAddressRepository repository) => _repository = repository;
 
         [UsedImplicitly]
         public async Task OnGetAsync()
@@ -48,7 +49,7 @@ namespace Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthority
             }
 
             TempData?.SetDisplayMessage(Context.Success,
-                $"{item.AuthorityName} successfully {(item.Active ? "deactivated" : "restored")}.");
+                $"{ThisOption.SingularName} successfully {(item.Active ? "deactivated" : "restored")}.");
 
             return RedirectToPage("Index");
         }

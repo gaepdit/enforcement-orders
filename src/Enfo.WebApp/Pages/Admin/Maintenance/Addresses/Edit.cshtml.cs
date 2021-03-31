@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
+using Enfo.Repository.Mapping;
 using Enfo.Repository.Repositories;
-using Enfo.Repository.Resources.LegalAuthority;
+using Enfo.Repository.Resources.Address;
 using Enfo.WebApp.Extensions;
 using Enfo.WebApp.Models;
 using JetBrains.Annotations;
@@ -8,21 +9,20 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
-namespace Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthority
+namespace Enfo.WebApp.Pages.Admin.Maintenance.Addresses
 {
     public class Edit : PageModel
     {
         [BindProperty]
-        public LegalAuthorityUpdate Item { get; set; }
+        public AddressUpdate Item { get; set; }
 
         [BindProperty]
         public int Id { get; set; }
 
-        public string OriginalName { get; set; }
-        public static MaintenanceOption ThisOption { get; } = MaintenanceOption.LegalAuthority;
+        public static MaintenanceOption ThisOption { get; } = MaintenanceOption.Address;
 
-        private readonly ILegalAuthorityRepository _repository;
-        public Edit(ILegalAuthorityRepository repository) => _repository = repository;
+        private readonly IAddressRepository _repository;
+        public Edit(IAddressRepository repository) => _repository = repository;
 
         [UsedImplicitly]
         public async Task<IActionResult> OnGetAsync(int? id)
@@ -37,9 +37,8 @@ namespace Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthority
                 return RedirectToPage("Index");
             }
 
-            Item = new LegalAuthorityUpdate(originalItem);
+            Item = AddressMapping.ToAddressUpdate(originalItem);
             Id = id.Value;
-            OriginalName = originalItem.AuthorityName;
             return Page();
         }
 
@@ -55,19 +54,12 @@ namespace Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthority
                 return RedirectToPage("Index");
             }
 
-            OriginalName = originalItem.AuthorityName;
-
             if (!ModelState.IsValid) return Page();
 
             Item.TrimAll();
 
-            if (await _repository.NameExistsAsync(Item.AuthorityName, Id))
-            {
-                ModelState.AddModelError("Item.AuthorityName", "The authority name entered already exists.");
-            }
-
             if (!ModelState.IsValid) return Page();
-            
+
             try
             {
                 await _repository.UpdateAsync(Id, Item);
@@ -78,7 +70,7 @@ namespace Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthority
                 throw;
             }
 
-            TempData?.SetDisplayMessage(Context.Success, $"{Item.AuthorityName} successfully updated.");
+            TempData?.SetDisplayMessage(Context.Success, $"{ThisOption.SingularName} successfully updated.");
             return RedirectToPage("Index");
         }
     }

@@ -1,5 +1,5 @@
 ﻿@page
-@model Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthority.Index
+@model Enfo.WebApp.Pages.Admin.Maintenance.Addresses.Index
 
 @{
     ViewData["Title"] = $"Site Maintenance: {Index.ThisOption.PluralName}";
@@ -22,7 +22,7 @@
     <table class="usa-table-borderless gaepd-table-responsive">
         <thead>
         <tr>
-            <th scope="col">Authority Name</th>
+            <th scope="col">Address</th>
             <th scope="col">Actions</th>
         </tr>
         </thead>
@@ -30,9 +30,9 @@
         @foreach (var item in Model.Items)
         {
             <tr class="@(item.Id == Model.NewId ? "gaepd-tablerow-highlight" : item.Active ? "" : "gaepd-tablerow-dimmed")">
-                <th scope="row" data-label="Authority Name">
+                <th scope="row" data-label="Address">
                     @Html.DisplayFor(m => item.Active, "BoolInactive")
-                    @Html.DisplayFor(m => item.AuthorityName)
+                    @Html.DisplayFor(m => item, "Address")
                 </th>
                 <td class="gaepd-tablecell-nolabel">
                     @if (item.Active)

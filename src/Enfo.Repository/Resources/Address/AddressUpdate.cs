@@ -5,8 +5,6 @@ namespace Enfo.Repository.Resources.Address
 {
     public class AddressUpdate
     {
-        public bool Active { get; set; }
-
         [DisplayName("Street Address")]
         [Required(ErrorMessage = "Street Address is required.")]
         [StringLength(100)]
@@ -26,9 +24,19 @@ namespace Enfo.Repository.Resources.Address
         public string State { get; set; } = "GA";
 
         [DisplayName("Postal Code")]
+        [Required(ErrorMessage = "Postal Code is required.")]
         [DataType(DataType.PostalCode)]
         [StringLength(10)]
         [RegularExpression(ResourceRegex.PostalCode, ErrorMessage = "Provide a valid US ZIP Code.")]
         public string PostalCode { get; set; }
+
+        public void TrimAll()
+        {
+            Street = Street?.Trim();
+            Street2 = Street2?.Trim();
+            City = City?.Trim();
+            State = State?.Trim();
+            PostalCode = PostalCode?.Trim();
+        }
     }
 }

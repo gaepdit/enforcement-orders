@@ -24,5 +24,9 @@ namespace Enfo.Repository.Mapping
 
             item.AuthorityName = resource.AuthorityName;
         }
+        
+        public static LegalAuthorityUpdate ToLegalAuthorityUpdate(LegalAuthorityView item) =>
+            new() {AuthorityName = item.AuthorityName};
+
     }
 }

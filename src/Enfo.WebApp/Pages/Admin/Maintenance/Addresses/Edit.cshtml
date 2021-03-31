@@ -1,0 +1,40 @@
+﻿@page "{id}"
+@model Enfo.WebApp.Pages.Admin.Maintenance.Addresses.Edit
+
+@{
+    ViewData["Title"] = $"Edit {Edit.ThisOption.SingularName}";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form method="post" class="usa-form">
+    <div asp-validation-summary="ModelOnly" class="usa-input-error-message"></div>
+
+    <label asp-for="Item.Street"></label>
+    <input asp-for="Item.Street" />
+    <span asp-validation-for="Item.Street" class="usa-input-error-message"></span>
+
+    <label asp-for="Item.Street2"></label>
+    <span class="usa-additional_text">(Optional)</span>
+    <input asp-for="Item.Street2" />
+    <span asp-validation-for="Item.Street2" class="usa-input-error-message"></span>
+
+    <div class="usa-grid-full">
+        <div class="usa-input-grid usa-input-grid-medium">
+            <label asp-for="Item.City"></label>
+            <input asp-for="Item.City" />
+            <span asp-validation-for="Item.City" class="usa-input-error-message"></span>
+        </div>
+        <div class="usa-input-grid usa-input-grid-medium">
+            <label asp-for="Item.PostalCode"></label>
+            <input asp-for="Item.PostalCode" />
+            <span asp-validation-for="Item.PostalCode" class="usa-input-error-message"></span>
+        </div>
+    </div>
+
+    <div class="gaepd-buttonrow">
+        <input type="hidden" asp-for="Id" />
+        <button type="submit">Save Changes</button>
+        <a asp-page="Index" class="usa-button usa-button-secondary">Cancel</a>
+    </div>
+</form>

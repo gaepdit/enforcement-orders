@@ -2,7 +2,6 @@ using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using Enfo.Repository.Resources.EpdContact;
-using Enfo.Repository.Resources.LegalAuthority;
 using Enfo.Repository.Utils;
 using JetBrains.Annotations;
 
@@ -24,15 +23,9 @@ namespace Enfo.Repository.Resources.EnforcementOrder
             HearingLocation = item.HearingLocation;
             HearingCommentPeriodClosesDate = item.HearingCommentPeriodClosesDate;
             HearingContact = item.HearingContact == null ? null : new EpdContactView(item.HearingContact);
-            LegalAuthority = item.LegalAuthority == null ? null : new LegalAuthorityView(item.LegalAuthority);
-            OrderNumber = item.OrderNumber;
             IsPublicProposedOrder = item.GetIsPublicProposedOrder;
-            IsProposedOrder = item.IsProposedOrder;
             CommentPeriodClosesDate = item.CommentPeriodClosesDate;
-            ProposedOrderPostedDate = item.ProposedOrderPostedDate;
             IsPublicExecutedOrder = item.GetIsPublicExecutedOrder;
-            IsExecutedOrder = IsPublicExecutedOrder && item.IsExecutedOrder;
-            ExecutedDate = item.ExecutedDate;
             ExecutedOrderPostedDate = item.ExecutedOrderPostedDate;
         }
 
@@ -51,12 +44,6 @@ namespace Enfo.Repository.Resources.EnforcementOrder
 
         // Common data elements
 
-        [DisplayName("Legal Authority")]
-        public LegalAuthorityView LegalAuthority { get; }
-
-        [DisplayName("Order Number")]
-        public string OrderNumber { get; }
-
         [DisplayName("Cause of Order")]
         public string Cause { get; }
 
@@ -71,9 +58,6 @@ namespace Enfo.Repository.Resources.EnforcementOrder
 
         private bool IsPublicProposedOrder { get; }
 
-        [DisplayName("Proposed Order Public Noticed")]
-        public bool IsProposedOrder { get; }
-
         [DisplayName("Send Comments To")]
         public EpdContactView CommentContact { get; }
 
@@ -81,20 +65,9 @@ namespace Enfo.Repository.Resources.EnforcementOrder
         [DisplayFormat(DataFormatString = DisplayFormats.FormatDateShortComposite)]
         public DateTime? CommentPeriodClosesDate { get; }
 
-        [DisplayName("Publication Date For Proposed Order")]
-        [DisplayFormat(DataFormatString = DisplayFormats.FormatDateShortComposite)]
-        public DateTime? ProposedOrderPostedDate { get; }
-
         // Executed orders
 
         private bool IsPublicExecutedOrder { get; }
-
-        [DisplayName("Enforcement Order Executed")]
-        public bool IsExecutedOrder { get; }
-
-        [DisplayName("Date Executed")]
-        [DisplayFormat(DataFormatString = DisplayFormats.FormatDateShortComposite)]
-        public DateTime? ExecutedDate { get; }
 
         [DisplayName("Publication Date For Executed Order")]
         [DisplayFormat(DataFormatString = DisplayFormats.FormatDateShortComposite)]
