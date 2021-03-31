@@ -32,12 +32,11 @@ namespace Enfo.Repository.Specs
 
         public OrderSorting Sort { get; set; } = OrderSorting.DateDesc;
 
-        public EnforcementOrderSpec TrimAll()
+        public void TrimAll()
         {
             County = County?.Trim();
             Facility = Facility?.Trim();
             OrderNumber = OrderNumber?.Trim();
-            return this;
         }
 
         public IDictionary<string, string> AsRouteValues => new Dictionary<string, string>()

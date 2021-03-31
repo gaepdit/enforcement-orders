@@ -34,6 +34,7 @@ namespace TestHelpers
         {
             new() {Id = 1, Active = true, AuthorityName = "Air Quality Act",},
             new() {Id = 2, Active = true, AuthorityName = "Asbestos Safety Act",},
+            new() {Id = 3, Active = false, AuthorityName = "Obsolete Act",},
         };
 
         public static readonly IEnumerable<EpdContact> GetEpdContacts = new List<EpdContact>

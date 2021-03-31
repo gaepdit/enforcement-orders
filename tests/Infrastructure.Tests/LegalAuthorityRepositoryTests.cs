@@ -5,6 +5,7 @@ using Enfo.Repository.Mapping;
 using Enfo.Repository.Resources.LegalAuthority;
 using FluentAssertions;
 using Xunit;
+using Xunit.Extensions.AssertExtensions;
 using static TestHelpers.DataHelper;
 using static TestHelpers.RepositoryHelper;
 
@@ -155,6 +156,84 @@ namespace Infrastructure.Tests
                 .And.ParamName.Should().Be("id");
         }
 
+        // UpdateStatusAsync
+
+        [Fact]
+        public async Task UpdateStatusToInactive_GivenActive_Succeeds()
+        {
+            var itemId = GetLegalAuthorities.First(e => e.Active).Id;
+
+            using var repositoryHelper = CreateRepositoryHelper();
+            using var repository = repositoryHelper.GetLegalAuthorityRepository();
+
+            await repository.UpdateStatusAsync(itemId, false);
+            repositoryHelper.ClearChangeTracker();
+
+            var item = await repository.GetAsync(itemId);
+            item.Active.ShouldBeFalse();
+        }
+
+        [Fact]
+        public async Task UpdateStatusToInactive_GivenInactive_Succeeds()
+        {
+            var itemId = GetLegalAuthorities.First(e => !e.Active).Id;
+
+            using var repositoryHelper = CreateRepositoryHelper();
+            using var repository = repositoryHelper.GetLegalAuthorityRepository();
+
+            await repository.UpdateStatusAsync(itemId, false);
+            repositoryHelper.ClearChangeTracker();
+
+            var item = await repository.GetAsync(itemId);
+            item.Active.ShouldBeFalse();
+        }
+
+        [Fact]
+        public async Task UpdateStatusToActive_GivenActive_Succeeds()
+        {
+            var itemId = GetLegalAuthorities.First(e => e.Active).Id;
+
+            using var repositoryHelper = CreateRepositoryHelper();
+            using var repository = repositoryHelper.GetLegalAuthorityRepository();
+
+            await repository.UpdateStatusAsync(itemId, true);
+            repositoryHelper.ClearChangeTracker();
+
+            var item = await repository.GetAsync(itemId);
+            item.Active.ShouldBeTrue();
+        }
+
+        [Fact]
+        public async Task UpdateStatusToActive_GivenInactive_Succeeds()
+        {
+            var itemId = GetLegalAuthorities.First(e => !e.Active).Id;
+
+            using var repositoryHelper = CreateRepositoryHelper();
+            using var repository = repositoryHelper.GetLegalAuthorityRepository();
+
+            await repository.UpdateStatusAsync(itemId, true);
+            repositoryHelper.ClearChangeTracker();
+
+            var item = await repository.GetAsync(itemId);
+            item.Active.ShouldBeTrue();
+        }
+
+        [Fact]
+        public async Task UpdateStatusToInactive_GivenInvalidId_ThrowsException()
+        {
+            const int itemId = -1;
+
+            Func<Task> action = async () =>
+            {
+                using var repository = CreateRepositoryHelper().GetLegalAuthorityRepository();
+                await repository.UpdateStatusAsync(itemId, true);
+            };
+
+            (await action.Should().ThrowAsync<ArgumentException>())
+                .WithMessage($"ID ({itemId}) not found. (Parameter 'id')")
+                .And.ParamName.Should().Be("id");
+        }
+
         // ExistsAsync
 
         [Fact]
@@ -162,7 +241,7 @@ namespace Infrastructure.Tests
         {
             using var repository = CreateRepositoryHelper().GetLegalAuthorityRepository();
             var result = await repository.ExistsAsync(GetLegalAuthorities.First().Id);
-            result.Should().BeTrue();
+            result.ShouldBeTrue();
         }
 
         [Fact]
@@ -170,7 +249,40 @@ namespace Infrastructure.Tests
         {
             using var repository = CreateRepositoryHelper().GetLegalAuthorityRepository();
             var result = await repository.ExistsAsync(-1);
-            result.Should().BeFalse();
+            result.ShouldBeFalse();
+        }
+
+        // NameExistsAsync
+
+        [Fact]
+        public async Task NameExists_GivenExistingName_ReturnsTrue()
+        {
+            var item = GetLegalAuthorities.First();
+            using var repository = CreateRepositoryHelper().GetLegalAuthorityRepository();
+            (await repository.NameExistsAsync(item.AuthorityName)).ShouldBeTrue();
+        }
+
+        [Fact]
+        public async Task NameExists_GivenNonexistentName_ReturnsFalse()
+        {
+            using var repository = CreateRepositoryHelper().GetLegalAuthorityRepository();
+            (await repository.NameExistsAsync(Guid.NewGuid().ToString())).ShouldBeFalse();
+        }
+
+        [Fact]
+        public async Task NameExists_GivenExistingNameAndMatchingId_ReturnsFalse()
+        {
+            var item = GetLegalAuthorities.First();
+            using var repository = CreateRepositoryHelper().GetLegalAuthorityRepository();
+            (await repository.NameExistsAsync(item.AuthorityName, item.Id)).ShouldBeFalse();
+        }
+
+        [Fact]
+        public async Task NameExists_GivenExistingNameAndNonMatchingId_ReturnsTrue()
+        {
+            var item = GetLegalAuthorities.First();
+            using var repository = CreateRepositoryHelper().GetLegalAuthorityRepository();
+            (await repository.NameExistsAsync(item.AuthorityName, -1)).ShouldBeTrue();
         }
     }
 }

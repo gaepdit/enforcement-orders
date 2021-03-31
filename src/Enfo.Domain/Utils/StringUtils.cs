@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace Enfo.Domain.Utils
@@ -8,11 +9,13 @@ namespace Enfo.Domain.Utils
         /// <summary>
         /// Indicates whether this string is null or a System.String.Empty string.
         /// </summary>
+        [DebuggerStepThrough]
         public static bool IsNullOrEmptyString(this string str) => string.IsNullOrEmpty(str);
 
         /// <summary>
         /// indicates whether this string is null, empty, or consists only of white-space characters.
         /// </summary>
+        [DebuggerStepThrough]
         public static bool IsNullOrWhiteSpaceString(this string str) => string.IsNullOrWhiteSpace(str);
 
         /// <summary>
@@ -23,6 +26,7 @@ namespace Enfo.Domain.Utils
         /// <param name="items">An array of strings to concatenate</param>
         /// <returns>A concatenated string separated by the specified separator.
         /// Null or empty strings are ignored.</returns>
+        [DebuggerStepThrough]
         public static string ConcatNonEmptyStrings(this IEnumerable<string> items, string separator) =>
             string.Join(separator, items.Where(s => !s.IsNullOrEmptyString()));
     }

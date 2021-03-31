@@ -1,0 +1,22 @@
+﻿@page "{id}"
+@model Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthority.Edit
+
+@{
+    ViewData["Title"] = $"Edit {Edit.ThisOption.SingularName}: {Model.OriginalName}";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form method="post" class="usa-form">
+    <div asp-validation-summary="ModelOnly" class="usa-input-error-message"></div>
+
+    <label asp-for="Item.AuthorityName"></label>
+    <input asp-for="Item.AuthorityName" />
+    <span asp-validation-for="Item.AuthorityName" class="usa-input-error-message"></span>
+
+    <div class="gaepd-buttonrow">
+        <input type="hidden" asp-for="Id" />
+        <button type="submit">Save Changes</button>
+        <a asp-page="Index" class="usa-button usa-button-secondary">Cancel</a>
+    </div>
+</form>

@@ -22,7 +22,6 @@ namespace Enfo.Repository.Mapping
             Guard.NotNull(item, nameof(item));
             Guard.NotNull(resource, nameof(resource));
 
-            item.Active = resource.Active;
             item.AuthorityName = resource.AuthorityName;
         }
     }

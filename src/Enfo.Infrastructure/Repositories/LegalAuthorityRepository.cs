@@ -27,7 +27,7 @@ namespace Enfo.Infrastructure.Repositories
         public async Task<IReadOnlyList<LegalAuthorityView>> ListAsync(bool includeInactive) =>
             await _context.LegalAuthorities.AsNoTracking()
                 .Where(e => e.Active || includeInactive)
-                .OrderBy(e => e.Id)
+                .OrderBy(e => e.AuthorityName).ThenBy(e => e.Id)
                 .Select(e => new LegalAuthorityView(e))
                 .ToListAsync().ConfigureAwait(false);
 
@@ -60,8 +60,21 @@ namespace Enfo.Infrastructure.Repositories
             await _context.SaveChangesAsync().ConfigureAwait(false);
         }
 
-        public async Task<bool> ExistsAsync(int id) => 
+        public async Task UpdateStatusAsync(int id, bool newActiveStatus)
+        {
+            var item = await _context.LegalAuthorities.FindAsync(id);
+            if (item == null) throw new ArgumentException($"ID ({id}) not found.", nameof(id));
+            item.Active = newActiveStatus;
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<bool> ExistsAsync(int id) =>
             await _context.LegalAuthorities.AnyAsync(e => e.Id == id).ConfigureAwait(false);
+
+        public async Task<bool> NameExistsAsync(string name, int? ignoreId = null) =>
+            await _context.LegalAuthorities.AsNoTracking()
+                .AnyAsync(e => e.AuthorityName == name && e.Id != ignoreId)
+                .ConfigureAwait(false);
 
         public void Dispose() => _context.Dispose();
     }

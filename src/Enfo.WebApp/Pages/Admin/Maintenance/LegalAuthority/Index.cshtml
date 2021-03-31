@@ -1,0 +1,52 @@
+﻿@page
+@model Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthority.Index
+
+@{
+    ViewData["Title"] = $"Site Maintenance: {Index.ThisOption.PluralName}";
+}
+
+<a asp-page="../Index">← Site Maintenance</a>
+
+<partial name="_AlertPartial" for="Message" />
+
+<h2>
+    @Index.ThisOption.PluralName
+    @* TODO: Auth *@
+    @* @if (User.IsInRole(UserRole.SiteMaintenance)) *@
+    @* { *@
+    <a asp-page="Add" class="usa-button usa-button-secondary">Create New</a>
+    @* } *@
+</h2>
+
+<form method="post">
+    <table class="usa-table-borderless gaepd-table-responsive">
+        <thead>
+        <tr>
+            <th scope="col">Authority Name</th>
+            <th scope="col">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in Model.Items)
+        {
+            <tr class="@(item.Id == Model.NewId ? "gaepd-tablerow-highlight" : item.Active ? "" : "gaepd-tablerow-dimmed")">
+                <th scope="row" data-label="Authority Name">
+                    @Html.DisplayFor(m => item.Active, "BoolInactive")
+                    @Html.DisplayFor(m => item.AuthorityName)
+                </th>
+                <td class="gaepd-tablecell-nolabel">
+                    @if (item.Active)
+                    {
+                        <a asp-page="Edit" asp-route-id="@item.Id" class="gaepd-button-inline-action usa-button">Edit</a>
+                        <button type="submit" name="id" value="@item.Id" class="gaepd-button-inline-action usa-button-secondary">Remove from use</button>
+                    }
+                    else
+                    {
+                        <button type="submit" name="id" value="@item.Id" class="gaepd-button-inline-action usa-button-secondary">Restore</button>
+                    }
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</form>

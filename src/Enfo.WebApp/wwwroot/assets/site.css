@@ -64,10 +64,10 @@ form.usa-section {
     height: auto;
 }
 
-/* 
-GeorgiaGov Interactive 
-Web Standards and Guidelines » 6.0 Brand Standards » 6.2 Shared Elements
-http://portal.georgia.gov/interactive/web-standards/62-shared-elements
+/*
+    GeorgiaGov Interactive 
+    Web Standards and Guidelines » 6.0 Brand Standards » 6.2 Shared Elements
+    http://portal.georgia.gov/interactive/web-standards/62-shared-elements
 */
 .gaepd-footer {
     color: #fff;
@@ -122,10 +122,10 @@ http://portal.georgia.gov/interactive/web-standards/62-shared-elements
     border-radius: 1px;
 }
 
-/* 
-GeorgiaGov Interactive 
-Web Standards and Guidelines » 6.0 Brand Standards » 6.1 Logo Usage
-http://portal.georgia.gov/interactive/web-standards/61-logo-usage
+/*
+    GeorgiaGov Interactive 
+    Web Standards and Guidelines » 6.0 Brand Standards » 6.1 Logo Usage
+    http://portal.georgia.gov/interactive/web-standards/61-logo-usage
 */
 @media screen and (min-width: 951px) {
     .usa-header-basic .gaepd-logo {
@@ -286,9 +286,10 @@ table tfoot td {
 
     .gaepd-table-responsive th:before,
     .gaepd-table-responsive td:before {
-        content: attr(data-label) ": ";
+        content: attr(data-label) ":";
         float: left;
         font-weight: 700;
+        margin-right: 1rem;
     }
 
     .gaepd-table-responsive th.gaepd-tablecell-nolabel:before,
@@ -457,6 +458,7 @@ hr {
     color: #ffffff;
 }
 
+.gaepd-buttonrow button,
 .gaepd-buttonrow .usa-button,
 .gaepd-buttonrow input,
 .gaepd-buttonrow label {
@@ -538,6 +540,10 @@ hr {
     }
 }
 
+/*
+    Forms
+ */
+
 select:disabled {
     color: #323a45;
     border-color: #aeb0b5;
@@ -559,6 +565,11 @@ select:disabled {
     margin-left: 1.8rem;
     padding-left: 0.6em;
     font-style: italic;
+}
+
+/* Automated error class replaces .usa-input-error */
+.input-validation-error {
+    border-left: 4px solid #cd2026;
 }
 
 /* 
@@ -602,8 +613,8 @@ svg:not(:root) {
     height: 1.5em;
 }
 
-/* 
-Bugfixes for bugs introduced when updating USWDS from 1.2.1 to 1.6.x
+/*
+    Bugfixes for bugs introduced when updating USWDS from 1.2.1 to 1.6.x
  */
 
 @media screen and (min-width: 951px) {
@@ -621,7 +632,7 @@ table {
 }
 
 /*
-Print stylesheets
+    Print stylesheets
 */
 
 @media not print {

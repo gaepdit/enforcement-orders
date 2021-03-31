@@ -7,18 +7,20 @@
 
 <h1>@ViewData["Title"]</h1>
 
-<p>Select a drop-down list to edit.</p>
+<p>Select a list to edit.</p>
 
-<nav aria-label="Secondary navigation" class="usa-sidenav-list">
-    <ul class="usa-sidenav-sub_list">
-        <li>
-            <a asp-page="Address/Index">@MaintenanceOptions.Address</a>
-        </li>
-        <li>
-            <a asp-page="Contact/Index">@MaintenanceOptions.EpdContact</a>
-        </li>
-        <li>
-            <a asp-page="LegalAuthority/Index">@MaintenanceOptions.LegalAuthority</a>
-        </li>
-    </ul>
-</nav>
+<div class="usa-grid-full">
+    <nav aria-label="Secondary navigation" class="usa-sidenav-list usa-width-one-third">
+        <ul class="usa-sidenav-sub_list">
+            <li>
+                <a asp-page="Address/Index">@MaintenanceOption.Address.PluralName</a>
+            </li>
+            <li>
+                <a asp-page="Contact/Index">@MaintenanceOption.EpdContact.PluralName</a>
+            </li>
+            <li>
+                <a asp-page="LegalAuthority/Index">@MaintenanceOption.LegalAuthority.PluralName</a>
+            </li>
+        </ul>
+    </nav>
+</div>

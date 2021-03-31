@@ -11,7 +11,6 @@ using Enfo.Repository.Specs;
 using Enfo.Repository.Utils;
 using Microsoft.EntityFrameworkCore;
 using static Enfo.Repository.Validation.EnforcementOrderValidation;
-using PublicationState = Enfo.Repository.Specs.PublicationState;
 
 namespace Enfo.Infrastructure.Repositories
 {
