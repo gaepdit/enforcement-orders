@@ -32,7 +32,7 @@ namespace WebApp.Tests.Pages
         {
             var repo = new Mock<IEnforcementOrderRepository>();
             repo.Setup(l => l.ListCurrentProposedEnforcementOrdersAsync())
-                .ReturnsAsync((IReadOnlyList<EnforcementOrderDetailedView>) null);
+                .ReturnsAsync(null as IReadOnlyList<EnforcementOrderDetailedView>);
             var page = new CurrentProposed(repo.Object);
 
             await page.OnGetAsync();

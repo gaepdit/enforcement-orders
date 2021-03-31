@@ -20,9 +20,9 @@ namespace Enfo.WebApp.Pages
         [UsedImplicitly]
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null) return NotFound("Order ID not found.");
+            if (id == null) return NotFound();
             Item = await _repository.GetAsync(id.Value);
-            if (Item == null) return NotFound("Order ID not found.");
+            if (Item == null) return NotFound("ID not found.");
             Message = TempData?.GetDisplayMessage();
             return Page();
         }

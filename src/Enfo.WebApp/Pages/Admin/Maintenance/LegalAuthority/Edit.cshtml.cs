@@ -29,7 +29,7 @@ namespace Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthority
         {
             if (id == null) return NotFound();
             var originalItem = await _repository.GetAsync(id.Value);
-            if (originalItem == null) return NotFound();
+            if (originalItem == null) return NotFound("ID not found.");
 
             if (!originalItem.Active)
             {

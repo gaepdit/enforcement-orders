@@ -57,26 +57,26 @@ namespace WebApp.Tests.Pages.Admin
         public async Task OnGet_MissingIdReturnsNotFound()
         {
             var mockRepo = new Mock<IEnforcementOrderRepository>();
-            var pageModel = new Details(mockRepo.Object);
+            var page = new Details(mockRepo.Object);
 
-            var result = await pageModel.OnGetAsync(null).ConfigureAwait(false);
+            var result = await page.OnGetAsync(null);
 
-            result.Should().BeOfType<NotFoundObjectResult>();
-            pageModel.Item.ShouldBeNull();
-            pageModel.Message.ShouldBeNull();
+            result.Should().BeOfType<NotFoundResult>();
+            page.Item.ShouldBeNull();
+            page.Message.ShouldBeNull();
         }
 
         [Fact]
         public async Task OnGet_NonexistentIdReturnsNotFound()
         {
             var mockRepo = new Mock<IEnforcementOrderRepository>();
-            var pageModel = new Details(mockRepo.Object);
+            var page = new Details(mockRepo.Object);
 
-            var result = await pageModel.OnGetAsync(-1).ConfigureAwait(false);
+            var result = await page.OnGetAsync(-1);
 
             result.Should().BeOfType<NotFoundObjectResult>();
-            pageModel.Item.ShouldBeNull();
-            pageModel.Message.ShouldBeNull();
+            page.Item.ShouldBeNull();
+            page.Message.ShouldBeNull();
         }
     }
 }
