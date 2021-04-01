@@ -75,14 +75,11 @@ else
             <td>
                 @if (Model.Item.CommentContact != null)
                 {
-                    @Html.DisplayFor(m => m.Item.CommentContact, "ContactPerson")
-
-                    @if (Model.Item.CommentContact.Address != null)
-                    {
-                        @Html.DisplayFor(m => m.Item.CommentContact.Address, "Address")
-                    }
-                    <br />
-                    @Html.DisplayFor(m => m.Item.CommentContact, "ContactCommunication")
+                    @Html.DisplayFor(m => m.Item.CommentContact, "Contact")
+                }
+                else
+                {
+                    <p>N/A</p>
                 }
             </td>
         </tr>
@@ -119,22 +116,15 @@ else
             </p>
             <p>
                 <em>@Html.DisplayNameFor(m => m.Item.HearingContact)</em><br />
-                @if (Model.Item.HearingContact != null)
-                {
-                    @Html.DisplayFor(m => m.Item.HearingContact, "ContactPerson")
-
-                    @if (Model.Item.HearingContact.Address != null)
-                    {
-                        @Html.DisplayFor(m => m.Item.HearingContact.Address, "Address")
-                    }
-                    <br />
-                    @Html.DisplayFor(m => m.Item.HearingContact, "ContactCommunication")
-                }
-                else
-                {
-                    <text>N/A</text>
-                }
             </p>
+            @if (Model.Item.HearingContact != null)
+            {
+                @Html.DisplayFor(m => m.Item.HearingContact, "Contact")
+            }
+            else
+            {
+                <p>N/A</p>
+            }
         </tr>
     }
     </tbody>

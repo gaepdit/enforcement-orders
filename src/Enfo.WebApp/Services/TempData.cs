@@ -151,7 +151,7 @@ namespace Enfo.WebApp.Services
                 OrderNumber = "EPD-WP-0001",
                 ProposedOrderPostedDate = new DateTime(2019, 03, 18),
                 PublicationStatus = EnforcementOrder.PublicationState.Published,
-                Requirements ="abc-" + Guid.NewGuid(),
+                Requirements = "abc-" + Guid.NewGuid(),
                 SettlementAmount = 1800
             },
             new()
@@ -199,7 +199,7 @@ namespace Enfo.WebApp.Services
                 OrderNumber = "EPD-AQ-0003",
                 ProposedOrderPostedDate = null,
                 PublicationStatus = EnforcementOrder.PublicationState.Published,
-                Requirements ="ūrbǣnitas-" + Guid.NewGuid(),
+                Requirements = "ūrbǣnitas-" + Guid.NewGuid(),
                 SettlementAmount = 5000
             },
             new()
@@ -224,7 +224,7 @@ namespace Enfo.WebApp.Services
                 OrderNumber = "EPD-SW-WQ-0004",
                 ProposedOrderPostedDate = DateTime.Today.AddDays(-7),
                 PublicationStatus = EnforcementOrder.PublicationState.Published,
-                Requirements ="efg-" + Guid.NewGuid(),
+                Requirements = "efg-" + Guid.NewGuid(),
                 SettlementAmount = 25000
             },
             new()
@@ -241,7 +241,7 @@ namespace Enfo.WebApp.Services
                 HearingCommentPeriodClosesDate = new DateTime(2012, 11, 21),
                 HearingContactId = 2000,
                 HearingDate = new DateTime(2012, 11, 15),
-                HearingLocation ="fgh-" + Guid.NewGuid(),
+                HearingLocation = "fgh-" + Guid.NewGuid(),
                 IsExecutedOrder = false,
                 IsHearingScheduled = true,
                 IsProposedOrder = true,
@@ -249,13 +249,13 @@ namespace Enfo.WebApp.Services
                 OrderNumber = "EPD-SW-WQ-0005",
                 ProposedOrderPostedDate = DateTime.Today.AddDays(-7),
                 PublicationStatus = EnforcementOrder.PublicationState.Published,
-                Requirements ="fgh-" + Guid.NewGuid(),
+                Requirements = "fgh-" + Guid.NewGuid(),
                 SettlementAmount = 25000
             },
             new()
             {
                 Id = 6,
-                Cause ="ghi-" + Guid.NewGuid(),
+                Cause = "ghi-" + Guid.NewGuid(),
                 CommentContactId = 2001,
                 CommentPeriodClosesDate = new DateTime(2012, 11, 15),
                 County = "Stephens",
@@ -274,7 +274,7 @@ namespace Enfo.WebApp.Services
                 OrderNumber = "EPD-SW-WQ-0006",
                 ProposedOrderPostedDate = new DateTime(2012, 10, 16),
                 PublicationStatus = EnforcementOrder.PublicationState.Published,
-                Requirements ="ghi-" + Guid.NewGuid(),
+                Requirements = "ghi-" + Guid.NewGuid(),
                 SettlementAmount = 25000
             },
             new()
@@ -287,7 +287,7 @@ namespace Enfo.WebApp.Services
                 Deleted = false,
                 ExecutedDate = null,
                 ExecutedOrderPostedDate = null,
-                FacilityName ="hij-" + Guid.NewGuid(),
+                FacilityName = "hij-" + Guid.NewGuid(),
                 HearingCommentPeriodClosesDate = null,
                 HearingDate = null,
                 HearingLocation = "",
@@ -298,7 +298,7 @@ namespace Enfo.WebApp.Services
                 OrderNumber = "EPD-WP-0007",
                 ProposedOrderPostedDate = new DateTime(2019, 03, 18),
                 PublicationStatus = EnforcementOrder.PublicationState.Draft,
-                Requirements ="hij-" + Guid.NewGuid(),
+                Requirements = "hij-" + Guid.NewGuid(),
                 SettlementAmount = 1800
             },
             new()
@@ -322,7 +322,7 @@ namespace Enfo.WebApp.Services
                 OrderNumber = "EPD-WP-0011",
                 ProposedOrderPostedDate = new DateTime(2019, 03, 18),
                 PublicationStatus = EnforcementOrder.PublicationState.Published,
-                Requirements ="abc-" + Guid.NewGuid(),
+                Requirements = "abc-" + Guid.NewGuid(),
                 SettlementAmount = 1800
             },
             new()
@@ -370,7 +370,7 @@ namespace Enfo.WebApp.Services
                 OrderNumber = "EPD-AQ-0013",
                 ProposedOrderPostedDate = null,
                 PublicationStatus = EnforcementOrder.PublicationState.Published,
-                Requirements ="ūrbǣnitas-" + Guid.NewGuid(),
+                Requirements = "ūrbǣnitas-" + Guid.NewGuid(),
                 SettlementAmount = 5000
             },
             new()
@@ -395,7 +395,7 @@ namespace Enfo.WebApp.Services
                 OrderNumber = "EPD-SW-WQ-0014",
                 ProposedOrderPostedDate = DateTime.Today.AddDays(-7),
                 PublicationStatus = EnforcementOrder.PublicationState.Published,
-                Requirements ="efg-" + Guid.NewGuid(),
+                Requirements = "efg-" + Guid.NewGuid(),
                 SettlementAmount = 25000
             },
             new()
@@ -409,10 +409,10 @@ namespace Enfo.WebApp.Services
                 ExecutedDate = null,
                 ExecutedOrderPostedDate = null,
                 FacilityName = "fgh-" + Guid.NewGuid(),
-                HearingCommentPeriodClosesDate = new DateTime(2012, 11, 21),
+                HearingCommentPeriodClosesDate = DateTime.Today.AddDays(3),
                 HearingContactId = 2000,
-                HearingDate = new DateTime(2012, 11, 15),
-                HearingLocation ="fgh-" + Guid.NewGuid(),
+                HearingDate = DateTime.Today.AddDays(3),
+                HearingLocation = "fgh-" + Guid.NewGuid(),
                 IsExecutedOrder = false,
                 IsHearingScheduled = true,
                 IsProposedOrder = true,
@@ -420,13 +420,13 @@ namespace Enfo.WebApp.Services
                 OrderNumber = "EPD-SW-WQ-0015",
                 ProposedOrderPostedDate = DateTime.Today.AddDays(-7),
                 PublicationStatus = EnforcementOrder.PublicationState.Published,
-                Requirements ="fgh-" + Guid.NewGuid(),
+                Requirements = "fgh-" + Guid.NewGuid(),
                 SettlementAmount = 25000
             },
             new()
             {
                 Id = 16,
-                Cause ="ghi-" + Guid.NewGuid(),
+                Cause = "ghi-" + Guid.NewGuid(),
                 CommentContactId = 2001,
                 CommentPeriodClosesDate = new DateTime(2012, 11, 15),
                 County = "Stephens",
@@ -445,7 +445,7 @@ namespace Enfo.WebApp.Services
                 OrderNumber = "EPD-SW-WQ-0016",
                 ProposedOrderPostedDate = new DateTime(2012, 10, 16),
                 PublicationStatus = EnforcementOrder.PublicationState.Published,
-                Requirements ="ghi-" + Guid.NewGuid(),
+                Requirements = "ghi-" + Guid.NewGuid(),
                 SettlementAmount = 25000
             },
             new()
@@ -458,7 +458,7 @@ namespace Enfo.WebApp.Services
                 Deleted = false,
                 ExecutedDate = null,
                 ExecutedOrderPostedDate = null,
-                FacilityName ="hij-" + Guid.NewGuid(),
+                FacilityName = "hij-" + Guid.NewGuid(),
                 HearingCommentPeriodClosesDate = null,
                 HearingDate = null,
                 HearingLocation = "",
@@ -469,7 +469,7 @@ namespace Enfo.WebApp.Services
                 OrderNumber = "EPD-WP-0017",
                 ProposedOrderPostedDate = new DateTime(2019, 03, 18),
                 PublicationStatus = EnforcementOrder.PublicationState.Draft,
-                Requirements ="hij-" + Guid.NewGuid(),
+                Requirements = "hij-" + Guid.NewGuid(),
                 SettlementAmount = 1800
             },
             new()
@@ -493,7 +493,7 @@ namespace Enfo.WebApp.Services
                 OrderNumber = "EPD-WP-0021",
                 ProposedOrderPostedDate = new DateTime(2019, 03, 18),
                 PublicationStatus = EnforcementOrder.PublicationState.Published,
-                Requirements ="abc-" + Guid.NewGuid(),
+                Requirements = "abc-" + Guid.NewGuid(),
                 SettlementAmount = 1800
             },
             new()
@@ -541,7 +541,7 @@ namespace Enfo.WebApp.Services
                 OrderNumber = "EPD-AQ-0023",
                 ProposedOrderPostedDate = null,
                 PublicationStatus = EnforcementOrder.PublicationState.Published,
-                Requirements ="ūrbǣnitas-" + Guid.NewGuid(),
+                Requirements = "ūrbǣnitas-" + Guid.NewGuid(),
                 SettlementAmount = 5000
             },
             new()
@@ -566,7 +566,7 @@ namespace Enfo.WebApp.Services
                 OrderNumber = "EPD-SW-WQ-0024",
                 ProposedOrderPostedDate = DateTime.Today.AddDays(-7),
                 PublicationStatus = EnforcementOrder.PublicationState.Published,
-                Requirements ="efg-" + Guid.NewGuid(),
+                Requirements = "efg-" + Guid.NewGuid(),
                 SettlementAmount = 25000
             },
             new()
@@ -583,7 +583,7 @@ namespace Enfo.WebApp.Services
                 HearingCommentPeriodClosesDate = new DateTime(2012, 11, 21),
                 HearingContactId = 2000,
                 HearingDate = new DateTime(2012, 11, 15),
-                HearingLocation ="fgh-" + Guid.NewGuid(),
+                HearingLocation = "fgh-" + Guid.NewGuid(),
                 IsExecutedOrder = false,
                 IsHearingScheduled = true,
                 IsProposedOrder = true,
@@ -591,13 +591,13 @@ namespace Enfo.WebApp.Services
                 OrderNumber = "EPD-SW-WQ-0025",
                 ProposedOrderPostedDate = DateTime.Today.AddDays(-7),
                 PublicationStatus = EnforcementOrder.PublicationState.Published,
-                Requirements ="fgh-" + Guid.NewGuid(),
+                Requirements = "fgh-" + Guid.NewGuid(),
                 SettlementAmount = 25000
             },
             new()
             {
                 Id = 26,
-                Cause ="ghi-" + Guid.NewGuid(),
+                Cause = "ghi-" + Guid.NewGuid(),
                 CommentContactId = 2001,
                 CommentPeriodClosesDate = new DateTime(2012, 11, 15),
                 County = "Stephens",
@@ -616,7 +616,7 @@ namespace Enfo.WebApp.Services
                 OrderNumber = "EPD-SW-WQ-0026",
                 ProposedOrderPostedDate = new DateTime(2012, 10, 16),
                 PublicationStatus = EnforcementOrder.PublicationState.Published,
-                Requirements ="ghi-" + Guid.NewGuid(),
+                Requirements = "ghi-" + Guid.NewGuid(),
                 SettlementAmount = 25000
             },
             new()
@@ -629,7 +629,7 @@ namespace Enfo.WebApp.Services
                 Deleted = false,
                 ExecutedDate = null,
                 ExecutedOrderPostedDate = null,
-                FacilityName ="hij-" + Guid.NewGuid(),
+                FacilityName = "hij-" + Guid.NewGuid(),
                 HearingCommentPeriodClosesDate = null,
                 HearingDate = null,
                 HearingLocation = "",
@@ -640,7 +640,7 @@ namespace Enfo.WebApp.Services
                 OrderNumber = "EPD-WP-0027",
                 ProposedOrderPostedDate = new DateTime(2019, 03, 18),
                 PublicationStatus = EnforcementOrder.PublicationState.Draft,
-                Requirements ="hij-" + Guid.NewGuid(),
+                Requirements = "hij-" + Guid.NewGuid(),
                 SettlementAmount = 1800
             },
         };

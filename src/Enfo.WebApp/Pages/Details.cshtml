@@ -60,14 +60,7 @@
             <tr>
                 <th scope="row">@Html.DisplayNameFor(m => m.Item.CommentContact)</th>
                 <td>
-                    @Html.DisplayFor(m => m.Item.CommentContact, "ContactPerson")
-
-                    @if (Model.Item.CommentContact.Address != null)
-                    {
-                        @Html.DisplayFor(m => m.Item.CommentContact.Address, "Address")
-                    }
-                    <br />
-                    @Html.DisplayFor(m => m.Item.CommentContact, "ContactCommunication")
+                    @Html.DisplayFor(m => m.Item.CommentContact, "Contact")
                 </td>
             </tr>
         }
@@ -108,15 +101,8 @@
             {
                 <p>
                     <em>@Html.DisplayNameFor(m => m.Item.HearingContact)</em><br />
-                    @Html.DisplayFor(m => m.Item.HearingContact, "ContactPerson")
-
-                    @if (Model.Item.HearingContact.Address != null)
-                    {
-                        @Html.DisplayFor(m => m.Item.HearingContact.Address, "Address")
-                    }
-                    <br />
-                    @Html.DisplayFor(m => m.Item.HearingContact, "ContactCommunication")
                 </p>
+                @Html.DisplayFor(m => m.Item.HearingContact, "Contact")
             }
         </tr>
     }
