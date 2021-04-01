@@ -60,19 +60,14 @@
             <tr>
                 <th scope="row">@Html.DisplayNameFor(m => m.Item.CommentContact)</th>
                 <td>
-                    @Html.DisplayFor(m => m.Item.CommentContact.ContactName)<br />
-                    @Html.DisplayFor(m => m.Item.CommentContact.Title)<br />
-                    @Html.DisplayFor(m => m.Item.CommentContact.Organization)<br />
+                    @Html.DisplayFor(m => m.Item.CommentContact, "ContactPerson")
+
                     @if (Model.Item.CommentContact.Address != null)
                     {
-                        @Model.Item.CommentContact.Address.AsLinearString<br />
+                        @Html.DisplayFor(m => m.Item.CommentContact.Address, "Address")
                     }
-                    @if (Model.Item.CommentContact.Email != null)
-                    {
-                        <br />
-                        <a href="mailto:@Html.DisplayFor(m => m.Item.CommentContact.Email)">@Html.DisplayFor(m => m.Item.CommentContact.Email)</a>
-                    }
-                    <br />@Html.DisplayFor(m => m.Item.CommentContact.Telephone)
+                    <br />
+                    @Html.DisplayFor(m => m.Item.CommentContact, "ContactCommunication")
                 </td>
             </tr>
         }
@@ -113,19 +108,14 @@
             {
                 <p>
                     <em>@Html.DisplayNameFor(m => m.Item.HearingContact)</em><br />
-                    @Html.DisplayFor(m => m.Item.HearingContact.ContactName)<br />
-                    @Html.DisplayFor(m => m.Item.HearingContact.Title)<br />
-                    @Html.DisplayFor(m => m.Item.HearingContact.Organization)<br />
+                    @Html.DisplayFor(m => m.Item.HearingContact, "ContactPerson")
+
                     @if (Model.Item.HearingContact.Address != null)
                     {
-                        @Model.Item.HearingContact.Address.AsLinearString<br />
+                        @Html.DisplayFor(m => m.Item.HearingContact.Address, "Address")
                     }
-                    @if (Model.Item.HearingContact.Email != null)
-                    {
-                        <br />
-                        <a href="mailto:@Html.DisplayFor(m => m.Item.HearingContact.Email)">@Html.DisplayFor(m => m.Item.HearingContact.Email)</a>
-                    }
-                    <br />@Html.DisplayFor(m => m.Item.HearingContact.Telephone)
+                    <br />
+                    @Html.DisplayFor(m => m.Item.HearingContact, "ContactCommunication")
                 </p>
             }
         </tr>

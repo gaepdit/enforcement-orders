@@ -377,7 +377,7 @@ namespace Enfo.WebApp.Services
             {
                 Id = 14,
                 Cause = "efg-" + Guid.NewGuid(),
-                CommentContactId = 2001,
+                CommentContactId = 2000,
                 CommentPeriodClosesDate = DateTime.Today.AddDays(7),
                 County = "Stephens",
                 Deleted = true,
@@ -402,7 +402,7 @@ namespace Enfo.WebApp.Services
             {
                 Id = 15,
                 Cause = "fgh-" + Guid.NewGuid(),
-                CommentContactId = 2001,
+                CommentContactId = 2000,
                 CommentPeriodClosesDate = DateTime.Today.AddDays(7),
                 County = "Stephens",
                 Deleted = false,

@@ -1,9 +1,9 @@
 ﻿@model Enfo.Repository.Resources.EpdContact.EpdContactView
 <div class="text-nowrap">
-    @Model.Telephone
+    <a href="mailto:@(Model.Email)">@Model.Email</a>
     @if (!string.IsNullOrEmpty(Model.Telephone) && !string.IsNullOrEmpty(Model.Email))
     {
         <br />
     }
-    @Model.Email
+    @Model.Telephone
 </div>
