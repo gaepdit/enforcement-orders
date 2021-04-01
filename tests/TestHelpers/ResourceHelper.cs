@@ -57,7 +57,13 @@ namespace TestHelpers
             GetAddresses.Select(e => new AddressView(e)).ToList();
 
         public static List<EpdContactView> GetEpdContactViewList() =>
-            GetEpdContacts.Select(e => new EpdContactView(e)).ToList();
+            GetEpdContacts.Select(e => new EpdContactView(FillNavigationProperties(e))).ToList();
+
+        private static EpdContact FillNavigationProperties(EpdContact contact)
+        {
+            contact.Address = GetAddresses.SingleOrDefault(e => e.Id == contact.AddressId);
+            return contact;
+        }
 
         public static List<LegalAuthorityView> GetLegalAuthorityViewList() =>
             GetLegalAuthorities.Select(e => new LegalAuthorityView(e)).ToList();

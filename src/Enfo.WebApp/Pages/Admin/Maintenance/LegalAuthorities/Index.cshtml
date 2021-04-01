@@ -29,7 +29,7 @@
         <tbody>
         @foreach (var item in Model.Items)
         {
-            <tr class="@(item.Id == Model.NewId ? "gaepd-tablerow-highlight" : item.Active ? "" : "gaepd-tablerow-dimmed")">
+            <tr class="@(item.Id == Model.HighlightId ? "gaepd-tablerow-highlight" : item.Active ? "" : "gaepd-tablerow-dimmed")">
                 <th scope="row" data-label="Authority Name">
                     @Html.DisplayFor(m => item.Active, "BoolInactive")
                     @Html.DisplayFor(m => item.AuthorityName)

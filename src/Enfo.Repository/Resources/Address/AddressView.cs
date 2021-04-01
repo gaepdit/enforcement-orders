@@ -35,11 +35,14 @@ namespace Enfo.Repository.Resources.Address
         [DisplayName("Postal Code")]
         public string PostalCode { get; }
 
-        public override string ToString()
+        public string AsLinearString
         {
-            var cityState = new[] {City, State}.ConcatNonEmptyStrings(", ");
-            var cityStateZip = new[] {cityState, PostalCode}.ConcatNonEmptyStrings(" ");
-            return new[] {Street, Street2, cityStateZip}.ConcatNonEmptyStrings(", ");
+            get
+            {
+                var cityState = new[] {City, State}.ConcatNonEmptyStrings(", ");
+                var cityStateZip = new[] {cityState, PostalCode}.ConcatNonEmptyStrings(" ");
+                return new[] {Street, Street2, cityStateZip}.ConcatNonEmptyStrings(", ");
+            }
         }
     }
 }

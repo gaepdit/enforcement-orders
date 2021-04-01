@@ -19,6 +19,9 @@ namespace Enfo.WebApp.Pages.Admin.Maintenance.Addresses
         [BindProperty]
         public int Id { get; set; }
 
+        [TempData]
+        public int HighlightId { get; set; }
+
         public static MaintenanceOption ThisOption { get; } = MaintenanceOption.Address;
 
         private readonly IAddressRepository _repository;
@@ -70,6 +73,7 @@ namespace Enfo.WebApp.Pages.Admin.Maintenance.Addresses
                 throw;
             }
 
+            HighlightId = Id;
             TempData?.SetDisplayMessage(Context.Success, $"{ThisOption.SingularName} successfully updated.");
             return RedirectToPage("Index");
         }

@@ -635,6 +635,11 @@ table {
     background-color: #f1f1f1;
 }
 
+.usa-sidenav-list {
+    border-bottom: 1px solid;
+    border-top: 1px solid;
+}
+
 /*
     Print stylesheets
 */

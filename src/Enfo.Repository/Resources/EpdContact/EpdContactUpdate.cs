@@ -24,7 +24,7 @@ namespace Enfo.Repository.Resources.EpdContact
 
         [DataType(DataType.PhoneNumber)]
         [StringLength(50)]
-        [RegularExpression(ResourceRegex.Telephone, ErrorMessage = "Provide a valid phone number.")]
+        [RegularExpression(ResourceRegex.Telephone, ErrorMessage = "Provide a valid phone number with area code.")]
         public string Telephone { get; set; }
 
         [DataType(DataType.EmailAddress)]

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Enfo.Repository.Repositories;
-using Enfo.Repository.Resources.Address;
+using Enfo.Repository.Resources.EpdContact;
 using Enfo.WebApp.Extensions;
 using Enfo.WebApp.Models;
 using JetBrains.Annotations;
@@ -9,19 +9,19 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
-namespace Enfo.WebApp.Pages.Admin.Maintenance.Addresses
+namespace Enfo.WebApp.Pages.Admin.Maintenance.Contacts
 {
     public class Index : PageModel
     {
-        public IReadOnlyList<AddressView> Items { get; private set; }
-        public static MaintenanceOption ThisOption { get; } = MaintenanceOption.Address;
+        public IReadOnlyList<EpdContactView> Items { get; private set; }
+        public static MaintenanceOption ThisOption { get; } = MaintenanceOption.EpdContact;
         public DisplayMessage Message { get; private set; }
 
         [TempData]
         public int HighlightId { get; set; }
 
-        private readonly IAddressRepository _repository;
-        public Index(IAddressRepository repository) => _repository = repository;
+        private readonly IEpdContactRepository _repository;
+        public Index(IEpdContactRepository repository) => _repository = repository;
 
         [UsedImplicitly]
         public async Task OnGetAsync()

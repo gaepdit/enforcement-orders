@@ -3,7 +3,7 @@ using Enfo.Repository.Repositories;
 using Enfo.Repository.Resources.EpdContact;
 using Enfo.WebApp.Extensions;
 using Enfo.WebApp.Models;
-using Enfo.WebApp.Pages.Admin.Maintenance.EpdContacts;
+using Enfo.WebApp.Pages.Admin.Maintenance.Contacts;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Moq;
 using Xunit;
 using Xunit.Extensions.AssertExtensions;
+using static TestHelpers.ResourceHelper;
 
 namespace WebApp.Tests.Pages.Admin.Maintenance.EpdContact
 {
@@ -28,18 +29,21 @@ namespace WebApp.Tests.Pages.Admin.Maintenance.EpdContact
             var repo = new Mock<IEpdContactRepository> {DefaultValue = DefaultValue.Mock};
             repo.Setup(l => l.CreateAsync(It.IsAny<EpdContactCreate>()))
                 .ReturnsAsync(1);
+            var addressRepo = new Mock<IAddressRepository> {DefaultValue = DefaultValue.Mock};
+            addressRepo.Setup(l => l.ListAsync(false))
+                .ReturnsAsync(GetAddressViewList());
 
             // Initialize Page TempData
             var httpContext = new DefaultHttpContext();
             var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
-            var page = new Add(repo.Object) {TempData = tempData, Item = item};
+            var page = new Add(repo.Object, addressRepo.Object) {TempData = tempData, Item = item};
 
             var result = await page.OnPostAsync();
 
             var expected = new DisplayMessage(Context.Success,
                 $"{Add.ThisOption.SingularName} successfully added.");
             page.TempData?.GetDisplayMessage().Should().BeEquivalentTo(expected);
-            page.NewId.ShouldEqual(1);
+            page.HighlightId.ShouldEqual(1);
 
             result.Should().BeOfType<RedirectToPageResult>();
             ((RedirectToPageResult) result).PageName.ShouldEqual("Index");
@@ -49,7 +53,10 @@ namespace WebApp.Tests.Pages.Admin.Maintenance.EpdContact
         public async Task OnPost_GivenModelError_ReturnsPageWithModelError()
         {
             var repo = new Mock<IEpdContactRepository> {DefaultValue = DefaultValue.Mock};
-            var page = new Add(repo.Object);
+            var addressRepo = new Mock<IAddressRepository> {DefaultValue = DefaultValue.Mock};
+            addressRepo.Setup(l => l.ListAsync(false))
+                .ReturnsAsync(GetAddressViewList());
+            var page = new Add(repo.Object, addressRepo.Object);
             page.ModelState.AddModelError("key", "message");
 
             var result = await page.OnPostAsync();

@@ -1,0 +1,43 @@
+﻿@page
+@model Enfo.WebApp.Pages.Admin.Maintenance.Contacts.Add
+@* TODO: Use tag helpers instead of HTML Helper extensions *@
+
+@{
+    ViewData["Title"] = $"Add a new {Add.ThisOption.SingularName}";
+}
+
+<h2>@ViewData["Title"]</h2>
+<form method="post" class="usa-form usa-form-large">
+    <div asp-validation-summary="ModelOnly" class="usa-alert usa-alert-error" role="alert"></div>
+
+    <label asp-for="Item.ContactName"></label>
+    @Html.EditorFor(m => m.Item.ContactName)
+    <span asp-validation-for="Item.ContactName" class="usa-input-error-message"></span>
+
+    <label asp-for="Item.Title"></label>
+    @Html.EditorFor(m => m.Item.Title)
+    <span asp-validation-for="Item.Title" class="usa-input-error-message"></span>
+
+    <label asp-for="Item.Organization"></label>
+    @Html.EditorFor(m => m.Item.Organization)
+    <span asp-validation-for="Item.Organization" class="usa-input-error-message"></span>
+
+    <label asp-for="Item.AddressId"></label>
+    <select asp-for="Item.AddressId" asp-items="Model.AddressSelectList">
+        <option>→ Select Address...</option>
+    </select>
+    <span asp-validation-for="Item.AddressId" class="usa-input-error-message"></span>
+
+    <label asp-for="Item.Telephone"></label>
+    @Html.EditorFor(m => m.Item.Telephone)
+    <span asp-validation-for="Item.Telephone" class="usa-input-error-message"></span>
+
+    <label asp-for="Item.Email"></label>
+    @Html.EditorFor(m => m.Item.Email)
+    <span asp-validation-for="Item.Email" class="usa-input-error-message"></span>
+
+    <div class="gaepd-buttonrow">
+        <button type="submit">Add New @Add.ThisOption.SingularName</button>
+        <a asp-page="Index" class="usa-button usa-button-secondary">Cancel</a>
+    </div>
+</form>

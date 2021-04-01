@@ -1,20 +1,22 @@
 ﻿using System.Threading.Tasks;
 using Enfo.Repository.Mapping;
 using Enfo.Repository.Repositories;
-using Enfo.Repository.Resources.LegalAuthority;
+using Enfo.Repository.Resources.Address;
+using Enfo.Repository.Resources.EpdContact;
 using Enfo.WebApp.Extensions;
 using Enfo.WebApp.Models;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
-namespace Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthorities
+namespace Enfo.WebApp.Pages.Admin.Maintenance.Contacts
 {
     public class Edit : PageModel
     {
         [BindProperty]
-        public LegalAuthorityUpdate Item { get; set; }
+        public EpdContactUpdate Item { get; set; }
 
         [BindProperty]
         public int Id { get; set; }
@@ -22,11 +24,17 @@ namespace Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthorities
         [TempData]
         public int HighlightId { get; set; }
 
-        public string OriginalName { get; set; }
-        public static MaintenanceOption ThisOption { get; } = MaintenanceOption.LegalAuthority;
+        public bool InactiveAddress { get; private set; }
 
-        private readonly ILegalAuthorityRepository _repository;
-        public Edit(ILegalAuthorityRepository repository) => _repository = repository;
+        public SelectList AddressSelectList { get; private set; }
+
+        public static MaintenanceOption ThisOption { get; } = MaintenanceOption.EpdContact;
+
+        private readonly IEpdContactRepository _repository;
+        private readonly IAddressRepository _address;
+
+        public Edit(IEpdContactRepository repository, IAddressRepository address) =>
+            (_repository, _address) = (repository, address);
 
         [UsedImplicitly]
         public async Task<IActionResult> OnGetAsync(int? id)
@@ -41,9 +49,10 @@ namespace Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthorities
                 return RedirectToPage("Index");
             }
 
-            Item = LegalAuthorityMapping.ToLegalAuthorityUpdate(originalItem);
+            Item = EpdContactMapping.ToEpdContactUpdate(originalItem);
             Id = id.Value;
-            OriginalName = originalItem.AuthorityName;
+            InactiveAddress = !originalItem.Address.Active;
+            await PopulateSelectLists();
             return Page();
         }
 
@@ -59,18 +68,19 @@ namespace Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthorities
                 return RedirectToPage("Index");
             }
 
-            OriginalName = originalItem.AuthorityName;
-
-            if (!ModelState.IsValid) return Page();
+            if (!ModelState.IsValid)
+            {
+                await PopulateSelectLists();
+                return Page();
+            }
 
             Item.TrimAll();
 
-            if (await _repository.NameExistsAsync(Item.AuthorityName, Id))
+            if (!ModelState.IsValid)
             {
-                ModelState.AddModelError("Item.AuthorityName", "The authority name entered already exists.");
+                await PopulateSelectLists();
+                return Page();
             }
-
-            if (!ModelState.IsValid) return Page();
 
             try
             {
@@ -83,8 +93,12 @@ namespace Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthorities
             }
 
             HighlightId = Id;
-            TempData?.SetDisplayMessage(Context.Success, $"{Item.AuthorityName} successfully updated.");
+            TempData?.SetDisplayMessage(Context.Success, $"{ThisOption.SingularName} successfully updated.");
             return RedirectToPage("Index");
         }
+
+        private async Task PopulateSelectLists() =>
+            AddressSelectList = new SelectList(await _address.ListAsync(), nameof(AddressView.Id),
+                nameof(AddressView.AsLinearString));
     }
 }

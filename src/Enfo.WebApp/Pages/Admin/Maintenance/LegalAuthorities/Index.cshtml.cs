@@ -16,8 +16,9 @@ namespace Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthorities
         public IReadOnlyList<LegalAuthorityView> Items { get; private set; }
         public static MaintenanceOption ThisOption { get; } = MaintenanceOption.LegalAuthority;
         public DisplayMessage Message { get; private set; }
+
         [TempData]
-        public int NewId { get; set; }
+        public int HighlightId { get; set; }
 
         private readonly ILegalAuthorityRepository _repository;
         public Index(ILegalAuthorityRepository repository) => _repository = repository;

@@ -82,7 +82,7 @@ else
                                     @Html.DisplayFor(model => enfo.HearingContact.Organization)<br />
                                     @if (enfo.HearingContact.Address != null)
                                     {
-                                        @enfo.HearingContact.Address.ToString()<br />
+                                        @enfo.HearingContact.Address.AsLinearString<br />
                                     }
                                     @if (enfo.HearingContact.Email != null)
                                     {

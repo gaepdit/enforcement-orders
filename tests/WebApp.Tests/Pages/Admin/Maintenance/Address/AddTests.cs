@@ -35,7 +35,7 @@ namespace WebApp.Tests.Pages.Admin.Maintenance.Address
             var expected = new DisplayMessage(Context.Success,
                 $"{Add.ThisOption.SingularName} successfully added.");
             page.TempData?.GetDisplayMessage().Should().BeEquivalentTo(expected);
-            page.NewId.ShouldEqual(1);
+            page.HighlightId.ShouldEqual(1);
 
             result.Should().BeOfType<RedirectToPageResult>();
             ((RedirectToPageResult) result).PageName.ShouldEqual("Index");

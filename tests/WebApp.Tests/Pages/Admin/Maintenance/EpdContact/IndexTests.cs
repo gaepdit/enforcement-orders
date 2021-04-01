@@ -3,7 +3,7 @@ using Enfo.Repository.Repositories;
 using Enfo.Repository.Resources.EpdContact;
 using Enfo.WebApp.Extensions;
 using Enfo.WebApp.Models;
-using Enfo.WebApp.Pages.Admin.Maintenance.EpdContacts;
+using Enfo.WebApp.Pages.Admin.Maintenance.Contacts;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -64,7 +64,7 @@ namespace WebApp.Tests.Pages.Admin.Maintenance.EpdContact
             var result = await page.OnPostAsync(item.Id);
 
             var expected = new DisplayMessage(Context.Success,
-                $"Contact successfully {(item.Active ? "deactivated" : "restored")}.");
+                $"{Index.ThisOption.SingularName} successfully {(item.Active ? "deactivated" : "restored")}.");
             page.TempData?.GetDisplayMessage().Should().BeEquivalentTo(expected);
 
             result.Should().BeOfType<RedirectToPageResult>();

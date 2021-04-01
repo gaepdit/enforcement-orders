@@ -72,7 +72,7 @@ else
                         @Html.DisplayFor(model => enfo.CommentContact.Organization)<br />
                         @if (enfo.CommentContact.Address != null)
                         {
-                            @enfo.CommentContact.Address.ToString()<br />
+                            @enfo.CommentContact.Address.AsLinearString<br />
                         }
                         @if (enfo.CommentContact.Email != null)
                         {
@@ -112,7 +112,7 @@ else
                             @Html.DisplayFor(model => enfo.HearingContact.Organization)<br />
                             @if (enfo.HearingContact.Address != null)
                             {
-                                @enfo.HearingContact.Address.ToString()<br />
+                                @enfo.HearingContact.Address.AsLinearString<br />
                             }
                             @if (enfo.HearingContact.Email != null)
                             {

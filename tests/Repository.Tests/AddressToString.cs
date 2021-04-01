@@ -20,7 +20,7 @@ namespace Repository.Tests
 
             var addressView = new AddressView(address);
 
-            addressView.ToString().Should().Be("123 Any Street, New York, NY 10101");
+            addressView.AsLinearString.Should().Be("123 Any Street, New York, NY 10101");
         }
 
         [Fact]
@@ -36,7 +36,7 @@ namespace Repository.Tests
 
             var addressView = new AddressView(address);
 
-            addressView.ToString().Should().Be("123 Any Street, Suite 404, Atlanta, GA 10101");
+            addressView.AsLinearString.Should().Be("123 Any Street, Suite 404, Atlanta, GA 10101");
         }
 
         [Fact]
@@ -50,7 +50,7 @@ namespace Repository.Tests
 
             var addressView = new AddressView(address);
 
-            addressView.ToString().Should().Be("GA ABC");
+            addressView.AsLinearString.Should().Be("GA ABC");
         }
     }
 }

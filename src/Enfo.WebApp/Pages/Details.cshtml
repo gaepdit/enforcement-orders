@@ -65,7 +65,7 @@
                     @Html.DisplayFor(m => m.Item.CommentContact.Organization)<br />
                     @if (Model.Item.CommentContact.Address != null)
                     {
-                        @Model.Item.CommentContact.Address.ToString()<br />
+                        @Model.Item.CommentContact.Address.AsLinearString<br />
                     }
                     @if (Model.Item.CommentContact.Email != null)
                     {
@@ -118,7 +118,7 @@
                     @Html.DisplayFor(m => m.Item.HearingContact.Organization)<br />
                     @if (Model.Item.HearingContact.Address != null)
                     {
-                        @Model.Item.HearingContact.Address.ToString()<br />
+                        @Model.Item.HearingContact.Address.AsLinearString<br />
                     }
                     @if (Model.Item.HearingContact.Email != null)
                     {

@@ -17,7 +17,7 @@ namespace Enfo.WebApp.Pages.Admin.Maintenance.Addresses
         public static MaintenanceOption ThisOption { get; } = MaintenanceOption.Address;
 
         [TempData]
-        public int NewId { get; set; }
+        public int HighlightId { get; set; }
 
         private readonly IAddressRepository _repository;
         public Add(IAddressRepository repository) => _repository = repository;
@@ -34,7 +34,7 @@ namespace Enfo.WebApp.Pages.Admin.Maintenance.Addresses
 
             if (!ModelState.IsValid) return Page();
 
-            NewId = await _repository.CreateAsync(Item);
+            HighlightId = await _repository.CreateAsync(Item);
             TempData?.SetDisplayMessage(Context.Success, $"{ThisOption.SingularName} successfully added.");
             return RedirectToPage("Index");
         }
