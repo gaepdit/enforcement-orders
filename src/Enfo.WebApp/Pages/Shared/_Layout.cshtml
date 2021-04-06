@@ -5,13 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] | Georgia EPD</title>
     <partial name="_FaviconPartial" />
-    <link rel="stylesheet" href="~/dist/vendor.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/assets/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/dist/site.css" asp-append-version="true" />
     <environment exclude="Development">
         <link rel="stylesheet" href="https://georgia.gov/profiles/georgiagov/modules/custom/gagov_external_blocks/css/gagov_external_blocks-topper.css" />
         <link rel="stylesheet" href="https://georgia.gov/profiles/georgiagov/modules/custom/gagov_external_blocks/css/gagov_external_blocks-footer.css" />
     </environment>
-    <script src="~/dist/vendor.bundle.js" asp-append-version="true" type="text/javascript" defer></script>
+    <script src="~/dist/site.bundle.js" asp-append-version="true" type="text/javascript" defer></script>
     @await RenderSectionAsync("ScriptFiles", required: false)
 </head>
 <body>
