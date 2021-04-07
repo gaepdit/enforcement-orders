@@ -57,8 +57,6 @@ namespace Enfo.WebApp.Pages.Admin.Maintenance.Addresses
                 return RedirectToPage("Index");
             }
 
-            if (!ModelState.IsValid) return Page();
-
             Item.TrimAll();
 
             if (!ModelState.IsValid) return Page();

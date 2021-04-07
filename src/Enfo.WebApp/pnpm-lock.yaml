@@ -4,6 +4,7 @@ specifiers:
   css-loader: ^5.1.3
   jquery: ^3.6.0
   jquery-ui: ^1.12.1
+  jquery-ui-timepicker-addon: ^1.6.3
   mini-css-extract-plugin: ^1.3.9
   uswds: 1.6.x
   webpack: ^5.26.1
@@ -12,6 +13,7 @@ specifiers:
 dependencies:
   jquery: 3.6.0
   jquery-ui: 1.12.1
+  jquery-ui-timepicker-addon: 1.6.3
   uswds: 1.6.13
 
 devDependencies:
@@ -2342,6 +2344,11 @@ packages:
       merge-stream: 2.0.0
       supports-color: 7.2.0
     dev: true
+
+  /jquery-ui-timepicker-addon/1.6.3:
+    resolution: {integrity: sha1-gDfDmwtjAoLdCzfditf8XhFjN38=}
+    engines: {node: '>= 0.8.0'}
+    dev: false
 
   /jquery-ui/1.12.1:
     resolution: {integrity: sha1-vLQEXI3QU5wTS8FIjN0+dop6nlE=}

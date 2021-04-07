@@ -52,7 +52,7 @@ namespace Enfo.WebApp.Pages.Admin.Maintenance.Contacts
             Item = EpdContactMapping.ToEpdContactUpdate(originalItem);
             Id = id.Value;
             InactiveAddress = !originalItem.Address.Active;
-            await PopulateSelectLists();
+            await PopulateSelectListsAsync();
             return Page();
         }
 
@@ -68,17 +68,11 @@ namespace Enfo.WebApp.Pages.Admin.Maintenance.Contacts
                 return RedirectToPage("Index");
             }
 
-            if (!ModelState.IsValid)
-            {
-                await PopulateSelectLists();
-                return Page();
-            }
-
             Item.TrimAll();
 
             if (!ModelState.IsValid)
             {
-                await PopulateSelectLists();
+                await PopulateSelectListsAsync();
                 return Page();
             }
 
@@ -97,7 +91,7 @@ namespace Enfo.WebApp.Pages.Admin.Maintenance.Contacts
             return RedirectToPage("Index");
         }
 
-        private async Task PopulateSelectLists() =>
+        private async Task PopulateSelectListsAsync() =>
             AddressSelectList = new SelectList(await _address.ListAsync(), nameof(AddressView.Id),
                 nameof(AddressView.AsLinearString));
     }

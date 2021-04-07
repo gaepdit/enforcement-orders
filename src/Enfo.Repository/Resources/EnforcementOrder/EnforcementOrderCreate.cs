@@ -1,18 +1,13 @@
 ﻿using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using Enfo.Repository.Validation;
+using Enfo.Repository.Utils;
 
 namespace Enfo.Repository.Resources.EnforcementOrder
 {
     public class EnforcementOrderCreate
     {
         //  Determines the type of Enforcement Order created
-        public enum NewEnforcementOrderType
-        {
-            Proposed,
-            Executed
-        }
 
         // Common data elements
 
@@ -27,7 +22,7 @@ namespace Enfo.Repository.Resources.EnforcementOrder
 
         [DisplayName("Legal Authority")]
         [Required(ErrorMessage = "Legal Authority is required.")]
-        public int LegalAuthorityId { get; set; }
+        public int? LegalAuthorityId { get; set; }
 
         [DisplayName("Cause of Order")]
         [DataType(DataType.MultilineText)]
@@ -43,11 +38,9 @@ namespace Enfo.Repository.Resources.EnforcementOrder
 
         [DisplayName("Settlement Amount")]
         [DataType(DataType.Currency)]
-        [NonNegative]
         public decimal? SettlementAmount { get; set; }
 
-        [DisplayName("Progress")]
-        public PublicationState PublicationStatus { get; set; }
+        public PublicationState Progress { get; set; } = PublicationState.Published;
 
         [DisplayName("Order Number")]
         [Required(ErrorMessage = "Order Number is required.")]
@@ -55,7 +48,7 @@ namespace Enfo.Repository.Resources.EnforcementOrder
         public string OrderNumber { get; set; }
 
         [DisplayName("Status")]
-        public NewEnforcementOrderType CreateAs { get; set; }
+        public NewEnforcementOrderType CreateAs { get; set; } = NewEnforcementOrderType.Proposed;
 
         // Proposed orders
 
@@ -70,7 +63,7 @@ namespace Enfo.Repository.Resources.EnforcementOrder
         [DisplayName("Publication Date For Proposed Order")]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = DisplayFormats.FormatDateEdit, ApplyFormatInEditMode = true)]
-        public DateTime? ProposedOrderPostedDate { get; set; }
+        public DateTime? ProposedOrderPostedDate { get; set; } = DateUtils.NextMonday();
 
         // Executed orders
 
@@ -82,7 +75,7 @@ namespace Enfo.Repository.Resources.EnforcementOrder
         [DisplayName("Publication Date For Executed Order")]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = DisplayFormats.FormatDateEdit, ApplyFormatInEditMode = true)]
-        public DateTime? ExecutedOrderPostedDate { get; set; }
+        public DateTime? ExecutedOrderPostedDate { get; set; } = DateUtils.NextMonday();
 
         // Hearing info
 
@@ -90,9 +83,9 @@ namespace Enfo.Repository.Resources.EnforcementOrder
         public bool IsHearingScheduled { get; set; }
 
         [DisplayName("Hearing Date/Time")]
-        [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = DisplayFormats.FormatDateEdit, ApplyFormatInEditMode = true)]
-        public DateTime? HearingDate { get; set; }
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(DataFormatString = DisplayFormats.FormatDateTimeEdit, ApplyFormatInEditMode = true)]
+        public DateTime? HearingDate { get; set; } = DateTime.Now;
 
         [DisplayName("Hearing Location")]
         [DataType(DataType.MultilineText)]
@@ -106,5 +99,21 @@ namespace Enfo.Repository.Resources.EnforcementOrder
 
         [DisplayName("Hearing Information Contact")]
         public int? HearingContactId { get; set; }
+
+        public void TrimAll()
+        {
+            County = County?.Trim();
+            FacilityName = FacilityName?.Trim();
+            Cause = Cause?.Trim();
+            Requirements = Requirements?.Trim();
+            OrderNumber = OrderNumber?.Trim();
+            HearingLocation = HearingLocation?.Trim();
+        }
+    }
+
+    public enum NewEnforcementOrderType
+    {
+        Proposed,
+        Executed
     }
 }

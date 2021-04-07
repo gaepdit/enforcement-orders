@@ -28,8 +28,6 @@ namespace Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthorities
         [UsedImplicitly]
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid) return Page();
-
             Item.TrimAll();
 
             if (await _repository.NameExistsAsync(Item.AuthorityName))

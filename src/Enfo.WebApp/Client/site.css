@@ -64,7 +64,7 @@ form.usa-section {
 .ui-datepicker select {
     font-weight: 400;
     display: inline-block;
-    padding: 1px;
+    padding: 1px 3px;
     height: auto;
 }
 
@@ -467,7 +467,7 @@ hr {
 .gaepd-buttonrow input,
 .gaepd-buttonrow label {
     display: inline-block;
-    margin-top: 0;
+    margin-top: 2.5rem;
     margin-bottom: 0;
 }
 
@@ -638,6 +638,10 @@ table {
 .usa-sidenav-list {
     border-bottom: 1px solid;
     border-top: 1px solid;
+}
+
+.usa-input-grid-medium input, .usa-input-grid-medium select {
+    margin-bottom: 0;
 }
 
 /*

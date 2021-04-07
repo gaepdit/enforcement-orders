@@ -61,8 +61,6 @@ namespace Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthorities
 
             OriginalName = originalItem.AuthorityName;
 
-            if (!ModelState.IsValid) return Page();
-
             Item.TrimAll();
 
             if (await _repository.NameExistsAsync(Item.AuthorityName, Id))

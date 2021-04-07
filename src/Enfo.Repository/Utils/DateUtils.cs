@@ -19,5 +19,8 @@ namespace Enfo.Repository.Utils
 
         public static DateTime MostRecentMonday() =>
             GetNextWeekday(DateTime.Today.AddDays(-6), DayOfWeek.Monday);
+
+        public static DateTime NextMonday() =>
+            GetNextWeekday(DateTime.Today.AddDays(1), DayOfWeek.Monday);
     }
 }

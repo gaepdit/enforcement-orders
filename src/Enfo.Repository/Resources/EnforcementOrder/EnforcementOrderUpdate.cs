@@ -34,7 +34,6 @@ namespace Enfo.Repository.Resources.EnforcementOrder
 
         [DisplayName("Settlement Amount")]
         [DataType(DataType.Currency)]
-        [NonNegative]
         public decimal? SettlementAmount { get; set; }
 
         [DisplayName("Progress")]
@@ -81,8 +80,8 @@ namespace Enfo.Repository.Resources.EnforcementOrder
         public bool IsHearingScheduled { get; set; }
 
         [DisplayName("Hearing Date/Time")]
-        [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = DisplayFormats.FormatDateEdit, ApplyFormatInEditMode = true)]
+        [DataType(DataType.DateTime)]
+        [DisplayFormat(DataFormatString = DisplayFormats.FormatDateTimeEdit, ApplyFormatInEditMode = true)]
         public DateTime? HearingDate { get; set; }
 
         [DisplayName("Hearing Location")]

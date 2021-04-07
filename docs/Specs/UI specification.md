@@ -9,19 +9,19 @@
     * Admin quick search `/Admin {find}`
     * Admin search `/Admin/Search`
     * Admin view `/Admin/Details/{id}`
-    * Create `/Admin/Create`
+    * Add `/Admin/Add`
     * Edit `/Admin/Edit/{id}`
     * Delete `/Admin/Delete/{id}`
     * Restore `/Admin/Restore/{id}`
 * Site maintenance `/Admin/Maintenance`
     * EPD Addresses list `/Admin/Maintenance/Address`
-        * Create `/Admin/Maintenance/Address/Create`
+        * Add `/Admin/Maintenance/Addresses/Add`
         * Edit `/Admin/Maintenance/Address/Edit/{id}`
     * EPD Contacts list `/Admin/Maintenance/Contact`
-        * Create `/Admin/Maintenance/Contact/Create`
+        * Add `/Admin/Maintenance/Contacts/Add`
         * Edit `/Admin/Maintenance/Contact/Edit/{id}`
     * Legal Authorities list `/Admin/Maintenance/LegalAuthority`
-        * Create `/Admin/Maintenance/LegalAuthority/Create`
+        * Add `/Admin/Maintenance/LegalAuthorities/Add`
         * Edit `/Admin/Maintenance/LegalAuthority/Edit/{id}`
 * Account profile `/Account`
 * Users list `/Admin/Users`

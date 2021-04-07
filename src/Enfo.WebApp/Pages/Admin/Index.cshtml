@@ -9,9 +9,11 @@
 
 <partial name="_AlertPartial" for="Message" />
 
+<h1>@ViewData["Title"]</h1>
+
 <form method="get" class="usa-search usa-search-big" asp-page="Find">
-    <h3>Quick Search</h3>
     <div role="search">
+        <h3>Quick Search</h3>
         <input type="hidden" name="handler" value="find" />
         <input name="find" type="search" placeholder="Order Number" class="gaepd-input-medium-large" />
         <button type="submit">

@@ -25,7 +25,7 @@ namespace Repository.Tests.ValidationTests
             LegalAuthorityId = 7,
             OrderNumber = "EPD-ACQ-7936",
             ProposedOrderPostedDate = new DateTime(2012, 10, 16),
-            PublicationStatus = PublicationState.Published,
+            Progress = PublicationState.Published,
             Requirements = "Duis ut diam quam nulla porttitor massa id neque. A lacus vestibulum.",
             SettlementAmount = 2000,
         };

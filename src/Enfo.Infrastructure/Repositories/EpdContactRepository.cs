@@ -30,7 +30,7 @@ namespace Enfo.Infrastructure.Repositories
             await _context.EpdContacts.AsNoTracking()
                 .Include(e => e.Address)
                 .Where(e => e.Active || includeInactive)
-                .OrderBy(e => e.Id)
+                .OrderBy(e => e.ContactName)
                 .Select(e => new EpdContactView(e))
                 .ToListAsync().ConfigureAwait(false);
 

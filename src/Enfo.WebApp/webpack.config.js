@@ -12,6 +12,10 @@ module.exports = {
             dependOn: 'site',
             import: './Client/searchForm.js'
         },
+        newOrderForm: {
+            dependOn: 'site',
+            import: './Client/newOrderForm.js'
+        },
     },
     output: {
         filename: '[name].bundle.js',

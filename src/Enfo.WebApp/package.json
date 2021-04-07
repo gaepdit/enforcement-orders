@@ -16,6 +16,7 @@
   "dependencies": {
     "jquery": "^3.6.0",
     "jquery-ui": "^1.12.1",
+    "jquery-ui-timepicker-addon": "^1.6.3",
     "uswds": "1.6.x"
   },
   "devDependencies": {

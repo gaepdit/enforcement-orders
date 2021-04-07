@@ -36,12 +36,12 @@ namespace Enfo.Repository.Mapping
                 IsExecutedOrder = resource.CreateAs == NewEnforcementOrderType.Executed,
                 IsHearingScheduled = resource.IsHearingScheduled,
                 IsProposedOrder = resource.CreateAs == NewEnforcementOrderType.Proposed,
-                LegalAuthorityId = resource.LegalAuthorityId,
+                LegalAuthorityId = resource.LegalAuthorityId ?? 0,
                 OrderNumber = resource.OrderNumber,
                 ProposedOrderPostedDate = resource.CreateAs == NewEnforcementOrderType.Proposed
                     ? resource.ProposedOrderPostedDate
                     : null,
-                PublicationStatus = GetEntityPublicationState(resource.PublicationStatus),
+                PublicationStatus = GetEntityPublicationState(resource.Progress),
                 Requirements = resource.Requirements,
                 SettlementAmount = resource.SettlementAmount
             };

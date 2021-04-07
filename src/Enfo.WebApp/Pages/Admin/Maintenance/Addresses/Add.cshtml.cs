@@ -28,8 +28,6 @@ namespace Enfo.WebApp.Pages.Admin.Maintenance.Addresses
         [UsedImplicitly]
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid) return Page();
-
             Item.TrimAll();
 
             if (!ModelState.IsValid) return Page();
