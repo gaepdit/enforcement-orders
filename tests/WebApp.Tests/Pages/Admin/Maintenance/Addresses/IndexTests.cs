@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
 using Enfo.Repository.Repositories;
-using Enfo.Repository.Resources.EpdContact;
+using Enfo.Repository.Resources.Address;
 using Enfo.WebApp.Extensions;
 using Enfo.WebApp.Models;
-using Enfo.WebApp.Pages.Admin.Maintenance.Contacts;
+using Enfo.WebApp.Pages.Admin.Maintenance.Addresses;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,15 +13,15 @@ using Xunit;
 using Xunit.Extensions.AssertExtensions;
 using static TestHelpers.ResourceHelper;
 
-namespace WebApp.Tests.Pages.Admin.Maintenance.EpdContact
+namespace WebApp.Tests.Pages.Admin.Maintenance.Addresses
 {
     public class IndexTests
     {
         [Fact]
         public async Task OnGet_ReturnsWithOrder()
         {
-            var list = GetEpdContactViewList();
-            var repo = new Mock<IEpdContactRepository>();
+            var list = GetAddressViewList();
+            var repo = new Mock<IAddressRepository>();
             repo.Setup(l => l.ListAsync(true)).ReturnsAsync(list);
             var page = new Index(repo.Object);
 
@@ -34,7 +34,7 @@ namespace WebApp.Tests.Pages.Admin.Maintenance.EpdContact
         [Fact]
         public async Task SetDisplayMessage_ReturnsWithDisplayMessage()
         {
-            var repo = new Mock<IEpdContactRepository> {DefaultValue = DefaultValue.Mock};
+            var repo = new Mock<IAddressRepository> {DefaultValue = DefaultValue.Mock};
 
             // Initialize Page TempData
             var httpContext = new DefaultHttpContext();
@@ -51,8 +51,8 @@ namespace WebApp.Tests.Pages.Admin.Maintenance.EpdContact
         [Fact]
         public async Task OnPost_ReturnsRedirectWithDisplayMessage()
         {
-            var item = GetEpdContactViewList()[0];
-            var repo = new Mock<IEpdContactRepository> {DefaultValue = DefaultValue.Mock};
+            var item = GetAddressViewList()[0];
+            var repo = new Mock<IAddressRepository> {DefaultValue = DefaultValue.Mock};
             repo.Setup(l => l.GetAsync(It.IsAny<int>()))
                 .ReturnsAsync(item);
 
@@ -74,7 +74,7 @@ namespace WebApp.Tests.Pages.Admin.Maintenance.EpdContact
         [Fact]
         public async Task OnPost_GivenNullId_ReturnsBadRequest()
         {
-            var repo = new Mock<IEpdContactRepository> {DefaultValue = DefaultValue.Mock};
+            var repo = new Mock<IAddressRepository> {DefaultValue = DefaultValue.Mock};
             var page = new Index(repo.Object);
 
             var result = await page.OnPostAsync(null);
@@ -85,9 +85,9 @@ namespace WebApp.Tests.Pages.Admin.Maintenance.EpdContact
         [Fact]
         public async Task OnPost_GivenInvalidId_ReturnsNotFound()
         {
-            var repo = new Mock<IEpdContactRepository> {DefaultValue = DefaultValue.Mock};
+            var repo = new Mock<IAddressRepository> {DefaultValue = DefaultValue.Mock};
             repo.Setup(l => l.GetAsync(It.IsAny<int>()))
-                .ReturnsAsync(null as EpdContactView);
+                .ReturnsAsync(null as AddressView);
             var page = new Index(repo.Object);
 
             var result = await page.OnPostAsync(1);

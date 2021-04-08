@@ -16,7 +16,7 @@ using Xunit;
 using Xunit.Extensions.AssertExtensions;
 using static TestHelpers.ResourceHelper;
 
-namespace WebApp.Tests.Pages.Admin.Maintenance.Address
+namespace WebApp.Tests.Pages.Admin.Maintenance.Addresses
 {
     public class EditTests
     {

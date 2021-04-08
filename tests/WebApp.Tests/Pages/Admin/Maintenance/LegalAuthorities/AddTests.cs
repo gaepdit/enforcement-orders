@@ -13,7 +13,7 @@ using Moq;
 using Xunit;
 using Xunit.Extensions.AssertExtensions;
 
-namespace WebApp.Tests.Pages.Admin.Maintenance.LegalAuthority
+namespace WebApp.Tests.Pages.Admin.Maintenance.LegalAuthorities
 {
     public class AddTests
     {

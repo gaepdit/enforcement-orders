@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
 using Enfo.Repository.Repositories;
-using Enfo.Repository.Resources.Address;
+using Enfo.Repository.Resources.LegalAuthority;
 using Enfo.WebApp.Extensions;
 using Enfo.WebApp.Models;
-using Enfo.WebApp.Pages.Admin.Maintenance.Addresses;
+using Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthorities;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,15 +13,15 @@ using Xunit;
 using Xunit.Extensions.AssertExtensions;
 using static TestHelpers.ResourceHelper;
 
-namespace WebApp.Tests.Pages.Admin.Maintenance.Address
+namespace WebApp.Tests.Pages.Admin.Maintenance.LegalAuthorities
 {
     public class IndexTests
     {
         [Fact]
         public async Task OnGet_ReturnsWithOrder()
         {
-            var list = GetAddressViewList();
-            var repo = new Mock<IAddressRepository>();
+            var list = GetLegalAuthorityViewList();
+            var repo = new Mock<ILegalAuthorityRepository>();
             repo.Setup(l => l.ListAsync(true)).ReturnsAsync(list);
             var page = new Index(repo.Object);
 
@@ -34,7 +34,7 @@ namespace WebApp.Tests.Pages.Admin.Maintenance.Address
         [Fact]
         public async Task SetDisplayMessage_ReturnsWithDisplayMessage()
         {
-            var repo = new Mock<IAddressRepository> {DefaultValue = DefaultValue.Mock};
+            var repo = new Mock<ILegalAuthorityRepository> {DefaultValue = DefaultValue.Mock};
 
             // Initialize Page TempData
             var httpContext = new DefaultHttpContext();
@@ -51,8 +51,8 @@ namespace WebApp.Tests.Pages.Admin.Maintenance.Address
         [Fact]
         public async Task OnPost_ReturnsRedirectWithDisplayMessage()
         {
-            var item = GetAddressViewList()[0];
-            var repo = new Mock<IAddressRepository> {DefaultValue = DefaultValue.Mock};
+            var item = GetLegalAuthorityViewList()[0];
+            var repo = new Mock<ILegalAuthorityRepository> {DefaultValue = DefaultValue.Mock};
             repo.Setup(l => l.GetAsync(It.IsAny<int>()))
                 .ReturnsAsync(item);
 
@@ -64,7 +64,7 @@ namespace WebApp.Tests.Pages.Admin.Maintenance.Address
             var result = await page.OnPostAsync(item.Id);
 
             var expected = new DisplayMessage(Context.Success,
-                $"{Index.ThisOption.SingularName} successfully {(item.Active ? "deactivated" : "restored")}.");
+                $"{item.AuthorityName} successfully {(item.Active ? "deactivated" : "restored")}.");
             page.TempData?.GetDisplayMessage().Should().BeEquivalentTo(expected);
 
             result.Should().BeOfType<RedirectToPageResult>();
@@ -74,7 +74,7 @@ namespace WebApp.Tests.Pages.Admin.Maintenance.Address
         [Fact]
         public async Task OnPost_GivenNullId_ReturnsBadRequest()
         {
-            var repo = new Mock<IAddressRepository> {DefaultValue = DefaultValue.Mock};
+            var repo = new Mock<ILegalAuthorityRepository> {DefaultValue = DefaultValue.Mock};
             var page = new Index(repo.Object);
 
             var result = await page.OnPostAsync(null);
@@ -85,9 +85,9 @@ namespace WebApp.Tests.Pages.Admin.Maintenance.Address
         [Fact]
         public async Task OnPost_GivenInvalidId_ReturnsNotFound()
         {
-            var repo = new Mock<IAddressRepository> {DefaultValue = DefaultValue.Mock};
+            var repo = new Mock<ILegalAuthorityRepository> {DefaultValue = DefaultValue.Mock};
             repo.Setup(l => l.GetAsync(It.IsAny<int>()))
-                .ReturnsAsync(null as AddressView);
+                .ReturnsAsync(null as LegalAuthorityView);
             var page = new Index(repo.Object);
 
             var result = await page.OnPostAsync(1);
