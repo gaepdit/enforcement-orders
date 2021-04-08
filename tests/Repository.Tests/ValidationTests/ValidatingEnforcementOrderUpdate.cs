@@ -154,7 +154,7 @@ namespace Repository.Tests.ValidationTests
                     "HearingDate",
                     "HearingLocation",
                     "HearingCommentPeriodClosesDate",
-                    "HearingContact");
+                    "HearingContactId");
         }
     }
 }

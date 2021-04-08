@@ -58,7 +58,10 @@ namespace Enfo.WebApp.Pages.Admin
                 {
                     ModelState.AddModelError(string.Concat(nameof(Item), ".", key), value);
                 }
+            }
 
+            if (!ModelState.IsValid)
+            {
                 await PopulateSelectListsAsync();
                 return Page();
             }

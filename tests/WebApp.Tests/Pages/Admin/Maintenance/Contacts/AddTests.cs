@@ -56,7 +56,7 @@ namespace WebApp.Tests.Pages.Admin.Maintenance.Contacts
             var addressRepo = new Mock<IAddressRepository> {DefaultValue = DefaultValue.Mock};
             addressRepo.Setup(l => l.ListAsync(false))
                 .ReturnsAsync(GetAddressViewList());
-            var page = new Add(repo.Object, addressRepo.Object);
+            var page = new Add(repo.Object, addressRepo.Object) {Item = new EpdContactCreate()};
             page.ModelState.AddModelError("key", "message");
 
             var result = await page.OnPostAsync();

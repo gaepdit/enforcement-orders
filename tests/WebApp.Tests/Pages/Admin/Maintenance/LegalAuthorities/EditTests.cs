@@ -151,7 +151,7 @@ namespace WebApp.Tests.Pages.Admin.Maintenance.LegalAuthorities
             var repo = new Mock<ILegalAuthorityRepository> {DefaultValue = DefaultValue.Mock};
             repo.Setup(l => l.GetAsync(It.IsAny<int>()))
                 .ReturnsAsync(GetLegalAuthorityViewList()[0]);
-            var page = new Edit(repo.Object);
+            var page = new Edit(repo.Object) {Item = new LegalAuthorityUpdate()};
             page.ModelState.AddModelError("key", "message");
 
             var result = await page.OnPostAsync();

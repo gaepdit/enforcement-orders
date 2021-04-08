@@ -126,7 +126,7 @@ namespace WebApp.Tests.Pages.Admin.Maintenance.Addresses
             var repo = new Mock<IAddressRepository> {DefaultValue = DefaultValue.Mock};
             repo.Setup(l => l.GetAsync(It.IsAny<int>()))
                 .ReturnsAsync(GetAddressViewList()[0]);
-            
+
             // Initialize Page TempData
             var httpContext = new DefaultHttpContext();
             var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
@@ -148,7 +148,7 @@ namespace WebApp.Tests.Pages.Admin.Maintenance.Addresses
             var repo = new Mock<IAddressRepository> {DefaultValue = DefaultValue.Mock};
             repo.Setup(l => l.GetAsync(It.IsAny<int>()))
                 .ReturnsAsync(GetAddressViewList()[0]);
-            var page = new Edit(repo.Object);
+            var page = new Edit(repo.Object) {Item = new AddressUpdate()};
             page.ModelState.AddModelError("key", "message");
 
             var result = await page.OnPostAsync();

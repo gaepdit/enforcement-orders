@@ -20,7 +20,7 @@ namespace WebApp.Tests.Pages.Admin.Maintenance.Addresses
         [Fact]
         public async Task OnPost_GivenSuccess_ReturnsRedirectWithDisplayMessage()
         {
-            var item = new AddressCreate {City = "abc",State = "GA",Street = "123",PostalCode = "01234"};
+            var item = new AddressCreate {City = "abc", State = "GA", Street = "123", PostalCode = "01234"};
             var repo = new Mock<IAddressRepository> {DefaultValue = DefaultValue.Mock};
             repo.Setup(l => l.CreateAsync(It.IsAny<AddressCreate>()))
                 .ReturnsAsync(1);
@@ -45,7 +45,7 @@ namespace WebApp.Tests.Pages.Admin.Maintenance.Addresses
         public async Task OnPost_GivenModelError_ReturnsPageWithModelError()
         {
             var repo = new Mock<IAddressRepository> {DefaultValue = DefaultValue.Mock};
-            var page = new Add(repo.Object);
+            var page = new Add(repo.Object) {Item = new AddressCreate()};
             page.ModelState.AddModelError("key", "message");
 
             var result = await page.OnPostAsync();

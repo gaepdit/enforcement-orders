@@ -47,7 +47,7 @@ namespace WebApp.Tests.Pages.Admin.Maintenance.LegalAuthorities
         public async Task OnPost_GivenModelError_ReturnsPageWithModelError()
         {
             var repo = new Mock<ILegalAuthorityRepository> {DefaultValue = DefaultValue.Mock};
-            var page = new Add(repo.Object);
+            var page = new Add(repo.Object) {Item = new LegalAuthorityCreate()};
             page.ModelState.AddModelError("key", "message");
 
             var result = await page.OnPostAsync();

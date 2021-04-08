@@ -160,7 +160,7 @@ namespace WebApp.Tests.Pages.Admin.Maintenance.Contacts
             var addressRepo = new Mock<IAddressRepository>();
             addressRepo.Setup(l => l.ListAsync(false))
                 .ReturnsAsync(GetAddressViewList());
-            var page = new Edit(repo.Object, addressRepo.Object);
+            var page = new Edit(repo.Object, addressRepo.Object) {Item = new EpdContactUpdate()};
             page.ModelState.AddModelError("key", "message");
 
             var result = await page.OnPostAsync();

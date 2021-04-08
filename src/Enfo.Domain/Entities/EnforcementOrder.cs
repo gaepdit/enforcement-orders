@@ -104,8 +104,7 @@ namespace Enfo.Domain.Entities
 
         public bool IsHearingScheduled { get; set; }
 
-        [DataType(DataType.Date)]
-        [Column(TypeName = "Date")]
+        [DataType(DataType.DateTime)]
         public DateTime? HearingDate { get; set; }
 
         [StringLength(3990)]

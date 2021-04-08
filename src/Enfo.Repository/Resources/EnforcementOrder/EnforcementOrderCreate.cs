@@ -85,7 +85,7 @@ namespace Enfo.Repository.Resources.EnforcementOrder
         [DisplayName("Hearing Date/Time")]
         [DataType(DataType.DateTime)]
         [DisplayFormat(DataFormatString = DisplayFormats.FormatDateTimeEdit, ApplyFormatInEditMode = true)]
-        public DateTime? HearingDate { get; set; } = DateTime.Now;
+        public DateTime? HearingDate { get; set; } = DateTime.Today.AddHours(12);
 
         [DisplayName("Hearing Location")]
         [DataType(DataType.MultilineText)]
