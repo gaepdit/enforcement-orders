@@ -7,7 +7,7 @@ namespace Enfo.Repository.Mapping
 {
     public static class LegalAuthorityMapping
     {
-        public static LegalAuthority ToLegalAuthority([NotNull] this LegalAuthorityCreate resource)
+        public static LegalAuthority ToLegalAuthorityEntity([NotNull] this LegalAuthorityCreate resource)
         {
             Guard.NotNull(resource, nameof(resource));
 
@@ -17,16 +17,15 @@ namespace Enfo.Repository.Mapping
             };
         }
 
-        public static void UpdateFrom([NotNull] this LegalAuthority item, [NotNull] LegalAuthorityUpdate resource)
+        public static void UpdateEntityFrom([NotNull] this LegalAuthority item, [NotNull] LegalAuthorityUpdate resource)
         {
             Guard.NotNull(item, nameof(item));
             Guard.NotNull(resource, nameof(resource));
 
             item.AuthorityName = resource.AuthorityName;
         }
-        
-        public static LegalAuthorityUpdate ToLegalAuthorityUpdate(LegalAuthorityView item) =>
-            new() {AuthorityName = item.AuthorityName};
 
+        public static LegalAuthorityUpdate ToLegalAuthorityUpdate(LegalAuthorityView item) => new()
+            {AuthorityName = item.AuthorityName};
     }
 }

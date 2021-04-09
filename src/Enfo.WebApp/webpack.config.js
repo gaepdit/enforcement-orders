@@ -8,13 +8,13 @@ module.exports = {
             dependOn: 'site',
             import: './Client/datepicker.js'
         },
-        searchForm: {
+        formSearch: {
             dependOn: 'site',
-            import: './Client/searchForm.js'
+            import: './Client/formSearch.js'
         },
-        newOrderForm: {
+        formAddOrder: {
             dependOn: 'site',
-            import: './Client/newOrderForm.js'
+            import: './Client/formAddOrder.js'
         },
     },
     output: {

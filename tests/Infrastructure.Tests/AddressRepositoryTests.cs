@@ -72,7 +72,7 @@ namespace Infrastructure.Tests
             var itemId = await repository.CreateAsync(itemCreate);
             repositoryHelper.ClearChangeTracker();
 
-            var item = itemCreate.ToAddress();
+            var item = itemCreate.ToAddressEntity();
             item.Id = itemId;
             var expected = new AddressView(item);
             (await repository.GetAsync(itemId))

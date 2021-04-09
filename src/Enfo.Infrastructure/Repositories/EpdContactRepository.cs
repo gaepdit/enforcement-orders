@@ -43,7 +43,7 @@ namespace Enfo.Infrastructure.Repositories
             Guard.RegexMatch(resource.Telephone, nameof(resource.Telephone), ResourceRegex.Telephone);
             Guard.RegexMatch(resource.Email, nameof(resource.Email), ResourceRegex.Email);
 
-            var item = resource.ToEpdContact();
+            var item = resource.ToEpdContactEntity();
             await _context.EpdContacts.AddAsync(item).ConfigureAwait(false);
             await _context.SaveChangesAsync().ConfigureAwait(false);
 
@@ -66,7 +66,7 @@ namespace Enfo.Infrastructure.Repositories
                 throw new ArgumentException($"ID ({id}) not found.", nameof(id));
             }
 
-            item.UpdateFrom(resource);
+            item.UpdateEntityFrom(resource);
             await _context.SaveChangesAsync().ConfigureAwait(false);
         }
 

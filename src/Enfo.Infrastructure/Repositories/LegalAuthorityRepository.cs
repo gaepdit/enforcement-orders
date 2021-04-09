@@ -37,7 +37,7 @@ namespace Enfo.Infrastructure.Repositories
             Guard.NotNull(resource, nameof(resource));
             Guard.NotNullOrWhiteSpace(resource.AuthorityName, nameof(resource.AuthorityName));
 
-            var item = resource.ToLegalAuthority();
+            var item = resource.ToLegalAuthorityEntity();
             await _context.LegalAuthorities.AddAsync(item).ConfigureAwait(false);
             await _context.SaveChangesAsync().ConfigureAwait(false);
 
@@ -56,7 +56,7 @@ namespace Enfo.Infrastructure.Repositories
                 throw new ArgumentException($"ID ({id}) not found.", nameof(id));
             }
 
-            item.UpdateFrom(resource);
+            item.UpdateEntityFrom(resource);
             await _context.SaveChangesAsync().ConfigureAwait(false);
         }
 

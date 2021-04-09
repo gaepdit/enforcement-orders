@@ -7,7 +7,7 @@ namespace Enfo.Repository.Mapping
 {
     public static class AddressMapping
     {
-        public static Address ToAddress([NotNull] this AddressCreate resource)
+        public static Address ToAddressEntity([NotNull] this AddressCreate resource)
         {
             Guard.NotNull(resource, nameof(resource));
 
@@ -21,7 +21,7 @@ namespace Enfo.Repository.Mapping
             };
         }
 
-        public static void UpdateFrom([NotNull] this Address item, [NotNull] AddressUpdate resource)
+        public static void UpdateEntityFrom([NotNull] this Address item, [NotNull] AddressUpdate resource)
         {
             Guard.NotNull(item, nameof(item));
             Guard.NotNull(resource, nameof(resource));
@@ -33,14 +33,13 @@ namespace Enfo.Repository.Mapping
             item.Street2 = resource.Street2;
         }
 
-        public static AddressUpdate ToAddressUpdate(AddressView item) =>
-            new()
-            {
-                City = item.City,
-                PostalCode = item.PostalCode,
-                State = item.State,
-                Street = item.Street,
-                Street2 = item.Street2,
-            };
+        public static AddressUpdate ToAddressUpdate(AddressView item) => new()
+        {
+            City = item.City,
+            PostalCode = item.PostalCode,
+            State = item.State,
+            Street = item.Street,
+            Street2 = item.Street2,
+        };
     }
 }

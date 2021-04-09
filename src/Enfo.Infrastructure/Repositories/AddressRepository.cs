@@ -41,7 +41,7 @@ namespace Enfo.Infrastructure.Repositories
             Guard.NotNullOrWhiteSpace(resource.PostalCode, nameof(resource.PostalCode));
             Guard.RegexMatch(resource.PostalCode, nameof(resource.PostalCode), ResourceRegex.PostalCode);
 
-            var item = resource.ToAddress();
+            var item = resource.ToAddressEntity();
             await _context.Addresses.AddAsync(item).ConfigureAwait(false);
             await _context.SaveChangesAsync().ConfigureAwait(false);
 
@@ -64,7 +64,7 @@ namespace Enfo.Infrastructure.Repositories
                 throw new ArgumentException($"ID ({id}) not found.", nameof(id));
             }
 
-            item.UpdateFrom(resource);
+            item.UpdateEntityFrom(resource);
             await _context.SaveChangesAsync().ConfigureAwait(false);
         }
 

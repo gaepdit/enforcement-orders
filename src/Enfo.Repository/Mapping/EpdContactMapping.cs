@@ -7,7 +7,7 @@ namespace Enfo.Repository.Mapping
 {
     public static class EpdContactMapping
     {
-        public static EpdContact ToEpdContact([NotNull] this EpdContactCreate resource)
+        public static EpdContact ToEpdContactEntity([NotNull] this EpdContactCreate resource)
         {
             Guard.NotNull(resource, nameof(resource));
 
@@ -22,7 +22,7 @@ namespace Enfo.Repository.Mapping
             };
         }
 
-        public static void UpdateFrom([NotNull] this EpdContact item, [NotNull] EpdContactUpdate resource)
+        public static void UpdateEntityFrom([NotNull] this EpdContact item, [NotNull] EpdContactUpdate resource)
         {
             Guard.NotNull(item, nameof(item));
             Guard.NotNull(resource, nameof(resource));
@@ -34,16 +34,16 @@ namespace Enfo.Repository.Mapping
             item.Telephone = resource.Telephone;
             item.Title = resource.Title;
         }
-        
-        public static EpdContactUpdate ToEpdContactUpdate(EpdContactView item) =>
-            new()
-            {
-                AddressId = item.Address.Id,
-                ContactName = item.ContactName,
-                Email = item.Email,
-                Organization = item.Organization,
-                Telephone = item.Telephone,
-                Title = item.Title,
-            };
+
+        public static EpdContactUpdate ToEpdContactUpdate(EpdContactView item) => new()
+        {
+            AddressId = item.Address.Id,
+            IsInactiveAddress = !item.Address.Active,
+            ContactName = item.ContactName,
+            Email = item.Email,
+            Organization = item.Organization,
+            Telephone = item.Telephone,
+            Title = item.Title,
+        };
     }
 }

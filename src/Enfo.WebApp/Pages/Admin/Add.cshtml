@@ -29,11 +29,11 @@
         <legend>Enforcement Order Details</legend>
 
         <label asp-for="Item.Cause"></label>
-        @Html.EditorFor(model => model.Item.Cause)
+        @Html.EditorFor(m => m.Item.Cause)
         <span asp-validation-for="Item.Cause" class="usa-input-error-message"></span>
 
         <label asp-for="Item.Requirements"></label>
-        @Html.EditorFor(model => model.Item.Requirements)
+        @Html.EditorFor(m => m.Item.Requirements)
         <span asp-validation-for="Item.Requirements" class="usa-input-error-message"></span>
 
         <label asp-for="Item.LegalAuthorityId"></label>
@@ -43,11 +43,11 @@
         <span asp-validation-for="Item.LegalAuthorityId" class="usa-input-error-message"></span>
 
         <label asp-for="Item.OrderNumber"></label>
-        @Html.EditorFor(model => model.Item.OrderNumber)
+        @Html.EditorFor(m => m.Item.OrderNumber)
         <span asp-validation-for="Item.OrderNumber" class="usa-input-error-message"></span>
 
         <label asp-for="Item.SettlementAmount"></label>
-        @Html.EditorFor(model => model.Item.SettlementAmount, new
+        @Html.EditorFor(m => m.Item.SettlementAmount, new
         {
             htmlAttributes = new
             {
@@ -102,7 +102,7 @@
     <fieldset>
         <legend>Public Hearing</legend>
 
-        @Html.EditorFor(model => model.Item.IsHearingScheduled)
+        @Html.EditorFor(m => m.Item.IsHearingScheduled)
         <label asp-for="Item.IsHearingScheduled"></label>
 
         <div id="public-hearing-details">
@@ -111,7 +111,7 @@
             <span asp-validation-for="Item.HearingDate" class="usa-input-error-message"></span>
 
             <label asp-for="Item.HearingLocation"></label>
-            @Html.EditorFor(model => model.Item.HearingLocation, new {htmlAttributes = new {@class = "hearing-item"}})
+            @Html.EditorFor(m => m.Item.HearingLocation, new {htmlAttributes = new {@class = "hearing-item"}})
             <span asp-validation-for="Item.HearingLocation" class="usa-input-error-message"></span>
 
             <label asp-for="Item.HearingContactId"></label>
@@ -159,7 +159,7 @@
 @section ScriptFiles
 {
     <link rel="stylesheet" href="~/dist/datepicker.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/dist/newOrderForm.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/dist/formAddOrder.css" asp-append-version="true" />
     <script src="~/dist/datepicker.bundle.js" asp-append-version="true" type="text/javascript" defer></script>
-    <script src="~/dist/newOrderForm.bundle.js" asp-append-version="true" type="text/javascript" defer></script>
+    <script src="~/dist/formAddOrder.bundle.js" asp-append-version="true" type="text/javascript" defer></script>
 }

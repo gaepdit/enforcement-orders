@@ -90,7 +90,7 @@ namespace Infrastructure.Tests
             itemId = await repository.CreateAsync(itemCreate);
             repositoryHelper.ClearChangeTracker();
 
-            var epdContact = itemCreate.ToEpdContact();
+            var epdContact = itemCreate.ToEpdContactEntity();
             epdContact.Address = GetAddresses.Single(e => e.Id == itemCreate.AddressId);
             epdContact.Id = itemId;
             var expected = new EpdContactView(epdContact);

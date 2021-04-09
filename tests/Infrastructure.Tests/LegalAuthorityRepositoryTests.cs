@@ -66,7 +66,7 @@ namespace Infrastructure.Tests
             var itemId = await repository.CreateAsync(itemCreate);
             repositoryHelper.ClearChangeTracker();
 
-            var item = itemCreate.ToLegalAuthority();
+            var item = itemCreate.ToLegalAuthorityEntity();
             item.Id = itemId;
             var expected = new LegalAuthorityView(item);
             (await repository.GetAsync(itemId))

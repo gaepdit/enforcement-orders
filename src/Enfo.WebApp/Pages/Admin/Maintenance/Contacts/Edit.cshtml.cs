@@ -25,8 +25,6 @@ namespace Enfo.WebApp.Pages.Admin.Maintenance.Contacts
         [TempData]
         public int HighlightId { get; set; }
 
-        public bool InactiveAddress { get; private set; }
-
         public SelectList AddressSelectList { get; private set; }
 
         public static MaintenanceOption ThisOption { get; } = MaintenanceOption.EpdContact;
@@ -52,7 +50,6 @@ namespace Enfo.WebApp.Pages.Admin.Maintenance.Contacts
 
             Item = EpdContactMapping.ToEpdContactUpdate(originalItem);
             Id = id.Value;
-            InactiveAddress = !originalItem.Address.Active;
             await PopulateSelectListsAsync();
             return Page();
         }

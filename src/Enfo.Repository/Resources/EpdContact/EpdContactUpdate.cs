@@ -22,6 +22,8 @@ namespace Enfo.Repository.Resources.EpdContact
         [Required(ErrorMessage = "Address is required.")]
         public int? AddressId { get; set; }
 
+        public bool IsInactiveAddress { get; init; }
+
         [DataType(DataType.PhoneNumber)]
         [StringLength(50)]
         [RegularExpression(ResourceRegex.Telephone, ErrorMessage = "Provide a valid phone number with area code.")]
@@ -31,7 +33,7 @@ namespace Enfo.Repository.Resources.EpdContact
         [StringLength(100)]
         [RegularExpression(ResourceRegex.Email, ErrorMessage = "Provide a valid email address.")]
         public string Email { get; set; }
-        
+
         public void TrimAll()
         {
             ContactName = ContactName?.Trim();
