@@ -1,0 +1,120 @@
+﻿@page "{id}"
+@model Enfo.WebApp.Pages.Admin.Restore
+
+@{
+    ViewData["Title"] = $"Restore Deleted Order: {Model.Item.OrderNumber}";
+}
+
+<h1>
+    <i>Confirm</i> @ViewData["Title"]
+</h1>
+
+<h3 class="gaepd-text-danger">Are you sure you want to restore this deleted Enforcement Order?</h3>
+<div class="gaepd-container-light">
+    <table class="gaepd-table-compact gaepd-table-rowheadings gaepd-table-autowidth">
+        <tbody>
+        <tr>
+            <th scope="row">@Html.DisplayNameFor(m => m.Item.PublicationStatus)</th>
+            <td>@Html.DisplayFor(m => m.Item.PublicationStatus)</td>
+        </tr>
+        <tr>
+            <th scope="row">@Html.DisplayNameFor(m => m.Item.FacilityName)</th>
+            <td>@Html.DisplayFor(m => m.Item.FacilityName)</td>
+        </tr>
+        <tr>
+            <th scope="row">@Html.DisplayNameFor(m => m.Item.County)</th>
+            <td>@Html.DisplayFor(m => m.Item.County) County</td>
+        </tr>
+        <tr>
+            <th scope="row">@Html.DisplayNameFor(m => m.Item.Cause)</th>
+            <td>@Html.DisplayFor(m => m.Item.Cause)</td>
+        </tr>
+        <tr>
+            <th scope="row">@Html.DisplayNameFor(m => m.Item.Requirements)</th>
+            <td>@Html.DisplayFor(m => m.Item.Requirements)</td>
+        </tr>
+        <tr>
+            <th scope="row">@(Model.Item.IsExecutedOrder ? "" : "Proposed ")@Html.DisplayNameFor(m => m.Item.SettlementAmount)</th>
+            <td>@Html.DisplayFor(m => m.Item.SettlementAmount)</td>
+        </tr>
+        <tr>
+            <th scope="row">@Html.DisplayNameFor(m => m.Item.LegalAuthority)</th>
+            <td>@Html.DisplayFor(m => m.Item.LegalAuthority.AuthorityName)</td>
+        </tr>
+
+        @if (Model.Item.IsProposedOrder)
+        {
+            <tr>
+                <th scope="row">@Html.DisplayNameFor(m => m.Item.ProposedOrderPostedDate)</th>
+                <td>@Html.DisplayFor(m => m.Item.ProposedOrderPostedDate)</td>
+            </tr>
+            <tr>
+                <th scope="row">@Html.DisplayNameFor(m => m.Item.CommentPeriodClosesDate)</th>
+                <td>@Html.DisplayFor(m => m.Item.CommentPeriodClosesDate)</td>
+            </tr>
+            <tr>
+                <th scope="row">@Html.DisplayNameFor(m => m.Item.CommentContact)</th>
+                <td>
+                    @if (Model.Item.CommentContact != null)
+                    {
+                        @Html.DisplayFor(m => m.Item.CommentContact, "Contact")
+                    }
+                    else
+                    {
+                        <p>N/A</p>
+                    }
+                </td>
+            </tr>
+        }
+
+        @if (Model.Item.IsExecutedOrder)
+        {
+            <tr>
+                <th scope="row">@Html.DisplayNameFor(m => m.Item.ExecutedDate)</th>
+                <td>@Html.DisplayFor(m => m.Item.ExecutedDate)</td>
+            </tr>
+            <tr>
+                <th scope="row">@Html.DisplayNameFor(m => m.Item.ExecutedOrderPostedDate)</th>
+                <td>@Html.DisplayFor(m => m.Item.ExecutedOrderPostedDate)</td>
+            </tr>
+        }
+
+        @if (Model.Item.IsHearingScheduled)
+        {
+            <tr>
+                <th scope="row">@Html.DisplayNameFor(m => m.Item.IsHearingScheduled)</th>
+                <td>
+                <p>
+                    <em>@Html.DisplayNameFor(m => m.Item.HearingDate)</em><br />
+                    @Html.DisplayFor(m => m.Item.HearingDate)
+                </p>
+                <p>
+                    <em>@Html.DisplayNameFor(m => m.Item.HearingLocation)</em><br />
+                    @Html.DisplayFor(m => m.Item.HearingLocation)
+                </p>
+                <p>
+                    <em>@Html.DisplayNameFor(m => m.Item.HearingCommentPeriodClosesDate)</em><br />
+                    @Html.DisplayFor(m => m.Item.HearingCommentPeriodClosesDate)
+                </p>
+                <p>
+                    <em>@Html.DisplayNameFor(m => m.Item.HearingContact)</em><br />
+                </p>
+                @if (Model.Item.HearingContact != null)
+                {
+                    @Html.DisplayFor(m => m.Item.HearingContact, "Contact")
+                }
+                else
+                {
+                    <p>N/A</p>
+                }
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
+
+<form method="post">
+    <input asp-for="Id" />
+    <button type="submit" class="usa-button-red">Restore Order</button>
+    <a asp-page="Details" asp-route-id="@Model.Id" class="usa-button usa-button-secondary">Cancel</a>
+</form>

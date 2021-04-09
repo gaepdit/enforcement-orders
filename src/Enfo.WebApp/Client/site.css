@@ -1,4 +1,4 @@
-/* USWDS modifications and additions copied from gaepdit-wds */
+/* USWDS modifications and additions copied from gaepdit-wds and modified */
 
 .usa-grid,
 .usa-grid-full {
@@ -31,6 +31,15 @@ form.usa-section {
 .gaepd-container-light {
     background-color: #f8f8f8;
     padding: 0 1.5rem;
+}
+
+.gaepd-container-light td,
+.gaepd-container-light th {
+    background-color: #f8f8f8;
+}
+
+.gaepd-text-danger {
+    color: #981b1e;
 }
 
 .usa-search [type=search],

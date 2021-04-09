@@ -19,6 +19,7 @@ namespace Enfo.WebApp.Pages.Admin.Maintenance.Contacts
         public EpdContactUpdate Item { get; set; }
 
         [BindProperty]
+        [HiddenInput]
         public int Id { get; set; }
 
         [TempData]

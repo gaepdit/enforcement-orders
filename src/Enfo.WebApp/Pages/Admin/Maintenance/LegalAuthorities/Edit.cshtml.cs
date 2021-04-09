@@ -17,6 +17,7 @@ namespace Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthorities
         public LegalAuthorityUpdate Item { get; set; }
 
         [BindProperty]
+        [HiddenInput]
         public int Id { get; set; }
 
         [TempData]

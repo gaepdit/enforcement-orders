@@ -12,7 +12,12 @@
     <i>Admin View:</i> @ViewData["Title"]
 </h2>
 
-@if (Model.Item.IsPublic)
+@if (Model.Item.Deleted)
+{
+    @await Html.PartialAsync("_AlertPartial", new DisplayMessage(Context.Warning,
+        "This enforcement order has been deleted and will not be displayed to the public.", false))
+}
+else if (Model.Item.IsPublic)
 {
     <div class="gaepd-noprint">
         <a asp-page="/Details" asp-route-id="@Model.Item.Id">Go to public view</a>
@@ -21,12 +26,6 @@
 else
 {
     <div>This Order is not publicly viewable.</div>
-}
-
-@if (Model.Item.Deleted)
-{
-    @await Html.PartialAsync("_AlertPartial", new DisplayMessage(Context.Warning,
-        "This enforcement order has been deleted and will not be displayed to the public.", false))
 }
 
 <table class="gaepd-table-compact gaepd-table-rowheadings gaepd-table-autowidth">
