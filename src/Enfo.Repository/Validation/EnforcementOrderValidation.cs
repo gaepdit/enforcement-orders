@@ -13,7 +13,7 @@ namespace Enfo.Repository.Validation
 
             if (resource.Progress != PublicationState.Published) return result;
             
-            if (resource.SettlementAmount.HasValue && resource.SettlementAmount < 0)
+            if (resource.SettlementAmount is < 0)
                 result.AddErrorMessage(nameof(EnforcementOrderCreate.SettlementAmount),
                     "Settlement Amount cannot be less than zero.");
 
@@ -94,7 +94,7 @@ namespace Enfo.Repository.Validation
 
             if (resource.Progress != PublicationState.Published) return result;
 
-            if (resource.SettlementAmount.HasValue && resource.SettlementAmount < 0)
+            if (resource.SettlementAmount is < 0)
                 result.AddErrorMessage(nameof(EnforcementOrderCreate.SettlementAmount),
                     "Settlement Amount cannot be less than zero.");
 
