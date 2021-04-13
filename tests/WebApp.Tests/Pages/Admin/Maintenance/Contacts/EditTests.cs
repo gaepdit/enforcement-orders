@@ -40,9 +40,7 @@ namespace WebApp.Tests.Pages.Admin.Maintenance.Contacts
         [Fact]
         public async Task OnGet_GivenNullId_ReturnsNotFound()
         {
-            var repo = new Mock<IEpdContactRepository>();
-            var addressRepo = new Mock<IAddressRepository>();
-            var page = new Edit(repo.Object, addressRepo.Object);
+            var page = new Edit(Mock.Of<IEpdContactRepository>(), Mock.Of<IAddressRepository>());
 
             var result = await page.OnGetAsync(null);
 
@@ -55,8 +53,7 @@ namespace WebApp.Tests.Pages.Admin.Maintenance.Contacts
         {
             var repo = new Mock<IEpdContactRepository>();
             repo.Setup(l => l.GetAsync(It.IsAny<int>())).ReturnsAsync(null as EpdContactView);
-            var addressRepo = new Mock<IAddressRepository>();
-            var page = new Edit(repo.Object, addressRepo.Object);
+            var page = new Edit(repo.Object, Mock.Of<IAddressRepository>());
 
             var result = await page.OnGetAsync(-1);
 
@@ -71,12 +68,12 @@ namespace WebApp.Tests.Pages.Admin.Maintenance.Contacts
             var repo = new Mock<IEpdContactRepository>();
             repo.Setup(l => l.GetAsync(It.IsAny<int>()))
                 .ReturnsAsync(item);
-            var addressRepo = new Mock<IAddressRepository>();
 
             // Initialize Page TempData
             var httpContext = new DefaultHttpContext();
             var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
-            var page = new Edit(repo.Object, addressRepo.Object) {TempData = tempData};
+            var page = new Edit(repo.Object, Mock.Of<IAddressRepository>())
+                {TempData = tempData};
 
             var result = await page.OnGetAsync(item.Id);
 
@@ -110,12 +107,12 @@ namespace WebApp.Tests.Pages.Admin.Maintenance.Contacts
             var repo = new Mock<IEpdContactRepository>();
             repo.Setup(l => l.GetAsync(It.IsAny<int>()))
                 .ReturnsAsync(item);
-            var addressRepo = new Mock<IAddressRepository>();
 
             // Initialize Page TempData
             var httpContext = new DefaultHttpContext();
             var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
-            var page = new Edit(repo.Object, addressRepo.Object) {TempData = tempData, Id = 0};
+            var page = new Edit(repo.Object, Mock.Of<IAddressRepository>()) 
+                {TempData = tempData, Id = 0};
 
             var result = await page.OnPostAsync();
 

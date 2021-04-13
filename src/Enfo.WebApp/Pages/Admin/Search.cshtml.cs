@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
-using Enfo.Domain.Data;
 using Enfo.Repository.Repositories;
 using Enfo.Repository.Resources;
 using Enfo.Repository.Resources.LegalAuthority;
 using Enfo.Repository.Specs;
+using Enfo.WebApp.App;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -18,7 +18,6 @@ namespace Enfo.WebApp.Pages.Admin
         public bool ShowResults { get; private set; }
 
         // Select Lists
-        public static SelectList CountiesSelectList => new(DomainData.Counties);
         public SelectList LegalAuthoritiesSelectList { get; private set; }
 
         private readonly IEnforcementOrderRepository _repository;
@@ -39,7 +38,7 @@ namespace Enfo.WebApp.Pages.Admin
         {
             spec.TrimAll();
             Spec = spec;
-            OrdersList = await _repository.ListAdminAsync(spec, new PaginationSpec(p, App.PageSize));
+            OrdersList = await _repository.ListAdminAsync(spec, new PaginationSpec(p, Pagination.PageSize));
             LegalAuthoritiesSelectList = await GetLegalAuthoritiesSelectList();
             ShowResults = true;
         }

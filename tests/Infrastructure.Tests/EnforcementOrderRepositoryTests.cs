@@ -396,10 +396,9 @@ namespace Infrastructure.Tests
             HearingDate = order.HearingDate,
             HearingLocation = order.HearingLocation,
             OrderNumber = order.OrderNumber,
-            PublicationStatus =
-                order.PublicationStatus == EnforcementOrder.PublicationState.Draft
-                    ? PublicationState.Draft
-                    : PublicationState.Published,
+            Progress = order.PublicationStatus == EnforcementOrder.PublicationState.Draft
+                ? PublicationState.Draft
+                : PublicationState.Published,
             SettlementAmount = order.SettlementAmount,
             CommentContactId = order.CommentContactId,
             HearingContactId = order.HearingContactId,

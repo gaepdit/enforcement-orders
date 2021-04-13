@@ -10,8 +10,8 @@ namespace Repository.Tests.ValidationTests
         [Fact]
         public void SucceedsGivenValidOrder()
         {
-            var order = GetValidEnforcementOrderCreate();
-            var result = ValidateNewEnforcementOrder(order);
+            var orderCreate = GetValidEnforcementOrderCreate();
+            var result = ValidateNewEnforcementOrder(orderCreate);
 
             result.IsValid.Should().BeTrue();
             result.ErrorMessages.Should().BeEmpty();
@@ -20,12 +20,12 @@ namespace Repository.Tests.ValidationTests
         [Fact]
         public void FailsIfMissingRequiredProperties()
         {
-            var order = GetValidEnforcementOrderCreate();
-            order.CommentContactId = null;
-            order.CommentPeriodClosesDate = null;
-            order.ProposedOrderPostedDate = null;
+            var orderCreate = GetValidEnforcementOrderCreate();
+            orderCreate.CommentContactId = null;
+            orderCreate.CommentPeriodClosesDate = null;
+            orderCreate.ProposedOrderPostedDate = null;
 
-            var result = ValidateNewEnforcementOrder(order);
+            var result = ValidateNewEnforcementOrder(orderCreate);
 
             result.IsValid.Should().BeFalse();
             result.ErrorMessages.Should().NotBeEmpty()

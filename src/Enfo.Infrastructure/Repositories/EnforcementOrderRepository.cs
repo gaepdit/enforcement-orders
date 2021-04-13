@@ -177,7 +177,7 @@ namespace Enfo.Infrastructure.Repositories
                 throw new ArgumentException($"ID ({id}) not found.", nameof(id));
             }
 
-            var validationResult = ValidateEnforcementOrderUpdate(item, resource);
+            var validationResult = ValidateEnforcementOrderUpdate(new EnforcementOrderAdminView(item), resource);
 
             if (await OrderNumberExistsAsync(resource.OrderNumber, id).ConfigureAwait(false))
             {

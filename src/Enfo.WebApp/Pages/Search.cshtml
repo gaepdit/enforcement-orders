@@ -26,7 +26,7 @@
             <input asp-for="Spec.Facility" name="@nameof(Model.Spec.Facility)" />
 
             <label asp-for="Spec.County"></label>
-            <select asp-for="Spec.County" asp-items="Search.CountiesSelectList"
+            <select asp-for="Spec.County" asp-items="App.SelectLists.CountiesSelectList"
                     name="@nameof(Model.Spec.County)" class="custom-select">
                 <option value="">(any)</option>
             </select>

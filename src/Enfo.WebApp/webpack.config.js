@@ -16,6 +16,10 @@ module.exports = {
             dependOn: 'site',
             import: './Client/formAddOrder.js'
         },
+        formEditOrder: {
+            dependOn: 'site',
+            import: './Client/formEditOrder.js'
+        },
     },
     output: {
         filename: '[name].bundle.js',

@@ -1,16 +1,14 @@
-﻿@page
+﻿@page "{id}"
 @using Enfo.Domain.Entities
-@using Enfo.Repository.Resources.EnforcementOrder
-@model Enfo.WebApp.Pages.Admin.Add
-
+@model Enfo.WebApp.Pages.Admin.Edit
 @{
-    ViewData["Title"] = "Add New Enforcement Order";
+    ViewData["Title"] = $"Edit Enforcement Order {Model.OriginalOrderNumber}";
 }
 
 <h2>@ViewData["Title"]</h2>
 
-<form method="post" class="usa-form-large">
-    <div asp-validation-summary="ModelOnly" class="usa-alert usa-alert-error" role="alert"></div>
+<form method="post" class="usa-form">
+    <div asp-validation-summary="ModelOnly" class="usa-input-error-message"></div>
 
     <fieldset>
         <legend>Facility Information</legend>
@@ -34,7 +32,7 @@
 
         <label asp-for="Item.Requirements"></label>
         @Html.EditorFor(m => m.Item.Requirements)
-        <span asp-validation-for="Item.Requirements" class="usa-input-error-message"></span>
+        <span asp-validation-for="Item.Requirements"></span>
 
         <label asp-for="Item.LegalAuthorityId"></label>
         <select asp-for="Item.LegalAuthorityId" asp-items="Model.LegalAuthoritiesSelectList">
@@ -59,44 +57,48 @@
         <span asp-validation-for="Item.SettlementAmount" class="usa-input-error-message"></span>
     </fieldset>
 
-    <fieldset class="usa-grid-full usa-fieldset-inputs">
-        <legend>Status</legend>
-        <ul class="usa-unstyled-list">
-            <li>
-                <input type="radio" name="Item.CreateAs" value="Proposed" id="CreateAs-Proposed"
-                       @if (Model.Item.CreateAs == NewEnforcementOrderType.Proposed)
-                       {<text> checked</text>}>
-                <label for="CreateAs-Proposed">Proposed</label>
-            </li>
-            <li>
-                <input type="radio" name="Item.CreateAs" value="Executed" id="CreateAs-Executed"
-                       @if (Model.Item.CreateAs == NewEnforcementOrderType.Executed)
-                       {<text> checked</text>}>
-                <label for="CreateAs-Executed">Executed</label>
-            </li>
-        </ul>
-    </fieldset>
+    @Html.HiddenFor(m => m.Item.IsProposedOrder)
+    @if (Model.Item.IsProposedOrder)
+    {
+        <fieldset id="proposed-fieldset">
+            <legend>Proposed Order Details</legend>
 
-    <fieldset id="proposed-fieldset">
-        <legend>Proposed Order Details</legend>
+            <label asp-for="Item.CommentContactId"></label>
+            @if (Model.Item.IsInactiveCommentContact)
+            {
+                <small id="CommentContactIdHelpBlock" class="usa-input-label-helper">
+                    The previously entered Comments Contact is no longer available. Please select a new one.
+                </small>
+            }
+            <select asp-for="Item.CommentContactId" asp-items="Model.EpdContactsSelectList" aria-describedby="CommentContactIdHelpBlock">
+                <option value="">→ Select Contact for Comments...</option>
+            </select>
+            <span asp-validation-for="Item.CommentContactId" class="usa-input-error-message"></span>
 
-        <label asp-for="Item.CommentContactId"></label>
-        <select asp-for="Item.CommentContactId" asp-items="Model.EpdContactsSelectList">
-            <option value="">→ Select Contact for Comments...</option>
-        </select>
-        <span asp-validation-for="Item.CommentContactId" class="usa-input-error-message"></span>
-
-        <label asp-for="Item.CommentPeriodClosesDate"></label>
-        <input type="datetime" asp-for="Item.CommentPeriodClosesDate" class="date-picker usa-input-medium proposed-item" />
-        <span asp-validation-for="Item.CommentPeriodClosesDate" class="usa-input-error-message"></span>
-    </fieldset>
+            <label asp-for="Item.CommentPeriodClosesDate"></label>
+            <input type="datetime" asp-for="Item.CommentPeriodClosesDate" class="date-picker usa-input-medium proposed-item" />
+            <span asp-validation-for="Item.CommentPeriodClosesDate" class="usa-input-error-message"></span>
+        </fieldset>
+    }
 
     <fieldset id="executed-fieldset">
         <legend>Executed Order Details</legend>
 
-        <label asp-for="Item.ExecutedDate"></label>
-        <input type="datetime" asp-for="Item.ExecutedDate" class="date-picker usa-input-medium executed-item" />
-        <span asp-validation-for="Item.ExecutedDate" class="usa-input-error-message"></span>
+        @if (Model.Item.IsProposedOrder)
+        {
+            @Html.EditorFor(m => m.Item.IsExecutedOrder)
+            <label asp-for="Item.IsExecutedOrder"></label>
+        }
+        else
+        {
+            @Html.HiddenFor(m => m.Item.IsExecutedOrder)
+        }
+
+        <div id="executed-details">
+            <label asp-for="Item.ExecutedDate"></label>
+            <input type="datetime" asp-for="Item.ExecutedDate" class="date-picker usa-input-medium executed-item" />
+            <span asp-validation-for="Item.ExecutedDate" class="usa-input-error-message"></span>
+        </div>
     </fieldset>
 
     <fieldset>
@@ -115,7 +117,14 @@
             <span asp-validation-for="Item.HearingLocation" class="usa-input-error-message"></span>
 
             <label asp-for="Item.HearingContactId"></label>
-            <select asp-for="Item.HearingContactId" asp-items="Model.EpdContactsSelectList">
+            @if (Model.Item.IsInactiveHearingContact)
+            {
+                <small id="HearingContactIdHelpBlock" class="usa-input-label-helper">
+                    The previously entered Hearing Comments Contact is no longer available. Please select a new one.
+                </small>
+            }
+            <select asp-for="Item.HearingContactId" asp-items="Model.EpdContactsSelectList" aria-describedby="HearingContactIdHelpBlock">
+                >
                 <option value="">→ Select Contact for Hearing Comments...</option>
             </select>
             <span asp-validation-for="Item.HearingContactId" class="usa-input-error-message"></span>
@@ -134,32 +143,36 @@
         </select>
         <span asp-validation-for="Item.Progress" class="usa-input-error-message"></span>
 
-        <div id="publication-date">
-            <div id="proposed-published">
-                <label asp-for="Item.ProposedOrderPostedDate"></label>
-                <input type="datetime" asp-for="Item.ProposedOrderPostedDate" 
-                       class="date-picker usa-input-medium proposed-item pub-date" />
-                <span asp-validation-for="Item.ProposedOrderPostedDate" class="usa-input-error-message"></span>
-            </div>
-            <div id="executed-published">
+        <div id="publication-date" class="usa-grid-full">
+            @if (Model.Item.IsProposedOrder)
+            {
+                <div id="proposed-published">
+                    <label asp-for="Item.ProposedOrderPostedDate"></label>
+                    <input type="datetime" asp-for="Item.ProposedOrderPostedDate"
+                           class="date-picker usa-input-medium proposed-item" />
+                    <span asp-validation-for="Item.ProposedOrderPostedDate" class="usa-input-error-message"></span>
+                </div>
+            }
+            <div id="executed-published" class="usa-input-grid usa-input-grid-small">
                 <label asp-for="Item.ExecutedOrderPostedDate"></label>
-                <input type="datetime" asp-for="Item.ExecutedOrderPostedDate" 
-                       class="date-picker usa-input-medium executed-item pub-date" />
+                <input type="datetime" asp-for="Item.ExecutedOrderPostedDate"
+                       class="date-picker usa-input-medium executed-item" />
                 <span asp-validation-for="Item.ExecutedOrderPostedDate" class="usa-input-error-message"></span>
             </div>
         </div>
-
-        <div class="gaepd-buttonrow">
-            <button type="submit">Add New Order</button>
-            <a asp-page="./Index" class="usa-button usa-button-secondary">Cancel</a>
-        </div>
     </fieldset>
+
+    <div class="gaepd-buttonrow">
+        <input asp-for="Id" />
+        <button type="submit">Save Changes</button>
+        <a asp-page="Details" asp-route-id="@Model.Id" class="usa-button usa-button-secondary">Cancel</a>
+    </div>
 </form>
 
 @section ScriptFiles
 {
     <link rel="stylesheet" href="~/dist/datepicker.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/dist/formAddOrder.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/dist/formEditOrder.css" asp-append-version="true" />
     <script src="~/dist/datepicker.bundle.js" asp-append-version="true" type="text/javascript" defer></script>
-    <script src="~/dist/formAddOrder.bundle.js" asp-append-version="true" type="text/javascript" defer></script>
+    <script src="~/dist/formEditOrder.bundle.js" asp-append-version="true" type="text/javascript" defer></script>
 }

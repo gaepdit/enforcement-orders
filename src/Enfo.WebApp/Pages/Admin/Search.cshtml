@@ -25,7 +25,7 @@
             <input asp-for="Spec.Facility" name="@nameof(Model.Spec.Facility)" />
 
             <label asp-for="Spec.County"></label>
-            <select asp-for="Spec.County" asp-items="Search.CountiesSelectList" name="@nameof(Model.Spec.County)"
+            <select asp-for="Spec.County" asp-items="App.SelectLists.CountiesSelectList" name="@nameof(Model.Spec.County)"
                     class="custom-select">
                 <option value="">(any)</option>
             </select>
@@ -50,19 +50,25 @@
                     <li>
                         <input type="radio" name="Status" value="All" id="Status-All"
                                @if (Model.Spec.Status == ActivityState.All)
-                               {<text> checked</text>}>
+                               {
+                                   <text> checked</text>
+                               }>
                         <label for="Status-All">All Orders</label>
                     </li>
                     <li>
                         <input type="radio" name="Status" value="Proposed" id="Status-Proposed"
                                @if (Model.Spec.Status == ActivityState.Proposed)
-                               {<text> checked</text>}>
+                               {
+                                   <text> checked</text>
+                               }>
                         <label for="Status-Proposed">Proposed orders only</label>
                     </li>
                     <li>
                         <input type="radio" name="Status" value="Executed" id="Status-Executed"
                                @if (Model.Spec.Status == ActivityState.Executed)
-                               {<text> checked</text>}>
+                               {
+                                   <text> checked</text>
+                               }>
                         <label for="Status-Executed">Executed orders only</label>
                     </li>
                 </ul>
@@ -74,19 +80,25 @@
                     <li>
                         <input type="radio" name="Progress" value="All" id="Progress-All"
                                @if (Model.Spec.Progress == PublicationState.All)
-                               {<text> checked</text>}>
+                               {
+                                   <text> checked</text>
+                               }>
                         <label for="Progress-All">All</label>
                     </li>
                     <li>
                         <input type="radio" name="Progress" value="Published" id="Progress-Published"
                                @if (Model.Spec.Progress == PublicationState.Published)
-                               {<text> checked</text>}>
+                               {
+                                   <text> checked</text>
+                               }>
                         <label for="Progress-Published">Published</label>
                     </li>
                     <li>
                         <input type="radio" name="Progress" value="Draft" id="Progress-Draft"
                                @if (Model.Spec.Progress == PublicationState.Draft)
-                               {<text> checked</text>}>
+                               {
+                                   <text> checked</text>
+                               }>
                         <label for="Progress-Draft">Draft</label>
                     </li>
                 </ul>
@@ -185,12 +197,14 @@
                         <td data-label="Status/Date">
                             @if (enfo.IsExecutedOrder)
                             {
-                                <b>Executed&nbsp;On</b><br />
+                                <b>Executed&nbsp;On</b>
+                                <br />
                                 @Html.DisplayFor(m => enfo.ExecutedDate)
                             }
                             else if (enfo.IsProposedOrder)
                             {
-                                <b>Proposed&nbsp;On</b><br />
+                                <b>Proposed&nbsp;On</b>
+                                <br />
                                 @Html.DisplayFor(m => enfo.ProposedOrderPostedDate)
                             }
                             else

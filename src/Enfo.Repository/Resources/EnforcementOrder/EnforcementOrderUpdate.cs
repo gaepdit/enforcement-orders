@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using Enfo.Repository.Validation;
 
 namespace Enfo.Repository.Resources.EnforcementOrder
 {
@@ -36,8 +35,7 @@ namespace Enfo.Repository.Resources.EnforcementOrder
         [DataType(DataType.Currency)]
         public decimal? SettlementAmount { get; set; }
 
-        [DisplayName("Progress")]
-        public PublicationState PublicationStatus { get; set; }
+        public PublicationState Progress { get; set; }
 
         [DisplayName("Order Number")]
         [Required(ErrorMessage = "Order Number is required.")]
@@ -46,6 +44,9 @@ namespace Enfo.Repository.Resources.EnforcementOrder
 
         // Proposed orders
 
+        [DisplayName("Proposed Order Public Noticed")]
+        public bool IsProposedOrder { get; set; }
+
         [DisplayName("Date Comment Period Closes")]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = DisplayFormats.FormatDateEdit, ApplyFormatInEditMode = true)]
@@ -53,6 +54,8 @@ namespace Enfo.Repository.Resources.EnforcementOrder
 
         [DisplayName("Send Comments To")]
         public int? CommentContactId { get; set; }
+
+        public bool IsInactiveCommentContact { get; init; }
 
         [DisplayName("Publication Date For Proposed Order")]
         [DataType(DataType.Date)]
@@ -96,5 +99,17 @@ namespace Enfo.Repository.Resources.EnforcementOrder
 
         [DisplayName("Hearing Information Contact")]
         public int? HearingContactId { get; set; }
+
+        public bool IsInactiveHearingContact { get; init; }
+
+        public void TrimAll()
+        {
+            Cause = Cause?.Trim();
+            County = County?.Trim();
+            Requirements = Requirements?.Trim();
+            FacilityName = FacilityName?.Trim();
+            HearingLocation = HearingLocation?.Trim();
+            OrderNumber = OrderNumber?.Trim();
+        }
     }
 }

@@ -74,7 +74,7 @@ namespace Enfo.Repository.Validation
         }
 
         public static ResourceValidationResult ValidateEnforcementOrderUpdate(
-            [NotNull] EnforcementOrder order,
+            [NotNull] EnforcementOrderAdminView order,
             [NotNull] EnforcementOrderUpdate resource)
         {
             var result = new ResourceValidationResult();
@@ -92,7 +92,7 @@ namespace Enfo.Repository.Validation
                     "Executed Order details are required for this Enforcement Order.");
             }
 
-            if (resource.PublicationStatus != PublicationState.Published) return result;
+            if (resource.Progress != PublicationState.Published) return result;
 
             if (resource.SettlementAmount.HasValue && resource.SettlementAmount < 0)
                 result.AddErrorMessage(nameof(EnforcementOrderCreate.SettlementAmount),

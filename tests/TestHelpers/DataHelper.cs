@@ -77,6 +77,35 @@ namespace TestHelpers
         {
             new()
             {
+                Id = 1,
+                Cause = "Integer feugiat scelerisque varius morbi enim nunc faucibus a.",
+                CommentContactId = 2000,
+                CommentPeriodClosesDate = new DateTime(2012, 11, 15),
+                County = "Liberty",
+                Deleted = false,
+                ExecutedDate = new DateTime(1998, 06, 29),
+                ExecutedOrderPostedDate = new DateTime(1998, 07, 06),
+                FacilityName = "A diam maecenas",
+                HearingCommentPeriodClosesDate = new DateTime(2012, 11, 21),
+                HearingContactId = 2000,
+                HearingDate = new DateTime(2012, 11, 15),
+                HearingLocation = "venenatis urna cursus eget nunc scelerisque viverra mauris in aliquam sem",
+                IsExecutedOrder = true,
+                IsHearingScheduled = true,
+                IsProposedOrder = true,
+                LegalAuthorityId = 1,
+                OrderNumber = "EPD-ACQ-7936",
+                ProposedOrderPostedDate = new DateTime(2012, 10, 16),
+                PublicationStatus = EnforcementOrder.PublicationState.Published,
+                Requirements =
+                    "Duis ut diam quam nulla porttitor massa id neque. A lacus vestibulum sed arcu non. " +
+                    "Amet massa vitae tortor condimentum. Magnis dis parturient montes nascetur ridiculus " +
+                    "mus mauris. Arcu risus quis varius quam quisque id diam. Pellentesque massa placerat " +
+                    "pellentesque habitant morbi.",
+                SettlementAmount = 2000,
+            },
+            new()
+            {
                 Id = 27,
                 Cause = "Nulla pellentesque dignissim enim sit.",
                 CommentContactId = 2000,
