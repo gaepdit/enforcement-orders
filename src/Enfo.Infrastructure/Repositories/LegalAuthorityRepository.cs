@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -24,7 +24,7 @@ namespace Enfo.Infrastructure.Repositories
             return item == null ? null : new LegalAuthorityView(item);
         }
 
-        public async Task<IReadOnlyList<LegalAuthorityView>> ListAsync(bool includeInactive) =>
+        public async Task<IReadOnlyList<LegalAuthorityView>> ListAsync(bool includeInactive = false) =>
             await _context.LegalAuthorities.AsNoTracking()
                 .Where(e => e.Active || includeInactive)
                 .OrderBy(e => e.AuthorityName).ThenBy(e => e.Id)

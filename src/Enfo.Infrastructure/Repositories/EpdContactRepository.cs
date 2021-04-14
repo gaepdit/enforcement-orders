@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -26,7 +26,7 @@ namespace Enfo.Infrastructure.Repositories
             return item == null ? null : new EpdContactView(item);
         }
 
-        public async Task<IReadOnlyList<EpdContactView>> ListAsync(bool includeInactive) =>
+        public async Task<IReadOnlyList<EpdContactView>> ListAsync(bool includeInactive = false) =>
             await _context.EpdContacts.AsNoTracking()
                 .Include(e => e.Address)
                 .Where(e => e.Active || includeInactive)
