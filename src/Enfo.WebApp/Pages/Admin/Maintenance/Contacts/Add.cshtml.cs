@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using Enfo.Repository.Repositories;
 using Enfo.Repository.Resources.Address;
 using Enfo.Repository.Resources.EpdContact;
@@ -30,7 +30,7 @@ namespace Enfo.WebApp.Pages.Admin.Maintenance.Contacts
             (_repository, _address) = (repository, address);
 
         [UsedImplicitly]
-        public async Task OnGetAsync() => await PopulateSelectListsAsync();
+        public Task OnGetAsync() => PopulateSelectListsAsync();
 
         [UsedImplicitly]
         public async Task<IActionResult> OnPostAsync()

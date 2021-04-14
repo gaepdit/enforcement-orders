@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -78,8 +78,7 @@ namespace Enfo.Infrastructure.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<bool> ExistsAsync(int id) =>
-            await _context.EpdContacts.AnyAsync(e => e.Id == id).ConfigureAwait(false);
+        public Task<bool> ExistsAsync(int id) => _context.EpdContacts.AnyAsync(e => e.Id == id);
 
         public void Dispose() => _context.Dispose();
     }

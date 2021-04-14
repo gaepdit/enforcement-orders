@@ -95,10 +95,9 @@ namespace Enfo.Infrastructure.Repositories
             return item != null && (!onlyPublic || item.GetIsPublic);
         }
 
-        public async Task<bool> OrderNumberExistsAsync(string orderNumber, int? ignoreId = null) =>
-            await _context.EnforcementOrders.AsNoTracking()
-                .AnyAsync(e => e.OrderNumber == orderNumber && !e.Deleted && e.Id != ignoreId)
-                .ConfigureAwait(false);
+        public Task<bool> OrderNumberExistsAsync(string orderNumber, int? ignoreId = null) =>
+            _context.EnforcementOrders.AsNoTracking()
+                .AnyAsync(e => e.OrderNumber == orderNumber && !e.Deleted && e.Id != ignoreId);
 
         // Current Proposed are public proposed orders (publication date in the past)
         // with comment close date in the future

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -68,13 +68,11 @@ namespace Enfo.Infrastructure.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<bool> ExistsAsync(int id) =>
-            await _context.LegalAuthorities.AnyAsync(e => e.Id == id).ConfigureAwait(false);
+        public Task<bool> ExistsAsync(int id) => _context.LegalAuthorities.AnyAsync(e => e.Id == id);
 
-        public async Task<bool> NameExistsAsync(string name, int? ignoreId = null) =>
-            await _context.LegalAuthorities.AsNoTracking()
-                .AnyAsync(e => e.AuthorityName == name && e.Id != ignoreId)
-                .ConfigureAwait(false);
+        public Task<bool> NameExistsAsync(string name, int? ignoreId = null) =>
+            _context.LegalAuthorities.AsNoTracking()
+                .AnyAsync(e => e.AuthorityName == name && e.Id != ignoreId);
 
         public void Dispose() => _context.Dispose();
     }
