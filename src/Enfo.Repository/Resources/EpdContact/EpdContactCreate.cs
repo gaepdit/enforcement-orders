@@ -7,11 +7,11 @@ namespace Enfo.Repository.Resources.EpdContact
     {
         [DisplayName("Contact Name")]
         [Required(ErrorMessage = "Contact Name is required.")]
-        [StringLength(50)]
+        [StringLength(250)]
         public string ContactName { get; set; }
 
         [Required(ErrorMessage = "Title is required.")]
-        [StringLength(50)]
+        [StringLength(100)]
         public string Title { get; set; }
 
         [Required(ErrorMessage = "Organization is required.")]

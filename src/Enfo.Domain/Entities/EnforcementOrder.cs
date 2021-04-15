@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -17,7 +17,6 @@ namespace Enfo.Domain.Entities
         // Common data elements
 
         [Required]
-        [StringLength(205)]
         public string FacilityName { get; set; }
 
         [Required]
@@ -31,11 +30,9 @@ namespace Enfo.Domain.Entities
         public int LegalAuthorityId { get; set; }
 
         [Required]
-        [StringLength(3990)]
         public string Cause { get; set; }
 
         [Required]
-        [StringLength(3990)]
         public string Requirements { get; set; }
 
         [DataType(DataType.Currency)]
@@ -107,7 +104,6 @@ namespace Enfo.Domain.Entities
         [DataType(DataType.DateTime)]
         public DateTime? HearingDate { get; set; }
 
-        [StringLength(3990)]
         public string HearingLocation { get; set; }
 
         [DataType(DataType.Date)]

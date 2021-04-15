@@ -5,11 +5,11 @@ namespace Enfo.Domain.Entities
     public class EpdContact : BaseActiveEntity
     {
         [Required]
-        [StringLength(50)]
+        [StringLength(250)]
         public string ContactName { get; set; }
 
         [Required]
-        [StringLength(50)]
+        [StringLength(100)]
         public string Title { get; set; }
 
         [Required]

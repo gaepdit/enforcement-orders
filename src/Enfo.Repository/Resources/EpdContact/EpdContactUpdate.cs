@@ -6,20 +6,20 @@ namespace Enfo.Repository.Resources.EpdContact
     public class EpdContactUpdate
     {
         [DisplayName("Contact Name")]
-        [StringLength(50)]
         [Required(ErrorMessage = "Contact Name is required.")]
+        [StringLength(250)]
         public string ContactName { get; set; }
 
-        [StringLength(50)]
         [Required(ErrorMessage = "Title is required.")]
+        [StringLength(100)]
         public string Title { get; set; }
 
-        [StringLength(100)]
         [Required(ErrorMessage = "Organization is required.")]
+        [StringLength(100)]
         public string Organization { get; set; }
 
-        [DisplayName("Address")]
         [Required(ErrorMessage = "Address is required.")]
+        [DisplayName("Address")]
         public int? AddressId { get; set; }
 
         public bool IsInactiveAddress { get; init; }

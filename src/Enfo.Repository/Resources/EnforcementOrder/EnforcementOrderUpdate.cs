@@ -10,7 +10,6 @@ namespace Enfo.Repository.Resources.EnforcementOrder
 
         [DisplayName("Facility")]
         [Required(ErrorMessage = "Facility Name is required.")]
-        [StringLength(205)]
         public string FacilityName { get; set; }
 
         [Required(ErrorMessage = "County Name is required.")]
@@ -23,12 +22,10 @@ namespace Enfo.Repository.Resources.EnforcementOrder
 
         [DisplayName("Cause of Order")]
         [DataType(DataType.MultilineText)]
-        [StringLength(3990)]
         public string Cause { get; set; }
 
         [DisplayName("Requirements of Order")]
         [DataType(DataType.MultilineText)]
-        [StringLength(3990)]
         public string Requirements { get; set; }
 
         [DisplayName("Settlement Amount")]
@@ -89,7 +86,6 @@ namespace Enfo.Repository.Resources.EnforcementOrder
 
         [DisplayName("Hearing Location")]
         [DataType(DataType.MultilineText)]
-        [StringLength(3990)]
         public string HearingLocation { get; set; }
 
         [DisplayName("Date Hearing Comment Period Closes")]
