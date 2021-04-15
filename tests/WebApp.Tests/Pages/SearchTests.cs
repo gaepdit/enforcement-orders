@@ -7,7 +7,13 @@ using Enfo.Repository.Resources.LegalAuthority;
 using Enfo.Repository.Specs;
 using Enfo.WebApp.Pages;
 using FluentAssertions;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.AspNetCore.Routing;
 using Moq;
 using Xunit;
 using Xunit.Extensions.AssertExtensions;
@@ -20,10 +26,17 @@ namespace WebApp.Tests.Pages
         [Fact]
         public async Task OnGet_ReturnsWithDefaults()
         {
+            // Initialize Page ViewData
+            var httpContext = new DefaultHttpContext();
+            var modelState = new ModelStateDictionary();
+            var viewData = new ViewDataDictionary(new EmptyModelMetadataProvider(), modelState);
+            var actionContext = new ActionContext(httpContext, new RouteData(), new PageActionDescriptor(), modelState);
+            var pageContext = new PageContext(actionContext) {ViewData = viewData};
+
             var orderRepo = new Mock<IEnforcementOrderRepository>();
             var legalRepo = new Mock<ILegalAuthorityRepository>();
             legalRepo.Setup(l => l.ListAsync(false)).ReturnsAsync(GetLegalAuthorityViewList());
-            var page = new Search(orderRepo.Object, legalRepo.Object);
+            var page = new Search(orderRepo.Object, legalRepo.Object) {PageContext = pageContext};
 
             await page.OnGetAsync();
 
@@ -55,7 +68,7 @@ namespace WebApp.Tests.Pages
             page.LegalAuthoritiesSelectList.Should().BeEquivalentTo(expectedLegal);
             page.ShowResults.ShouldBeTrue();
         }
-        
+
         [Fact]
         public async Task OnGetSearch_GivenNoResults_ReturnsWithEmptyOrders()
         {

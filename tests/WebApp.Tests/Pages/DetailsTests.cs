@@ -7,7 +7,10 @@ using Enfo.WebApp.Pages;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.AspNetCore.Routing;
 using Moq;
 using Xunit;
 using Xunit.Extensions.AssertExtensions;
@@ -16,16 +19,24 @@ using static TestHelpers.DataHelper;
 
 namespace WebApp.Tests.Pages
 {
-    public class DetailsTests
+    public class
+        DetailsTests
     {
         [Fact]
         public async Task OnGet_ReturnsWithOrder()
         {
+            // Initialize Page ViewData
+            var httpContext = new DefaultHttpContext();
+            var modelState = new ModelStateDictionary();
+            var viewData = new ViewDataDictionary(new EmptyModelMetadataProvider(), modelState);
+            var actionContext = new ActionContext(httpContext, new RouteData(), new PageActionDescriptor(), modelState);
+            var pageContext = new PageContext(actionContext) {ViewData = viewData};
+
             var itemId = GetEnforcementOrders.First().Id;
             var item = GetEnforcementOrderDetailedView(itemId);
             var repo = new Mock<IEnforcementOrderRepository>();
             repo.Setup(l => l.GetAsync(itemId)).ReturnsAsync(item);
-            var page = new Details(repo.Object);
+            var page = new Details(repo.Object) {PageContext = pageContext};
 
             await page.OnGetAsync(itemId);
 
@@ -44,7 +55,14 @@ namespace WebApp.Tests.Pages
             // Initialize Page TempData
             var httpContext = new DefaultHttpContext();
             var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
-            var page = new Details(repo.Object) {TempData = tempData};
+
+            // Initialize Page ViewData
+            var modelState = new ModelStateDictionary();
+            var viewData = new ViewDataDictionary(new EmptyModelMetadataProvider(), modelState);
+            var actionContext = new ActionContext(httpContext, new RouteData(), new PageActionDescriptor(), modelState);
+            var pageContext = new PageContext(actionContext) {ViewData = viewData};
+
+            var page = new Details(repo.Object) {TempData = tempData, PageContext = pageContext};
 
             page.TempData.SetDisplayMessage(Context.Info, "Info message");
             await page.OnGetAsync(itemId);
@@ -56,8 +74,15 @@ namespace WebApp.Tests.Pages
         [Fact]
         public async Task OnGet_NullId_ReturnsNotFound()
         {
+            // Initialize Page ViewData
+            var httpContext = new DefaultHttpContext();
+            var modelState = new ModelStateDictionary();
+            var viewData = new ViewDataDictionary(new EmptyModelMetadataProvider(), modelState);
+            var actionContext = new ActionContext(httpContext, new RouteData(), new PageActionDescriptor(), modelState);
+            var pageContext = new PageContext(actionContext) {ViewData = viewData};
+
             var mockRepo = new Mock<IEnforcementOrderRepository>();
-            var page = new Details(mockRepo.Object);
+            var page = new Details(mockRepo.Object) {PageContext = pageContext};
 
             var result = await page.OnGetAsync(null);
 
@@ -69,8 +94,15 @@ namespace WebApp.Tests.Pages
         [Fact]
         public async Task OnGet_NonexistentId_ReturnsNotFound()
         {
+            // Initialize Page ViewData
+            var httpContext = new DefaultHttpContext();
+            var modelState = new ModelStateDictionary();
+            var viewData = new ViewDataDictionary(new EmptyModelMetadataProvider(), modelState);
+            var actionContext = new ActionContext(httpContext, new RouteData(), new PageActionDescriptor(), modelState);
+            var pageContext = new PageContext(actionContext) {ViewData = viewData};
+
             var mockRepo = new Mock<IEnforcementOrderRepository>();
-            var page = new Details(mockRepo.Object);
+            var page = new Details(mockRepo.Object) {PageContext = pageContext};
 
             var result = await page.OnGetAsync(-1);
 
