@@ -19,6 +19,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Mindscape.Raygun4Net.AspNetCore;
 
 namespace Enfo.WebApp
 {
@@ -48,14 +49,17 @@ namespace Enfo.WebApp
 
             // Configure UI
             services.AddRazorPages();
-                // .AddMicrosoftIdentityUI();
+            // .AddMicrosoftIdentityUI();
 
             // Configure HSTS
             // services.AddHsts(opts => opts.MaxAge = TimeSpan.FromDays(365 * 2));
 
             // Configure Raygun
-            // services.AddRaygun(Configuration, new RaygunMiddlewareSettings
-            //     {ClientProvider = new RaygunClientProvider()});
+            services.AddRaygun(Configuration,
+                new RaygunMiddlewareSettings {ClientProvider = new RaygunClientProvider()});
+            
+            // Register IHttpContextAccessor (needed by RaygunScriptPartial)
+            services.AddHttpContextAccessor();
 
             // Configure data repositories
             services.AddScoped<IAddressRepository, AddressRepository>();
@@ -77,12 +81,12 @@ namespace Enfo.WebApp
             else
             {
                 app.UseExceptionHandler("/Error");
+                app.UseRaygun();
                 app.UseHsts();
             }
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
             app.UseRouting();
 
             // app.UseAuthentication();
