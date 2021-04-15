@@ -47,7 +47,3 @@
 
 * Name *(required)*
 * Active *(bool)*
-
-## County
-
-* Name *(required)*

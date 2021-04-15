@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -21,7 +21,7 @@ namespace Enfo.Domain.Entities
         public string FacilityName { get; set; }
 
         [Required]
-        [StringLength(25)]
+        [StringLength(20)]
         public string County { get; set; }
 
         [DisplayName("Legal Authority")]

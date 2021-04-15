@@ -17,7 +17,7 @@ namespace Enfo.Repository.Resources.EnforcementOrder
         public string FacilityName { get; set; }
 
         [Required(ErrorMessage = "County Name is required.")]
-        [StringLength(25)]
+        [StringLength(20)]
         public string County { get; set; }
 
         [DisplayName("Legal Authority")]
