@@ -29,6 +29,9 @@ namespace Enfo.WebApp.Pages
         [UsedImplicitly]
         public async Task OnGetAsync()
         {
+            // TODO: Remove after authentication is implemented
+            ViewData["PageIsPublic"] = true;
+
             Spec = new EnforcementOrderSpec();
             LegalAuthoritiesSelectList = await GetLegalAuthoritiesSelectList();
         }

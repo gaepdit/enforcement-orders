@@ -15,6 +15,12 @@ namespace Enfo.WebApp.Pages
         public RecentExecuted(IEnforcementOrderRepository repository) => _repository = repository;
 
         [UsedImplicitly]
-        public async Task OnGetAsync() => Orders = await _repository.ListRecentlyExecutedEnforcementOrdersAsync();
+        public async Task OnGetAsync()
+        {
+            // TODO: Remove after authentication is implemented
+            ViewData["PageIsPublic"] = true;
+
+            Orders = await _repository.ListRecentlyExecutedEnforcementOrdersAsync();
+        }
     }
 }

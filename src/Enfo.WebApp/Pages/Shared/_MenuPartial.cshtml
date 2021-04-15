@@ -1,0 +1,106 @@
+﻿@{
+    // var showAdminMenu = User?.Identity?.IsAuthenticated ?? false;
+    // TODO: Remove after authentication is implemented
+    var showAdminMenu = ViewData["PageIsPublic"] is null;
+}
+<header class="usa-header usa-header-basic" role="banner">
+    <div class="usa-nav-container">
+        <div class="usa-navbar gaepd-navbar">
+            <button class="usa-menu-btn">Menu</button>
+            <div class="usa-logo gaepd-logo" id="logo">
+                <em class="usa-logo-text">
+                    @if (showAdminMenu)
+                    {
+                        // Admin
+                        <a title="Home" aria-label="Home" class="gaepd-logo-link" asp-page="/Admin/Index">
+                            <img src="~/assets/epd-icon.svg" alt="" />
+                            <environment include="Development">
+                                <span class="usa-label-big gaepd-label-dev">DEV</span>
+                            </environment>
+                            <environment include="Staging">
+                                <span class="usa-label-big gaepd-label-uat">UAT</span>
+                            </environment>
+                            EPD Enforcement Orders
+                        </a>
+                    }
+                    else
+                    {
+                        // Public
+                        <a title="Home" aria-label="Home" class="gaepd-logo-link" asp-page="/Index">
+                            <img src="~/assets/epd-icon.svg" alt="" />
+                            <environment include="Development">
+                                <span class="usa-label-big gaepd-label-dev">DEV</span>
+                            </environment>
+                            <environment include="Staging">
+                                <span class="usa-label-big gaepd-label-uat">UAT</span>
+                            </environment>
+                            EPD Enforcement Orders
+                        </a>
+                    }
+                </em>
+            </div>
+        </div>
+        <nav role="navigation" class="usa-nav">
+            <button class="usa-nav-close">
+                <img src="~/assets/close.svg" alt="close">
+            </button>
+            <ul class="usa-nav-primary usa-accordion">
+                @if (showAdminMenu)
+                {
+                    // Admin
+                    <li>
+                        <a asp-page="/Admin/Add">+ New Order</a>
+                    </li>
+                    <li>
+                        <a asp-page="/Admin/Search">Search</a>
+                    </li>
+                    <li>
+                        <button class="usa-accordion-button usa-nav-link" aria-expanded="false" aria-controls="nav-admin">
+                            <span>Admin</span>
+                        </button>
+                        <ul id="nav-admin" class="usa-nav-submenu" aria-hidden="true">
+                            <li>
+                                <a asp-page="/Admin/Maintenance/Index">Site Maintenance</a>
+                            </li>
+                            <li>
+                                @* <a asp-page="/Admin/Users/Index">Users List</a> *@
+                                <a asp-page="/NotImplemented">Users List</a>
+                            </li>
+                            <li>
+                                <a asp-page="/Index">Public Dashboard</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <button class="usa-accordion-button usa-nav-link" aria-expanded="false" aria-controls="nav-account">
+                            <span>Account</span>
+                        </button>
+                        <ul id="nav-account" class="usa-nav-submenu" aria-hidden="true">
+                            <li>
+                                @* <a asp-page="/Account">View Profile</a> *@
+                                <a asp-page="/NotImplemented">View Profile</a>
+                            </li>
+                            <li>
+                                @* <form method="post" asp-page="/Account/Logout"> *@
+                                <form method="get" asp-page="/NotImplemented">
+                                    <button type="submit" aria-label="Sign out" class="usa-button gaepd-nav-button">Sign out</button>
+                                </form>
+                            </li>
+                        </ul>
+                    </li>
+                }
+                else
+                {
+                    // Public
+                    <li>
+                        <a asp-page="/Search">Search</a>
+                    </li>
+                    <li>
+                        <a asp-page="/Admin/Index">Admin</a>
+                    </li>
+                }
+
+            </ul>
+        </nav>
+    </div>
+</header>

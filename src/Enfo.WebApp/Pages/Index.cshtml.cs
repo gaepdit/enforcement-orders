@@ -21,6 +21,9 @@ namespace Enfo.WebApp.Pages
         [UsedImplicitly]
         public async Task OnGetAsync()
         {
+            // TODO: Remove after authentication is implemented
+            ViewData["PageIsPublic"] = true;
+
             CurrentProposedOrders = await _repository.ListCurrentProposedEnforcementOrdersAsync();
             RecentExecutedOrders = await _repository.ListRecentlyExecutedEnforcementOrdersAsync();
             Message = TempData?.GetDisplayMessage();

@@ -13,8 +13,14 @@ namespace Enfo.WebApp.Pages
 
         private readonly IEnforcementOrderRepository _repository;
         public CurrentProposed(IEnforcementOrderRepository repository) => _repository = repository;
-
+        
         [UsedImplicitly]
-        public async Task OnGetAsync() => Orders = await _repository.ListCurrentProposedEnforcementOrdersAsync();
+        public async Task OnGetAsync()
+        {
+            // TODO: Remove after authentication is implemented
+            ViewData["PageIsPublic"] = true;
+
+            Orders = await _repository.ListCurrentProposedEnforcementOrdersAsync();
+        }
     }
 }
