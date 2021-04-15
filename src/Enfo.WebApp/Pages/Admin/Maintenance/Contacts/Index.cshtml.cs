@@ -14,7 +14,7 @@ namespace Enfo.WebApp.Pages.Admin.Maintenance.Contacts
     public class Index : PageModel
     {
         public IReadOnlyList<EpdContactView> Items { get; private set; }
-        public static MaintenanceOption ThisOption { get; } = MaintenanceOption.EpdContact;
+        public static MaintenanceOption ThisOption => MaintenanceOption.EpdContact;
         public DisplayMessage Message { get; private set; }
 
         [TempData]

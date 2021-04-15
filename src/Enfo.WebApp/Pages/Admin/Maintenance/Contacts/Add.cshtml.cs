@@ -1,4 +1,4 @@
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Enfo.Repository.Repositories;
 using Enfo.Repository.Resources.Address;
 using Enfo.Repository.Resources.EpdContact;
@@ -18,7 +18,7 @@ namespace Enfo.WebApp.Pages.Admin.Maintenance.Contacts
 
         public SelectList AddressSelectList { get; private set; }
 
-        public static MaintenanceOption ThisOption { get; } = MaintenanceOption.EpdContact;
+        public static MaintenanceOption ThisOption => MaintenanceOption.EpdContact;
 
         [TempData]
         public int HighlightId { get; set; }

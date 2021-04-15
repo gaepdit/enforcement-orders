@@ -14,7 +14,7 @@ namespace Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthorities
     public class Index : PageModel
     {
         public IReadOnlyList<LegalAuthorityView> Items { get; private set; }
-        public static MaintenanceOption ThisOption { get; } = MaintenanceOption.LegalAuthority;
+        public static MaintenanceOption ThisOption => MaintenanceOption.LegalAuthority;
         public DisplayMessage Message { get; private set; }
 
         [TempData]

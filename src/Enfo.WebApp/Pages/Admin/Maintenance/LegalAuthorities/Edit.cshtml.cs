@@ -24,7 +24,7 @@ namespace Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthorities
         public int HighlightId { get; set; }
 
         public string OriginalName { get; set; }
-        public static MaintenanceOption ThisOption { get; } = MaintenanceOption.LegalAuthority;
+        public static MaintenanceOption ThisOption => MaintenanceOption.LegalAuthority;
 
         private readonly ILegalAuthorityRepository _repository;
         public Edit(ILegalAuthorityRepository repository) => _repository = repository;

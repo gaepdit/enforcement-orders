@@ -14,7 +14,7 @@ namespace Enfo.WebApp.Pages.Admin.Maintenance.Addresses
         [BindProperty]
         public AddressCreate Item { get; set; }
 
-        public static MaintenanceOption ThisOption { get; } = MaintenanceOption.Address;
+        public static MaintenanceOption ThisOption => MaintenanceOption.Address;
 
         [TempData]
         public int HighlightId { get; set; }
@@ -23,7 +23,10 @@ namespace Enfo.WebApp.Pages.Admin.Maintenance.Addresses
         public Add(IAddressRepository repository) => _repository = repository;
 
         [UsedImplicitly]
-        public static void OnGet() { }
+        public static void OnGet()
+        {
+            // Method intentionally left empty.
+        }
 
         [UsedImplicitly]
         public async Task<IActionResult> OnPostAsync()

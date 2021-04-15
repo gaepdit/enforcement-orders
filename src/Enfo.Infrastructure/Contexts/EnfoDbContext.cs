@@ -19,9 +19,6 @@ namespace Enfo.Infrastructure.Contexts
         {
             base.OnModelCreating(builder ?? throw new ArgumentNullException(nameof(builder)));
 
-            // Unique indexes
-            // builder.Entity<EnforcementOrder>().HasIndex(b => b.OrderNumber).IsUnique();
-
             // ASP.NET Identity Tables
             builder.Entity<ApplicationUser>().ToTable("AppUsers");
             builder.Entity<IdentityRole<Guid>>().ToTable("AppRoles");

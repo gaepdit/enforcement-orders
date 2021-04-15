@@ -14,7 +14,7 @@ namespace Enfo.WebApp.Pages.Admin.Maintenance.Addresses
     public class Index : PageModel
     {
         public IReadOnlyList<AddressView> Items { get; private set; }
-        public static MaintenanceOption ThisOption { get; } = MaintenanceOption.Address;
+        public static MaintenanceOption ThisOption => MaintenanceOption.Address;
         public DisplayMessage Message { get; private set; }
 
         [TempData]

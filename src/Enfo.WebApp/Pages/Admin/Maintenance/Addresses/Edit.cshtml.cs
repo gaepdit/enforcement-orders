@@ -23,7 +23,7 @@ namespace Enfo.WebApp.Pages.Admin.Maintenance.Addresses
         [TempData]
         public int HighlightId { get; set; }
 
-        public static MaintenanceOption ThisOption { get; } = MaintenanceOption.Address;
+        public static MaintenanceOption ThisOption => MaintenanceOption.Address;
 
         private readonly IAddressRepository _repository;
         public Edit(IAddressRepository repository) => _repository = repository;

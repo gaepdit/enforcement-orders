@@ -8,6 +8,9 @@ namespace Enfo.WebApp.Pages.Admin.Maintenance
     public class Index : PageModel
     {
         [UsedImplicitly]
-        public static void OnGet() { }
+        public static void OnGet()
+        {
+            // Method intentionally left empty.
+        }
     }
 }

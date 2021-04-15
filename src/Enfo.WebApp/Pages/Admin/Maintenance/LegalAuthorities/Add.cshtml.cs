@@ -14,7 +14,7 @@ namespace Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthorities
         [BindProperty]
         public LegalAuthorityCreate Item { get; set; }
 
-        public static MaintenanceOption ThisOption { get; } = MaintenanceOption.LegalAuthority;
+        public static MaintenanceOption ThisOption => MaintenanceOption.LegalAuthority;
 
         [TempData]
         public int HighlightId { get; set; }
@@ -23,7 +23,10 @@ namespace Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthorities
         public Add(ILegalAuthorityRepository repository) => _repository = repository;
 
         [UsedImplicitly]
-        public static void OnGet() { }
+        public static void OnGet()
+        {
+            // Method intentionally left empty.
+        }
 
         [UsedImplicitly]
         public async Task<IActionResult> OnPostAsync()

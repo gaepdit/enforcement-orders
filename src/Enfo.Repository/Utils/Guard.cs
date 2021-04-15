@@ -51,7 +51,7 @@ namespace Enfo.Repository.Utils
                 throw new ArgumentNullException(parameterName);
             }
 
-            if (value is null || value.Count == 0)
+            if (value.Count == 0)
             {
                 throw new ArgumentException($"{parameterName} cannot be null or empty.", parameterName);
             }

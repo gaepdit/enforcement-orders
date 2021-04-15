@@ -27,7 +27,7 @@ namespace Enfo.WebApp.Pages.Admin.Maintenance.Contacts
 
         public SelectList AddressSelectList { get; private set; }
 
-        public static MaintenanceOption ThisOption { get; } = MaintenanceOption.EpdContact;
+        public static MaintenanceOption ThisOption => MaintenanceOption.EpdContact;
 
         private readonly IEpdContactRepository _repository;
         private readonly IAddressRepository _address;
