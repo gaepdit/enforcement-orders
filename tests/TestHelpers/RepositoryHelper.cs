@@ -15,7 +15,7 @@ namespace TestHelpers
 
         private RepositoryHelper()
         {
-            _context = new EnfoDbContext(_options);
+            _context = new EnfoDbContext(_options, null);
             _context.Database.EnsureCreated();
         }
 
@@ -60,25 +60,25 @@ namespace TestHelpers
         public IAddressRepository GetAddressRepository()
         {
             SeedAddressData();
-            return new AddressRepository(new EnfoDbContext(_options));
+            return new AddressRepository(new EnfoDbContext(_options, null));
         }
 
         public ILegalAuthorityRepository GetLegalAuthorityRepository()
         {
             SeedLegalAuthorityData();
-            return new LegalAuthorityRepository(new EnfoDbContext(_options));
+            return new LegalAuthorityRepository(new EnfoDbContext(_options, null));
         }
 
         public IEpdContactRepository GetEpdContactRepository()
         {
             SeedEpdContactData();
-            return new EpdContactRepository(new EnfoDbContext(_options));
+            return new EpdContactRepository(new EnfoDbContext(_options, null));
         }
 
         public IEnforcementOrderRepository GetEnforcementOrderRepository()
         {
             SeedEnforcementOrderData();
-            return new EnforcementOrderRepository(new EnfoDbContext(_options));
+            return new EnforcementOrderRepository(new EnfoDbContext(_options, null));
         }
 
         public void Dispose() => _context.Dispose();
