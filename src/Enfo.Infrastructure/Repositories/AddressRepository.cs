@@ -64,6 +64,7 @@ namespace Enfo.Infrastructure.Repositories
                 throw new ArgumentException($"ID ({id}) not found.", nameof(id));
             }
 
+            _context.Entry(item).OriginalValues["ConcurrencyStamp"] = resource.ConcurrencyStamp;
             item.UpdateEntityFrom(resource);
             await _context.SaveChangesAsync().ConfigureAwait(false);
         }

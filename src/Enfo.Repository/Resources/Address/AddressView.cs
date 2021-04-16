@@ -18,6 +18,7 @@ namespace Enfo.Repository.Resources.Address
             State = item.State;
             Street = item.Street;
             Street2 = item.Street2;
+            ConcurrencyStamp = item.ConcurrencyStamp;
         }
 
         public int Id { get; }
@@ -34,6 +35,8 @@ namespace Enfo.Repository.Resources.Address
 
         [DisplayName("Postal Code")]
         public string PostalCode { get; }
+
+        public string ConcurrencyStamp { get; }
 
         public string AsLinearString
         {

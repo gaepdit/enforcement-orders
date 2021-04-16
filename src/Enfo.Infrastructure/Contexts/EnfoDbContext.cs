@@ -47,6 +47,8 @@ namespace Enfo.Infrastructure.Contexts
                 builder.Entity(entityType.ClrType).Property<DateTimeOffset?>(AuditProperties.UpdatedAt);
                 builder.Entity(entityType.ClrType).Property<string>(AuditProperties.CreatedBy);
                 builder.Entity(entityType.ClrType).Property<string>(AuditProperties.UpdatedBy);
+                // builder.Entity(entityType.ClrType).Property(AuditProperties.ConcurrencyStamp)
+                //     .IsConcurrencyToken();
             }
         }
 
@@ -71,6 +73,7 @@ namespace Enfo.Infrastructure.Contexts
 
             foreach (var entry in entries)
             {
+                entry.Property(AuditProperties.ConcurrencyStamp).CurrentValue = Guid.NewGuid().ToString();
                 entry.Property(AuditProperties.UpdatedAt).CurrentValue = DateTimeOffset.Now;
                 entry.Property(AuditProperties.UpdatedBy).CurrentValue = currentUser;
                 if (entry.State == EntityState.Modified) continue;
@@ -85,6 +88,7 @@ namespace Enfo.Infrastructure.Contexts
             internal const string UpdatedAt = "UpdatedAt";
             internal const string CreatedBy = "CreatedBy";
             internal const string UpdatedBy = "UpdatedBy";
+            internal const string ConcurrencyStamp = "ConcurrencyStamp";
         }
     }
 }

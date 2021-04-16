@@ -30,6 +30,8 @@ namespace Enfo.Repository.Resources.Address
         [RegularExpression(ResourceRegex.PostalCode, ErrorMessage = "Provide a valid US ZIP Code.")]
         public string PostalCode { get; set; }
 
+        public string ConcurrencyStamp { get; init; }
+        
         public void TrimAll()
         {
             Street = Street?.Trim();

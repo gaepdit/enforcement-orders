@@ -40,6 +40,7 @@ namespace Enfo.Repository.Mapping
             State = item.State,
             Street = item.Street,
             Street2 = item.Street2,
+            ConcurrencyStamp = item.ConcurrencyStamp
         };
     }
 }
