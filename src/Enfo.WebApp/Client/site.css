@@ -653,6 +653,10 @@ table {
     margin-bottom: 0;
 }
 
+.usa-skipnav:focus {
+    outline: 3px solid #3e94cf;
+}
+
 /*
     Print stylesheets
 */

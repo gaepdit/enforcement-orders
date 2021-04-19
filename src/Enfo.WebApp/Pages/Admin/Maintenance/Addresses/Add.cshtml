@@ -26,7 +26,7 @@
             <span asp-validation-for="Item.City" class="usa-input-error-message"></span>
         </div>
     </div>
-    
+
     <div>
         <div class="usa-input-grid usa-input-grid-medium">
             <label asp-for="Item.PostalCode"></label>
@@ -40,3 +40,8 @@
         <a asp-page="Index" class="usa-button usa-button-secondary">Cancel</a>
     </div>
 </form>
+
+@section ScriptFiles
+{
+    <script src="~/dist/formValidation.bundle.js" asp-append-version="true" type="text/javascript" defer></script>
+}

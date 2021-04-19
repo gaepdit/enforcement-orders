@@ -20,6 +20,10 @@ module.exports = {
             dependOn: 'site',
             import: './Client/formEditOrder.js'
         },
+        formValidation: {
+            dependOn: 'site',
+            import: './Client/formValidation.js'
+        },
     },
     output: {
         filename: '[name].bundle.js',

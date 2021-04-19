@@ -54,12 +54,12 @@
 
     <Target Name="NpmRunBuild" BeforeTargets="Build" DependsOnTargets="NpmInstall" Condition=" '$(Configuration)' == 'Debug' ">
         <Message Importance="high" Text="Running npm build task (webpack)..." />
-        <Exec Command="pnpm run build" />
+        <Exec Command="pnpm run pack" />
     </Target>
 
     <Target Name="NpmRunBuildProd" BeforeTargets="Build" DependsOnTargets="NpmInstall" Condition=" '$(Configuration)' != 'Debug' ">
         <Message Importance="high" Text="Running npm build-prod task (webpack)..." />
-        <Exec Command="pnpm run build-prod" />
+        <Exec Command="pnpm run pack-prod" />
     </Target>
 
     <Target Name="NpmClean" BeforeTargets="Clean">
