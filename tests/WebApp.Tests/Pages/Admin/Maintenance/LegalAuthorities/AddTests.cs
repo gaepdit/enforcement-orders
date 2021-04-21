@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
 using Enfo.Repository.Repositories;
 using Enfo.Repository.Resources.LegalAuthority;
-using Enfo.WebApp.Extensions;
 using Enfo.WebApp.Models;
 using Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthorities;
+using Enfo.WebApp.Platform.Extensions;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

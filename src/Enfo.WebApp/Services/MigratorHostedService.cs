@@ -10,7 +10,7 @@ using Microsoft.Extensions.Hosting;
 namespace Enfo.WebApp.Services
 {
     /// <summary>
-    /// Set up the database 
+    /// Sets up the database. 
     /// ref: https://andrewlock.net/running-async-tasks-on-app-startup-in-asp-net-core-3/
     /// </summary>
     public class MigratorHostedService : IHostedService

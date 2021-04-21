@@ -2,8 +2,8 @@
 using Enfo.Repository.Mapping;
 using Enfo.Repository.Repositories;
 using Enfo.Repository.Resources.LegalAuthority;
-using Enfo.WebApp.Extensions;
 using Enfo.WebApp.Models;
+using Enfo.WebApp.Platform.Extensions;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;

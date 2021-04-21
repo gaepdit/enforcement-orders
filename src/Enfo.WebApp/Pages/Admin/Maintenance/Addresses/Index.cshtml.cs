@@ -2,8 +2,8 @@
 using System.Threading.Tasks;
 using Enfo.Repository.Repositories;
 using Enfo.Repository.Resources.Address;
-using Enfo.WebApp.Extensions;
 using Enfo.WebApp.Models;
+using Enfo.WebApp.Platform.Extensions;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;

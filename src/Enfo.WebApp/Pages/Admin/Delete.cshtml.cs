@@ -2,8 +2,8 @@
 using Enfo.Repository;
 using Enfo.Repository.Repositories;
 using Enfo.Repository.Resources.EnforcementOrder;
-using Enfo.WebApp.Extensions;
 using Enfo.WebApp.Models;
+using Enfo.WebApp.Platform.Extensions;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

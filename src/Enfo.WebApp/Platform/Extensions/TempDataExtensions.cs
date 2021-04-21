@@ -2,7 +2,7 @@ using System.Text.Json;
 using Enfo.WebApp.Models;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
-namespace Enfo.WebApp.Extensions
+namespace Enfo.WebApp.Platform.Extensions
 {
     public static class TempDataExtensions
     {
