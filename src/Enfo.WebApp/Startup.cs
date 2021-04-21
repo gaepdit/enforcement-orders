@@ -53,7 +53,7 @@ namespace Enfo.WebApp
             // .AddMicrosoftIdentityUI();
 
             // Configure HSTS
-            // services.AddHsts(opts => opts.MaxAge = TimeSpan.FromDays(365 * 2));
+            services.AddHsts(opts => opts.MaxAge = TimeSpan.FromMinutes(5));
 
             // Configure Raygun
             services.AddRaygun(Configuration,
