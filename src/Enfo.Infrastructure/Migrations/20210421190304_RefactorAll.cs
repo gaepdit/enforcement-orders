@@ -371,6 +371,74 @@ namespace Enfo.Infrastructure.Migrations
                 type: "nvarchar(max)",
                 nullable: true);
 
+            // Begin: Make old audit dates nullable
+
+            migrationBuilder.AlterColumn<DateTime>(
+                name: "UpdatedDate",
+                table: "LegalAuthorities",
+                type: "datetime2",
+                nullable: true,
+                oldClrType: typeof(DateTime),
+                oldType: "datetime2");
+
+            migrationBuilder.AlterColumn<DateTime>(
+                name: "CreatedDate",
+                table: "LegalAuthorities",
+                type: "datetime2",
+                nullable: true,
+                oldClrType: typeof(DateTime),
+                oldType: "datetime2");
+
+            migrationBuilder.AlterColumn<DateTime>(
+                name: "UpdatedDate",
+                table: "EpdContacts",
+                type: "datetime2",
+                nullable: true,
+                oldClrType: typeof(DateTime),
+                oldType: "datetime2");
+
+            migrationBuilder.AlterColumn<DateTime>(
+                name: "CreatedDate",
+                table: "EpdContacts",
+                type: "datetime2",
+                nullable: true,
+                oldClrType: typeof(DateTime),
+                oldType: "datetime2");
+
+            migrationBuilder.AlterColumn<DateTime>(
+                name: "UpdatedDate",
+                table: "EnforcementOrders",
+                type: "datetime2",
+                nullable: true,
+                oldClrType: typeof(DateTime),
+                oldType: "datetime2");
+
+            migrationBuilder.AlterColumn<DateTime>(
+                name: "CreatedDate",
+                table: "EnforcementOrders",
+                type: "datetime2",
+                nullable: true,
+                oldClrType: typeof(DateTime),
+                oldType: "datetime2");
+
+            migrationBuilder.AlterColumn<DateTime>(
+                name: "UpdatedDate",
+                table: "Addresses",
+                type: "datetime2",
+                nullable: true,
+                oldClrType: typeof(DateTime),
+                oldType: "datetime2");
+
+            migrationBuilder.AlterColumn<DateTime>(
+                name: "CreatedDate",
+                table: "Addresses",
+                type: "datetime2",
+                nullable: true,
+                oldClrType: typeof(DateTime),
+                oldType: "datetime2");
+
+            // End: Make old audit dates nullable
+            
             migrationBuilder.CreateTable(
                 name: "AppRoles",
                 columns: table => new

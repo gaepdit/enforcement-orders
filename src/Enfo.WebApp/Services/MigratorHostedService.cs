@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using Enfo.Infrastructure.Contexts;
@@ -19,6 +20,7 @@ namespace Enfo.WebApp.Services
         private readonly IServiceProvider _serviceProvider;
         public MigratorHostedService(IServiceProvider serviceProvider) => _serviceProvider = serviceProvider;
 
+        [SuppressMessage("ReSharper", "S125")]
         public async Task StartAsync(CancellationToken cancellationToken)
         {
             // Create a new scope to retrieve scoped services
@@ -30,7 +32,8 @@ namespace Enfo.WebApp.Services
             {
                 // Initialize database
                 await context.Database.EnsureDeletedAsync(cancellationToken);
-                await context.Database.EnsureCreatedAsync(cancellationToken);
+                await context.Database.MigrateAsync(cancellationToken);
+                // await context.Database.EnsureCreatedAsync(cancellationToken);
 
                 // Seed initial data
                 await context.SeedTempDataAsync(cancellationToken);
