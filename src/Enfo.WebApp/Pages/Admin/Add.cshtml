@@ -12,6 +12,8 @@
 <form method="post" class="usa-form-large">
     <div asp-validation-summary="ModelOnly" class="usa-alert usa-alert-error" role="alert"></div>
 
+    <p>Required fields are marked with an asterisk (<abbr class="required-field-label" title="Required">*</abbr>).</p>
+
     <fieldset>
         <legend>Facility Information</legend>
         <label asp-for="Item.FacilityName"></label>
@@ -60,7 +62,7 @@
     </fieldset>
 
     <fieldset class="usa-grid-full usa-fieldset-inputs">
-        <legend>Status</legend>
+        <legend>Status <abbr class="required-field-label" title="Required">*</abbr></legend>
         <ul class="usa-unstyled-list">
             <li>
                 <input type="radio" name="Item.CreateAs" value="Proposed" id="CreateAs-Proposed"

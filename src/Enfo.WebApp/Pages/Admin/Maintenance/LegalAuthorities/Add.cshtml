@@ -10,6 +10,8 @@
 <form method="post" class="usa-form-large">
     <div asp-validation-summary="ModelOnly" class="usa-alert usa-alert-error" role="alert"></div>
 
+    <p>Required fields are marked with an asterisk (<abbr class="required-field-label" title="Required">*</abbr>).</p>
+
     <label asp-for="Item.AuthorityName"></label>
     <input asp-for="Item.AuthorityName" />
     <span asp-validation-for="Item.AuthorityName" class="usa-input-error-message"></span>

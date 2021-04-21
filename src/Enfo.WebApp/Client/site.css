@@ -580,6 +580,16 @@ select:disabled {
     font-style: italic;
 }
 
+abbr.required-field-label {
+    border: none;
+    text-decoration: none;
+    color: #cd2026;
+    font-weight: bold;
+    font-size: 120%;
+    line-height: 1;
+    cursor: inherit;
+}
+
 /* Automated error class replaces .usa-input-error */
 .input-validation-error {
     border-left: 4px solid #cd2026;

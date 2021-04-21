@@ -1,4 +1,4 @@
-﻿@page "{id}"
+@page "{id}"
 @model Enfo.WebApp.Pages.Admin.Maintenance.Addresses.Edit
 
 @{
@@ -9,6 +9,8 @@
 
 <form method="post" class="usa-form">
     <div asp-validation-summary="ModelOnly" class="usa-input-error-message"></div>
+
+    <p>Required fields are marked with an asterisk (<abbr class="required-field-label" title="Required">*</abbr>).</p>
 
     <label asp-for="Item.Street"></label>
     <input asp-for="Item.Street" />

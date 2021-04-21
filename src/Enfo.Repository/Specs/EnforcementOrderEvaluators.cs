@@ -28,7 +28,7 @@ namespace Enfo.Repository.Specs
                 .FilterByPublicationStatus(adminSpec.Progress)
                 .FilterByOrderNumber(adminSpec.OrderNumber)
                 .FilterByText(adminSpec.Text)
-                .FilterByIsDeleted(adminSpec.ShowDeleted);
+                .FilterByIsDeleted(adminSpec.ShowDeleted ?? false);
 
         public static IOrderedQueryable<EnforcementOrder> ApplySorting(
             [NotNull] this IQueryable<EnforcementOrder> query, OrderSorting sorting) =>

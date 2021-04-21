@@ -1,4 +1,4 @@
-﻿@page "{id}"
+@page "{id}"
 @model Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthorities.Edit
 
 @{
@@ -10,7 +10,9 @@
 <form method="post" class="usa-form">
     <div asp-validation-summary="ModelOnly" class="usa-input-error-message"></div>
 
-    <label asp-for="Item.AuthorityName"></label>
+     <p>Required fields are marked with an asterisk (<abbr class="required-field-label" title="Required">*</abbr>).</p>
+ 
+   <label asp-for="Item.AuthorityName"></label>
     <input asp-for="Item.AuthorityName" />
     <span asp-validation-for="Item.AuthorityName" class="usa-input-error-message"></span>
 

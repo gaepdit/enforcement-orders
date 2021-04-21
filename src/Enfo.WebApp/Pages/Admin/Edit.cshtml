@@ -1,4 +1,4 @@
-﻿@page "{id}"
+@page "{id}"
 @using Enfo.Domain.Entities
 @model Enfo.WebApp.Pages.Admin.Edit
 @{
@@ -9,6 +9,8 @@
 
 <form method="post" class="usa-form">
     <div asp-validation-summary="ModelOnly" class="usa-input-error-message"></div>
+
+    <p>Required fields are marked with an asterisk (<abbr class="required-field-label" title="Required">*</abbr>).</p>
 
     <fieldset>
         <legend>Facility Information</legend>

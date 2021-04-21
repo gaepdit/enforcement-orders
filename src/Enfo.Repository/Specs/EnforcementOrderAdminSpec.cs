@@ -38,7 +38,7 @@ namespace Enfo.Repository.Specs
 
         // Either deleted or active items are returned; not both.
         [DisplayName("Show deleted records")]
-        public bool ShowDeleted { get; set; }
+        public bool? ShowDeleted { get; set; }
 
         public OrderSorting Sort { get; set; } = OrderSorting.DateDesc;
 
