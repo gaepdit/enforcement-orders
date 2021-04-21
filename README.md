@@ -14,17 +14,29 @@ Enforcement order notices are time-critical and high-profile public information.
 
 # Info for developers
 
-ENFO is written using .NET Core 3.1.
+ENFO is written using .NET 5.
 
 ## Prerequisites
 
-[Visual Studio](https://www.visualstudio.com/vs/) or [Visual Studio Code](https://code.visualstudio.com/)
+[Visual Studio](https://www.visualstudio.com/vs/), [VS Code](https://code.visualstudio.com/), or equivalent IDE.
 
 ## Project organization
 
 The Visual Studio solution contains four projects:
 
-* Domain - A class library containing the data models and business logic
-* Infrastructure - A class library implementing the Domain Repository using Entity Framework
-* API - ASP.NET Core Web API
-* UI (not yet developed) - Front end application
+* Enfo.Domain - A class library containing the data models and business logic
+* Enfo.Repository - A class library containing the repository definitions
+* Enfo.Infrastructure - A class library implementing the Domain & Repository using Entity Framework
+* Enfo.WebApp - Front end web application
+
+## Database migrations
+
+To create new database migration, install or update the Entity Framework tools:
+
+> `dotnet tool install --global dotnet-ef`
+
+> `dotnet tool update --global dotnet-ef`
+
+Then from the root directory, run:
+
+> `dotnet ef migrations add MigrationName -s src\Enfo.Infrastructure --msbuildprojectextensionspath artifacts\Enfo.Infrastructure\obj\`

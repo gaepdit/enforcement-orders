@@ -34,7 +34,8 @@ namespace Enfo.WebApp
         {
             // Configure database
             services.AddDbContext<EnfoDbContext>(opts =>
-                opts.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                opts.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"),
+                    x => x.MigrationsAssembly("Enfo.Infrastructure")));
 
             // Configure authentication
             // services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
@@ -67,7 +68,7 @@ namespace Enfo.WebApp
             services.AddScoped<IEpdContactRepository, EpdContactRepository>();
             services.AddScoped<ILegalAuthorityRepository, LegalAuthorityRepository>();
 
-            // Set up database
+            // Initialize database
             services.AddHostedService<MigratorHostedService>();
         }
 
