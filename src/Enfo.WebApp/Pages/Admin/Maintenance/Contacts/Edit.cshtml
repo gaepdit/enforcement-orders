@@ -1,4 +1,4 @@
-@page "{id}"
+﻿@page "{id}"
 @model Enfo.WebApp.Pages.Admin.Maintenance.Contacts.Edit
 
 @{
@@ -7,49 +7,51 @@
 
 <h2>@ViewData["Title"]</h2>
 
-<form method="post" class="usa-form">
-    <div asp-validation-summary="ModelOnly" class="usa-input-error-message"></div>
+<div class="gaepd-container-light">
+    <form method="post" class="usa-form-large">
+        <div asp-validation-summary="ModelOnly" class="usa-input-error-message"></div>
 
-    <p>Required fields are marked with an asterisk (<abbr class="required-field-label" title="Required">*</abbr>).</p>
+        <p>Required fields are marked with an asterisk (<abbr class="required-field-label" title="Required">*</abbr>).</p>
 
-    <label asp-for="Item.ContactName"></label>
-    @Html.EditorFor(m => m.Item.ContactName)
-    <span asp-validation-for="Item.ContactName" class="usa-input-error-message"></span>
+        <label asp-for="Item.ContactName"></label>
+        @Html.EditorFor(m => m.Item.ContactName)
+        <span asp-validation-for="Item.ContactName" class="usa-input-error-message"></span>
 
-    <label asp-for="Item.Title"></label>
-    @Html.EditorFor(m => m.Item.Title)
-    <span asp-validation-for="Item.Title" class="usa-input-error-message"></span>
+        <label asp-for="Item.Title"></label>
+        @Html.EditorFor(m => m.Item.Title)
+        <span asp-validation-for="Item.Title" class="usa-input-error-message"></span>
 
-    <label asp-for="Item.Organization"></label>
-    @Html.EditorFor(m => m.Item.Organization)
-    <span asp-validation-for="Item.Organization" class="usa-input-error-message"></span>
+        <label asp-for="Item.Organization"></label>
+        @Html.EditorFor(m => m.Item.Organization)
+        <span asp-validation-for="Item.Organization" class="usa-input-error-message"></span>
 
-    <label asp-for="Item.AddressId"></label>
-    @if (Model.Item.IsInactiveAddress)
-    {
-        <small id="AddressIdHelpBlock" class="usa-input-label-helper">
-            The previously entered address is no longer available. Please select a new one.
-        </small>
-    }
-    <select asp-for="Item.AddressId" asp-items="Model.AddressSelectList" aria-describedby="AddressIdHelpBlock">
-        <option value="">→ Select Address...</option>
-    </select>
-    <span asp-validation-for="Item.AddressId" class="usa-input-error-message"></span>
+        <label asp-for="Item.AddressId"></label>
+        @if (Model.Item.IsInactiveAddress)
+        {
+            <small id="AddressIdHelpBlock" class="usa-input-label-helper">
+                The previously entered address is no longer available. Please select a new one.
+            </small>
+        }
+        <select asp-for="Item.AddressId" asp-items="Model.AddressSelectList" aria-describedby="AddressIdHelpBlock">
+            <option value="">→ Select Address...</option>
+        </select>
+        <span asp-validation-for="Item.AddressId" class="usa-input-error-message"></span>
 
-    <label asp-for="Item.Telephone"></label>
-    @Html.EditorFor(m => m.Item.Telephone)
-    <span asp-validation-for="Item.Telephone" class="usa-input-error-message"></span>
+        <label asp-for="Item.Telephone"></label>
+        @Html.EditorFor(m => m.Item.Telephone)
+        <span asp-validation-for="Item.Telephone" class="usa-input-error-message"></span>
 
-    <label asp-for="Item.Email"></label>
-    @Html.EditorFor(m => m.Item.Email)
-    <span asp-validation-for="Item.Email" class="usa-input-error-message"></span>
+        <label asp-for="Item.Email"></label>
+        @Html.EditorFor(m => m.Item.Email)
+        <span asp-validation-for="Item.Email" class="usa-input-error-message"></span>
 
-    <div class="gaepd-buttonrow">
-        <input asp-for="Id" />
-        <button type="submit">Save Changes</button>
-        <a asp-page="Index" class="usa-button usa-button-secondary">Cancel</a>
-    </div>
-</form>
+        <div class="gaepd-buttonrow">
+            <input asp-for="Id" />
+            <button type="submit">Save Changes</button>
+            <a asp-page="Index" class="usa-button usa-button-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
 
 @section ScriptFiles
 {

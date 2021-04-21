@@ -1,4 +1,4 @@
-@page
+﻿@page
 @model Enfo.WebApp.Pages.Admin.Maintenance.Addresses.Add
 
 @{
@@ -7,41 +7,40 @@
 
 <h2>@ViewData["Title"]</h2>
 
-<form method="post" class="usa-form-large">
-    <div asp-validation-summary="ModelOnly" class="usa-alert usa-alert-error" role="alert"></div>
+<div class="gaepd-container-light">
+    <form method="post" class="usa-form-large">
+        <div asp-validation-summary="ModelOnly" class="usa-alert usa-alert-error" role="alert"></div>
 
-    <p>Required fields are marked with an asterisk (<abbr class="required-field-label" title="Required">*</abbr>).</p>
+        <p>Required fields are marked with an asterisk (<abbr class="required-field-label" title="Required">*</abbr>).</p>
 
-    <label asp-for="Item.Street"></label>
-    <input asp-for="Item.Street" />
-    <span asp-validation-for="Item.Street" class="usa-input-error-message"></span>
+        <label asp-for="Item.Street"></label>
+        <input asp-for="Item.Street" />
+        <span asp-validation-for="Item.Street" class="usa-input-error-message"></span>
 
-    <label asp-for="Item.Street2"></label>
-    <span class="usa-additional_text">(Optional)</span>
-    <input asp-for="Item.Street2" />
-    <span asp-validation-for="Item.Street2" class="usa-input-error-message"></span>
+        <label asp-for="Item.Street2"></label>
+        <span class="usa-additional_text">(Optional)</span>
+        <input asp-for="Item.Street2" />
+        <span asp-validation-for="Item.Street2" class="usa-input-error-message"></span>
 
-    <div>
+
         <div class="usa-input-grid usa-input-grid-medium">
             <label asp-for="Item.City"></label>
             <input asp-for="Item.City" />
             <span asp-validation-for="Item.City" class="usa-input-error-message"></span>
         </div>
-    </div>
 
-    <div>
-        <div class="usa-input-grid usa-input-grid-medium">
+        <div class="usa-input-grid">
             <label asp-for="Item.PostalCode"></label>
-            <input asp-for="Item.PostalCode" />
+            <input asp-for="Item.PostalCode" class="usa-input-medium" />
             <span asp-validation-for="Item.PostalCode" class="usa-input-error-message"></span>
         </div>
-    </div>
 
-    <div class="gaepd-buttonrow">
-        <button type="submit">Add New @Add.ThisOption.SingularName</button>
-        <a asp-page="Index" class="usa-button usa-button-secondary">Cancel</a>
-    </div>
-</form>
+        <div class="gaepd-buttonrow">
+            <button type="submit">Add New @Add.ThisOption.SingularName</button>
+            <a asp-page="Index" class="usa-button usa-button-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
 
 @section ScriptFiles
 {
