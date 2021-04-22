@@ -29,7 +29,7 @@
             These Enforcement Orders are currently displayed on the
             <a asp-page="/Index">Public&nbsp;Website</a>.
             <br />
-            Date of Posting: @DateUtils.MostRecentMonday().ToString(DisplayFormats.FormatDateLong)
+            Date of Posting: @DateUtils.MostRecentMonday().ToString(DisplayFormats.LongDate)
         </i>
     </p>
 
@@ -62,7 +62,7 @@
                                 <i>@item.County County</i>
                             </th>
                             <td data-label="Date Comment Period Closes" class="gaepd-tablecell-alignright">
-                                @(item.CommentPeriodClosesDate?.ToString(DisplayFormats.FormatDateShort) ?? "not entered")
+                                @(item.CommentPeriodClosesDate?.ToString(DisplayFormats.ShortDate) ?? "not entered")
                             </td>
                             <td class="gaepd-tablecell-nolabel">
                                 <a asp-page="Details" asp-route-id="@item.Id">View</a>
@@ -102,7 +102,7 @@
                                 <i>@item.County County</i>
                             </th>
                             <td class="gaepd-tablecell-alignright">
-                                @(item.ExecutedDate?.ToString(DisplayFormats.FormatDateShort) ?? "not entered")
+                                @(item.ExecutedDate?.ToString(DisplayFormats.ShortDate) ?? "not entered")
                             </td>
                             <td class="gaepd-tablecell-nolabel">
                                 <a asp-page="Details" asp-route-id="@item.Id">View</a>
@@ -152,7 +152,7 @@
                                 <i>@item.County County</i>
                             </th>
                             <td class="gaepd-tablecell-alignright">
-                                @(item.PendingPublicationDate?.ToString(DisplayFormats.FormatDateShort) ?? "error")
+                                @(item.PendingPublicationDate?.ToString(DisplayFormats.ShortDate) ?? "error")
                             </td>
                             <td class="gaepd-tablecell-nolabel">
                                 <a asp-page="Details" asp-route-id="@item.Id">View</a>

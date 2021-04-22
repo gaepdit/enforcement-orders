@@ -51,11 +51,11 @@ namespace Enfo.Repository.Resources.EnforcementOrder
         public bool IsProposedOrder { get; }
 
         [DisplayName("Date Comment Period Closes")]
-        [DisplayFormat(DataFormatString = DisplayFormats.FormatDateShortComposite)]
+        [DisplayFormat(DataFormatString = DisplayFormats.ShortDateComposite)]
         public DateTime? CommentPeriodClosesDate { get; }
 
         [DisplayName("Publication Date For Proposed Order")]
-        [DisplayFormat(DataFormatString = DisplayFormats.FormatDateShortComposite)]
+        [DisplayFormat(DataFormatString = DisplayFormats.ShortDateComposite)]
         public DateTime? ProposedOrderPostedDate { get; }
 
         // Executed orders
@@ -66,16 +66,16 @@ namespace Enfo.Repository.Resources.EnforcementOrder
         public bool IsExecutedOrder { get; }
 
         [DisplayName("Date Executed")]
-        [DisplayFormat(DataFormatString = DisplayFormats.FormatDateShortComposite)]
+        [DisplayFormat(DataFormatString = DisplayFormats.ShortDateComposite)]
         public DateTime? ExecutedDate { get; }
 
         [DisplayName("Publication Date For Executed Order")]
-        [DisplayFormat(DataFormatString = DisplayFormats.FormatDateShortComposite)]
+        [DisplayFormat(DataFormatString = DisplayFormats.ShortDateComposite)]
         public DateTime? ExecutedOrderPostedDate { get; }
 
         // Calculated properties
 
-        [DisplayFormat(DataFormatString = DisplayFormats.FormatDateShortComposite)]
+        [DisplayFormat(DataFormatString = DisplayFormats.ShortDateComposite)]
         public DateTime? LastPostedDate => ExecutedDate ?? ProposedOrderPostedDate;
 
         public bool IsPublic => IsPublicExecutedOrder || IsPublicProposedOrder;

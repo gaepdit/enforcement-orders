@@ -3,10 +3,10 @@
     public static class DisplayFormats
     {
         // DateTime display formats
-        public const string FormatDateShortComposite = "{0:d\u2011MMM\u2011yyyy}";
-        public const string FormatDateEdit = "{0:d}";
-        public const string FormatDateTimeEdit = "{0:g}";
-        public const string FormatDateLong = "dddd, MMMM\u00a0d, yyyy";
-        public const string FormatDateShort = "d\u2011MMM\u2011yyyy";
+        public const string EditDate = "{0:d}";
+        public const string EditDateTime = "{0:g}";
+        public const string LongDate = "dddd, MMMM\u00a0d, yyyy";
+        public const string ShortDate = "d\u2011MMM\u2011yyyy";
+        public const string ShortDateComposite = "{0:d\u2011MMM\u2011yyyy}";
     }
 }

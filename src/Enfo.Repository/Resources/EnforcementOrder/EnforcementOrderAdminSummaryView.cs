@@ -39,7 +39,7 @@ namespace Enfo.Repository.Resources.EnforcementOrder
         [DisplayName("Order Number")]
         public string OrderNumber { get; }
 
-        [DisplayFormat(DataFormatString = DisplayFormats.FormatDateShortComposite)]
+        [DisplayFormat(DataFormatString = DisplayFormats.ShortDateComposite)]
         public DateTime? PendingPublicationDate => ExecutedDate ?? ProposedOrderPostedDate;
 
         // Proposed orders
@@ -48,7 +48,7 @@ namespace Enfo.Repository.Resources.EnforcementOrder
         public bool IsProposedOrder { get; }
 
         [DisplayName("Publication Date For Proposed Order")]
-        [DisplayFormat(DataFormatString = DisplayFormats.FormatDateShortComposite)]
+        [DisplayFormat(DataFormatString = DisplayFormats.ShortDateComposite)]
         public DateTime? ProposedOrderPostedDate { get; }
 
         // Executed orders
@@ -57,7 +57,7 @@ namespace Enfo.Repository.Resources.EnforcementOrder
         public bool IsExecutedOrder { get; }
 
         [DisplayName("Date Executed")]
-        [DisplayFormat(DataFormatString = DisplayFormats.FormatDateShortComposite)]
+        [DisplayFormat(DataFormatString = DisplayFormats.ShortDateComposite)]
         public DateTime? ExecutedDate { get; }
     }
 }

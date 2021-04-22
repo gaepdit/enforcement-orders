@@ -58,14 +58,14 @@ namespace Enfo.Repository.Resources.EnforcementOrder
         public bool IsHearingScheduled { get; }
 
         [DisplayName("Hearing Date/Time")]
-        [DisplayFormat(DataFormatString = DisplayFormats.FormatDateShortComposite)]
+        [DisplayFormat(DataFormatString = DisplayFormats.ShortDateComposite)]
         public DateTime? HearingDate { get; }
 
         [DisplayName("Hearing Location")]
         public string HearingLocation { get; }
 
         [DisplayName("Date Hearing Comment Period Closes")]
-        [DisplayFormat(DataFormatString = DisplayFormats.FormatDateShortComposite)]
+        [DisplayFormat(DataFormatString = DisplayFormats.ShortDateComposite)]
         public DateTime? HearingCommentPeriodClosesDate { get; }
 
         [DisplayName("Hearing Information Contact")]

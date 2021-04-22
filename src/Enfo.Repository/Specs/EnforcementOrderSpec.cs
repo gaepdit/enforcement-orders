@@ -20,11 +20,11 @@ namespace Enfo.Repository.Specs
         public int? LegalAuth { get; set; }
 
         [DisplayName("Beginning Date")]
-        [DisplayFormat(DataFormatString = DisplayFormats.FormatDateEdit, ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = DisplayFormats.EditDate, ApplyFormatInEditMode = true)]
         public DateTime? FromDate { get; set; }
 
         [DisplayName("Ending Date")]
-        [DisplayFormat(DataFormatString = DisplayFormats.FormatDateEdit, ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = DisplayFormats.EditDate, ApplyFormatInEditMode = true)]
         public DateTime? TillDate { get; set; }
 
         [DisplayName("Enforcement Order Status")]

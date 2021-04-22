@@ -26,7 +26,7 @@
 <h2>Current Orders (notices that change weekly)</h2>
 
 <p>
-    <b>Date of Posting: @DateUtils.MostRecentMonday().ToString(DisplayFormats.FormatDateLong)</b>
+    <b>Date of Posting: @DateUtils.MostRecentMonday().ToString(DisplayFormats.LongDate)</b>
 </p>
 
 <section class="usa-grid-full">
@@ -67,7 +67,7 @@
                             <i>@enfo.County County</i>
                         </th>
                         <td class="gaepd-tablecell-alignright">
-                            @(enfo.CommentPeriodClosesDate?.ToString(DisplayFormats.FormatDateShort) ?? "not entered")
+                            @(enfo.CommentPeriodClosesDate?.ToString(DisplayFormats.ShortDate) ?? "not entered")
                         </td>
                         <td>
                             <a asp-page="Details" asp-route-id="@enfo.Id">View</a>
@@ -117,7 +117,7 @@
                             <i>@enfo.County County</i>
                         </th>
                         <td class="gaepd-tablecell-alignright">
-                            @(enfo.ExecutedDate?.ToString(DisplayFormats.FormatDateShort) ?? "not entered")
+                            @(enfo.ExecutedDate?.ToString(DisplayFormats.ShortDate) ?? "not entered")
                         </td>
                         <td>
                             <a asp-page="Details" asp-route-id="@enfo.Id">View</a>
