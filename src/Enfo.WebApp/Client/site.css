@@ -351,7 +351,7 @@ hr {
 }
 
 .gaepd-label-dev, .gaepd-label-local {
-    text-transform: lowercase;
+    text-transform: none;
     background: linear-gradient(124deg,
     #ff2400,
     #ff6600,
@@ -364,7 +364,7 @@ hr {
     #dd00f3,
     #ff1496);
     background-size: 1800% 1800%;
-    animation: rainbow 18s ease infinite;
+    animation: rainbow 30s ease infinite;
 }
 
 @keyframes rainbow {
