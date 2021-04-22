@@ -223,7 +223,6 @@ namespace Enfo.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Requirements")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal?>("SettlementAmount")

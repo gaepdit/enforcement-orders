@@ -32,7 +32,6 @@ namespace Enfo.Domain.Entities
         [Required]
         public string Cause { get; set; }
 
-        [Required]
         public string Requirements { get; set; }
 
         [DataType(DataType.Currency)]

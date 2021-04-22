@@ -219,12 +219,10 @@ namespace Enfo.Infrastructure.Migrations
                 name: "Requirements",
                 table: "EnforcementOrders",
                 type: "nvarchar(max)",
-                nullable: false,
-                defaultValue: "",
+                nullable: true,
                 oldClrType: typeof(string),
                 oldType: "nvarchar(3990)",
-                oldMaxLength: 3990,
-                oldNullable: true);
+                oldMaxLength: 3990);
 
             migrationBuilder.AlterColumn<DateTime>(
                 name: "ProposedOrderPostedDate",

@@ -29,7 +29,6 @@ namespace Enfo.Repository.Resources.EnforcementOrder
         public string Cause { get; set; }
 
         [DisplayName("Requirements of Order")]
-        [Required(ErrorMessage = "Requirements of Order is required.")]
         [DataType(DataType.MultilineText)]
         public string Requirements { get; set; }
 

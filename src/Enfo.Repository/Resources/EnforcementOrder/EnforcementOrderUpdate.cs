@@ -21,6 +21,7 @@ namespace Enfo.Repository.Resources.EnforcementOrder
         public int LegalAuthorityId { get; set; }
 
         [DisplayName("Cause of Order")]
+        [Required(ErrorMessage = "Cause of Order is required.")]
         [DataType(DataType.MultilineText)]
         public string Cause { get; set; }
 
