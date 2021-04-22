@@ -14,11 +14,14 @@
                         // Admin
                         <a title="Home" aria-label="Home" class="gaepd-logo-link" asp-page="/Admin/Index">
                             <img src="~/assets/epd-icon.svg" alt="" />
+                            <environment include="Local">
+                                <span class="usa-label-big gaepd-label gaepd-label-local">local</span>
+                            </environment>
                             <environment include="Development">
-                                <span class="usa-label-big gaepd-label-dev">DEV</span>
+                                <span class="usa-label-big gaepd-label gaepd-label-dev">DEV</span>
                             </environment>
                             <environment include="Staging">
-                                <span class="usa-label-big gaepd-label-uat">UAT</span>
+                                <span class="usa-label-big gaepd-label gaepd-label-uat">TEST</span>
                             </environment>
                             EPD Enforcement Orders
                         </a>
@@ -28,11 +31,14 @@
                         // Public
                         <a title="Home" aria-label="Home" class="gaepd-logo-link" asp-page="/Index">
                             <img src="~/assets/epd-icon.svg" alt="" />
+                            <environment include="Local">
+                                <span class="usa-label-big gaepd-label gaepd-label-local">local</span>
+                            </environment>
                             <environment include="Development">
-                                <span class="usa-label-big gaepd-label-dev">DEV</span>
+                                <span class="usa-label-big gaepd-label gaepd-label-dev">DEV</span>
                             </environment>
                             <environment include="Staging">
-                                <span class="usa-label-big gaepd-label-uat">UAT</span>
+                                <span class="usa-label-big gaepd-label gaepd-label-uat">TEST</span>
                             </environment>
                             EPD Enforcement Orders
                         </a>

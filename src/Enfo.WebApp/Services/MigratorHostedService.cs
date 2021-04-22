@@ -28,7 +28,7 @@ namespace Enfo.WebApp.Services
             var context = scope.ServiceProvider.GetRequiredService<EnfoDbContext>();
             var env = scope.ServiceProvider.GetRequiredService<IWebHostEnvironment>();
 
-            if (env.IsDevelopment())
+            if (env.IsEnvironment("Local"))
             {
                 // Initialize database
                 await context.Database.EnsureDeletedAsync(cancellationToken);
