@@ -79,7 +79,7 @@ namespace Enfo.Repository.Resources.EnforcementOrder
         public bool IsHearingScheduled { get; }
 
         [DisplayName("Hearing Date/Time")]
-        [DisplayFormat(DataFormatString = DisplayFormats.ShortDateComposite)]
+        [DisplayFormat(DataFormatString = DisplayFormats.DateTimeComposite)]
         public DateTime? HearingDate { get; }
 
         [DisplayName("Hearing Location")]
