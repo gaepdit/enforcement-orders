@@ -3,7 +3,7 @@ using Enfo.Repository.Repositories;
 using Enfo.Repository.Resources;
 using Enfo.Repository.Resources.LegalAuthority;
 using Enfo.Repository.Specs;
-using Enfo.WebApp.App;
+using Enfo.WebApp.Platform;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -41,7 +41,7 @@ namespace Enfo.WebApp.Pages
         {
             spec.TrimAll();
             Spec = spec;
-            OrdersList = await _order.ListAsync(spec, new PaginationSpec(p, Pagination.PageSize));
+            OrdersList = await _order.ListAsync(spec, new PaginationSpec(p, GlobalConstants.PageSize));
             LegalAuthoritiesSelectList = await GetLegalAuthoritiesSelectList();
             ShowResults = true;
         }

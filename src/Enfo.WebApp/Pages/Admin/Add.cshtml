@@ -1,6 +1,7 @@
 ﻿@page
 @using Enfo.Domain.Entities
 @using Enfo.Repository.Resources.EnforcementOrder
+@using Enfo.WebApp.Platform
 @model Enfo.WebApp.Pages.Admin.Add
 
 @{
@@ -21,7 +22,7 @@
         <span asp-validation-for="Item.FacilityName" class="usa-input-error-message"></span>
 
         <label asp-for="Item.County"></label>
-        <select asp-for="Item.County" asp-items="App.SelectLists.CountiesSelectList">
+        <select asp-for="Item.County" asp-items="CommonSelectLists.CountiesSelectList">
             <option value="">→ Select County...</option>
         </select>
         <span asp-validation-for="Item.County" class="usa-input-error-message"></span>

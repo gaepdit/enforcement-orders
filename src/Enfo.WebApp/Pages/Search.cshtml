@@ -1,6 +1,7 @@
 @page
 @using Enfo.Repository.Resources.EnforcementOrder
 @using Enfo.Repository.Specs
+@using Enfo.WebApp.Platform
 @model Enfo.WebApp.Pages.Search
 
 @{
@@ -26,7 +27,7 @@
             <input asp-for="Spec.Facility" name="@nameof(Model.Spec.Facility)" />
 
             <label asp-for="Spec.County"></label>
-            <select asp-for="Spec.County" asp-items="App.SelectLists.CountiesSelectList"
+            <select asp-for="Spec.County" asp-items="CommonSelectLists.CountiesSelectList"
                     name="@nameof(Model.Spec.County)" class="custom-select">
                 <option value="">(any)</option>
             </select>

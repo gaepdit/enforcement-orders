@@ -1,5 +1,6 @@
 ﻿@page "{id}"
 @using Enfo.Domain.Entities
+@using Enfo.WebApp.Platform
 @model Enfo.WebApp.Pages.Admin.Edit
 @{
     ViewData["Title"] = $"Edit Enforcement Order {Model.OriginalOrderNumber}";
@@ -19,7 +20,7 @@
         <span asp-validation-for="Item.FacilityName" class="usa-input-error-message"></span>
 
         <label asp-for="Item.County"></label>
-        <select asp-for="Item.County" asp-items="App.SelectLists.CountiesSelectList">
+        <select asp-for="Item.County" asp-items="CommonSelectLists.CountiesSelectList">
             <option value="">→ Select County...</option>
         </select>
         <span asp-validation-for="Item.County" class="usa-input-error-message"></span>
