@@ -59,9 +59,7 @@
         {
             <tr>
                 <th scope="row">@Html.DisplayNameFor(m => m.Item.CommentContact)</th>
-                <td>
-                    @Html.DisplayFor(m => m.Item.CommentContact, "Contact")
-                </td>
+                <td>@Html.DisplayFor(m => m.Item.CommentContact, "Contact")</td>
             </tr>
         }
     }
@@ -100,7 +98,7 @@
                 && Model.Item.HearingContact != null)
             {
                 <p>
-                    <em>@Html.DisplayNameFor(m => m.Item.HearingContact)</em><br />
+                    <em>@Html.DisplayNameFor(m => m.Item.HearingContact)</em>
                 </p>
                 @Html.DisplayFor(m => m.Item.HearingContact, "Contact")
             }

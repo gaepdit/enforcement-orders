@@ -66,21 +66,7 @@ else
             {
                 <tr>
                     <th scope="row">@Html.DisplayNameFor(m => enfo.CommentContact)</th>
-                    <td>
-                        @Html.DisplayFor(m => enfo.CommentContact.ContactName)<br />
-                        @Html.DisplayFor(m => enfo.CommentContact.Title)<br />
-                        @Html.DisplayFor(m => enfo.CommentContact.Organization)<br />
-                        @if (enfo.CommentContact.Address != null)
-                        {
-                            @enfo.CommentContact.Address.AsLinearString<br />
-                        }
-                        @if (enfo.CommentContact.Email != null)
-                        {
-                            <br />
-                            <a href="mailto:@Html.DisplayFor(m => enfo.CommentContact.Email)">@Html.DisplayFor(m => enfo.CommentContact.Email)</a>
-                        }
-                        <br />@Html.DisplayFor(m => enfo.CommentContact.Telephone)
-                    </td>
+                    <td>@Html.DisplayFor(m => enfo.CommentContact, "Contact")</td>
                 </tr>
             }
 
@@ -106,21 +92,9 @@ else
                         && enfo.HearingContact != null)
                     {
                         <p>
-                            <em>@Html.DisplayNameFor(m => enfo.HearingContact)</em><br />
-                            @Html.DisplayFor(m => enfo.HearingContact.ContactName)<br />
-                            @Html.DisplayFor(m => enfo.HearingContact.Title)<br />
-                            @Html.DisplayFor(m => enfo.HearingContact.Organization)<br />
-                            @if (enfo.HearingContact.Address != null)
-                            {
-                                @enfo.HearingContact.Address.AsLinearString<br />
-                            }
-                            @if (enfo.HearingContact.Email != null)
-                            {
-                                <br />
-                                <a href="mailto:@Html.DisplayFor(m => enfo.HearingContact.Email)">@Html.DisplayFor(m => enfo.HearingContact.Email)</a>
-                            }
-                            <br />@Html.DisplayFor(m => enfo.HearingContact.Telephone)
+                            <em>@Html.DisplayNameFor(m => enfo.HearingContact)</em>
                         </p>
+                        @Html.DisplayFor(m => enfo.HearingContact, "Contact")
                     }
                 </tr>
             }

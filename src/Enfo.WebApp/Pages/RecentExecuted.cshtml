@@ -16,7 +16,9 @@
 
 @if (Model.Orders == null || Model.Orders.Count == 0)
 {
-    <p><b>No Recently Executed Orders</b></p>
+    <p>
+        <b>No Recently Executed Orders</b>
+    </p>
 }
 else
 {
@@ -25,74 +27,63 @@ else
         <h3>Enforcement Order @Html.DisplayFor(m => enfo.OrderNumber)</h3>
         <table class="gaepd-table-compact gaepd-table-rowheadings gaepd-table-autowidth">
             <tbody>
+            <tr>
+                <th scope="row">@Html.DisplayNameFor(m => enfo.FacilityName)</th>
+                <td>@Html.DisplayFor(m => enfo.FacilityName)</td>
+            </tr>
+            <tr>
+                <th scope="row">@Html.DisplayNameFor(m => enfo.County)</th>
+                <td>@Html.DisplayFor(m => enfo.County) County</td>
+            </tr>
+            <tr>
+                <th scope="row">@Html.DisplayNameFor(m => enfo.Cause)</th>
+                <td>@Html.DisplayFor(m => enfo.Cause)</td>
+            </tr>
+            <tr>
+                <th scope="row">@Html.DisplayNameFor(m => enfo.Requirements)</th>
+                <td>@Html.DisplayFor(m => enfo.Requirements)</td>
+            </tr>
+            <tr>
+                <th scope="row">@(enfo.IsExecutedOrder ? "" : "Proposed ")@Html.DisplayNameFor(m => enfo.SettlementAmount)</th>
+                <td>@Html.DisplayFor(m => enfo.SettlementAmount)</td>
+            </tr>
+            <tr>
+                <th scope="row">@Html.DisplayNameFor(m => enfo.LegalAuthority)</th>
+                <td>@Html.DisplayFor(m => enfo.LegalAuthority.AuthorityName)</td>
+            </tr>
+            <tr>
+                <th scope="row">@Html.DisplayNameFor(m => enfo.ExecutedDate)</th>
+                <td>@Html.DisplayFor(m => enfo.ExecutedDate)</td>
+            </tr>
+
+            @if (enfo.IsHearingScheduled)
+            {
                 <tr>
-                    <th scope="row">@Html.DisplayNameFor(m => enfo.FacilityName)</th>
-                    <td>@Html.DisplayFor(m => enfo.FacilityName)</td>
+                    <th scope="row">@Html.DisplayNameFor(m => enfo.IsHearingScheduled)</th>
+                    <td>
+                    <p>
+                        <em>@Html.DisplayNameFor(m => enfo.HearingDate)</em><br />
+                        @Html.DisplayFor(m => enfo.HearingDate)
+                    </p>
+                    <p>
+                        <em>@Html.DisplayNameFor(m => enfo.HearingLocation)</em><br />
+                        @Html.DisplayFor(m => enfo.HearingLocation)
+                    </p>
+                    <p>
+                        <em>@Html.DisplayNameFor(m => enfo.HearingCommentPeriodClosesDate)</em><br />
+                        @Html.DisplayFor(m => enfo.HearingCommentPeriodClosesDate)
+                    </p>
+                    @if (enfo.HearingCommentPeriodClosesDate.HasValue
+                        && enfo.HearingCommentPeriodClosesDate.Value >= DateTime.Today
+                        && enfo.HearingContact != null)
+                    {
+                        <p>
+                            <em>@Html.DisplayNameFor(m => enfo.HearingContact)</em>
+                        </p>
+                        @Html.DisplayFor(m => enfo.HearingContact, "Contact")
+                    }
                 </tr>
-                <tr>
-                    <th scope="row">@Html.DisplayNameFor(m => enfo.County)</th>
-                    <td>@Html.DisplayFor(m => enfo.County) County</td>
-                </tr>
-                <tr>
-                    <th scope="row">@Html.DisplayNameFor(m => enfo.Cause)</th>
-                    <td>@Html.DisplayFor(m => enfo.Cause)</td>
-                </tr>
-                <tr>
-                    <th scope="row">@Html.DisplayNameFor(m => enfo.Requirements)</th>
-                    <td>@Html.DisplayFor(m => enfo.Requirements)</td>
-                </tr>
-                <tr>
-                    <th scope="row">@(enfo.IsExecutedOrder ? "" : "Proposed ")@Html.DisplayNameFor(m => enfo.SettlementAmount)</th>
-                    <td>@Html.DisplayFor(m => enfo.SettlementAmount)</td>
-                </tr>
-                <tr>
-                    <th scope="row">@Html.DisplayNameFor(m => enfo.LegalAuthority)</th>
-                    <td>@Html.DisplayFor(m => enfo.LegalAuthority.AuthorityName)</td>
-                </tr>
-                <tr>
-                    <th scope="row">@Html.DisplayNameFor(m => enfo.ExecutedDate)</th>
-                    <td>@Html.DisplayFor(m => enfo.ExecutedDate)</td>
-                </tr>
-                
-                @if (enfo.IsHearingScheduled)
-                {
-                    <tr>
-                        <th scope="row">@Html.DisplayNameFor(m => enfo.IsHearingScheduled)</th>
-                        <td>
-                            <p>
-                                <em>@Html.DisplayNameFor(m => enfo.HearingDate)</em><br />
-                                @Html.DisplayFor(m => enfo.HearingDate)
-                            </p>
-                            <p>
-                                <em>@Html.DisplayNameFor(m => enfo.HearingLocation)</em><br />
-                                @Html.DisplayFor(m => enfo.HearingLocation)
-                            </p>
-                            <p>
-                                <em>@Html.DisplayNameFor(m => enfo.HearingCommentPeriodClosesDate)</em><br />
-                                @Html.DisplayFor(m => enfo.HearingCommentPeriodClosesDate)
-                            </p>
-                            @if (enfo.HearingCommentPeriodClosesDate.HasValue
-                            && enfo.HearingCommentPeriodClosesDate.Value >= DateTime.Today
-                            && enfo.HearingContact != null)
-                            {
-                                <p>
-                                    <em>@Html.DisplayNameFor(m => enfo.HearingContact)</em><br />
-                                    @Html.DisplayFor(m => enfo.HearingContact.ContactName)<br />
-                                    @Html.DisplayFor(m => enfo.HearingContact.Title)<br />
-                                    @Html.DisplayFor(m => enfo.HearingContact.Organization)<br />
-                                    @if (enfo.HearingContact.Address != null)
-                                    {
-                                        @enfo.HearingContact.Address.AsLinearString<br />
-                                    }
-                                    @if (enfo.HearingContact.Email != null)
-                                    {
-                                        <br /><a href="mailto:@Html.DisplayFor(m => enfo.HearingContact.Email)">@Html.DisplayFor(m => enfo.HearingContact.Email)</a>
-                                    }
-                                    <br />@Html.DisplayFor(m => enfo.HearingContact.Telephone)
-                                </p>
-                            }
-                    </tr>
-                }
+            }
             </tbody>
         </table>
         <hr />
