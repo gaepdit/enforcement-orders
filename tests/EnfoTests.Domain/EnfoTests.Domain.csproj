@@ -17,6 +17,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\src\Enfo.Domain\Enfo.Domain.csproj" />
+        <ProjectReference Include="..\EnfoTests.Helpers\EnfoTests.Helpers.csproj" />
     </ItemGroup>
 
 </Project>

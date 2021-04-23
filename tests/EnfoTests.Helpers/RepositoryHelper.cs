@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
+using Enfo.Domain.Repositories;
 using Enfo.Infrastructure.Contexts;
 using Enfo.Infrastructure.Repositories;
-using Enfo.Repository.Repositories;
 using Microsoft.EntityFrameworkCore;
 using TestSupport.EfHelpers;
 

@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
-using Enfo.Repository.Repositories;
-using Enfo.Repository.Resources.LegalAuthority;
+using Enfo.Domain.Repositories;
+using Enfo.Domain.Resources.LegalAuthority;
 using Enfo.WebApp.Models;
 using Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthorities;
 using Enfo.WebApp.Platform.Extensions;

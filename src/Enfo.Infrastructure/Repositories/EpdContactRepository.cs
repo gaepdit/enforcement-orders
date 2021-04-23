@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Enfo.Domain.Mapping;
+using Enfo.Domain.Repositories;
+using Enfo.Domain.Resources;
+using Enfo.Domain.Resources.EpdContact;
+using Enfo.Domain.Utils;
 using Enfo.Infrastructure.Contexts;
-using Enfo.Repository.Mapping;
-using Enfo.Repository.Repositories;
-using Enfo.Repository.Resources;
-using Enfo.Repository.Resources.EpdContact;
-using Enfo.Repository.Utils;
 using Microsoft.EntityFrameworkCore;
 
 namespace Enfo.Infrastructure.Repositories

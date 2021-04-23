@@ -1,4 +1,4 @@
-﻿namespace Enfo.Domain.Entities
+﻿namespace Enfo.Domain.Entities.Base
 {
     public abstract class BaseActiveEntity : BaseEntity
     {

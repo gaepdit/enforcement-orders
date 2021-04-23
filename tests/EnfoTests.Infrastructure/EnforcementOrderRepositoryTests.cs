@@ -2,16 +2,16 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Enfo.Domain.Entities;
-using Enfo.Repository.Mapping;
-using Enfo.Repository.Resources.EnforcementOrder;
-using Enfo.Repository.Specs;
+using Enfo.Domain.Mapping;
+using Enfo.Domain.Resources.EnforcementOrder;
+using Enfo.Domain.Specs;
 using FluentAssertions;
 using Xunit;
-using static Enfo.Repository.Utils.DateUtils;
+using static Enfo.Domain.Utils.DateUtils;
 using static EnfoTests.Helpers.DataHelper;
 using static EnfoTests.Helpers.RepositoryHelper;
 using static EnfoTests.Helpers.ResourceHelper;
-using PublicationState = Enfo.Repository.Resources.EnforcementOrder.PublicationState;
+using PublicationState = Enfo.Domain.Resources.EnforcementOrder.PublicationState;
 
 namespace EnfoTests.Infrastructure
 {

@@ -1,8 +1,8 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Enfo.Repository.Mapping;
-using Enfo.Repository.Resources.EpdContact;
+using Enfo.Domain.Mapping;
+using Enfo.Domain.Resources.EpdContact;
 using FluentAssertions;
 using Xunit;
 using Xunit.Extensions.AssertExtensions;

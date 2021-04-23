@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
-using Enfo.Repository.Repositories;
-using Enfo.Repository.Resources;
-using Enfo.Repository.Resources.LegalAuthority;
-using Enfo.Repository.Specs;
+using Enfo.Domain.Repositories;
+using Enfo.Domain.Resources;
+using Enfo.Domain.Resources.LegalAuthority;
+using Enfo.Domain.Specs;
 using Enfo.WebApp.Platform;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Mvc;

@@ -1,8 +1,8 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Enfo.Repository.Mapping;
-using Enfo.Repository.Resources.Address;
+using Enfo.Domain.Mapping;
+using Enfo.Domain.Resources.Address;
 using FluentAssertions;
 using Xunit;
 using Xunit.Extensions.AssertExtensions;

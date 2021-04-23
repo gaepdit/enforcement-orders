@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using Enfo.Domain.Entities;
-using Enfo.Repository.Resources.Address;
-using Enfo.Repository.Resources.EnforcementOrder;
-using Enfo.Repository.Resources.EpdContact;
-using Enfo.Repository.Resources.LegalAuthority;
+using Enfo.Domain.Resources.Address;
+using Enfo.Domain.Resources.EnforcementOrder;
+using Enfo.Domain.Resources.EpdContact;
+using Enfo.Domain.Resources.LegalAuthority;
 using static EnfoTests.Helpers.DataHelper;
 
 namespace EnfoTests.Helpers

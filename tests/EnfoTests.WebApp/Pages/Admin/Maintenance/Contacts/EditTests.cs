@@ -1,8 +1,8 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using Enfo.Repository.Mapping;
-using Enfo.Repository.Repositories;
-using Enfo.Repository.Resources.EpdContact;
+using Enfo.Domain.Mapping;
+using Enfo.Domain.Repositories;
+using Enfo.Domain.Resources.EpdContact;
 using Enfo.WebApp.Models;
 using Enfo.WebApp.Pages.Admin.Maintenance.Contacts;
 using Enfo.WebApp.Platform.Extensions;

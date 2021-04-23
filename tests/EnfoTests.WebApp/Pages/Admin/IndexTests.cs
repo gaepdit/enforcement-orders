@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Enfo.Repository.Repositories;
-using Enfo.Repository.Resources;
-using Enfo.Repository.Resources.EnforcementOrder;
-using Enfo.Repository.Specs;
+using Enfo.Domain.Repositories;
+using Enfo.Domain.Resources;
+using Enfo.Domain.Resources.EnforcementOrder;
+using Enfo.Domain.Specs;
 using Enfo.WebApp.Models;
 using Enfo.WebApp.Pages.Admin;
 using Enfo.WebApp.Platform.Extensions;

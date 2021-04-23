@@ -18,16 +18,19 @@ ENFO is written using .NET 5.
 
 ## Prerequisites
 
-[Visual Studio](https://www.visualstudio.com/vs/), [VS Code](https://code.visualstudio.com/), or equivalent IDE.
+* [Visual Studio](https://www.visualstudio.com/vs/), [VS Code](https://code.visualstudio.com/), or equivalent IDE.
+
+* [pnpm](https://pnpm.io/) package manager.
 
 ## Project organization
 
-The Visual Studio solution contains four projects:
+The solution contains three projects:
 
 * Enfo.Domain - A class library containing the data models and business logic
-* Enfo.Repository - A class library containing the repository definitions
 * Enfo.Infrastructure - A class library implementing the Domain & Repository using Entity Framework
 * Enfo.WebApp - Front end web application
+
+There are also three corresponding unit test projects.
 
 ## Database migrations
 

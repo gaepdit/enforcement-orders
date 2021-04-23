@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Enfo.Domain.Entities;
+using Enfo.Domain.Utils;
 using Enfo.Infrastructure.Contexts;
-using Enfo.Repository.Utils;
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 

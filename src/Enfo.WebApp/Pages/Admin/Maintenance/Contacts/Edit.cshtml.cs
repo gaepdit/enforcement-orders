@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
-using Enfo.Repository.Mapping;
-using Enfo.Repository.Repositories;
-using Enfo.Repository.Resources.Address;
-using Enfo.Repository.Resources.EpdContact;
+using Enfo.Domain.Mapping;
+using Enfo.Domain.Repositories;
+using Enfo.Domain.Resources.Address;
+using Enfo.Domain.Resources.EpdContact;
 using Enfo.WebApp.Models;
 using Enfo.WebApp.Platform.Extensions;
 using JetBrains.Annotations;

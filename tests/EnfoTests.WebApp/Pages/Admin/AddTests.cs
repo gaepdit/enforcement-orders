@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Enfo.Repository.Repositories;
-using Enfo.Repository.Resources.EnforcementOrder;
-using Enfo.Repository.Resources.EpdContact;
-using Enfo.Repository.Resources.LegalAuthority;
+using Enfo.Domain.Repositories;
+using Enfo.Domain.Resources.EnforcementOrder;
+using Enfo.Domain.Resources.EpdContact;
+using Enfo.Domain.Resources.LegalAuthority;
 using Enfo.WebApp.Models;
 using Enfo.WebApp.Pages.Admin;
 using Enfo.WebApp.Platform.Extensions;
