@@ -10,154 +10,160 @@
 
 <h2>@ViewData["Title"]</h2>
 
-<form method="post" class="usa-form-large">
-    <div asp-validation-summary="ModelOnly" class="usa-alert usa-alert-error" role="alert"></div>
+<div class="gaepd-container-light">
+    <form method="post" class="usa-form-large">
+        <div asp-validation-summary="ModelOnly" class="usa-alert usa-alert-error" role="alert"></div>
 
-    <p>Required fields are marked with an asterisk (<abbr class="required-field-label" title="Required">*</abbr>).</p>
+        <p>Required fields are marked with an asterisk (<abbr class="required-field-label" title="Required">*</abbr>).</p>
 
-    <fieldset>
-        <legend>Facility Information</legend>
-        <label asp-for="Item.FacilityName"></label>
-        @Html.EditorFor(m => m.Item.FacilityName)
-        <span asp-validation-for="Item.FacilityName" class="usa-input-error-message"></span>
+        <fieldset>
+            <legend>Facility Information</legend>
+            <label asp-for="Item.FacilityName"></label>
+            @Html.EditorFor(m => m.Item.FacilityName)
+            <span asp-validation-for="Item.FacilityName" class="usa-input-error-message"></span>
 
-        <label asp-for="Item.County"></label>
-        <select asp-for="Item.County" asp-items="CommonSelectLists.CountiesSelectList">
-            <option value="">→ Select County...</option>
-        </select>
-        <span asp-validation-for="Item.County" class="usa-input-error-message"></span>
-    </fieldset>
-
-    <fieldset>
-        <legend>Enforcement Order Details</legend>
-
-        <label asp-for="Item.Cause"></label>
-        @Html.EditorFor(m => m.Item.Cause)
-        <span asp-validation-for="Item.Cause" class="usa-input-error-message"></span>
-
-        <label asp-for="Item.Requirements"></label>
-        @Html.EditorFor(m => m.Item.Requirements)
-        <span asp-validation-for="Item.Requirements" class="usa-input-error-message"></span>
-
-        <label asp-for="Item.LegalAuthorityId"></label>
-        <select asp-for="Item.LegalAuthorityId" asp-items="Model.LegalAuthoritiesSelectList">
-            <option value="">→ Select Legal Authority...</option>
-        </select>
-        <span asp-validation-for="Item.LegalAuthorityId" class="usa-input-error-message"></span>
-
-        <label asp-for="Item.OrderNumber"></label>
-        @Html.EditorFor(m => m.Item.OrderNumber)
-        <span asp-validation-for="Item.OrderNumber" class="usa-input-error-message"></span>
-
-        <label asp-for="Item.SettlementAmount"></label>
-        @Html.EditorFor(m => m.Item.SettlementAmount, new
-        {
-            htmlAttributes = new
-            {
-                @class = "usa-input-medium",
-                @pattern = "^\\$?(([1-9](\\d*|\\d{0,2}(,\\d{3})*))|0)(\\.\\d{1,2})?$",
-                @title = "Settlement Amount must be a decimal amount"
-            }
-        })
-        <span asp-validation-for="Item.SettlementAmount" class="usa-input-error-message"></span>
-    </fieldset>
-
-    <fieldset class="usa-grid-full usa-fieldset-inputs">
-        <legend>Status <abbr class="required-field-label" title="Required">*</abbr></legend>
-        <ul class="usa-unstyled-list">
-            <li>
-                <input type="radio" name="Item.CreateAs" value="Proposed" id="CreateAs-Proposed"
-                       @if (Model.Item.CreateAs == NewEnforcementOrderType.Proposed)
-                       {<text> checked</text>}>
-                <label for="CreateAs-Proposed">Proposed</label>
-            </li>
-            <li>
-                <input type="radio" name="Item.CreateAs" value="Executed" id="CreateAs-Executed"
-                       @if (Model.Item.CreateAs == NewEnforcementOrderType.Executed)
-                       {<text> checked</text>}>
-                <label for="CreateAs-Executed">Executed</label>
-            </li>
-        </ul>
-    </fieldset>
-
-    <fieldset id="proposed-fieldset">
-        <legend>Proposed Order Details</legend>
-
-        <label asp-for="Item.CommentContactId"></label>
-        <select asp-for="Item.CommentContactId" asp-items="Model.EpdContactsSelectList">
-            <option value="">→ Select Contact for Comments...</option>
-        </select>
-        <span asp-validation-for="Item.CommentContactId" class="usa-input-error-message"></span>
-
-        <label asp-for="Item.CommentPeriodClosesDate"></label>
-        <input type="datetime" asp-for="Item.CommentPeriodClosesDate" class="date-picker usa-input-medium proposed-item" />
-        <span asp-validation-for="Item.CommentPeriodClosesDate" class="usa-input-error-message"></span>
-    </fieldset>
-
-    <fieldset id="executed-fieldset">
-        <legend>Executed Order Details</legend>
-
-        <label asp-for="Item.ExecutedDate"></label>
-        <input type="datetime" asp-for="Item.ExecutedDate" class="date-picker usa-input-medium executed-item" />
-        <span asp-validation-for="Item.ExecutedDate" class="usa-input-error-message"></span>
-    </fieldset>
-
-    <fieldset>
-        <legend>Public Hearing</legend>
-
-        @Html.EditorFor(m => m.Item.IsHearingScheduled)
-        <label asp-for="Item.IsHearingScheduled"></label>
-
-        <div id="public-hearing-details">
-            <label asp-for="Item.HearingDate"></label>
-            <input type="datetime" asp-for="Item.HearingDate" class="date-time-picker hearing-item" />
-            <span asp-validation-for="Item.HearingDate" class="usa-input-error-message"></span>
-
-            <label asp-for="Item.HearingLocation"></label>
-            @Html.EditorFor(m => m.Item.HearingLocation, new {htmlAttributes = new {@class = "hearing-item"}})
-            <span asp-validation-for="Item.HearingLocation" class="usa-input-error-message"></span>
-
-            <label asp-for="Item.HearingContactId"></label>
-            <select asp-for="Item.HearingContactId" asp-items="Model.EpdContactsSelectList">
-                <option value="">→ Select Contact for Hearing Comments...</option>
+            <label asp-for="Item.County"></label>
+            <select asp-for="Item.County" asp-items="CommonSelectLists.CountiesSelectList">
+                <option value="">→ Select County...</option>
             </select>
-            <span asp-validation-for="Item.HearingContactId" class="usa-input-error-message"></span>
+            <span asp-validation-for="Item.County" class="usa-input-error-message"></span>
+        </fieldset>
 
-            <label asp-for="Item.HearingCommentPeriodClosesDate"></label>
-            <input type="datetime" asp-for="Item.HearingCommentPeriodClosesDate" class="date-picker usa-input-medium hearing-item" />
-            <span asp-validation-for="Item.HearingCommentPeriodClosesDate" class="usa-input-error-message"></span>
-        </div>
-    </fieldset>
+        <fieldset>
+            <legend>Enforcement Order Details</legend>
 
-    <fieldset>
-        <legend>Publish</legend>
+            <label asp-for="Item.Cause"></label>
+            @Html.EditorFor(m => m.Item.Cause)
+            <span asp-validation-for="Item.Cause" class="usa-input-error-message"></span>
 
-        <label asp-for="Item.Progress"></label>
-        <select asp-for="Item.Progress" asp-items="Html.GetEnumSelectList<EnforcementOrder.PublicationState>()">
-        </select>
-        <span asp-validation-for="Item.Progress" class="usa-input-error-message"></span>
+            <label asp-for="Item.Requirements"></label>
+            @Html.EditorFor(m => m.Item.Requirements)
+            <span asp-validation-for="Item.Requirements" class="usa-input-error-message"></span>
 
-        <div id="publication-date">
-            <div id="proposed-published">
-                <label asp-for="Item.ProposedOrderPostedDate"></label>
-                <input type="datetime" asp-for="Item.ProposedOrderPostedDate" 
-                       class="date-picker usa-input-medium proposed-item pub-date" />
-                <span asp-validation-for="Item.ProposedOrderPostedDate" class="usa-input-error-message"></span>
+            <label asp-for="Item.LegalAuthorityId"></label>
+            <select asp-for="Item.LegalAuthorityId" asp-items="Model.LegalAuthoritiesSelectList">
+                <option value="">→ Select Legal Authority...</option>
+            </select>
+            <span asp-validation-for="Item.LegalAuthorityId" class="usa-input-error-message"></span>
+
+            <label asp-for="Item.OrderNumber"></label>
+            @Html.EditorFor(m => m.Item.OrderNumber)
+            <span asp-validation-for="Item.OrderNumber" class="usa-input-error-message"></span>
+
+            <label asp-for="Item.SettlementAmount"></label>
+            @Html.EditorFor(m => m.Item.SettlementAmount, new
+            {
+                htmlAttributes = new
+                {
+                    @class = "usa-input-medium",
+                    @pattern = "^\\$?(([1-9](\\d*|\\d{0,2}(,\\d{3})*))|0)(\\.\\d{1,2})?$",
+                    @title = "Settlement Amount must be a decimal amount"
+                }
+            })
+            <span asp-validation-for="Item.SettlementAmount" class="usa-input-error-message"></span>
+        </fieldset>
+
+        <fieldset class="usa-grid-full usa-fieldset-inputs">
+            <legend>Status <abbr class="required-field-label" title="Required">*</abbr></legend>
+            <ul class="usa-unstyled-list">
+                <li>
+                    <input type="radio" name="Item.CreateAs" value="Proposed" id="CreateAs-Proposed"
+                           @if (Model.Item.CreateAs == NewEnforcementOrderType.Proposed)
+                           {
+                               <text> checked</text>
+                           }>
+                    <label for="CreateAs-Proposed">Proposed</label>
+                </li>
+                <li>
+                    <input type="radio" name="Item.CreateAs" value="Executed" id="CreateAs-Executed"
+                           @if (Model.Item.CreateAs == NewEnforcementOrderType.Executed)
+                           {
+                               <text> checked</text>
+                           }>
+                    <label for="CreateAs-Executed">Executed</label>
+                </li>
+            </ul>
+        </fieldset>
+
+        <fieldset id="proposed-fieldset">
+            <legend>Proposed Order Details</legend>
+
+            <label asp-for="Item.CommentContactId"></label>
+            <select asp-for="Item.CommentContactId" asp-items="Model.EpdContactsSelectList">
+                <option value="">→ Select Contact for Comments...</option>
+            </select>
+            <span asp-validation-for="Item.CommentContactId" class="usa-input-error-message"></span>
+
+            <label asp-for="Item.CommentPeriodClosesDate"></label>
+            <input type="datetime" asp-for="Item.CommentPeriodClosesDate" class="date-picker usa-input-medium proposed-item" />
+            <span asp-validation-for="Item.CommentPeriodClosesDate" class="usa-input-error-message"></span>
+        </fieldset>
+
+        <fieldset id="executed-fieldset">
+            <legend>Executed Order Details</legend>
+
+            <label asp-for="Item.ExecutedDate"></label>
+            <input type="datetime" asp-for="Item.ExecutedDate" class="date-picker usa-input-medium executed-item" />
+            <span asp-validation-for="Item.ExecutedDate" class="usa-input-error-message"></span>
+        </fieldset>
+
+        <fieldset>
+            <legend>Public Hearing</legend>
+
+            @Html.EditorFor(m => m.Item.IsHearingScheduled)
+            <label asp-for="Item.IsHearingScheduled"></label>
+
+            <div id="public-hearing-details">
+                <label asp-for="Item.HearingDate"></label>
+                <input type="datetime" asp-for="Item.HearingDate" class="date-time-picker hearing-item" />
+                <span asp-validation-for="Item.HearingDate" class="usa-input-error-message"></span>
+
+                <label asp-for="Item.HearingLocation"></label>
+                @Html.EditorFor(m => m.Item.HearingLocation, new {htmlAttributes = new {@class = "hearing-item"}})
+                <span asp-validation-for="Item.HearingLocation" class="usa-input-error-message"></span>
+
+                <label asp-for="Item.HearingContactId"></label>
+                <select asp-for="Item.HearingContactId" asp-items="Model.EpdContactsSelectList">
+                    <option value="">→ Select Contact for Hearing Comments...</option>
+                </select>
+                <span asp-validation-for="Item.HearingContactId" class="usa-input-error-message"></span>
+
+                <label asp-for="Item.HearingCommentPeriodClosesDate"></label>
+                <input type="datetime" asp-for="Item.HearingCommentPeriodClosesDate" class="date-picker usa-input-medium hearing-item" />
+                <span asp-validation-for="Item.HearingCommentPeriodClosesDate" class="usa-input-error-message"></span>
             </div>
-            <div id="executed-published">
-                <label asp-for="Item.ExecutedOrderPostedDate"></label>
-                <input type="datetime" asp-for="Item.ExecutedOrderPostedDate" 
-                       class="date-picker usa-input-medium executed-item pub-date" />
-                <span asp-validation-for="Item.ExecutedOrderPostedDate" class="usa-input-error-message"></span>
-            </div>
-        </div>
+        </fieldset>
 
-        <div class="gaepd-buttonrow">
-            <button type="submit">Add New Order</button>
-            <a asp-page="Index" class="usa-button usa-button-secondary">Cancel</a>
-        </div>
-    </fieldset>
-</form>
+        <fieldset>
+            <legend>Publish</legend>
+
+            <label asp-for="Item.Progress"></label>
+            <select asp-for="Item.Progress" asp-items="Html.GetEnumSelectList<EnforcementOrder.PublicationState>()">
+            </select>
+            <span asp-validation-for="Item.Progress" class="usa-input-error-message"></span>
+
+            <div id="publication-date">
+                <div id="proposed-published">
+                    <label asp-for="Item.ProposedOrderPostedDate"></label>
+                    <input type="datetime" asp-for="Item.ProposedOrderPostedDate"
+                           class="date-picker usa-input-medium proposed-item pub-date" />
+                    <span asp-validation-for="Item.ProposedOrderPostedDate" class="usa-input-error-message"></span>
+                </div>
+                <div id="executed-published">
+                    <label asp-for="Item.ExecutedOrderPostedDate"></label>
+                    <input type="datetime" asp-for="Item.ExecutedOrderPostedDate"
+                           class="date-picker usa-input-medium executed-item pub-date" />
+                    <span asp-validation-for="Item.ExecutedOrderPostedDate" class="usa-input-error-message"></span>
+                </div>
+            </div>
+
+            <div class="gaepd-buttonrow">
+                <button type="submit">Add New Order</button>
+                <a asp-page="Index" class="usa-button usa-button-secondary">Cancel</a>
+            </div>
+        </fieldset>
+    </form>
+</div>
 
 @section ScriptFiles
 {
