@@ -32,6 +32,9 @@ namespace Enfo.WebApp.Services
             {
                 // Initialize database
                 await context.Database.EnsureDeletedAsync(cancellationToken);
+                
+                // Comment/un-comment one of the following two lines
+                // depending on whether you need to debug migrations.
                 await context.Database.MigrateAsync(cancellationToken);
                 // await context.Database.EnsureCreatedAsync(cancellationToken);
 
