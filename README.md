@@ -31,15 +31,3 @@ The solution contains three projects:
 * Enfo.WebApp - Front end web application
 
 There are also three corresponding unit test projects.
-
-## Database migrations
-
-To create new database migration, install or update the Entity Framework tools:
-
-> `dotnet tool install --global dotnet-ef`
-
-> `dotnet tool update --global dotnet-ef`
-
-Then from the root directory, run:
-
-> `dotnet ef migrations add MigrationName -s src\Enfo.Infrastructure --msbuildprojectextensionspath artifacts\Enfo.Infrastructure\obj\`
