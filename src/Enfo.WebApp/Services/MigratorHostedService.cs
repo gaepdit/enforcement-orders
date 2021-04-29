@@ -2,8 +2,10 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
+using Enfo.Domain.Entities.Users;
 using Enfo.Infrastructure.Contexts;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -20,7 +22,7 @@ namespace Enfo.WebApp.Services
         private readonly IServiceProvider _serviceProvider;
         public MigratorHostedService(IServiceProvider serviceProvider) => _serviceProvider = serviceProvider;
 
-        [SuppressMessage("ReSharper", "S125")]
+        [SuppressMessage("ReSharper", "S125", Justification = "Local dev code has optional EF migration call.")]
         public async Task StartAsync(CancellationToken cancellationToken)
         {
             // Create a new scope to retrieve scoped services
@@ -32,9 +34,8 @@ namespace Enfo.WebApp.Services
             {
                 // Initialize database
                 await context.Database.EnsureDeletedAsync(cancellationToken);
-                
-                // Comment/un-comment one of the following two lines
-                // depending on whether you need to debug migrations.
+
+                // Un-comment one of the following two lines depending on whether you need to debug EF migrations.
                 await context.Database.MigrateAsync(cancellationToken);
                 // await context.Database.EnsureCreatedAsync(cancellationToken);
 
@@ -42,14 +43,14 @@ namespace Enfo.WebApp.Services
                 await context.SeedTempDataAsync(cancellationToken);
 
                 // Initialize roles
-                // var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
-                // foreach (var role in UserRole.AllRoles)
-                // {
-                //     if (!await context.Roles.AnyAsync(e => e.Name == role.Name, cancellationToken))
-                //     {
-                //         await roleManager.CreateAsync(new IdentityRole<Guid>(role.Name));
-                //     }
-                // }
+                var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
+                foreach (var role in UserRole.AllRoles)
+                {
+                    if (!await context.Roles.AnyAsync(e => e.Name == role.Name, cancellationToken))
+                    {
+                        await roleManager.CreateAsync(new IdentityRole<Guid>(role.Name));
+                    }
+                }
             }
             else
             {

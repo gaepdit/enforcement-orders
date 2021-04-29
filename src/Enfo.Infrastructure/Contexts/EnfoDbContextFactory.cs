@@ -4,6 +4,10 @@ using Microsoft.EntityFrameworkCore.Design;
 
 namespace Enfo.Infrastructure.Contexts
 {
+    /// <summary>
+    /// Facilitates some EF Core Tools commands. See "Design-time DbContext Creation":
+    /// https://docs.microsoft.com/en-us/ef/core/cli/dbcontext-creation?tabs=dotnet-core-cli#from-a-design-time-factory
+    /// </summary>
     [UsedImplicitly]
     public class EnfoDbContextFactory : IDesignTimeDbContextFactory<EnfoDbContext>
     {

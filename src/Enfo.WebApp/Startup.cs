@@ -1,20 +1,18 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.IO;
+using Enfo.Domain.Entities.Users;
 using Enfo.Domain.Repositories;
 using Enfo.Infrastructure.Contexts;
 using Enfo.Infrastructure.Repositories;
 using Enfo.WebApp.Services;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.Identity.Web;
-using Microsoft.Identity.Web.UI;
+using Microsoft.AspNetCore.Authentication.AzureAD.UI;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -37,20 +35,39 @@ namespace Enfo.WebApp
                 opts.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"),
                     x => x.MigrationsAssembly("Enfo.Infrastructure")));
 
-            // Configure authentication
-            // services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
-            //     .AddMicrosoftIdentityWebApp(Configuration.GetSection("AzureAd"));
+            // Configure Identity
+            services.AddIdentity<ApplicationUser, IdentityRole<Guid>>()
+                .AddRoles<IdentityRole<Guid>>()
+                .AddEntityFrameworkStores<EnfoDbContext>();
 
-            // services.AddAuthorization(options =>
-            // {
-            //     // By default, all incoming requests will be authorized according to the default policy
-            //     options.FallbackPolicy = options.DefaultPolicy;
-            // });
-            // services.AddDataProtection().PersistKeysToFileSystem(new DirectoryInfo(_dataProtectionKeysFolder));
+            // Configure cookies
+            // SameSiteMode.None is needed to get single sign-out to work
+            services.Configure<CookiePolicyOptions>(opts => opts.MinimumSameSitePolicy = SameSiteMode.None);
+
+            // Configure authentication
+            // (AddAzureAD is marked as obsolete and will be removed in a future version, but
+            // the replacement, Microsoft Identity Web, is net yet compatible with RoleManager.)
+            // Follow along at https://github.com/AzureAD/microsoft-identity-web/issues/1091
+            services.AddAuthentication().AddAzureAD(opts =>
+            {
+                Configuration.Bind(AzureADDefaults.AuthenticationScheme, opts);
+                opts.CallbackPath = "/signin-oidc";
+                opts.CookieSchemeName = "Identity.External";
+            });
+            services.Configure<OpenIdConnectOptions>(AzureADDefaults.OpenIdScheme, opts =>
+            {
+                opts.Authority += "/v2.0/";
+                opts.TokenValidationParameters.ValidateIssuer = true;
+                opts.UsePkce = true;
+            });
+            var keysFolder = Path.Combine(Configuration["PersistedFilesBasePath"], "DataProtectionKeys");
+            services.AddDataProtection().PersistKeysToFileSystem(Directory.CreateDirectory(keysFolder));
+
+            // Configure authorization policies
+            services.AddAuthorization();
 
             // Configure UI
             services.AddRazorPages();
-            // .AddMicrosoftIdentityUI();
 
             // Configure HSTS
             services.AddHsts(opts => opts.MaxAge = TimeSpan.FromDays(30));
@@ -58,7 +75,7 @@ namespace Enfo.WebApp
             // Configure Raygun
             services.AddRaygun(Configuration,
                 new RaygunMiddlewareSettings {ClientProvider = new RaygunClientProvider()});
-            
+
             // Register IHttpContextAccessor (needed by RaygunScriptPartial)
             services.AddHttpContextAccessor();
 
@@ -96,8 +113,8 @@ namespace Enfo.WebApp
             app.UseStaticFiles();
             app.UseRouting();
 
-            // app.UseAuthentication();
-            // app.UseAuthorization();
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
