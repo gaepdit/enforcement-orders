@@ -1,16 +1,19 @@
 ﻿using System.Threading.Tasks;
+using Enfo.Domain.Entities.Users;
 using Enfo.Domain.Mapping;
 using Enfo.Domain.Repositories;
 using Enfo.Domain.Resources.LegalAuthority;
 using Enfo.WebApp.Models;
 using Enfo.WebApp.Platform.Extensions;
 using JetBrains.Annotations;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
 namespace Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthorities
 {
+    [Authorize(Roles = UserRole.SiteMaintenance)]
     public class Edit : PageModel
     {
         [BindProperty]

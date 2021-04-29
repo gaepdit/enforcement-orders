@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Enfo.Domain.Entities.Users;
 using Enfo.Domain.Repositories;
 using Enfo.Domain.Resources.EnforcementOrder;
 using Enfo.Domain.Resources.EpdContact;
@@ -6,6 +7,7 @@ using Enfo.Domain.Resources.LegalAuthority;
 using Enfo.WebApp.Models;
 using Enfo.WebApp.Platform.Extensions;
 using JetBrains.Annotations;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -13,6 +15,7 @@ using static Enfo.Domain.Validation.EnforcementOrderValidation;
 
 namespace Enfo.WebApp.Pages.Admin
 {
+    [Authorize(Roles = UserRole.OrderAdministrator)]
     public class Add : PageModel
     {
         [BindProperty]

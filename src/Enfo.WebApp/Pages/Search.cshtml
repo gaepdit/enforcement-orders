@@ -10,13 +10,12 @@
 
 <h2>@ViewData["Title"]</h2>
 
-@* TODO: Auth *@
-@* @if (User?.Identity?.IsAuthenticated == true) *@
-@* { *@
-<div class="gaepd-noprint">
-    <a asp-page="/Admin/Search" class="gaepd-no-visited">Go to admin search</a>
-</div>
-@* } *@
+@if (User?.Identity?.IsAuthenticated == true)
+{
+    <div class="gaepd-noprint">
+        <a asp-page="/Admin/Search" class="gaepd-no-visited">Go to admin search</a>
+    </div>
+}
 
 <div class="gaepd-container-light">
     <form method="get" class="usa-form-large" asp-fragment="search-results">
@@ -48,19 +47,25 @@
                 <li>
                     <input type="radio" name="Status" value="All" id="Status-All"
                            @if (Model.Spec.Status == ActivityState.All)
-                           {<text> checked</text>}>
+                           {
+                               <text> checked</text>
+                           }>
                     <label for="Status-All">All Orders</label>
                 </li>
                 <li>
                     <input type="radio" name="Status" value="Proposed" id="Status-Proposed"
                            @if (Model.Spec.Status == ActivityState.Proposed)
-                           {<text> checked</text>}>
+                           {
+                               <text> checked</text>
+                           }>
                     <label for="Status-Proposed">Proposed orders only</label>
                 </li>
                 <li>
                     <input type="radio" name="Status" value="Executed" id="Status-Executed"
                            @if (Model.Spec.Status == ActivityState.Executed)
-                           {<text> checked</text>}>
+                           {
+                               <text> checked</text>
+                           }>
                     <label for="Status-Executed">Executed orders only</label>
                 </li>
             </ul>
@@ -152,12 +157,14 @@
                         <td data-label="Status/Date">
                             @if (enfo.IsExecutedOrder)
                             {
-                                <b>Executed&nbsp;On</b><br />
+                                <b>Executed&nbsp;On</b>
+                                <br />
                                 @Html.DisplayFor(m => enfo.ExecutedDate)
                             }
                             else if (enfo.IsProposedOrder)
                             {
-                                <b>Proposed&nbsp;On</b><br />
+                                <b>Proposed&nbsp;On</b>
+                                <br />
                                 @Html.DisplayFor(m => enfo.ProposedOrderPostedDate)
                             }
                             else

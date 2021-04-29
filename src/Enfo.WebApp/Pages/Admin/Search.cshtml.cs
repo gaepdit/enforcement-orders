@@ -5,12 +5,14 @@ using Enfo.Domain.Resources.LegalAuthority;
 using Enfo.Domain.Specs;
 using Enfo.WebApp.Platform;
 using JetBrains.Annotations;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Enfo.WebApp.Pages.Admin
 {
+    [Authorize]
     public class Search : PageModel
     {
         public EnforcementOrderAdminSpec Spec { get; set; }

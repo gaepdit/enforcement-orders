@@ -5,12 +5,14 @@ using Enfo.Domain.Resources.Address;
 using Enfo.WebApp.Models;
 using Enfo.WebApp.Platform.Extensions;
 using JetBrains.Annotations;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
 namespace Enfo.WebApp.Pages.Admin.Maintenance.Addresses
 {
+    [Authorize]
     public class Index : PageModel
     {
         public IReadOnlyList<AddressView> Items { get; private set; }

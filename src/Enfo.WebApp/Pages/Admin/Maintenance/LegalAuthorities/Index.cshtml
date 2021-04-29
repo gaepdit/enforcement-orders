@@ -1,4 +1,5 @@
 ﻿@page
+@using Enfo.Domain.Entities.Users
 @model Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthorities.Index
 
 @{
@@ -11,16 +12,16 @@
 
 <h2>
     @Index.ThisOption.PluralName
-    @* TODO: Auth *@
-    @* @if (User.IsInRole(UserRole.SiteMaintenance)) *@
-    @* { *@
-    <a asp-page="Add" class="usa-button usa-button-secondary">Add New</a>
-    @* } *@
+    @if (User.IsInRole(UserRole.SiteMaintenance))
+    {
+        <a asp-page="Add" class="usa-button usa-button-secondary">Add New</a>
+    }
 </h2>
 
 <p>
     The @Index.ThisOption.PluralName listed below are available for selection when adding or editing Enforcement Orders.
     Removing one from use makes it unavailable for future Orders but does not affect any existing Orders.
+    The @UserRole.SiteMaintenanceRole.DisplayName role is needed to edit the list.
 </p>
 
 
@@ -40,18 +41,21 @@
                 @Html.DisplayFor(m => item.AuthorityName)
             </th>
             <td class="gaepd-tablecell-nolabel">
-                @if (item.Active)
+                @if (User.IsInRole(UserRole.SiteMaintenance))
                 {
-                    <a asp-page="Edit" asp-route-id="@item.Id" class="gaepd-button-inline-action usa-button">Edit</a>
-                    <form method="post">
-                        <button type="submit" name="id" value="@item.Id" class="gaepd-button-inline-action usa-button-secondary">Remove from use</button>
-                    </form>
-                }
-                else
-                {
-                    <form method="post">
-                        <button type="submit" name="id" value="@item.Id" class="gaepd-button-inline-action usa-button-secondary">Restore</button>
-                    </form>
+                    @if (item.Active)
+                    {
+                        <a asp-page="Edit" asp-route-id="@item.Id" class="gaepd-button-inline-action usa-button">Edit</a>
+                        <form method="post">
+                            <button type="submit" name="id" value="@item.Id" class="gaepd-button-inline-action usa-button-secondary">Remove from use</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <form method="post">
+                            <button type="submit" name="id" value="@item.Id" class="gaepd-button-inline-action usa-button-secondary">Restore</button>
+                        </form>
+                    }
                 }
             </td>
         </tr>

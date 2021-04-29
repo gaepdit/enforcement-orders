@@ -1,4 +1,5 @@
 ﻿@page
+@using Enfo.Domain.Entities.Users
 @using Enfo.Domain.Resources
 @using Enfo.Domain.Utils
 @model Enfo.WebApp.Pages.Admin.Index
@@ -116,92 +117,95 @@
     </div>
 </section>
 
-<section>
-    <h2>Unpublished Orders</h2>
+@if (User.IsInRole(UserRole.OrderAdministrator))
+{
+    <section>
+        <h2>Unpublished Orders</h2>
 
-    <div class="usa-grid-full">
-        <section class="usa-width-one-half">
-            <h3>Pending Orders</h3>
+        <div class="usa-grid-full">
+            <section class="usa-width-one-half">
+                <h3>Pending Orders</h3>
 
-            <p>
-                <i>These Enforcement Orders are scheduled to be published in the future. They are not <em>yet</em> accessible on the Public Website.</i>
-            </p>
-
-            @if (Model.PendingOrders == null || Model.PendingOrders.Count == 0)
-            {
                 <p>
-                    <b>No Pending Orders</b>
+                    <i>These Enforcement Orders are scheduled to be published in the future. They are not <em>yet</em> accessible on the Public Website.</i>
                 </p>
-            }
-            else
-            {
-                <table class="gaepd-table-compact">
-                    <thead>
-                    <tr>
-                        <th scope="col">Facility</th>
-                        <th scope="col" class="gaepd-tablecell-alignright">Pending Publication Date</th>
-                        <th scope="col"></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    @foreach (var item in Model.PendingOrders)
-                    {
+
+                @if (Model.PendingOrders == null || Model.PendingOrders.Count == 0)
+                {
+                    <p>
+                        <b>No Pending Orders</b>
+                    </p>
+                }
+                else
+                {
+                    <table class="gaepd-table-compact">
+                        <thead>
                         <tr>
-                            <th scope="row">
-                                @item.FacilityName <br />
-                                <i>@item.County County</i>
-                            </th>
-                            <td class="gaepd-tablecell-alignright">
-                                @(item.PendingPublicationDate?.ToString(DisplayFormats.ShortDate) ?? "error")
-                            </td>
-                            <td class="gaepd-tablecell-nolabel">
-                                <a asp-page="Details" asp-route-id="@item.Id">View</a>
-                            </td>
+                            <th scope="col">Facility</th>
+                            <th scope="col" class="gaepd-tablecell-alignright">Pending Publication Date</th>
+                            <th scope="col"></th>
                         </tr>
-                    }
-                    </tbody>
-                </table>
-            }
-        </section>
+                        </thead>
+                        <tbody>
+                        @foreach (var item in Model.PendingOrders)
+                        {
+                            <tr>
+                                <th scope="row">
+                                    @item.FacilityName <br />
+                                    <i>@item.County County</i>
+                                </th>
+                                <td class="gaepd-tablecell-alignright">
+                                    @(item.PendingPublicationDate?.ToString(DisplayFormats.ShortDate) ?? "error")
+                                </td>
+                                <td class="gaepd-tablecell-nolabel">
+                                    <a asp-page="Details" asp-route-id="@item.Id">View</a>
+                                </td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                }
+            </section>
 
-        <section class="usa-width-one-half">
-            <h3>Draft Orders</h3>
+            <section class="usa-width-one-half">
+                <h3>Draft Orders</h3>
 
-            <p>
-                <i>These Enforcement Orders have been saved as draft. They are not accessible on the Public Website.</i>
-            </p>
-
-            @if (Model.DraftOrders == null || Model.DraftOrders.Count == 0)
-            {
                 <p>
-                    <b>No Draft Orders</b>
+                    <i>These Enforcement Orders have been saved as draft. They are not accessible on the Public Website.</i>
                 </p>
-            }
-            else
-            {
-                <table class="gaepd-table-compact">
-                    <thead>
-                    <tr>
-                        <th scope="col">Facility</th>
-                        <th scope="col"></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    @foreach (var item in Model.DraftOrders)
-                    {
+
+                @if (Model.DraftOrders == null || Model.DraftOrders.Count == 0)
+                {
+                    <p>
+                        <b>No Draft Orders</b>
+                    </p>
+                }
+                else
+                {
+                    <table class="gaepd-table-compact">
+                        <thead>
                         <tr>
-                            <th scope="row">
-                                @item.FacilityName <br />
-                                <i>@item.County County</i>
-                            </th>
-                            <td class="gaepd-tablecell-nolabel">
-                                <a asp-page="Edit" asp-route-id="@item.Id">Edit</a>
-                            </td>
+                            <th scope="col">Facility</th>
+                            <th scope="col"></th>
                         </tr>
-                    }
-                    </tbody>
-                </table>
-            }
-        </section>
-    </div>
-</section>
+                        </thead>
+                        <tbody>
+                        @foreach (var item in Model.DraftOrders)
+                        {
+                            <tr>
+                                <th scope="row">
+                                    @item.FacilityName <br />
+                                    <i>@item.County County</i>
+                                </th>
+                                <td class="gaepd-tablecell-nolabel">
+                                    <a asp-page="Edit" asp-route-id="@item.Id">Edit</a>
+                                </td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                }
+            </section>
+        </div>
+    </section>
+}

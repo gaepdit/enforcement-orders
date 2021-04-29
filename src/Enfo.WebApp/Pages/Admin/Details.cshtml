@@ -1,4 +1,5 @@
 ﻿@page "{id}"
+@using Enfo.Domain.Entities.Users
 @using Enfo.WebApp.Models
 @model Enfo.WebApp.Pages.Admin.Details
 
@@ -129,18 +130,17 @@ else
     </tbody>
 </table>
 
-@* TODO: Auth *@
-@* @if (User.IsInRole(UserRole.OrderAdministrator)) *@
-@* { *@
-<div>
-    @if (Model.Item.Deleted)
-    {
-        <a asp-page="Restore" asp-route-id="@Model.Item.Id" class="usa-button usa-button-secondary">Restore deleted order</a>
-    }
-    else
-    {
-        <a asp-page="Edit" asp-route-id="@Model.Item.Id" class="usa-button usa-button-secondary">Edit</a>
-        <a asp-page="Delete" asp-route-id="@Model.Item.Id" class="usa-button usa-button-red">Delete</a>
-    }
-</div>
-@* } *@
+@if (User.IsInRole(UserRole.OrderAdministrator))
+{
+    <div>
+        @if (Model.Item.Deleted)
+        {
+            <a asp-page="Restore" asp-route-id="@Model.Item.Id" class="usa-button usa-button-secondary">Restore deleted order</a>
+        }
+        else
+        {
+            <a asp-page="Edit" asp-route-id="@Model.Item.Id" class="usa-button usa-button-secondary">Edit</a>
+            <a asp-page="Delete" asp-route-id="@Model.Item.Id" class="usa-button usa-button-red">Delete</a>
+        }
+    </div>
+}

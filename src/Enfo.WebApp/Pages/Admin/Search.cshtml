@@ -1,4 +1,5 @@
 ﻿@page
+@using Enfo.Domain.Entities.Users
 @using Enfo.Domain.Resources.EnforcementOrder
 @using Enfo.Domain.Specs
 @using Enfo.WebApp.Platform
@@ -126,12 +127,11 @@
             <input type="hidden" name="handler" value="search" />
             <button id="SearchButton" type="submit">Search</button>
             <a asp-page="Search" class="usa-button usa-button-secondary">Clear Form</a>
-            @* TODO: Auth *@
-            @* @if (User.IsInRole(UserRole.OrderAdministrator)) *@
-            @* { *@
-            <input type="checkbox" id="Spec_ShowDeleted" name="ShowDeleted" value="true" checked="@Model.Spec.ShowDeleted">
-            <label asp-for="Spec.ShowDeleted"></label>
-            @* } *@
+            @if (User.IsInRole(UserRole.OrderAdministrator))
+            {
+                <input type="checkbox" id="Spec_ShowDeleted" name="ShowDeleted" value="true" checked="@Model.Spec.ShowDeleted">
+                <label asp-for="Spec.ShowDeleted"></label>
+            }
         </div>
     </form>
 </div>

@@ -5,12 +5,14 @@ using Enfo.Domain.Resources.EpdContact;
 using Enfo.WebApp.Models;
 using Enfo.WebApp.Platform.Extensions;
 using JetBrains.Annotations;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
 namespace Enfo.WebApp.Pages.Admin.Maintenance.Contacts
 {
+    [Authorize]
     public class Index : PageModel
     {
         public IReadOnlyList<EpdContactView> Items { get; private set; }

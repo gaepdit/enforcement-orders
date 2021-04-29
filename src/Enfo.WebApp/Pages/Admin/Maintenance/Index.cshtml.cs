@@ -1,10 +1,10 @@
 ﻿using JetBrains.Annotations;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Enfo.WebApp.Pages.Admin.Maintenance
 {
-    // TODO: Auth
-    // [Authorize(Roles = UserRole.SiteMaintenance)]
+    [Authorize]
     public class Index : PageModel
     {
         [UsedImplicitly]

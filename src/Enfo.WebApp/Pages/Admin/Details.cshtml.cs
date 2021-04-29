@@ -10,8 +10,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Enfo.WebApp.Pages.Admin
 {
-    // TODO: Auth
-    // [Authorize(Roles = UserRole.OrderAdministrator)]
+    [Authorize]
     public class Details : PageModel
     {
         public EnforcementOrderAdminView Item { get; private set; }

@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Enfo.Domain.Entities.Users;
 using Enfo.Domain.Repositories;
 using Enfo.Domain.Resources.EnforcementOrder;
 using Enfo.WebApp.Models;
@@ -10,7 +11,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Enfo.WebApp.Pages.Admin
 {
-    // [Authorize(Roles = UserRole.OrderAdministrator)]
+    [Authorize(Roles = UserRole.OrderAdministrator)]
     public class Restore : PageModel
     {
         [BindProperty]

@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Enfo.Domain.Entities.Users;
 using Enfo.Domain.Mapping;
 using Enfo.Domain.Repositories;
 using Enfo.Domain.Resources.EnforcementOrder;
@@ -8,6 +9,7 @@ using Enfo.Domain.Validation;
 using Enfo.WebApp.Models;
 using Enfo.WebApp.Platform.Extensions;
 using JetBrains.Annotations;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -15,7 +17,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Enfo.WebApp.Pages.Admin
 {
-    // [Authorize(Roles = UserRole.OrderAdministrator)]
+    [Authorize(Roles = UserRole.OrderAdministrator)]
     public class Edit : PageModel
     {
         [BindProperty]
@@ -24,7 +26,7 @@ namespace Enfo.WebApp.Pages.Admin
         [BindProperty]
         [HiddenInput]
         public int Id { get; set; }
-        
+
         public string OriginalOrderNumber { get; private set; }
 
         // Select Lists

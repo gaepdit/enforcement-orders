@@ -5,12 +5,14 @@ using Enfo.Domain.Resources.LegalAuthority;
 using Enfo.WebApp.Models;
 using Enfo.WebApp.Platform.Extensions;
 using JetBrains.Annotations;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
 namespace Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthorities
 {
+    [Authorize]
     public class Index : PageModel
     {
         public IReadOnlyList<LegalAuthorityView> Items { get; private set; }
