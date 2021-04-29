@@ -24,6 +24,7 @@
         * Add `/Admin/Maintenance/LegalAuthorities/Add`
         * Edit `/Admin/Maintenance/LegalAuthority/Edit/{id}`
 * Account profile `/Account`
+    * Account Login `/Account/Login`
 * Users list `/Admin/Users`
     * View user profile `/Admin/Users/Details/{id}`
     * Edit user profile `/Admin/Users/Edit/{id}`

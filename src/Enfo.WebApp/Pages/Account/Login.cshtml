@@ -1,0 +1,27 @@
+﻿@page
+@model Enfo.WebApp.Pages.Account.Login
+
+@{
+    ViewData["Title"] = "Agency Login";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<p>
+    The Enforcement Orders admin site is a State of Georgia application.
+    It is provided to conduct official State business and is available
+    for use by State of Georgia employees only.
+</p>
+
+<partial name="_AlertPartial" for="Message" />
+
+<div class="gaepd-container-light">
+    <h2>Sign in using your work account</h2>
+
+    <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+        <div asp-validation-summary="ModelOnly" class="usa-alert usa-alert-error" role="alert"></div>
+        <button type="submit" class="usa-button-secondary gaepd-button-extra-large gaepd-button-image" title="Sign in using your work account">
+            <img src="~/assets/ms-symbol.svg" alt="" /> Sign in
+        </button>
+    </form>
+</div>

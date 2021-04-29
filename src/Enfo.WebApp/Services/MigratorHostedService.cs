@@ -44,11 +44,11 @@ namespace Enfo.WebApp.Services
 
                 // Initialize roles
                 var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
-                foreach (var role in UserRole.AllRoles)
+                foreach (var role in UserRole.AllRoles.Keys)
                 {
-                    if (!await context.Roles.AnyAsync(e => e.Name == role.Name, cancellationToken))
+                    if (!await context.Roles.AnyAsync(e => e.Name == role, cancellationToken))
                     {
-                        await roleManager.CreateAsync(new IdentityRole<Guid>(role.Name));
+                        await roleManager.CreateAsync(new IdentityRole<Guid>(role));
                     }
                 }
             }

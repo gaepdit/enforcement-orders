@@ -2,8 +2,10 @@ using System;
 using System.IO;
 using Enfo.Domain.Entities.Users;
 using Enfo.Domain.Repositories;
+using Enfo.Domain.Services;
 using Enfo.Infrastructure.Contexts;
 using Enfo.Infrastructure.Repositories;
+using Enfo.Infrastructure.Services;
 using Enfo.WebApp.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.AzureAD.UI;
@@ -79,7 +81,8 @@ namespace Enfo.WebApp
             // Register IHttpContextAccessor (needed by RaygunScriptPartial)
             services.AddHttpContextAccessor();
 
-            // Configure data repositories
+            // Configure dependencies
+            services.AddScoped<IUserService, UserService>();
             services.AddScoped<IAddressRepository, AddressRepository>();
             services.AddScoped<IEnforcementOrderRepository, EnforcementOrderRepository>();
             services.AddScoped<IEpdContactRepository, EpdContactRepository>();

@@ -61,6 +61,31 @@ form.usa-section {
     color: #981b1e;
 }
 
+dl {
+    margin: 0;
+}
+
+dt {
+    font-weight: bold;
+}
+
+dd {
+    margin-bottom: 2rem;
+    margin-left: 0;
+}
+
+h1 + h2 {
+    margin-top: 0;
+}
+
+small {
+    font-size: 90%;
+}
+
+.gaepd-text-muted {
+    color: #555;
+}
+
 @supports (position: sticky) {
     .usa-alert {
         position: -webkit-sticky;
@@ -548,6 +573,16 @@ hr {
     padding-top: 1.3rem;
     padding-bottom: 1.3rem;
     font-size: 2rem;
+}
+
+.gaepd-button-image {
+    margin-bottom: 4.5rem;
+    margin-top: 0;
+}
+
+.gaepd-button-image, .gaepd-button-image img {
+    vertical-align: text-bottom;
+    line-height: 2;
 }
 
 .usa-nav-primary .gaepd-nav-button {
