@@ -1,17 +1,15 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Enfo.Domain.Entities.Users;
 using Enfo.WebApp.Models;
 using Enfo.WebApp.Platform;
-using Enfo.WebApp.Platform.DevHelpers;
 using Enfo.WebApp.Platform.Extensions;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.AzureAD.UI;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -28,15 +26,13 @@ namespace Enfo.WebApp.Pages.Account
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IConfiguration _configuration;
-        private readonly IWebHostEnvironment _environment;
 
         public ExternalLogin(
             SignInManager<ApplicationUser> signInManager,
             UserManager<ApplicationUser> userManager,
-            IConfiguration configuration,
-            IWebHostEnvironment environment) =>
-            (_signInManager, _userManager, _configuration, _environment) =
-            (signInManager, userManager, configuration, environment);
+            IConfiguration configuration) =>
+            (_signInManager, _userManager, _configuration) =
+            (signInManager, userManager, configuration);
 
         // Don't call the page directly
         [UsedImplicitly]
@@ -46,8 +42,8 @@ namespace Enfo.WebApp.Pages.Account
         [UsedImplicitly]
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
-            // In Local Development environment, create "test" user information and sign in the user.
-            if (_environment.IsLocalDev()) return await SignInAsDevUser();
+            // In Local environment, create "test" user information and sign in the user.
+            if (Environment.GetEnvironmentVariable("ENABLE_TEST_USER") == "true") return await SignInAsTestUser();
 
             // Request a redirect to the external login provider.
             const string provider = AzureADDefaults.AuthenticationScheme;
@@ -55,15 +51,19 @@ namespace Enfo.WebApp.Pages.Account
             var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
             return new ChallengeResult(provider, properties);
 
-            async Task<IActionResult> SignInAsDevUser()
+            async Task<IActionResult> SignInAsTestUser()
             {
-                var user = new ApplicationUser
+                var user = new ApplicationUser();
+                _configuration.Bind("FakeUser", user);
+
+                var userExists = await _userManager.FindByEmailAsync(user.Email);
+                if (userExists == null)
                 {
-                    Email = "test@example.com", UserName = "test@example.com", FamilyName = "User", GivenName = "Test"
-                };
-                await _userManager.CreateAsync(user);
-                foreach (var role in UserRole.AllRoles) await _userManager.AddToRoleAsync(user, role.Key);
-                await _signInManager.SignInAsync(user, false);
+                    await _userManager.CreateAsync(user);
+                    foreach (var role in UserRole.AllRoles) await _userManager.AddToRoleAsync(user, role.Key);
+                }
+
+                await _signInManager.SignInAsync(userExists ?? user, false);
                 return LocalRedirect(returnUrl);
             }
         }

@@ -13,10 +13,22 @@
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Local",
-        "ASPNETCORE_HOSTINGSTARTUPASSEMBLIES": "Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation"
+        "ASPNETCORE_HOSTINGSTARTUPASSEMBLIES": "Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation",
+        "ENABLE_TEST_USER": "true"
       }
     },
     "Enfo.WebApp": {
+      "commandName": "Project",
+      "dotnetRunMessages": "true",
+      "launchBrowser": true,
+      "applicationUrl": "https://localhost:44331;http://localhost:21784",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Local",
+        "ASPNETCORE_HOSTINGSTARTUPASSEMBLIES": "Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation",
+        "ENABLE_TEST_USER": "true"
+      }
+    },
+    "Enfo.WebApp_ExternalLogin": {
       "commandName": "Project",
       "dotnetRunMessages": "true",
       "launchBrowser": true,

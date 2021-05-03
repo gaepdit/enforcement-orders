@@ -13,6 +13,7 @@
 
 <h3>Roles</h3>
 <p>This account has the following application roles:</p>
+
 <div class="gaepd-container-light">
     @if (Model.Roles is {Count: > 0 })
     {
@@ -36,6 +37,7 @@
         </p>
     }
 </div>
+
 <div>
     @if (User.IsInRole(UserRole.UserMaintenance))
     {
