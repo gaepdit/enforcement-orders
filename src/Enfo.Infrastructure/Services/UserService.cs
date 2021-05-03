@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Enfo.Domain.Entities.Users;
+using Enfo.Domain.Resources.Users;
 using Enfo.Domain.Services;
 using Enfo.Infrastructure.Contexts;
 using Microsoft.AspNetCore.Http;
@@ -21,44 +22,52 @@ namespace Enfo.Infrastructure.Services
             UserManager<ApplicationUser> userManager,
             EnfoDbContext context,
             IHttpContextAccessor httpContextAccessor) =>
-            (_userManager, _context, _httpContextAccessor) = 
+            (_userManager, _context, _httpContextAccessor) =
             (userManager, context, httpContextAccessor);
 
-        public async Task<ApplicationUser> GetCurrentUserAsync()
+        private async Task<ApplicationUser> GetCurrentApplicationUserAsync()
         {
             var principal = _httpContextAccessor?.HttpContext?.User;
             return principal == null ? null : await _userManager.GetUserAsync(principal);
         }
 
-        public async Task<IList<string>> GetCurrentUserRolesAsync() =>
-            await _userManager.GetRolesAsync(await GetCurrentUserAsync());
+        public async Task<UserView> GetCurrentUserAsync()
+        {
+            var user = await GetCurrentApplicationUserAsync();
+            return user == null ? null : new UserView(user);
+        }
 
-        public Task<List<ApplicationUser>> GetUsersAsync(string nameFilter, string emailFilter) =>
+        public async Task<IList<string>> GetCurrentUserRolesAsync() =>
+            await _userManager.GetRolesAsync(await GetCurrentApplicationUserAsync());
+
+        public Task<List<UserView>> GetUsersAsync(string nameFilter, string emailFilter) =>
             _context.Users.AsNoTracking()
                 .Where(m => string.IsNullOrEmpty(nameFilter)
                     || m.GivenName.Contains(nameFilter)
                     || m.FamilyName.Contains(nameFilter))
-                .Where(m => string.IsNullOrEmpty(emailFilter)
-                    || m.Email == emailFilter)
-                .OrderBy(m => m.FamilyName)
+                .Where(m => string.IsNullOrEmpty(emailFilter) || m.Email == emailFilter)
+                .OrderBy(m => m.FamilyName).ThenBy(m => m.GivenName)
+                .Select(e => new UserView(e))
                 .ToListAsync();
 
-        public Task<ApplicationUser> GetUserByIdAsync(Guid id) =>
-            _userManager.FindByIdAsync(id.ToString());
-
-        public async Task<IList<string>> GetUserRolesAsync(Guid id) =>
-            await _userManager.GetRolesAsync(await GetUserByIdAsync(id));
-
-        public async Task<IdentityResult> UpdateUserRolesAsync(Guid id, Dictionary<string, bool> roleSettings)
+        public async Task<UserView> GetUserByIdAsync(Guid id)
         {
-            foreach (var (key, value) in roleSettings)
+            var user = await _userManager.FindByIdAsync(id.ToString());
+            return user == null ? null : new UserView(user);
+        }
+
+        public async Task<IList<string>> GetUserRolesAsync(Guid id)
+        {
+            var user = await _userManager.FindByIdAsync(id.ToString());
+            return user == null ? null : await _userManager.GetRolesAsync(user);
+        }
+
+        public async Task<IdentityResult> UpdateUserRolesAsync(Guid id, Dictionary<string, bool> roleUpdates)
+        {
+            foreach (var (key, value) in roleUpdates)
             {
                 var result = await UpdateUserRoleAsync(id, key, value);
-
-                if (result != IdentityResult.Success)
-                {
-                    return result;
-                }
+                if (result != IdentityResult.Success) return result;
             }
 
             return IdentityResult.Success;
@@ -66,7 +75,7 @@ namespace Enfo.Infrastructure.Services
 
         private async Task<IdentityResult> UpdateUserRoleAsync(Guid id, string role, bool addToRole)
         {
-            var user = await GetUserByIdAsync(id);
+            var user = await _userManager.FindByIdAsync(id.ToString());
             if (user == null) return IdentityResult.Failed(_userManager.ErrorDescriber.DefaultError());
 
             var isInRole = await _userManager.IsInRoleAsync(user, role);

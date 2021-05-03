@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Enfo.Domain.Entities;
+using Enfo.Domain.Entities.Base;
 using Enfo.Domain.Entities.Users;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -38,8 +39,8 @@ namespace Enfo.Infrastructure.Contexts
             builder.Entity<IdentityUserToken<Guid>>().ToTable("AppUserTokens");
 
             // Add audit properties to all entities
-            var entityTypes = builder.Model.GetEntityTypes();
-            foreach (var entityType in entityTypes)
+            foreach (var entityType in builder.Model.GetEntityTypes()
+                .Where(e => typeof(IBaseEntity).IsAssignableFrom(e.ClrType)))
             {
                 // Skip the ASP.NET Identity tables
                 if (entityType.ClrType.Name.StartsWith("App")) continue;
@@ -68,7 +69,7 @@ namespace Enfo.Infrastructure.Contexts
             var currentUser = _httpContextAccessor?.HttpContext?.User?.Identity?.Name;
 
             var entries = ChangeTracker.Entries()
-                .Where(e => e.State is EntityState.Added or EntityState.Modified);
+                .Where(e => (e.State is EntityState.Added or EntityState.Modified) && e.Entity is IBaseEntity);
 
             foreach (var entry in entries)
             {

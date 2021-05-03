@@ -1,0 +1,62 @@
+﻿@page
+@using Enfo.Domain.Entities.Users
+@model Enfo.WebApp.Pages.Admin.Users.Index
+@{
+    ViewData["Title"] = "User Search";
+}
+
+<h1>ENFO @ViewData["Title"]</h1>
+
+<div class="gaepd-container-light">
+    <form method="get" class="usa-form-large" asp-fragment="search-results">
+        <label asp-for="Name"></label>
+        <input asp-for="Name" aria-describedby="nameHelpBlock" />
+        <small id="nameHelpBlock" class="usa-input-label-helper">First <em>or</em> last name</small>
+
+        <label asp-for="Email"></label>
+        <input asp-for="Email" />
+
+        <div class="gaepd-buttonrow">
+            <input type="hidden" name="handler" value="search" />
+            <button id="SearchButton" type="submit">Search</button>
+            <a asp-page="Index" class="usa-button usa-button-secondary">Clear Form</a>
+        </div>
+    </form>
+</div>
+
+@if (Model.ShowResults)
+{
+    <div id="search-results">
+        @if (Model.SearchResults is not {Count: > 0 })
+        {
+            <h3>No results found.</h3>
+        }
+        else
+        {
+            <table class="usa-table-borderless gaepd-table-responsive">
+                <thead>
+                <tr>
+                    <th scope="col">@Html.DisplayNameFor(m => m.Name)</th>
+                    <th scope="col">@Html.DisplayNameFor(m => m.Email)</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var item in Model.SearchResults)
+                {
+                    <tr>
+                        <td data-label="@Html.DisplayNameFor(m => m.Name)">
+                            <a asp-page="Details" asp-route-id="@item.Id">@Html.DisplayFor(m => item.Name)</a>
+                        </td>
+                        <td data-label="@Html.DisplayNameFor(m => m.Email)">@Html.DisplayFor(m => item.Email)</td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        }
+    </div>
+}
+
+@section ScriptFiles
+{
+    <script src="~/dist/formSearch.bundle.js" asp-append-version="true" type="text/javascript" defer></script>
+}

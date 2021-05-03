@@ -6,6 +6,7 @@ using Enfo.Domain.Services;
 using Enfo.Infrastructure.Contexts;
 using Enfo.Infrastructure.Repositories;
 using Enfo.Infrastructure.Services;
+using Enfo.WebApp.Platform.DevHelpers;
 using Enfo.WebApp.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.AzureAD.UI;
@@ -95,7 +96,7 @@ namespace Enfo.WebApp
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsEnvironment("Local"))
+            if (env.IsLocalDev())
             {
                 app.UseDeveloperExceptionPage();
             }

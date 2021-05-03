@@ -2,13 +2,11 @@
 @using Enfo.Domain.Resources
 @using Enfo.Domain.Utils
 @model Enfo.WebApp.Pages.CurrentProposed
-
 @{
     ViewData["Title"] = "Current Proposed Enforcement Orders";
 }
 
-<h2>@ViewData["Title"]</h2>
-
+<h1>@ViewData["Title"]</h1>
 <p>(Notices that change weekly)</p>
 <p>
     <i>Date of Posting: @DateUtils.MostRecentMonday().ToString(DisplayFormats.LongDate)</i>

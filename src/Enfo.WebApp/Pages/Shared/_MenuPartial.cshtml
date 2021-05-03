@@ -67,8 +67,7 @@
                                 <a asp-page="/Admin/Maintenance/Index">Site Maintenance</a>
                             </li>
                             <li>
-                                @* <a asp-page="/Admin/Users/Index">Users List</a> *@
-                                <a asp-page="/NotImplemented">Users List</a>
+                                <a asp-page="/Admin/Users/Index">Users List</a>
                             </li>
                             <li>
                                 <a asp-page="/Index">Public Dashboard</a>
@@ -81,12 +80,10 @@
                         </button>
                         <ul id="nav-account" class="usa-nav-submenu" aria-hidden="true">
                             <li>
-                                @* <a asp-page="/Account">View Profile</a> *@
-                                <a asp-page="/NotImplemented">View Profile</a>
+                                <a asp-page="/Account">View Profile</a>
                             </li>
                             <li>
-                                @* <form method="post" asp-page="/Account/Logout"> *@
-                                <form method="get" asp-page="/NotImplemented">
+                                <form method="post" asp-page="/Account/Logout">
                                     <button type="submit" aria-label="Sign out" class="usa-button gaepd-nav-button">Sign out</button>
                                 </form>
                             </li>
@@ -103,7 +100,6 @@
                         <a asp-page="/Admin/Index">Admin</a>
                     </li>
                 }
-
             </ul>
         </nav>
     </div>

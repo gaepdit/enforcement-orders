@@ -1,0 +1,33 @@
+﻿@page "{id}"
+@model Enfo.WebApp.Pages.Admin.Users.Edit
+@{
+    ViewData["Title"] = "Edit Application Roles";
+}
+
+<h1>@ViewData["Title"] For:</h1>
+<h2>@Model.DisplayUser.Name (@Model.DisplayUser.Email)</h2>
+
+<form method="post" class="usa-form-large">
+    <div asp-validation-summary="ModelOnly" class="usa-input-error-message" role="alert">
+        User update failed:
+    </div>
+
+    @for (var i = 0; i < Model.UserRoleSettings.Count; i++)
+    {
+        var index = i;
+        <div class="gaepd-checkbox-tile">
+            <input type="checkbox" asp-for="@Model.UserRoleSettings[index].IsSelected" aria-describedby="RoleHelpBlock-@index" />
+            <label class="gaepd-checkbox-label" asp-for="@Model.UserRoleSettings[index].IsSelected">
+                @Model.UserRoleSettings[index].DisplayName
+                <small id="RoleHelpBlock-@index" class="gaepd-text-muted">@Model.UserRoleSettings[index].Description</small>
+            </label>
+            <input type="hidden" asp-for="@Model.UserRoleSettings[index].Name" />
+        </div>
+    }
+
+    <div class="gaepd-buttonrow">
+        <input asp-for="UserId" />
+        <button type="submit">Save Roles</button>
+        <a asp-page="Details" asp-route-id="@Model.UserId" class="usa-button usa-button-secondary">Cancel</a>
+    </div>
+</form>

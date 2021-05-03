@@ -1,12 +1,11 @@
 @page "{id}"
 @model Enfo.WebApp.Pages.Details
-
 @{
     ViewData["Title"] = $"Enforcement Order {Model.Item.OrderNumber}";
 }
 <partial name="_AlertPartial" for="Message" />
 
-<h2>@ViewData["Title"]</h2>
+<h1>@ViewData["Title"]</h1>
 
 @if (User?.Identity?.IsAuthenticated == true)
 {

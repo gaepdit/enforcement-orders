@@ -5,11 +5,13 @@ using System.Threading.Tasks;
 using Enfo.Domain.Entities.Users;
 using Enfo.WebApp.Models;
 using Enfo.WebApp.Platform;
+using Enfo.WebApp.Platform.DevHelpers;
 using Enfo.WebApp.Platform.Extensions;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.AzureAD.UI;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -26,13 +28,15 @@ namespace Enfo.WebApp.Pages.Account
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IConfiguration _configuration;
+        private readonly IWebHostEnvironment _environment;
 
         public ExternalLogin(
             SignInManager<ApplicationUser> signInManager,
             UserManager<ApplicationUser> userManager,
-            IConfiguration configuration) =>
-            (_signInManager, _userManager, _configuration) =
-            (signInManager, userManager, configuration);
+            IConfiguration configuration,
+            IWebHostEnvironment environment) =>
+            (_signInManager, _userManager, _configuration, _environment) =
+            (signInManager, userManager, configuration, environment);
 
         // Don't call the page directly
         [UsedImplicitly]
@@ -40,13 +44,28 @@ namespace Enfo.WebApp.Pages.Account
 
         // This Post method is called by the Login page
         [UsedImplicitly]
-        public IActionResult OnPost(string returnUrl = null)
+        public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
+            // In Local Development environment, create "test" user information and sign in the user.
+            if (_environment.IsLocalDev()) return await SignInAsDevUser();
+
             // Request a redirect to the external login provider.
             const string provider = AzureADDefaults.AuthenticationScheme;
             var redirectUrl = Url.Page("./ExternalLogin", pageHandler: "Callback", values: new {returnUrl});
             var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
             return new ChallengeResult(provider, properties);
+
+            async Task<IActionResult> SignInAsDevUser()
+            {
+                var user = new ApplicationUser
+                {
+                    Email = "test@example.com", UserName = "test@example.com", FamilyName = "User", GivenName = "Test"
+                };
+                await _userManager.CreateAsync(user);
+                foreach (var role in UserRole.AllRoles) await _userManager.AddToRoleAsync(user, role.Key);
+                await _signInManager.SignInAsync(user, false);
+                return LocalRedirect(returnUrl);
+            }
         }
 
         // This method is called by the external login provider.

@@ -24,7 +24,7 @@ namespace Enfo.WebApp.Platform.TagHelpers
         /// <remarks>Adds text indicating the field is required if the property has the RequiredAttribute.</remarks>
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
-            if (Model.Metadata.IsRequired)
+            if (Model.Metadata.IsRequired && Model.Metadata.ModelType != typeof(bool))
                 output.Content.AppendHtml(@" <abbr class=""required-field-label"" title=""Required"">*</abbr>");
         }
     }

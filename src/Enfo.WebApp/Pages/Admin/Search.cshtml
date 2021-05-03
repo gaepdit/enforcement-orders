@@ -5,14 +5,13 @@
 @using Enfo.WebApp.Platform
 @using PublicationState = Enfo.Domain.Specs.PublicationState
 @model Enfo.WebApp.Pages.Admin.Search
-
 @{
     ViewData["Title"] = "Search Enforcement Orders";
 }
 
-<h2>
+<h1>
     <i>Admin:</i> @ViewData["Title"]
-</h2>
+</h1>
 
 <div class="gaepd-noprint">
     <a asp-page="/Search" class="gaepd-no-visited">Go to public search</a>
@@ -20,7 +19,6 @@
 
 <div class="gaepd-container-light">
     <form method="get" class="usa-form-large" asp-fragment="search-results">
-        <div asp-validation-summary="ModelOnly" class="usa-alert usa-alert-error" role="alert"></div>
         <fieldset class="usa-fieldset-inputs">
             <legend>Details</legend>
             <label asp-for="Spec.Facility"></label>

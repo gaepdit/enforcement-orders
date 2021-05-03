@@ -2,16 +2,15 @@
 @using Enfo.Domain.Entities.Users
 @using Enfo.WebApp.Models
 @model Enfo.WebApp.Pages.Admin.Details
-
 @{
     ViewData["Title"] = $"Enforcement Order {Model.Item.OrderNumber}";
 }
 
 <partial name="_AlertPartial" for="Message" />
 
-<h2>
+<h1>
     <i>Admin View:</i> @ViewData["Title"]
-</h2>
+</h1>
 
 @if (Model.Item.Deleted)
 {

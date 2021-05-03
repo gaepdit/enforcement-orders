@@ -8,7 +8,7 @@ using Enfo.Infrastructure.Contexts;
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 
-namespace Enfo.WebApp.Services
+namespace Enfo.WebApp.Platform.DevHelpers
 {
     public static class TempData
     {

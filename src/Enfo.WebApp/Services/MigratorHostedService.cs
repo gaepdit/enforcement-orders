@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Enfo.Domain.Entities.Users;
 using Enfo.Infrastructure.Contexts;
+using Enfo.WebApp.Platform.DevHelpers;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -30,14 +31,14 @@ namespace Enfo.WebApp.Services
             var context = scope.ServiceProvider.GetRequiredService<EnfoDbContext>();
             var env = scope.ServiceProvider.GetRequiredService<IWebHostEnvironment>();
 
-            if (env.IsEnvironment("Local"))
+            if (env.IsLocalDev())
             {
                 // Initialize database
                 await context.Database.EnsureDeletedAsync(cancellationToken);
 
                 // Un-comment one of the following two lines depending on whether you need to debug EF migrations.
-                await context.Database.MigrateAsync(cancellationToken);
-                // await context.Database.EnsureCreatedAsync(cancellationToken);
+                // await context.Database.MigrateAsync(cancellationToken);
+                await context.Database.EnsureCreatedAsync(cancellationToken);
 
                 // Seed initial data
                 await context.SeedTempDataAsync(cancellationToken);
