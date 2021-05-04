@@ -22,9 +22,6 @@ namespace Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthorities
         [TempData]
         public int HighlightId { get; set; }
 
-        private readonly ILegalAuthorityRepository _repository;
-        public Add(ILegalAuthorityRepository repository) => _repository = repository;
-
         [UsedImplicitly]
         public static void OnGet()
         {
@@ -32,18 +29,18 @@ namespace Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthorities
         }
 
         [UsedImplicitly]
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostAsync([FromServices] ILegalAuthorityRepository repository)
         {
             Item.TrimAll();
 
-            if (await _repository.NameExistsAsync(Item.AuthorityName))
+            if (await repository.NameExistsAsync(Item.AuthorityName))
             {
                 ModelState.AddModelError("Item.AuthorityName", "The authority name entered already exists.");
             }
 
             if (!ModelState.IsValid) return Page();
 
-            HighlightId = await _repository.CreateAsync(Item);
+            HighlightId = await repository.CreateAsync(Item);
             TempData?.SetDisplayMessage(Context.Success, $"{Item.AuthorityName} successfully added.");
             return RedirectToPage("Index");
         }

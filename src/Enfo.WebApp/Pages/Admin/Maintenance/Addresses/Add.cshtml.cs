@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using Enfo.Domain.Entities.Users;
 using Enfo.Domain.Repositories;
 using Enfo.Domain.Resources.Address;
@@ -22,9 +22,6 @@ namespace Enfo.WebApp.Pages.Admin.Maintenance.Addresses
         [TempData]
         public int HighlightId { get; set; }
 
-        private readonly IAddressRepository _repository;
-        public Add(IAddressRepository repository) => _repository = repository;
-
         [UsedImplicitly]
         public static void OnGet()
         {
@@ -32,13 +29,13 @@ namespace Enfo.WebApp.Pages.Admin.Maintenance.Addresses
         }
 
         [UsedImplicitly]
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostAsync([FromServices] IAddressRepository repository)
         {
             Item.TrimAll();
 
             if (!ModelState.IsValid) return Page();
 
-            HighlightId = await _repository.CreateAsync(Item);
+            HighlightId = await repository.CreateAsync(Item);
             TempData?.SetDisplayMessage(Context.Success, $"{ThisOption.SingularName} successfully added.");
             return RedirectToPage("Index");
         }

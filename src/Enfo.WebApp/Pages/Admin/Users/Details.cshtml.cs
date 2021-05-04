@@ -19,16 +19,13 @@ namespace Enfo.WebApp.Pages.Admin.Users
         public IList<string> Roles { get; private set; }
         public DisplayMessage Message { get; private set; }
 
-        private readonly IUserService _userService;
-        public Details(IUserService userService) => _userService = userService;
-
         [UsedImplicitly]
-        public async Task<IActionResult> OnGetAsync(Guid? id)
+        public async Task<IActionResult> OnGetAsync([FromServices] IUserService userService, Guid? id)
         {
             if (id == null) return NotFound();
-            DisplayUser = await _userService.GetUserByIdAsync(id.Value);
+            DisplayUser = await userService.GetUserByIdAsync(id.Value);
             if (DisplayUser == null) return NotFound();
-            Roles = await _userService.GetUserRolesAsync(DisplayUser.Id);
+            Roles = await userService.GetUserRolesAsync(DisplayUser.Id);
             Message = TempData?.GetDisplayMessage();
             return Page();
         }

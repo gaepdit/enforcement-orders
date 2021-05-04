@@ -5,6 +5,7 @@ using Enfo.Domain.Resources.EnforcementOrder;
 using Enfo.WebApp.Models;
 using Enfo.WebApp.Platform.Extensions;
 using JetBrains.Annotations;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Enfo.WebApp.Pages
@@ -15,14 +16,11 @@ namespace Enfo.WebApp.Pages
         public IReadOnlyList<EnforcementOrderSummaryView> RecentExecutedOrders { get; private set; }
         public DisplayMessage Message { get; private set; }
 
-        private readonly IEnforcementOrderRepository _repository;
-        public Index(IEnforcementOrderRepository repository) => _repository = repository;
-
         [UsedImplicitly]
-        public async Task OnGetAsync()
+        public async Task OnGetAsync([FromServices] IEnforcementOrderRepository repository)
         {
-            CurrentProposedOrders = await _repository.ListCurrentProposedEnforcementOrdersAsync();
-            RecentExecutedOrders = await _repository.ListRecentlyExecutedEnforcementOrdersAsync();
+            CurrentProposedOrders = await repository.ListCurrentProposedEnforcementOrdersAsync();
+            RecentExecutedOrders = await repository.ListRecentlyExecutedEnforcementOrdersAsync();
             Message = TempData?.GetDisplayMessage();
         }
     }

@@ -35,9 +35,9 @@ namespace EnfoTests.WebApp.Pages
                 .ReturnsAsync(list);
             repo.Setup(l => l.ListRecentlyExecutedEnforcementOrdersAsync())
                 .ReturnsAsync(list);
-            var page = new Index(repo.Object) {PageContext = pageContext};
+            var page = new Index {PageContext = pageContext};
 
-            await page.OnGetAsync();
+            await page.OnGetAsync(repo.Object);
 
             page.CurrentProposedOrders.Should().BeEquivalentTo(list);
             page.RecentExecutedOrders.Should().BeEquivalentTo(list);
@@ -55,9 +55,9 @@ namespace EnfoTests.WebApp.Pages
             var pageContext = new PageContext(actionContext) {ViewData = viewData};
 
             var repo = new Mock<IEnforcementOrderRepository> {DefaultValue = DefaultValue.Mock};
-            var page = new Index(repo.Object) {PageContext = pageContext};
+            var page = new Index {PageContext = pageContext};
 
-            await page.OnGetAsync();
+            await page.OnGetAsync(repo.Object);
 
             page.CurrentProposedOrders.ShouldBeEmpty();
             page.RecentExecutedOrders.ShouldBeEmpty();
@@ -78,10 +78,10 @@ namespace EnfoTests.WebApp.Pages
             var actionContext = new ActionContext(httpContext, new RouteData(), new PageActionDescriptor(), modelState);
             var pageContext = new PageContext(actionContext) {ViewData = viewData};
 
-            var page = new Index(repo.Object) {TempData = tempData, PageContext = pageContext};
+            var page = new Index {TempData = tempData, PageContext = pageContext};
 
             page.TempData.SetDisplayMessage(Context.Info, "Info message");
-            await page.OnGetAsync();
+            await page.OnGetAsync(repo.Object);
 
             var expected = new DisplayMessage(Context.Info, "Info message");
             page.Message.Should().BeEquivalentTo(expected);

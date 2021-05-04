@@ -36,9 +36,9 @@ namespace EnfoTests.WebApp.Pages
             var item = GetEnforcementOrderDetailedView(itemId);
             var repo = new Mock<IEnforcementOrderRepository>();
             repo.Setup(l => l.GetAsync(itemId)).ReturnsAsync(item);
-            var page = new Details(repo.Object) {PageContext = pageContext};
+            var page = new Details {PageContext = pageContext};
 
-            await page.OnGetAsync(itemId);
+            await page.OnGetAsync(repo.Object, itemId);
 
             page.Item.ShouldEqual(item);
         }
@@ -62,10 +62,10 @@ namespace EnfoTests.WebApp.Pages
             var actionContext = new ActionContext(httpContext, new RouteData(), new PageActionDescriptor(), modelState);
             var pageContext = new PageContext(actionContext) {ViewData = viewData};
 
-            var page = new Details(repo.Object) {TempData = tempData, PageContext = pageContext};
+            var page = new Details {TempData = tempData, PageContext = pageContext};
 
             page.TempData.SetDisplayMessage(Context.Info, "Info message");
-            await page.OnGetAsync(itemId);
+            await page.OnGetAsync(repo.Object, itemId);
 
             var expected = new DisplayMessage(Context.Info, "Info message");
             page.Message.Should().BeEquivalentTo(expected);
@@ -81,10 +81,10 @@ namespace EnfoTests.WebApp.Pages
             var actionContext = new ActionContext(httpContext, new RouteData(), new PageActionDescriptor(), modelState);
             var pageContext = new PageContext(actionContext) {ViewData = viewData};
 
-            var mockRepo = new Mock<IEnforcementOrderRepository>();
-            var page = new Details(mockRepo.Object) {PageContext = pageContext};
+            var repo = new Mock<IEnforcementOrderRepository>();
+            var page = new Details {PageContext = pageContext};
 
-            var result = await page.OnGetAsync(null);
+            var result = await page.OnGetAsync(repo.Object, null);
 
             result.Should().BeOfType<NotFoundResult>();
             page.Item.ShouldBeNull();
@@ -101,10 +101,10 @@ namespace EnfoTests.WebApp.Pages
             var actionContext = new ActionContext(httpContext, new RouteData(), new PageActionDescriptor(), modelState);
             var pageContext = new PageContext(actionContext) {ViewData = viewData};
 
-            var mockRepo = new Mock<IEnforcementOrderRepository>();
-            var page = new Details(mockRepo.Object) {PageContext = pageContext};
+            var repo = new Mock<IEnforcementOrderRepository>();
+            var page = new Details() {PageContext = pageContext};
 
-            var result = await page.OnGetAsync(-1);
+            var result = await page.OnGetAsync(repo.Object, -1);
 
             result.Should().BeOfType<NotFoundObjectResult>();
             page.Item.ShouldBeNull();

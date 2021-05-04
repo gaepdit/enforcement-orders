@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Enfo.Domain.Repositories;
 using Enfo.Domain.Resources.EnforcementOrder;
 using JetBrains.Annotations;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Enfo.WebApp.Pages
@@ -11,11 +12,8 @@ namespace Enfo.WebApp.Pages
     {
         public IReadOnlyList<EnforcementOrderDetailedView> Orders { get; private set; }
 
-        private readonly IEnforcementOrderRepository _repository;
-        public CurrentProposed(IEnforcementOrderRepository repository) => _repository = repository;
-
         [UsedImplicitly]
-        public async Task OnGetAsync() =>
-            Orders = await _repository.ListCurrentProposedEnforcementOrdersAsync();
+        public async Task OnGetAsync([FromServices] IEnforcementOrderRepository repository) =>
+            Orders = await repository.ListCurrentProposedEnforcementOrdersAsync();
     }
 }

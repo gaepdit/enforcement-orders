@@ -21,9 +21,6 @@ namespace Enfo.WebApp.Pages.Admin.Users
         public bool ShowResults { get; set; }
         public List<UserView> SearchResults { get; set; }
 
-        private readonly IUserService _userService;
-        public Index(IUserService userService) => _userService = userService;
-
         [UsedImplicitly]
         public static void OnGet()
         {
@@ -31,10 +28,11 @@ namespace Enfo.WebApp.Pages.Admin.Users
         }
 
         [UsedImplicitly]
-        public async Task<IActionResult> OnGetSearchAsync(string name, string email)
+        public async Task<IActionResult> OnGetSearchAsync([FromServices] IUserService userService,
+            string name, string email)
         {
             if (!ModelState.IsValid) return Page();
-            SearchResults = await _userService.GetUsersAsync(name, email);
+            SearchResults = await userService.GetUsersAsync(name, email);
             ShowResults = true;
             return Page();
         }

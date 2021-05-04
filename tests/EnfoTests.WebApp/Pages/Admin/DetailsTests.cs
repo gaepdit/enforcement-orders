@@ -25,9 +25,9 @@ namespace EnfoTests.WebApp.Pages.Admin
             var item = GetEnforcementOrderAdminView(itemId);
             var repo = new Mock<IEnforcementOrderRepository>();
             repo.Setup(l => l.GetAdminViewAsync(itemId)).ReturnsAsync(item);
-            var page = new Details(repo.Object);
+            var page = new Details();
 
-            await page.OnGetAsync(itemId);
+            await page.OnGetAsync(repo.Object, itemId);
 
             page.Item.ShouldEqual(item);
         }
@@ -44,10 +44,10 @@ namespace EnfoTests.WebApp.Pages.Admin
             // Initialize Page TempData
             var httpContext = new DefaultHttpContext();
             var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
-            var page = new Details(repo.Object) {TempData = tempData};
+            var page = new Details() {TempData = tempData};
 
             page.TempData.SetDisplayMessage(Context.Info, "Info message");
-            await page.OnGetAsync(itemId);
+            await page.OnGetAsync(repo.Object, itemId);
 
             var expected = new DisplayMessage(Context.Info, "Info message");
             page.Message.Should().BeEquivalentTo(expected);
@@ -56,10 +56,10 @@ namespace EnfoTests.WebApp.Pages.Admin
         [Fact]
         public async Task OnGet_MissingIdReturnsNotFound()
         {
-            var mockRepo = new Mock<IEnforcementOrderRepository>();
-            var page = new Details(mockRepo.Object);
+            var repo = new Mock<IEnforcementOrderRepository>();
+            var page = new Details();
 
-            var result = await page.OnGetAsync(null);
+            var result = await page.OnGetAsync(repo.Object, null);
 
             result.Should().BeOfType<NotFoundResult>();
             page.Item.ShouldBeNull();
@@ -69,10 +69,10 @@ namespace EnfoTests.WebApp.Pages.Admin
         [Fact]
         public async Task OnGet_NonexistentIdReturnsNotFound()
         {
-            var mockRepo = new Mock<IEnforcementOrderRepository>();
-            var page = new Details(mockRepo.Object);
+            var repo = new Mock<IEnforcementOrderRepository>();
+            var page = new Details();
 
-            var result = await page.OnGetAsync(-1);
+            var result = await page.OnGetAsync(repo.Object, -1);
 
             result.Should().BeOfType<NotFoundObjectResult>();
             page.Item.ShouldBeNull();

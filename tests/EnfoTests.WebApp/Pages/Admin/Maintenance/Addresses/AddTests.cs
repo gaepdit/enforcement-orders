@@ -28,9 +28,9 @@ namespace EnfoTests.WebApp.Pages.Admin.Maintenance.Addresses
             // Initialize Page TempData
             var httpContext = new DefaultHttpContext();
             var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
-            var page = new Add(repo.Object) {TempData = tempData, Item = item};
+            var page = new Add {TempData = tempData, Item = item};
 
-            var result = await page.OnPostAsync();
+            var result = await page.OnPostAsync(repo.Object);
 
             var expected = new DisplayMessage(Context.Success,
                 $"{Add.ThisOption.SingularName} successfully added.");
@@ -45,10 +45,10 @@ namespace EnfoTests.WebApp.Pages.Admin.Maintenance.Addresses
         public async Task OnPost_GivenModelError_ReturnsPageWithModelError()
         {
             var repo = new Mock<IAddressRepository> {DefaultValue = DefaultValue.Mock};
-            var page = new Add(repo.Object) {Item = new AddressCreate()};
+            var page = new Add {Item = new AddressCreate()};
             page.ModelState.AddModelError("key", "message");
 
-            var result = await page.OnPostAsync();
+            var result = await page.OnPostAsync(repo.Object);
 
             result.Should().BeOfType<PageResult>();
             page.ModelState.IsValid.ShouldBeFalse();

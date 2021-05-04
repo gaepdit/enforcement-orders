@@ -30,9 +30,9 @@ namespace EnfoTests.WebApp.Pages.Admin.Maintenance.LegalAuthorities
             // Initialize Page TempData
             var httpContext = new DefaultHttpContext();
             var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
-            var page = new Add(repo.Object) {TempData = tempData, Item = item};
+            var page = new Add {TempData = tempData, Item = item};
 
-            var result = await page.OnPostAsync();
+            var result = await page.OnPostAsync(repo.Object);
 
             var expected = new DisplayMessage(Context.Success,
                 $"{item.AuthorityName} successfully added.");
@@ -47,10 +47,10 @@ namespace EnfoTests.WebApp.Pages.Admin.Maintenance.LegalAuthorities
         public async Task OnPost_GivenModelError_ReturnsPageWithModelError()
         {
             var repo = new Mock<ILegalAuthorityRepository> {DefaultValue = DefaultValue.Mock};
-            var page = new Add(repo.Object) {Item = new LegalAuthorityCreate()};
+            var page = new Add {Item = new LegalAuthorityCreate()};
             page.ModelState.AddModelError("key", "message");
 
-            var result = await page.OnPostAsync();
+            var result = await page.OnPostAsync(repo.Object);
 
             result.Should().BeOfType<PageResult>();
             page.ModelState.IsValid.ShouldBeFalse();
@@ -63,9 +63,9 @@ namespace EnfoTests.WebApp.Pages.Admin.Maintenance.LegalAuthorities
             var repo = new Mock<ILegalAuthorityRepository> {DefaultValue = DefaultValue.Mock};
             repo.Setup(l => l.NameExistsAsync(It.IsAny<string>(), null))
                 .ReturnsAsync(true);
-            var page = new Add(repo.Object) {Item = item};
+            var page = new Add {Item = item};
 
-            var result = await page.OnPostAsync();
+            var result = await page.OnPostAsync(repo.Object);
 
             result.Should().BeOfType<PageResult>();
             page.ModelState.IsValid.ShouldBeFalse();

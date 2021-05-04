@@ -14,14 +14,11 @@ namespace Enfo.WebApp.Pages
         public EnforcementOrderDetailedView Item { get; private set; }
         public DisplayMessage Message { get; private set; }
 
-        private readonly IEnforcementOrderRepository _repository;
-        public Details(IEnforcementOrderRepository repository) => _repository = repository;
-
         [UsedImplicitly]
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public async Task<IActionResult> OnGetAsync([FromServices] IEnforcementOrderRepository repository, int? id)
         {
             if (id == null) return NotFound();
-            Item = await _repository.GetAsync(id.Value);
+            Item = await repository.GetAsync(id.Value);
             if (Item == null) return NotFound("ID not found.");
             Message = TempData?.GetDisplayMessage();
             return Page();

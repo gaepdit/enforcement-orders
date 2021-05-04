@@ -33,9 +33,9 @@ namespace EnfoTests.WebApp.Pages
             var repo = new Mock<IEnforcementOrderRepository>();
             repo.Setup(l => l.ListCurrentProposedEnforcementOrdersAsync())
                 .ReturnsAsync(list);
-            var page = new CurrentProposed(repo.Object) {PageContext = pageContext};
+            var page = new CurrentProposed {PageContext = pageContext};
 
-            await page.OnGetAsync();
+            await page.OnGetAsync(repo.Object);
 
             page.Orders.Should().BeEquivalentTo(list);
         }
@@ -53,9 +53,9 @@ namespace EnfoTests.WebApp.Pages
             var repo = new Mock<IEnforcementOrderRepository>();
             repo.Setup(l => l.ListCurrentProposedEnforcementOrdersAsync())
                 .ReturnsAsync(null as IReadOnlyList<EnforcementOrderDetailedView>);
-            var page = new CurrentProposed(repo.Object) {PageContext = pageContext};
+            var page = new CurrentProposed {PageContext = pageContext};
 
-            await page.OnGetAsync();
+            await page.OnGetAsync(repo.Object);
 
             page.Orders.ShouldBeNull();
         }
