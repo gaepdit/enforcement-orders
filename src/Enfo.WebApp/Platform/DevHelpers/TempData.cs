@@ -12,44 +12,43 @@ namespace Enfo.WebApp.Platform.DevHelpers
 {
     public static class TempData
     {
-        public static async Task SeedTempDataAsync([NotNull] this EnfoDbContext context,
-            CancellationToken cancellationToken)
+        public static async Task SeedTempDataAsync([NotNull] this EnfoDbContext c, CancellationToken t)
         {
-            await context.Database.OpenConnectionAsync(cancellationToken);
+            await c.Database.OpenConnectionAsync(t);
 
-            await context.Database.ExecuteSqlRawAsync(
-                $"SET IDENTITY_INSERT dbo.{nameof(context.Addresses)} ON", cancellationToken);
-            if (!await context.Addresses.AnyAsync(cancellationToken))
-                await context.Addresses.AddRangeAsync(GetAddresses, cancellationToken);
-            await context.SaveChangesAsync(cancellationToken);
-            await context.Database.ExecuteSqlRawAsync(
-                $"SET IDENTITY_INSERT dbo.{nameof(context.Addresses)} OFF", cancellationToken);
+            if (!await c.Addresses.AnyAsync(t))
+            {
+                await c.Database.ExecuteSqlRawAsync($"SET IDENTITY_INSERT dbo.{nameof(c.Addresses)} ON", t);
+                await c.Addresses.AddRangeAsync(GetAddresses, t);
+                await c.SaveChangesAsync(t);
+                await c.Database.ExecuteSqlRawAsync($"SET IDENTITY_INSERT dbo.{nameof(c.Addresses)} OFF", t);
+            }
 
-            await context.Database.ExecuteSqlRawAsync(
-                $"SET IDENTITY_INSERT dbo.{nameof(context.LegalAuthorities)} ON", cancellationToken);
-            if (!await context.LegalAuthorities.AnyAsync(cancellationToken))
-                await context.LegalAuthorities.AddRangeAsync(GetLegalAuthorities, cancellationToken);
-            await context.SaveChangesAsync(cancellationToken);
-            await context.Database.ExecuteSqlRawAsync(
-                $"SET IDENTITY_INSERT dbo.{nameof(context.LegalAuthorities)} OFF", cancellationToken);
+            if (!await c.LegalAuthorities.AnyAsync(t))
+            {
+                await c.Database.ExecuteSqlRawAsync($"SET IDENTITY_INSERT dbo.{nameof(c.LegalAuthorities)} ON", t);
+                await c.LegalAuthorities.AddRangeAsync(GetLegalAuthorities, t);
+                await c.SaveChangesAsync(t);
+                await c.Database.ExecuteSqlRawAsync($"SET IDENTITY_INSERT dbo.{nameof(c.LegalAuthorities)} OFF", t);
+            }
 
-            await context.Database.ExecuteSqlRawAsync(
-                $"SET IDENTITY_INSERT dbo.{nameof(context.EpdContacts)} ON", cancellationToken);
-            if (!await context.EpdContacts.AnyAsync(cancellationToken))
-                await context.EpdContacts.AddRangeAsync(GetEpdContacts, cancellationToken);
-            await context.SaveChangesAsync(cancellationToken);
-            await context.Database.ExecuteSqlRawAsync(
-                $"SET IDENTITY_INSERT dbo.{nameof(context.EpdContacts)} OFF", cancellationToken);
+            if (!await c.EpdContacts.AnyAsync(t))
+            {
+                await c.Database.ExecuteSqlRawAsync($"SET IDENTITY_INSERT dbo.{nameof(c.EpdContacts)} ON", t);
+                await c.EpdContacts.AddRangeAsync(GetEpdContacts, t);
+                await c.SaveChangesAsync(t);
+                await c.Database.ExecuteSqlRawAsync($"SET IDENTITY_INSERT dbo.{nameof(c.EpdContacts)} OFF", t);
+            }
 
-            await context.Database.ExecuteSqlRawAsync(
-                $"SET IDENTITY_INSERT dbo.{nameof(context.EnforcementOrders)} ON", cancellationToken);
-            if (!await context.EnforcementOrders.AnyAsync(cancellationToken))
-                await context.EnforcementOrders.AddRangeAsync(GetEnforcementOrders, cancellationToken);
-            await context.SaveChangesAsync(cancellationToken);
-            await context.Database.ExecuteSqlRawAsync(
-                $"SET IDENTITY_INSERT dbo.{nameof(context.EnforcementOrders)} OFF", cancellationToken);
+            if (!await c.EnforcementOrders.AnyAsync(t))
+            {
+                await c.Database.ExecuteSqlRawAsync($"SET IDENTITY_INSERT dbo.{nameof(c.EnforcementOrders)} ON", t);
+                await c.EnforcementOrders.AddRangeAsync(GetEnforcementOrders, t);
+                await c.SaveChangesAsync(t);
+                await c.Database.ExecuteSqlRawAsync($"SET IDENTITY_INSERT dbo.{nameof(c.EnforcementOrders)} OFF", t);
+            }
 
-            await context.Database.CloseConnectionAsync();
+            await c.Database.CloseConnectionAsync();
         }
 
         private static readonly IEnumerable<Address> GetAddresses = new List<Address>

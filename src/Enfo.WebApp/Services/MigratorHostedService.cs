@@ -37,8 +37,8 @@ namespace Enfo.WebApp.Services
                 await context.Database.EnsureDeletedAsync(cancellationToken);
 
                 // Un-comment one of the following two lines depending on whether you need to debug EF migrations.
-                // await context.Database.MigrateAsync(cancellationToken);
-                await context.Database.EnsureCreatedAsync(cancellationToken);
+                await context.Database.MigrateAsync(cancellationToken);
+                // await context.Database.EnsureCreatedAsync(cancellationToken);
 
                 // Seed initial data
                 await context.SeedTempDataAsync(cancellationToken);
