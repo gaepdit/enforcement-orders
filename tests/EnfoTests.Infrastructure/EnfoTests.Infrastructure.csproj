@@ -17,7 +17,6 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\src\Enfo.Infrastructure\Enfo.Infrastructure.csproj" />
-        <ProjectReference Include="..\..\src\Enfo.Repository\Enfo.Repository.csproj" />
         <ProjectReference Include="..\EnfoTests.Helpers\EnfoTests.Helpers.csproj" />
     </ItemGroup>
 

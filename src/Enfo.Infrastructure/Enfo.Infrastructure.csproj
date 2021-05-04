@@ -26,7 +26,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Enfo.Domain\Enfo.Domain.csproj" />
-    <ProjectReference Include="..\Enfo.Repository\Enfo.Repository.csproj" />
   </ItemGroup>
 
 </Project>
