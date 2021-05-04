@@ -42,22 +42,18 @@ namespace Enfo.WebApp.Services
 
                 // Seed initial data
                 await context.SeedTempDataAsync(cancellationToken);
-
-                // Initialize roles
-                var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
-                foreach (var role in UserRole.AllRoles.Keys)
-                {
-                    if (!await context.Roles.AnyAsync(e => e.Name == role, cancellationToken))
-                    {
-                        await roleManager.CreateAsync(new IdentityRole<Guid>(role));
-                    }
-                }
             }
             else
             {
                 // Run database migrations
                 await context.Database.MigrateAsync(cancellationToken);
             }
+
+            // Initialize roles
+            var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
+            foreach (var role in UserRole.AllRoles.Keys)
+                if (!await context.Roles.AnyAsync(e => e.Name == role, cancellationToken))
+                    await roleManager.CreateAsync(new IdentityRole<Guid>(role));
         }
 
         // noop

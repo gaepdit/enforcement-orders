@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using JetBrains.Annotations;
 
 namespace Enfo.Domain.Entities.Users
 {
@@ -10,6 +11,7 @@ namespace Enfo.Domain.Entities.Users
         public string DisplayName { get; }
         public string Description { get; }
 
+        [UsedImplicitly]
         private UserRole(string name, string displayName, string description)
         {
             (DisplayName, Description) = (displayName, description);
@@ -26,12 +28,14 @@ namespace Enfo.Domain.Entities.Users
         public const string SiteMaintenance = "SiteMaintenance";
 
         // These static UserRole objects are used for displaying role information in the UI.
+        [UsedImplicitly]
         public static UserRole OrderAdministratorRole { get; } = new(
             OrderAdministrator,
             "Order Administrator",
             "Users with the Order Administrator role are able to add and edit enforcement orders."
         );
 
+        [UsedImplicitly]
         public static UserRole UserMaintenanceRole { get; } = new(
             UserMaintenance,
             "User Maintenance",
