@@ -20,7 +20,7 @@ namespace Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthorities
         public DisplayMessage Message { get; private set; }
 
         [TempData]
-        public int HighlightId { get; set; }
+        public int HighlightId { get; [UsedImplicitly] set; }
 
         private readonly ILegalAuthorityRepository _repository;
         public Index(ILegalAuthorityRepository repository) => _repository = repository;

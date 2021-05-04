@@ -23,10 +23,10 @@ namespace Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthorities
         [HiddenInput]
         public int Id { get; set; }
 
-        [TempData]
-        public int HighlightId { get; set; }
+        [TempData, UsedImplicitly]
+        public int HighlightId { [UsedImplicitly] get; set; }
 
-        public string OriginalName { get; set; }
+        public string OriginalName { get; private set; }
         public static MaintenanceOption ThisOption => MaintenanceOption.LegalAuthority;
 
         private readonly ILegalAuthorityRepository _repository;

@@ -25,8 +25,8 @@ namespace Enfo.WebApp.Pages.Admin.Maintenance.Contacts
         [HiddenInput]
         public int Id { get; set; }
 
-        [TempData]
-        public int HighlightId { get; set; }
+        [TempData, UsedImplicitly]
+        public int HighlightId { [UsedImplicitly] get; set; }
 
         public SelectList AddressSelectList { get; private set; }
 

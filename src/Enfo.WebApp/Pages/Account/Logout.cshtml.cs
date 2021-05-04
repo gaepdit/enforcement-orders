@@ -13,6 +13,7 @@ namespace Enfo.WebApp.Pages.Account
     [AllowAnonymous]
     public class Logout : PageModel
     {
+#pragma warning disable 618
         [UsedImplicitly]
         public IActionResult OnGet() =>
             SignOut("Identity.Application", "Identity.External", AzureADDefaults.OpenIdScheme);
@@ -26,5 +27,6 @@ namespace Enfo.WebApp.Pages.Account
             await signInManager.SignOutAsync();
             return RedirectToPage("/Index");
         }
+#pragma warning restore 618
     }
 }

@@ -15,12 +15,12 @@ namespace Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthorities
     public class Add : PageModel
     {
         [BindProperty]
-        public LegalAuthorityCreate Item { get; set; }
+        public LegalAuthorityCreate Item { get; init; }
 
         public static MaintenanceOption ThisOption => MaintenanceOption.LegalAuthority;
 
         [TempData]
-        public int HighlightId { get; set; }
+        public int HighlightId { get; [UsedImplicitly] set; }
 
         [UsedImplicitly]
         public static void OnGet()

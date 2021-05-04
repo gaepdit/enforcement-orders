@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Enfo.Domain.Entities.Users;
 using Enfo.Domain.Resources.Users;
 using Microsoft.AspNetCore.Identity;
 

@@ -1,4 +1,4 @@
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Enfo.Domain.Entities.Users;
 using Enfo.Domain.Repositories;
 using Enfo.Domain.Resources.Address;
@@ -15,12 +15,12 @@ namespace Enfo.WebApp.Pages.Admin.Maintenance.Addresses
     public class Add : PageModel
     {
         [BindProperty]
-        public AddressCreate Item { get; set; }
+        public AddressCreate Item { get; init; }
 
         public static MaintenanceOption ThisOption => MaintenanceOption.Address;
 
         [TempData]
-        public int HighlightId { get; set; }
+        public int HighlightId { get; [UsedImplicitly] set; }
 
         [UsedImplicitly]
         public static void OnGet()

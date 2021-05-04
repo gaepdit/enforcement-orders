@@ -20,7 +20,7 @@ namespace Enfo.WebApp.Pages.Admin.Maintenance.Contacts
         public DisplayMessage Message { get; private set; }
 
         [TempData]
-        public int HighlightId { get; set; }
+        public int HighlightId { get; [UsedImplicitly] set; }
 
         private readonly IEpdContactRepository _repository;
         public Index(IEpdContactRepository repository) => _repository = repository;

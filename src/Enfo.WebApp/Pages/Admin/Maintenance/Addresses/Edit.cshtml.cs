@@ -23,8 +23,8 @@ namespace Enfo.WebApp.Pages.Admin.Maintenance.Addresses
         [HiddenInput]
         public int Id { get; set; }
 
-        [TempData]
-        public int HighlightId { get; set; }
+        [TempData, UsedImplicitly]
+        public int HighlightId { [UsedImplicitly] get; set; }
 
         public static MaintenanceOption ThisOption => MaintenanceOption.Address;
 

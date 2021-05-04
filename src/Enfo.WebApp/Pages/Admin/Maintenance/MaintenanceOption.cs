@@ -1,5 +1,9 @@
-﻿namespace Enfo.WebApp.Pages.Admin.Maintenance
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Enfo.WebApp.Pages.Admin.Maintenance
 {
+    [SuppressMessage("ReSharper", "S3453",
+        Justification = "See https://github.com/SonarSource/sonar-dotnet/issues/4282")]
     public class MaintenanceOption
     {
         public string SingularName { get; private init; }

@@ -51,6 +51,7 @@ namespace Enfo.WebApp
             // (AddAzureAD is marked as obsolete and will be removed in a future version, but
             // the replacement, Microsoft Identity Web, is net yet compatible with RoleManager.)
             // Follow along at https://github.com/AzureAD/microsoft-identity-web/issues/1091
+#pragma warning disable 618
             services.AddAuthentication().AddAzureAD(opts =>
             {
                 Configuration.Bind(AzureADDefaults.AuthenticationScheme, opts);
@@ -63,6 +64,7 @@ namespace Enfo.WebApp
                 opts.TokenValidationParameters.ValidateIssuer = true;
                 opts.UsePkce = true;
             });
+#pragma warning restore 618
             var keysFolder = Path.Combine(Configuration["PersistedFilesBasePath"], "DataProtectionKeys");
             services.AddDataProtection().PersistKeysToFileSystem(Directory.CreateDirectory(keysFolder));
 

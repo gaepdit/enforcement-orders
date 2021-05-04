@@ -20,7 +20,7 @@ namespace Enfo.WebApp.Pages.Admin.Maintenance.Addresses
         public DisplayMessage Message { get; private set; }
 
         [TempData]
-        public int HighlightId { get; set; }
+        public int HighlightId { get; [UsedImplicitly] set; }
 
         private readonly IAddressRepository _repository;
         public Index(IAddressRepository repository) => _repository = repository;

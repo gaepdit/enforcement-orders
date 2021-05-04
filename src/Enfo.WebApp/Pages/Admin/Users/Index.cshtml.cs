@@ -13,13 +13,13 @@ namespace Enfo.WebApp.Pages.Admin.Users
     [Authorize]
     public class Index : PageModel
     {
-        public string Name { get; set; }
+        public string Name { get; init; }
 
         [EmailAddress]
-        public string Email { get; set; }
+        public string Email { get; init; }
 
-        public bool ShowResults { get; set; }
-        public List<UserView> SearchResults { get; set; }
+        public bool ShowResults { get; private set; }
+        public List<UserView> SearchResults { get; private set; }
 
         [UsedImplicitly]
         public static void OnGet()

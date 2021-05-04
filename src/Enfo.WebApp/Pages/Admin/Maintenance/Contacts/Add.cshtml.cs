@@ -17,14 +17,14 @@ namespace Enfo.WebApp.Pages.Admin.Maintenance.Contacts
     public class Add : PageModel
     {
         [BindProperty]
-        public EpdContactCreate Item { get; set; }
+        public EpdContactCreate Item { get; init; }
 
         public SelectList AddressSelectList { get; private set; }
 
         public static MaintenanceOption ThisOption => MaintenanceOption.EpdContact;
 
         [TempData]
-        public int HighlightId { get; set; }
+        public int HighlightId { get; [UsedImplicitly] set; }
 
         private readonly IEpdContactRepository _repository;
         private readonly IAddressRepository _address;

@@ -33,8 +33,8 @@ namespace Enfo.Domain.Resources.EnforcementOrder
             Domain.Entities.EnforcementOrder.PublicationState status) =>
             status switch
             {
-                Domain.Entities.EnforcementOrder.PublicationState.Draft => PublicationState.Draft,
-                Domain.Entities.EnforcementOrder.PublicationState.Published => PublicationState.Published,
+                Entities.EnforcementOrder.PublicationState.Draft => PublicationState.Draft,
+                Entities.EnforcementOrder.PublicationState.Published => PublicationState.Published,
                 _ => throw new InvalidEnumArgumentException(nameof(status), (int) status,
                     typeof(Domain.Entities.EnforcementOrder.PublicationState))
             };
