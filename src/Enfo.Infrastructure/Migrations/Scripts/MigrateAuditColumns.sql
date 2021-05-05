@@ -85,3 +85,21 @@ alter table EpdContacts
 alter table LegalAuthorities
     drop column CreatedDate, UpdatedDate, CreatedById, UpdatedById;
 
+-- Update audit data where user data was not originally available
+
+update EnforcementOrders
+set CreatedBy = case
+                    when CreatedBy = '0@dnr.ga.gov' then 'kfrazier'
+                    when CreatedBy = '00@dnr.ga.gov' then 'johnson'
+                    when CreatedBy = '000@dnr.ga.gov' then 'lewis'
+                    when CreatedBy = '0000@dnr.ga.gov' then 'lhughes'
+    end,
+    UpdatedBy = case
+                    when UpdatedBy = '0@dnr.ga.gov' then 'kfrazier'
+                    when UpdatedBy = '00@dnr.ga.gov' then 'johnson'
+                    when UpdatedBy = '000@dnr.ga.gov' then 'lewis'
+                    when UpdatedBy = '0000@dnr.ga.gov' then 'lhughes'
+        end
+where CreatedBy like '0%';
+
+go
