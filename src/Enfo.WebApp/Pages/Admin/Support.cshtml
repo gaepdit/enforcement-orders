@@ -1,0 +1,30 @@
+﻿@page
+@model Enfo.WebApp.Pages.Admin.Support
+@{
+    ViewData["Title"] = "Support";
+    var supportMailto = $"mailto:{Model.SupportEmail}?subject=ENFO Support Request";
+}
+
+<h1>@ViewData["Title"]</h1>
+<p>For technical support, contact <a href="@supportMailto">@Model.SupportEmail</a>.</p>
+<p>
+    Copyright © 2017 – @DateTime.Now.Year, State of Georgia.<br />
+    ENFO was developed by Georgia EPD-IT.
+</p>
+
+<details>
+    <summary>
+        <h2>Open Source Licenses</h2>
+    </summary>
+
+    <p>ENFO gratefully uses the following open source components:</p>
+    <ul>
+        <li><a href="https://dotnet.microsoft.com/apps/aspnet">ASP.NET</a> (<a href="https://github.com/dotnet/aspnetcore/blob/main/LICENSE.txt">License</a>)</li>
+        <li><a href="https://docs.microsoft.com/en-us/ef/">Entity Framework</a> (<a href="https://github.com/dotnet/efcore/blob/main/LICENSE.txt">License</a>)</li>
+        <li><a href="https://designsystem.digital.gov/">U.S. Web Design System</a> (<a href="https://github.com/uswds/uswds/blob/develop/LICENSE.md">License</a>)</li>
+        <li><a href="https://jquery.com/">jQuery</a> (<a href="https://jquery.org/license/">License</a>)</li>
+        <li><a href="https://jqueryvalidation.org/">jQuery Validation</a> (<a href="https://github.com/jquery-validation/jquery-validation/blob/master/LICENSE.md">License</a>)</li>
+        <li><a href="https://timepicker.co/">jQuery Timepicker</a> (<a href="https://github.com/wvega/timepicker#license">License</a>)</li>
+        <li><a href="https://github.com/MindscapeHQ/raygun4net">Raygun4Net</a> (<a href="https://github.com/MindscapeHQ/raygun4net/blob/master/LICENSE">License</a>)</li>
+    </ul>
+</details>
