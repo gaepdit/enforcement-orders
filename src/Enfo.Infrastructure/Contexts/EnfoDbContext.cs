@@ -42,9 +42,6 @@ namespace Enfo.Infrastructure.Contexts
             foreach (var entityType in builder.Model.GetEntityTypes()
                 .Where(e => typeof(IBaseEntity).IsAssignableFrom(e.ClrType)))
             {
-                // Skip the ASP.NET Identity tables
-                if (entityType.ClrType.Name.StartsWith("App")) continue;
-
                 builder.Entity(entityType.ClrType).Property<DateTimeOffset?>(AuditProperties.CreatedAt);
                 builder.Entity(entityType.ClrType).Property<DateTimeOffset?>(AuditProperties.UpdatedAt);
                 builder.Entity(entityType.ClrType).Property<string>(AuditProperties.CreatedBy);
