@@ -17,7 +17,7 @@ namespace Enfo.WebApp.Pages.Account
         public IList<string> Roles { get; private set; }
 
         [UsedImplicitly]
-        public async Task OnGet([FromServices] IUserService userService)
+        public async Task OnGetAsync([FromServices] IUserService userService)
         {
             DisplayUser = await userService.GetCurrentUserAsync() ?? throw new Exception("Current user not found");
             Roles = await userService.GetCurrentUserRolesAsync();

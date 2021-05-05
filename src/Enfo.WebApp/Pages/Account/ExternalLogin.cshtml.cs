@@ -36,7 +36,7 @@ namespace Enfo.WebApp.Pages.Account
 
         // Don't call the page directly
         [UsedImplicitly]
-        public IActionResult OnGetAsync() => RedirectToPage("./Login");
+        public IActionResult OnGet() => RedirectToPage("./Login");
 
         // This Post method is called by the Login page
         [UsedImplicitly]
