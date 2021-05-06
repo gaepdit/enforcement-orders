@@ -24,7 +24,6 @@ namespace EnfoTests.Infrastructure
             var item = await repository.GetAsync(id);
 
             var epdContact = GetEpdContacts.Single(e => e.Id == id);
-            epdContact.Address = GetAddresses.Single(e => e.Id == epdContact.AddressId);
             var expected = new EpdContactView(epdContact);
 
             item.Should().BeEquivalentTo(expected);
@@ -48,7 +47,6 @@ namespace EnfoTests.Infrastructure
             items.Should().HaveCount(GetEpdContacts.Count(e => e.Active));
 
             var epdContact = GetEpdContacts.First(e => e.Active);
-            epdContact.Address = GetAddresses.Single(e => e.Id == epdContact.AddressId);
             var expected = new EpdContactView(epdContact);
 
             items[0].Should().BeEquivalentTo(expected);
@@ -62,7 +60,6 @@ namespace EnfoTests.Infrastructure
             items.Should().HaveCount(GetEpdContacts.Count());
 
             var epdContact = GetEpdContacts.First();
-            epdContact.Address = GetAddresses.Single(e => e.Id == epdContact.AddressId);
             var expected = new EpdContactView(epdContact);
 
             items[0].Should().BeEquivalentTo(expected);
@@ -73,25 +70,26 @@ namespace EnfoTests.Infrastructure
         [Fact]
         public async Task Create_AddsNewItem()
         {
-            int itemId;
             var itemCreate = new EpdContactCreate()
             {
                 Email = null,
                 Organization = "EPD",
                 Telephone = null,
                 Title = "Title",
-                AddressId = 2000,
                 ContactName = "C. Patel",
+                City = "Abc",
+                State = "GA",
+                Street = "123 St",
+                PostalCode = "00000"
             };
 
             using var repositoryHelper = CreateRepositoryHelper();
             using var repository = repositoryHelper.GetEpdContactRepository();
 
-            itemId = await repository.CreateAsync(itemCreate);
+            var itemId = await repository.CreateAsync(itemCreate);
             repositoryHelper.ClearChangeTracker();
 
             var epdContact = itemCreate.ToEpdContactEntity();
-            epdContact.Address = GetAddresses.Single(e => e.Id == itemCreate.AddressId);
             epdContact.Id = itemId;
             var expected = new EpdContactView(epdContact);
 
@@ -107,8 +105,11 @@ namespace EnfoTests.Infrastructure
                 Organization = "EPD",
                 Telephone = null,
                 Title = "Title",
-                AddressId = 2000,
                 ContactName = null,
+                City = "Abc",
+                State = "GA",
+                Street = "123 St",
+                PostalCode = "00000"
             };
 
             Func<Task> action = async () =>
@@ -130,8 +131,11 @@ namespace EnfoTests.Infrastructure
                 Organization = "EPD",
                 Telephone = null,
                 Title = "Title",
-                AddressId = 2000,
                 ContactName = "C. Patel",
+                City = "Abc",
+                State = "GA",
+                Street = "123 St",
+                PostalCode = "00000"
             };
 
             Func<Task> action = async () =>
@@ -141,7 +145,7 @@ namespace EnfoTests.Infrastructure
             };
 
             (await action.Should().ThrowAsync<ArgumentException>())
-                .WithMessage($"Value ({itemCreate.Email}) is not valid. (Parameter 'Email')")
+                .WithMessage($"Value ({itemCreate.Email}) is not valid. (Parameter '{nameof(itemCreate.Email)}')")
                 .And.ParamName.Should().Be(nameof(itemCreate.Email));
         }
 
@@ -154,8 +158,11 @@ namespace EnfoTests.Infrastructure
                 Organization = "EPD",
                 Telephone = "abc",
                 Title = "Title",
-                AddressId = 2000,
                 ContactName = "C. Patel",
+                City = "Abc",
+                State = "GA",
+                Street = "123 St",
+                PostalCode = "00000"
             };
 
             Func<Task> action = async () =>
@@ -165,8 +172,63 @@ namespace EnfoTests.Infrastructure
             };
 
             (await action.Should().ThrowAsync<ArgumentException>())
-                .WithMessage($"Value ({itemCreate.Telephone}) is not valid. (Parameter 'Telephone')")
+                .WithMessage($"Value ({itemCreate.Telephone}) is not valid. (Parameter '{nameof(itemCreate.Telephone)}')")
                 .And.ParamName.Should().Be(nameof(itemCreate.Telephone));
+        }
+
+        [Fact]
+        public async Task Create_GivenNullStreet_ThrowsException()
+        {
+            var itemCreate = new EpdContactCreate()
+            {
+                Email = null,
+                Organization = "EPD",
+                Telephone = null,
+                Title = "Title",
+                ContactName = "C. Patel",
+                City = "Abc",
+                State = "GA",
+                Street = null,
+                PostalCode = "00000"
+            };
+
+            Func<Task> action = async () =>
+            {
+                using var repository = CreateRepositoryHelper().GetEpdContactRepository();
+                await repository.CreateAsync(itemCreate);
+            };
+
+            (await action.Should().ThrowAsync<ArgumentException>())
+                .WithMessage($"Value cannot be null. (Parameter '{nameof(itemCreate.Street)}')")
+                .And.ParamName.Should().Be(nameof(itemCreate.Street));
+        }
+
+        [Fact]
+        public async Task Create_GivenInvalidZIP_ThrowsException()
+        {
+            var itemCreate = new EpdContactCreate()
+            {
+                Email = null,
+                Organization = "EPD",
+                Telephone = null,
+                Title = "Title",
+                ContactName = "C. Patel",
+                City = "Abc",
+                State = "GA",
+                Street = "123 St",
+                PostalCode = "123"
+            };
+
+            Func<Task> action = async () =>
+            {
+                using var repository = CreateRepositoryHelper().GetEpdContactRepository();
+                await repository.CreateAsync(itemCreate);
+            };
+
+            (await action.Should().ThrowAsync<ArgumentException>())
+                .WithMessage(
+                    $"Value ({itemCreate.PostalCode}) is not valid. (Parameter '{nameof(itemCreate.PostalCode)}')")
+                .And.ParamName.Should().Be(nameof(itemCreate.PostalCode));
         }
 
         // UpdateAsync
@@ -181,8 +243,11 @@ namespace EnfoTests.Infrastructure
                 Organization = "New Org",
                 Telephone = null,
                 Title = "Title",
-                AddressId = 2001,
                 ContactName = "C. Patel",
+                City = "Abc",
+                State = "GA",
+                Street = "123 St",
+                PostalCode = "00000"
             };
 
             using var repositoryHelper = CreateRepositoryHelper();
@@ -207,8 +272,11 @@ namespace EnfoTests.Infrastructure
                 Organization = original.Organization,
                 Telephone = original.Telephone,
                 Title = original.Title,
-                AddressId = original.AddressId,
                 ContactName = original.ContactName,
+                City = "Abc",
+                State = "GA",
+                Street = "123 St",
+                PostalCode = "00000"
             };
 
             using var repositoryHelper = CreateRepositoryHelper();
@@ -232,8 +300,11 @@ namespace EnfoTests.Infrastructure
                 Organization = "EPD",
                 Telephone = null,
                 Title = "Title",
-                AddressId = 2000,
                 ContactName = null,
+                City = "Abc",
+                State = "GA",
+                Street = "123 St",
+                PostalCode = "00000"
             };
 
             Func<Task> action = async () =>
@@ -256,8 +327,11 @@ namespace EnfoTests.Infrastructure
                 Organization = "EPD",
                 Telephone = null,
                 Title = "Title",
-                AddressId = 2000,
                 ContactName = "C. Patel",
+                City = "Abc",
+                State = "GA",
+                Street = "123 St",
+                PostalCode = "00000"
             };
 
             Func<Task> action = async () =>
@@ -267,7 +341,7 @@ namespace EnfoTests.Infrastructure
             };
 
             (await action.Should().ThrowAsync<ArgumentException>())
-                .WithMessage($"Value ({itemUpdate.Email}) is not valid. (Parameter 'Email')")
+                .WithMessage($"Value ({itemUpdate.Email}) is not valid. (Parameter '{nameof(itemUpdate.Email)}')")
                 .And.ParamName.Should().Be(nameof(itemUpdate.Email));
         }
 
@@ -281,8 +355,11 @@ namespace EnfoTests.Infrastructure
                 Organization = "EPD",
                 Telephone = "abc",
                 Title = "Title",
-                AddressId = 2000,
                 ContactName = "C. Patel",
+                City = "Abc",
+                State = "GA",
+                Street = "123 St",
+                PostalCode = "00000"
             };
 
             Func<Task> action = async () =>
@@ -292,8 +369,64 @@ namespace EnfoTests.Infrastructure
             };
 
             (await action.Should().ThrowAsync<ArgumentException>())
-                .WithMessage($"Value ({itemUpdate.Telephone}) is not valid. (Parameter 'Telephone')")
+                .WithMessage($"Value ({itemUpdate.Telephone}) is not valid. (Parameter '{nameof(itemUpdate.Telephone)}')")
                 .And.ParamName.Should().Be(nameof(itemUpdate.Telephone));
+        }
+
+        [Fact]
+        public async Task Update_GivenNullStreet_ThrowsException()
+        {
+            var itemId = GetEpdContacts.First(e => e.Active).Id;
+            var itemUpdate = new EpdContactUpdate()
+            {
+                Email = null,
+                Organization = "EPD",
+                Telephone = null,
+                Title = "Title",
+                ContactName = "C. Patel",
+                City = "Abc",
+                State = "GA",
+                Street = null,
+                PostalCode = "00000"
+            };
+
+            Func<Task> action = async () =>
+            {
+                using var repository = CreateRepositoryHelper().GetEpdContactRepository();
+                await repository.UpdateAsync(itemId, itemUpdate);
+            };
+
+            (await action.Should().ThrowAsync<ArgumentException>())
+                .WithMessage($"Value cannot be null. (Parameter '{nameof(itemUpdate.Street)}')")
+                .And.ParamName.Should().Be(nameof(itemUpdate.Street));
+        }
+
+        [Fact]
+        public async Task Update_GivenInvalidZIP_ThrowsException()
+        {
+            var itemId = GetEpdContacts.First(e => e.Active).Id;
+            var itemUpdate = new EpdContactUpdate()
+            {
+                Email = null,
+                Organization = "EPD",
+                Telephone = null,
+                Title = "Title",
+                ContactName = "C. Patel",
+                City = "Abc",
+                State = "GA",
+                Street = "123 St",
+                PostalCode = "123"
+            };
+
+            Func<Task> action = async () =>
+            {
+                using var repository = CreateRepositoryHelper().GetEpdContactRepository();
+                await repository.UpdateAsync(itemId, itemUpdate);
+            };
+
+            (await action.Should().ThrowAsync<ArgumentException>())
+                .WithMessage($"Value ({itemUpdate.PostalCode}) is not valid. (Parameter '{nameof(itemUpdate.PostalCode)}')")
+                .And.ParamName.Should().Be(nameof(itemUpdate.PostalCode));
         }
 
         [Fact]
@@ -305,8 +438,11 @@ namespace EnfoTests.Infrastructure
                 Organization = "New Org",
                 Telephone = null,
                 Title = "Title",
-                AddressId = 2000,
                 ContactName = "C. Patel",
+                City = "Abc",
+                State = "GA",
+                Street = "123 St",
+                PostalCode = "00000"
             };
 
             const int itemId = -1;

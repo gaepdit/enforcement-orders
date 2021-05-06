@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Enfo.Domain.Entities;
-using Enfo.Domain.Resources.Address;
 using Enfo.Domain.Resources.EnforcementOrder;
 using Enfo.Domain.Resources.EpdContact;
 using Enfo.Domain.Resources.LegalAuthority;
@@ -44,13 +43,7 @@ namespace EnfoTests.Helpers
         {
             order.LegalAuthority = GetLegalAuthorities.SingleOrDefault(e => e.Id == order.LegalAuthorityId);
             order.CommentContact = GetEpdContacts.SingleOrDefault(e => e.Id == order.CommentContactId);
-            if (order.CommentContact != null)
-                order.CommentContact.Address =
-                    GetAddresses.SingleOrDefault(e => e.Id == order.CommentContact.AddressId);
             order.HearingContact = GetEpdContacts.SingleOrDefault(e => e.Id == order.HearingContactId);
-            if (order.HearingContact != null)
-                order.HearingContact.Address =
-                    GetAddresses.SingleOrDefault(e => e.Id == order.HearingContact.AddressId);
 
             return order;
         }
@@ -100,20 +93,11 @@ namespace EnfoTests.Helpers
                 "Duis ut diam quam nulla porttitor massa id neque. A lacus vestibulum sed arcu non. Amet massa vitae tortor condimentum. Magnis dis parturient montes nascetur ridiculus mus mauris. Arcu risus quis varius quam quisque id diam. Pellentesque massa placerat duis ultricies lacus sed. Tellus in hac habitasse platea dictumst vestibulum. Justo nec ultrices dui sapien eget. Ac odio tempor orci dapibus ultrices in. Lacus sed viverra tellus in hac habitasse platea dictumst vestibulum. Donec et odio pellentesque diam volutpat. Nunc faucibus a pellentesque sit amet porttitor eget dolor morbi. Neque ornare aenean euismod elementum nisi quis eleifend quam. Praesent elementum facilisis leo vel fringilla est ullamcorper eget. Et netus et malesuada fames. Urna et pharetra pharetra massa massa ultricies mi quis. Sit amet consectetur adipiscing elit. Felis donec et odio pellentesque diam volutpat commodo sed egestas. Adipiscing elit pellentesque habitant morbi.",
             SettlementAmount = 2000,
         };
-        
+
         // Maintenance
 
-        public static List<AddressView> GetAddressViewList() =>
-            GetAddresses.Select(e => new AddressView(e)).ToList();
-
         public static List<EpdContactView> GetEpdContactViewList() =>
-            GetEpdContacts.Select(e => new EpdContactView(FillNavigationProperties(e))).ToList();
-
-        private static EpdContact FillNavigationProperties(EpdContact contact)
-        {
-            contact.Address = GetAddresses.SingleOrDefault(e => e.Id == contact.AddressId);
-            return contact;
-        }
+            GetEpdContacts.Select(e => new EpdContactView(e)).ToList();
 
         public static List<LegalAuthorityView> GetLegalAuthorityViewList() =>
             GetLegalAuthorities.Select(e => new LegalAuthorityView(e)).ToList();

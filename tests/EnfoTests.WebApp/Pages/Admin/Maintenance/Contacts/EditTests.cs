@@ -26,10 +26,7 @@ namespace EnfoTests.WebApp.Pages.Admin.Maintenance.Contacts
             var item = GetEpdContactViewList()[0];
             var repo = new Mock<IEpdContactRepository>();
             repo.Setup(l => l.GetAsync(item.Id)).ReturnsAsync(item);
-            var addressRepo = new Mock<IAddressRepository> {DefaultValue = DefaultValue.Mock};
-            addressRepo.Setup(l => l.ListAsync(false))
-                .ReturnsAsync(GetAddressViewList());
-            var page = new Edit(repo.Object, addressRepo.Object);
+            var page = new Edit(repo.Object);
 
             await page.OnGetAsync(item.Id);
 
@@ -40,7 +37,7 @@ namespace EnfoTests.WebApp.Pages.Admin.Maintenance.Contacts
         [Fact]
         public async Task OnGet_GivenNullId_ReturnsNotFound()
         {
-            var page = new Edit(Mock.Of<IEpdContactRepository>(), Mock.Of<IAddressRepository>());
+            var page = new Edit(Mock.Of<IEpdContactRepository>());
 
             var result = await page.OnGetAsync(null);
 
@@ -53,7 +50,7 @@ namespace EnfoTests.WebApp.Pages.Admin.Maintenance.Contacts
         {
             var repo = new Mock<IEpdContactRepository>();
             repo.Setup(l => l.GetAsync(It.IsAny<int>())).ReturnsAsync(null as EpdContactView);
-            var page = new Edit(repo.Object, Mock.Of<IAddressRepository>());
+            var page = new Edit(repo.Object);
 
             var result = await page.OnGetAsync(-1);
 
@@ -72,7 +69,7 @@ namespace EnfoTests.WebApp.Pages.Admin.Maintenance.Contacts
             // Initialize Page TempData
             var httpContext = new DefaultHttpContext();
             var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
-            var page = new Edit(repo.Object, Mock.Of<IAddressRepository>())
+            var page = new Edit(repo.Object)
                 {TempData = tempData};
 
             var result = await page.OnGetAsync(item.Id);
@@ -91,8 +88,7 @@ namespace EnfoTests.WebApp.Pages.Admin.Maintenance.Contacts
         {
             var repo = new Mock<IEpdContactRepository>();
             repo.Setup(l => l.GetAsync(It.IsAny<int>())).ReturnsAsync(null as EpdContactView);
-            var addressRepo = new Mock<IAddressRepository>();
-            var page = new Edit(repo.Object, addressRepo.Object) {Id = 0};
+            var page = new Edit(repo.Object) {Id = 0};
 
             var result = await page.OnPostAsync();
 
@@ -111,7 +107,7 @@ namespace EnfoTests.WebApp.Pages.Admin.Maintenance.Contacts
             // Initialize Page TempData
             var httpContext = new DefaultHttpContext();
             var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
-            var page = new Edit(repo.Object, Mock.Of<IAddressRepository>()) 
+            var page = new Edit(repo.Object) 
                 {TempData = tempData, Id = 0};
 
             var result = await page.OnPostAsync();
@@ -131,12 +127,11 @@ namespace EnfoTests.WebApp.Pages.Admin.Maintenance.Contacts
             var repo = new Mock<IEpdContactRepository> {DefaultValue = DefaultValue.Mock};
             repo.Setup(l => l.GetAsync(It.IsAny<int>()))
                 .ReturnsAsync(GetEpdContactViewList()[0]);
-            var addressRepo = new Mock<IAddressRepository>();
-
+            
             // Initialize Page TempData
             var httpContext = new DefaultHttpContext();
             var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
-            var page = new Edit(repo.Object, addressRepo.Object) {TempData = tempData, Item = item};
+            var page = new Edit(repo.Object) {TempData = tempData, Item = item};
 
             var result = await page.OnPostAsync();
 
@@ -154,10 +149,7 @@ namespace EnfoTests.WebApp.Pages.Admin.Maintenance.Contacts
             var repo = new Mock<IEpdContactRepository> {DefaultValue = DefaultValue.Mock};
             repo.Setup(l => l.GetAsync(It.IsAny<int>()))
                 .ReturnsAsync(GetEpdContactViewList()[0]);
-            var addressRepo = new Mock<IAddressRepository>();
-            addressRepo.Setup(l => l.ListAsync(false))
-                .ReturnsAsync(GetAddressViewList());
-            var page = new Edit(repo.Object, addressRepo.Object) {Item = new EpdContactUpdate()};
+            var page = new Edit(repo.Object) {Item = new EpdContactUpdate()};
             page.ModelState.AddModelError("key", "message");
 
             var result = await page.OnPostAsync();

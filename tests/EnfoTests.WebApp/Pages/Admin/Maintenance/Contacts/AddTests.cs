@@ -12,7 +12,6 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Moq;
 using Xunit;
 using Xunit.Extensions.AssertExtensions;
-using static EnfoTests.Helpers.ResourceHelper;
 
 namespace EnfoTests.WebApp.Pages.Admin.Maintenance.Contacts
 {
@@ -23,22 +22,19 @@ namespace EnfoTests.WebApp.Pages.Admin.Maintenance.Contacts
         {
             var item = new EpdContactCreate
             {
-                Email = "abc", Organization = "abc", Telephone = "abc", Title = "abc", AddressId = 2000,
-                ContactName = "abc"
+                Email = "abc", Organization = "abc", Telephone = "abc", Title = "abc", ContactName = "abc",
+                City = "abc", State = "GA", Street = "123", PostalCode = "01234",
             };
             var repo = new Mock<IEpdContactRepository> {DefaultValue = DefaultValue.Mock};
             repo.Setup(l => l.CreateAsync(It.IsAny<EpdContactCreate>()))
                 .ReturnsAsync(1);
-            var addressRepo = new Mock<IAddressRepository> {DefaultValue = DefaultValue.Mock};
-            addressRepo.Setup(l => l.ListAsync(false))
-                .ReturnsAsync(GetAddressViewList());
 
             // Initialize Page TempData
             var httpContext = new DefaultHttpContext();
             var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
-            var page = new Add(repo.Object, addressRepo.Object) {TempData = tempData, Item = item};
+            var page = new Add {TempData = tempData, Item = item};
 
-            var result = await page.OnPostAsync();
+            var result = await page.OnPostAsync(repo.Object);
 
             var expected = new DisplayMessage(Context.Success,
                 $"{Add.ThisOption.SingularName} successfully added.");
@@ -53,13 +49,10 @@ namespace EnfoTests.WebApp.Pages.Admin.Maintenance.Contacts
         public async Task OnPost_GivenModelError_ReturnsPageWithModelError()
         {
             var repo = new Mock<IEpdContactRepository> {DefaultValue = DefaultValue.Mock};
-            var addressRepo = new Mock<IAddressRepository> {DefaultValue = DefaultValue.Mock};
-            addressRepo.Setup(l => l.ListAsync(false))
-                .ReturnsAsync(GetAddressViewList());
-            var page = new Add(repo.Object, addressRepo.Object) {Item = new EpdContactCreate()};
+            var page = new Add() {Item = new EpdContactCreate()};
             page.ModelState.AddModelError("key", "message");
 
-            var result = await page.OnPostAsync();
+            var result = await page.OnPostAsync(repo.Object);
 
             result.Should().BeOfType<PageResult>();
             page.ModelState.IsValid.ShouldBeFalse();
