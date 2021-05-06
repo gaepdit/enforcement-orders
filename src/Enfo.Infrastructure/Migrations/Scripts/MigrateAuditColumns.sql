@@ -1,21 +1,4 @@
-﻿-- Addresses
-
-update t
-set CreatedAt = CreatedDate at time zone 'Eastern Standard Time',
-    UpdatedAt = UpdatedDate at time zone 'Eastern Standard Time'
-from Addresses t;
-
-update t
-set t.CreatedBy = u.EmailAddress
-from Addresses t
-    inner join EnfoUsers u
-    on t.CreatedById = u.Id;
-
-update t
-set t.UpdatedBy = u.EmailAddress
-from Addresses t
-    inner join EnfoUsers u
-    on t.UpdatedById = u.Id;
+﻿-- Migrate database audit columns
 
 -- EnforcementOrders
 
@@ -35,6 +18,11 @@ set t.UpdatedBy = u.EmailAddress
 from EnforcementOrders t
     inner join EnfoUsers u
     on t.UpdatedById = u.Id;
+go
+
+alter table EnforcementOrders
+    drop column CreatedDate, UpdatedDate, CreatedById, UpdatedById;
+go
 
 -- EpdContacts
 
@@ -54,6 +42,11 @@ set t.UpdatedBy = u.EmailAddress
 from EpdContacts t
     inner join EnfoUsers u
     on t.UpdatedById = u.Id;
+go
+
+alter table EpdContacts
+    drop column CreatedDate, UpdatedDate, CreatedById, UpdatedById;
+go
 
 -- LegalAuthorities
 
@@ -73,17 +66,11 @@ set t.UpdatedBy = u.EmailAddress
 from LegalAuthorities t
     inner join EnfoUsers u
     on t.UpdatedById = u.Id;
+go
 
--- Drop obsolete columns
-
-alter table Addresses
-    drop column CreatedDate, UpdatedDate, CreatedById, UpdatedById;
-alter table EnforcementOrders
-    drop column CreatedDate, UpdatedDate, CreatedById, UpdatedById;
-alter table EpdContacts
-    drop column CreatedDate, UpdatedDate, CreatedById, UpdatedById;
 alter table LegalAuthorities
     drop column CreatedDate, UpdatedDate, CreatedById, UpdatedById;
+go
 
 -- Update audit data where user data was not originally available
 
