@@ -2,7 +2,6 @@
 using Enfo.Domain.Entities.Users;
 using Enfo.Domain.Mapping;
 using Enfo.Domain.Repositories;
-using Enfo.Domain.Resources.Address;
 using Enfo.Domain.Resources.EpdContact;
 using Enfo.WebApp.Models;
 using Enfo.WebApp.Platform.Extensions;
@@ -10,7 +9,6 @@ using JetBrains.Annotations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace Enfo.WebApp.Pages.Admin.Maintenance.Contacts
@@ -28,15 +26,10 @@ namespace Enfo.WebApp.Pages.Admin.Maintenance.Contacts
         [TempData, UsedImplicitly]
         public int HighlightId { [UsedImplicitly] get; set; }
 
-        public SelectList AddressSelectList { get; private set; }
-
         public static MaintenanceOption ThisOption => MaintenanceOption.EpdContact;
 
         private readonly IEpdContactRepository _repository;
-        private readonly IAddressRepository _address;
-
-        public Edit(IEpdContactRepository repository, IAddressRepository address) =>
-            (_repository, _address) = (repository, address);
+        public Edit(IEpdContactRepository repository) => _repository = repository;
 
         [UsedImplicitly]
         public async Task<IActionResult> OnGetAsync(int? id)
@@ -53,7 +46,6 @@ namespace Enfo.WebApp.Pages.Admin.Maintenance.Contacts
 
             Item = EpdContactMapping.ToEpdContactUpdate(originalItem);
             Id = id.Value;
-            await PopulateSelectListsAsync();
             return Page();
         }
 
@@ -71,11 +63,7 @@ namespace Enfo.WebApp.Pages.Admin.Maintenance.Contacts
 
             Item.TrimAll();
 
-            if (!ModelState.IsValid)
-            {
-                await PopulateSelectListsAsync();
-                return Page();
-            }
+            if (!ModelState.IsValid) return Page();
 
             try
             {
@@ -91,9 +79,5 @@ namespace Enfo.WebApp.Pages.Admin.Maintenance.Contacts
             TempData?.SetDisplayMessage(Context.Success, $"{ThisOption.SingularName} successfully updated.");
             return RedirectToPage("Index");
         }
-
-        private async Task PopulateSelectListsAsync() =>
-            AddressSelectList = new SelectList(await _address.ListAsync(), nameof(AddressView.Id),
-                nameof(AddressView.AsLinearString));
     }
 }

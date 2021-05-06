@@ -86,7 +86,6 @@ namespace Enfo.WebApp
 
             // Configure dependencies
             services.AddScoped<IUserService, UserService>();
-            services.AddScoped<IAddressRepository, AddressRepository>();
             services.AddScoped<IEnforcementOrderRepository, EnforcementOrderRepository>();
             services.AddScoped<IEpdContactRepository, EpdContactRepository>();
             services.AddScoped<ILegalAuthorityRepository, LegalAuthorityRepository>();

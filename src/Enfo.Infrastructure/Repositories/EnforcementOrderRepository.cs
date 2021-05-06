@@ -23,8 +23,8 @@ namespace Enfo.Infrastructure.Repositories
         {
             var item = await _context.EnforcementOrders.AsNoTracking()
                 .FilterForOnlyPublic()
-                .Include(e => e.CommentContact).ThenInclude(e => e.Address)
-                .Include(e => e.HearingContact).ThenInclude(e => e.Address)
+                .Include(e => e.CommentContact)
+                .Include(e => e.HearingContact)
                 .Include(e => e.LegalAuthority)
                 .SingleOrDefaultAsync(e => e.Id == id).ConfigureAwait(false);
 
@@ -34,8 +34,8 @@ namespace Enfo.Infrastructure.Repositories
         public async Task<EnforcementOrderAdminView> GetAdminViewAsync(int id)
         {
             var item = (await _context.EnforcementOrders.AsNoTracking()
-                .Include(e => e.CommentContact).ThenInclude(e => e.Address)
-                .Include(e => e.HearingContact).ThenInclude(e => e.Address)
+                .Include(e => e.CommentContact)
+                .Include(e => e.HearingContact)
                 .Include(e => e.LegalAuthority)
                 .SingleOrDefaultAsync(e => e.Id == id).ConfigureAwait(false));
 
@@ -105,8 +105,8 @@ namespace Enfo.Infrastructure.Repositories
             await _context.EnforcementOrders.AsNoTracking()
                 .FilterForCurrentProposed()
                 .ApplySorting(OrderSorting.DateAsc)
-                .Include(e => e.CommentContact).ThenInclude(e => e.Address)
-                .Include(e => e.HearingContact).ThenInclude(e => e.Address)
+                .Include(e => e.CommentContact)
+                .Include(e => e.HearingContact)
                 .Include(e => e.LegalAuthority)
                 .Select(e => new EnforcementOrderDetailedView(e))
                 .ToListAsync().ConfigureAwait(false);
@@ -117,8 +117,8 @@ namespace Enfo.Infrastructure.Repositories
             await _context.EnforcementOrders.AsNoTracking()
                 .FilterForRecentlyExecuted()
                 .ApplySorting(OrderSorting.DateAsc)
-                .Include(e => e.CommentContact).ThenInclude(e => e.Address)
-                .Include(e => e.HearingContact).ThenInclude(e => e.Address)
+                .Include(e => e.CommentContact)
+                .Include(e => e.HearingContact)
                 .Include(e => e.LegalAuthority)
                 .Select(e => new EnforcementOrderDetailedView(e))
                 .ToListAsync().ConfigureAwait(false);

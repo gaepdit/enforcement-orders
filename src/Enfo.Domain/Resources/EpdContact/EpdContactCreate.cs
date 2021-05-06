@@ -5,7 +5,7 @@ namespace Enfo.Domain.Resources.EpdContact
 {
     public class EpdContactCreate
     {
-        [DisplayName("Contact Name")]
+        [DisplayName("Contact Full Name")]
         [Required(ErrorMessage = "Contact Name is required.")]
         [StringLength(250)]
         public string ContactName { get; set; }
@@ -18,10 +18,6 @@ namespace Enfo.Domain.Resources.EpdContact
         [StringLength(100)]
         public string Organization { get; set; }
 
-        [DisplayName("Address")]
-        [Required(ErrorMessage = "Address is required.")]
-        public int AddressId { get; set; }
-
         [DataType(DataType.PhoneNumber)]
         [StringLength(50)]
         [RegularExpression(ResourceRegex.Telephone, ErrorMessage = "Provide a valid phone number with area code.")]
@@ -32,6 +28,31 @@ namespace Enfo.Domain.Resources.EpdContact
         [RegularExpression(ResourceRegex.Email, ErrorMessage = "Provide a valid email address.")]
         public string Email { get; set; }
         
+        [DisplayName("Street Address")]
+        [Required(ErrorMessage = "Street Address is required.")]
+        [StringLength(100)]
+        public string Street { get; set; }
+
+        [DisplayName("Apt / Suite / Other")]
+        [StringLength(100)]
+        public string Street2 { get; set; }
+
+        [Required(ErrorMessage = "City is required.")]
+        [StringLength(50)]
+        public string City { get; set; }
+
+        [Required(ErrorMessage = "State is required.")]
+        [StringLength(2)]
+        [DefaultValue("GA")]
+        public string State { get; set; } = "GA";
+
+        [DisplayName("Postal Code")]
+        [Required(ErrorMessage = "Postal Code is required.")]
+        [DataType(DataType.PostalCode)]
+        [StringLength(10)]
+        [RegularExpression(ResourceRegex.PostalCode, ErrorMessage = "Provide a valid US ZIP Code.")]
+        public string PostalCode { get; set; }
+
         public void TrimAll()
         {
             ContactName = ContactName?.Trim();
@@ -39,6 +60,11 @@ namespace Enfo.Domain.Resources.EpdContact
             Organization = Organization?.Trim();
             Telephone = Telephone?.Trim();
             Email = Email?.Trim();
+            Street = Street?.Trim();
+            Street2 = Street2?.Trim();
+            City = City?.Trim();
+            State = State?.Trim();
+            PostalCode = PostalCode?.Trim();
         }
     }
 }

@@ -20,7 +20,6 @@ namespace Enfo.Infrastructure.Contexts
             IHttpContextAccessor httpContextAccessor) : base(options) =>
             _httpContextAccessor = httpContextAccessor;
 
-        public DbSet<Address> Addresses { get; set; }
         public DbSet<EnforcementOrder> EnforcementOrders { get; set; }
         public DbSet<EpdContact> EpdContacts { get; set; }
         public DbSet<LegalAuthority> LegalAuthorities { get; set; }

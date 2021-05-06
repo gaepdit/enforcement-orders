@@ -24,19 +24,40 @@
         @Html.EditorFor(m => m.Item.Organization)
         <span asp-validation-for="Item.Organization" class="usa-input-error-message"></span>
 
-        <label asp-for="Item.AddressId"></label>
-        <select asp-for="Item.AddressId" asp-items="Model.AddressSelectList">
-            <option>→ Select Address...</option>
-        </select>
-        <span asp-validation-for="Item.AddressId" class="usa-input-error-message"></span>
+        <fieldset>
+            <legend>Address</legend>
+            <label asp-for="Item.Street"></label>
+            <input asp-for="Item.Street" />
+            <span asp-validation-for="Item.Street" class="usa-input-error-message"></span>
 
-        <label asp-for="Item.Telephone"></label>
-        @Html.EditorFor(m => m.Item.Telephone)
-        <span asp-validation-for="Item.Telephone" class="usa-input-error-message"></span>
+            <label asp-for="Item.Street2"></label>
+            <span class="usa-additional_text">(Optional)</span>
+            <input asp-for="Item.Street2" />
+            <span asp-validation-for="Item.Street2" class="usa-input-error-message"></span>
 
-        <label asp-for="Item.Email"></label>
-        @Html.EditorFor(m => m.Item.Email)
-        <span asp-validation-for="Item.Email" class="usa-input-error-message"></span>
+            <div class="usa-input-grid usa-input-grid-medium">
+                <label asp-for="Item.City"></label>
+                <input asp-for="Item.City" />
+                <span asp-validation-for="Item.City" class="usa-input-error-message"></span>
+            </div>
+
+            <div class="usa-input-grid">
+                <label asp-for="Item.PostalCode"></label>
+                <input asp-for="Item.PostalCode" class="usa-input-medium" />
+                <span asp-validation-for="Item.PostalCode" class="usa-input-error-message"></span>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend>Communication</legend>
+            <label asp-for="Item.Telephone"></label>
+            @Html.EditorFor(m => m.Item.Telephone)
+            <span asp-validation-for="Item.Telephone" class="usa-input-error-message"></span>
+
+            <label asp-for="Item.Email"></label>
+            @Html.EditorFor(m => m.Item.Email)
+            <span asp-validation-for="Item.Email" class="usa-input-error-message"></span>
+        </fieldset>
 
         <div class="gaepd-buttonrow">
             <button type="submit">Add New @Add.ThisOption.SingularName</button>

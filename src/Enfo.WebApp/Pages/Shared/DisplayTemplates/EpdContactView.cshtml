@@ -5,7 +5,16 @@
     @Model.Organization
 </p>
 
-@Html.DisplayFor(m => m.Address, "AddressView")
+<p class="text-nowrap">
+    @Model.Street
+    @if (!string.IsNullOrWhiteSpace(Model.Street2))
+    {
+        <br />
+        @Model.Street2
+    }
+    <br />
+    @Model.City, @Model.State @Model.PostalCode
+</p>
 
 @if (!string.IsNullOrEmpty(Model.Telephone) || !string.IsNullOrEmpty(Model.Email))
 {

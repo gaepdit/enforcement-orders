@@ -117,7 +117,7 @@ namespace Enfo.WebApp.Pages.Admin
             LegalAuthoritiesSelectList = new SelectList(await _legalAuthority.ListAsync(),
                 nameof(LegalAuthorityView.Id), nameof(LegalAuthorityView.AuthorityName));
             EpdContactsSelectList = new SelectList(await _contact.ListAsync(),
-                nameof(EpdContactView.Id), nameof(EpdContactView.ContactName));
+                nameof(EpdContactView.Id), nameof(EpdContactView.AsLinearString));
         }
     }
 }

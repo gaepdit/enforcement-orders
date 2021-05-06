@@ -13,12 +13,16 @@ namespace Enfo.Domain.Mapping
 
             return new EpdContact
             {
-                AddressId = resource.AddressId,
                 ContactName = resource.ContactName,
                 Email = resource.Email,
                 Organization = resource.Organization,
                 Telephone = resource.Telephone,
                 Title = resource.Title,
+                City = resource.City,
+                PostalCode = resource.PostalCode,
+                State = resource.State,
+                Street = resource.Street,
+                Street2 = resource.Street2,
             };
         }
 
@@ -27,23 +31,30 @@ namespace Enfo.Domain.Mapping
             Guard.NotNull(item, nameof(item));
             Guard.NotNull(resource, nameof(resource));
 
-            item.AddressId = resource.AddressId;
             item.ContactName = resource.ContactName;
             item.Email = resource.Email;
             item.Organization = resource.Organization;
             item.Telephone = resource.Telephone;
             item.Title = resource.Title;
+            item.City = resource.City;
+            item.PostalCode = resource.PostalCode;
+            item.State = resource.State;
+            item.Street = resource.Street;
+            item.Street2 = resource.Street2;
         }
 
         public static EpdContactUpdate ToEpdContactUpdate(EpdContactView item) => new()
         {
-            AddressId = item.Address.Id,
-            IsInactiveAddress = !item.Address.Active,
             ContactName = item.ContactName,
             Email = item.Email,
             Organization = item.Organization,
             Telephone = item.Telephone,
             Title = item.Title,
+            City = item.City,
+            PostalCode = item.PostalCode,
+            State = item.State,
+            Street = item.Street,
+            Street2 = item.Street2,
         };
     }
 }

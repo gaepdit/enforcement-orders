@@ -11,9 +11,6 @@ namespace Enfo.WebApp.Pages.Admin.Maintenance
 
         private MaintenanceOption() { }
 
-        public static MaintenanceOption Address { get; } =
-            new() {SingularName = "EPD Address", PluralName = "EPD Addresses"};
-
         public static MaintenanceOption EpdContact { get; } =
             new() {SingularName = "EPD Contact", PluralName = "EPD Contacts"};
 

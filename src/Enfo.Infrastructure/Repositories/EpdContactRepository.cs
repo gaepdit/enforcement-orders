@@ -20,7 +20,6 @@ namespace Enfo.Infrastructure.Repositories
         public async Task<EpdContactView> GetAsync(int id)
         {
             var item = await _context.EpdContacts.AsNoTracking()
-                .Include(e => e.Address)
                 .SingleOrDefaultAsync(e => e.Id == id).ConfigureAwait(false);
 
             return item == null ? null : new EpdContactView(item);
@@ -28,7 +27,6 @@ namespace Enfo.Infrastructure.Repositories
 
         public async Task<IReadOnlyList<EpdContactView>> ListAsync(bool includeInactive = false) =>
             await _context.EpdContacts.AsNoTracking()
-                .Include(e => e.Address)
                 .Where(e => e.Active || includeInactive)
                 .OrderBy(e => e.ContactName)
                 .Select(e => new EpdContactView(e))
@@ -42,6 +40,11 @@ namespace Enfo.Infrastructure.Repositories
             Guard.NotNullOrWhiteSpace(resource.Organization, nameof(resource.Organization));
             Guard.RegexMatch(resource.Telephone, nameof(resource.Telephone), ResourceRegex.Telephone);
             Guard.RegexMatch(resource.Email, nameof(resource.Email), ResourceRegex.Email);
+            Guard.NotNullOrWhiteSpace(resource.City, nameof(resource.City));
+            Guard.NotNullOrWhiteSpace(resource.State, nameof(resource.State));
+            Guard.NotNullOrWhiteSpace(resource.Street, nameof(resource.Street));
+            Guard.NotNullOrWhiteSpace(resource.PostalCode, nameof(resource.PostalCode));
+            Guard.RegexMatch(resource.PostalCode, nameof(resource.PostalCode), ResourceRegex.PostalCode);
 
             var item = resource.ToEpdContactEntity();
             await _context.EpdContacts.AddAsync(item).ConfigureAwait(false);
@@ -58,6 +61,11 @@ namespace Enfo.Infrastructure.Repositories
             Guard.NotNullOrWhiteSpace(resource.Organization, nameof(resource.Organization));
             Guard.RegexMatch(resource.Telephone, nameof(resource.Telephone), ResourceRegex.Telephone);
             Guard.RegexMatch(resource.Email, nameof(resource.Email), ResourceRegex.Email);
+            Guard.NotNullOrWhiteSpace(resource.City, nameof(resource.City));
+            Guard.NotNullOrWhiteSpace(resource.State, nameof(resource.State));
+            Guard.NotNullOrWhiteSpace(resource.Street, nameof(resource.Street));
+            Guard.NotNullOrWhiteSpace(resource.PostalCode, nameof(resource.PostalCode));
+            Guard.RegexMatch(resource.PostalCode, nameof(resource.PostalCode), ResourceRegex.PostalCode);
 
             var item = await _context.EpdContacts.FindAsync(id).ConfigureAwait(false);
 
