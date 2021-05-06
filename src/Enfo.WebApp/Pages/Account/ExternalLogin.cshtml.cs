@@ -42,7 +42,7 @@ namespace Enfo.WebApp.Pages.Account
         [UsedImplicitly]
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
-            // In Local environment, create "test" user information and sign in the user.
+            // If "test" users is enabled, create user information and sign in locally.
             if (Environment.GetEnvironmentVariable("ENABLE_TEST_USER") == "true") return await SignInAsTestUser();
 
             // Request a redirect to the external login provider.

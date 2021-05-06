@@ -31,14 +31,20 @@ namespace Enfo.WebApp.Services
             var context = scope.ServiceProvider.GetRequiredService<EnfoDbContext>();
             var env = scope.ServiceProvider.GetRequiredService<IWebHostEnvironment>();
 
+            // Initialize database
             if (env.IsLocalDev())
             {
-                // Initialize database
-                await context.Database.EnsureDeletedAsync(cancellationToken);
-
-                // Un-comment one of the following two lines depending on whether you need to debug EF migrations.
-                await context.Database.MigrateAsync(cancellationToken);
-                // await context.Database.EnsureCreatedAsync(cancellationToken);
+                if (Environment.GetEnvironmentVariable("ENABLE_EF_MIGRATIONS") == "true")
+                {
+                    // If EF migrations are enabled, preserve database and run migrations.
+                    await context.Database.MigrateAsync(cancellationToken);
+                }
+                else
+                {
+                    // Otherwise, delete and re-create database as currently defined.
+                    await context.Database.EnsureDeletedAsync(cancellationToken);
+                    await context.Database.EnsureCreatedAsync(cancellationToken);
+                }
 
                 // Seed initial data
                 await context.SeedTempDataAsync(cancellationToken);
