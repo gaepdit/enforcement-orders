@@ -12,8 +12,7 @@ namespace Enfo.Domain.Specs
                 .FilterByFacility(spec.Facility)
                 .FilterByCounty(spec.County)
                 .FilterByLegalAuth(spec.LegalAuth)
-                .FilterByStartDate(spec.FromDate, spec.Status)
-                .FilterByEndDate(spec.TillDate, spec.Status)
+                .FilterByDateRange(spec.FromDate,spec.TillDate, spec.Status)
                 .FilterByActivityStatus(spec.Status)
                 .FilterByOrderNumber(spec.OrderNumber);
         
@@ -22,8 +21,7 @@ namespace Enfo.Domain.Specs
             query.FilterByFacility(adminSpec.Facility)
                 .FilterByCounty(adminSpec.County)
                 .FilterByLegalAuth(adminSpec.LegalAuth)
-                .FilterByStartDate(adminSpec.FromDate, adminSpec.Status)
-                .FilterByEndDate(adminSpec.TillDate, adminSpec.Status)
+                .FilterByDateRange(adminSpec.FromDate,adminSpec.TillDate, adminSpec.Status)
                 .FilterByActivityStatus(adminSpec.Status)
                 .FilterByPublicationStatus(adminSpec.Progress)
                 .FilterByOrderNumber(adminSpec.OrderNumber)

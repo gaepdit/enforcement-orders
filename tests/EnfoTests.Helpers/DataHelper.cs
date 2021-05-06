@@ -211,6 +211,22 @@ namespace EnfoTests.Helpers
                     "Massa enim nec dui nunc. Pulvinar etiam non quam lacus suspendisse faucibus interdum posuere lorem. Neque sodales ut etiam sit amet nisl purus.",
                 SettlementAmount = 1800
             },
+            new()
+            {
+                Id = 46,
+                Deleted = false,
+                FacilityName = "Date Range Test",
+                County = "",
+                LegalAuthorityId = 1,
+                Cause = "",
+                OrderNumber = "",
+                PublicationStatus = EnforcementOrder.PublicationState.Published,
+                IsProposedOrder = true,
+                ProposedOrderPostedDate = new DateTime(2021, 2, 1),
+                IsExecutedOrder = true,
+                ExecutedDate = new DateTime(2021, 5, 1),
+                ExecutedOrderPostedDate = new DateTime(2021, 5, 1)
+            },
         };
     }
 }

@@ -29,33 +29,42 @@ namespace Enfo.Domain.Specs
                 ? query.Where(e => e.LegalAuthorityId == legalAuthId)
                 : query;
 
-        internal static IQueryable<EnforcementOrder> FilterByStartDate(
+        internal static IQueryable<EnforcementOrder> FilterByDateRange(
             [NotNull] this IQueryable<EnforcementOrder> query,
-            DateTime? fromDate, ActivityState status) =>
-            fromDate.HasValue
-                ? status switch
-                {
-                    ActivityState.All => query.Where(e =>
-                        e.ProposedOrderPostedDate >= fromDate || e.ExecutedDate >= fromDate),
-                    ActivityState.Executed => query.Where(e => e.ExecutedDate >= fromDate),
-                    ActivityState.Proposed => query.Where(e => e.ProposedOrderPostedDate >= fromDate),
-                    _ => query
-                }
-                : query;
+            DateTime? fromDate, DateTime? tillDate, ActivityState status)
+        {
+            if (fromDate is null && tillDate is null) return query;
 
-        internal static IQueryable<EnforcementOrder> FilterByEndDate(
-            [NotNull] this IQueryable<EnforcementOrder> query,
-            DateTime? tillDate, ActivityState status) =>
-            tillDate.HasValue
-                ? status switch
-                {
-                    ActivityState.All => query.Where(e =>
-                        e.ProposedOrderPostedDate <= tillDate || e.ExecutedDate <= tillDate),
-                    ActivityState.Executed => query.Where(e => e.ExecutedDate <= tillDate),
-                    ActivityState.Proposed => query.Where(e => e.ProposedOrderPostedDate <= tillDate),
-                    _ => query
-                }
-                : query;
+            switch (status)
+            {
+                case ActivityState.All:
+                    if (tillDate is null)
+                        return query.Where(e => e.ProposedOrderPostedDate >= fromDate || e.ExecutedDate >= fromDate);
+                    if (fromDate is null)
+                        return query.Where(e => e.ProposedOrderPostedDate <= tillDate || e.ExecutedDate <= tillDate);
+                    return query.Where(e =>
+                        e.ProposedOrderPostedDate >= fromDate && e.ProposedOrderPostedDate <= tillDate
+                        || e.ExecutedDate >= fromDate && e.ExecutedDate <= tillDate);
+
+                case ActivityState.Executed:
+                    if (tillDate is null)
+                        return query.Where(e => e.ExecutedDate >= fromDate);
+                    if (fromDate is null)
+                        return query.Where(e => e.ExecutedDate <= tillDate);
+                    return query.Where(e => e.ExecutedDate >= fromDate && e.ExecutedDate <= tillDate);
+
+                case ActivityState.Proposed:
+                    if (tillDate is null)
+                        return query.Where(e => e.ProposedOrderPostedDate >= fromDate);
+                    if (fromDate is null)
+                        return query.Where(e => e.ProposedOrderPostedDate <= tillDate);
+                    return query.Where(e =>
+                        e.ProposedOrderPostedDate >= fromDate && e.ProposedOrderPostedDate <= tillDate);
+
+                default:
+                    return query;
+            }
+        }
 
         internal static IQueryable<EnforcementOrder> FilterByActivityStatus(
             [NotNull] this IQueryable<EnforcementOrder> query,

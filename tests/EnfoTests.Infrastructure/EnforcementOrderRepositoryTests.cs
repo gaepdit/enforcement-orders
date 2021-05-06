@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Enfo.Domain.Entities;
@@ -118,6 +119,68 @@ namespace EnfoTests.Infrastructure
                 GetEnforcementOrderSummaryView(expectedList[0].Id));
         }
 
+        [Fact]
+        public async Task List_WithDateRangeBetweenProposedAndExecutedDates_ReturnsNone()
+        {
+            var spec = new EnforcementOrderSpec
+            {
+                Facility = "Date Range Test",
+                FromDate = new DateTime(2021, 3, 1),
+                TillDate = new DateTime(2021, 4, 1),
+            };
+
+            using var repository = CreateRepositoryHelper().GetEnforcementOrderRepository();
+            var result = await repository.ListAsync(spec, new PaginationSpec(1, 20));
+
+            result.CurrentCount.Should().Be(0);
+            result.Items.Should().HaveCount(0);
+            result.PageNumber.Should().Be(1);
+        }
+
+        [Fact]
+        public async Task List_WithStartDateBeforeFacilityDates_ReturnsFacility()
+        {
+            var spec = new EnforcementOrderSpec
+            {
+                Facility = "Date Range Test",
+                FromDate = new DateTime(2021, 1, 1),
+            };
+
+            using var repository = CreateRepositoryHelper().GetEnforcementOrderRepository();
+            var result = await repository.ListAsync(spec, new PaginationSpec(1, 20));
+
+            var expectedList = GetEnforcementOrders
+                .Where(e => string.Equals(e.FacilityName, spec.Facility, StringComparison.Ordinal))
+                .ToList();
+
+            result.CurrentCount.Should().Be(expectedList.Count);
+            result.Items.Should().HaveCount(expectedList.Count);
+            result.PageNumber.Should().Be(1);
+            result.Items[0].Should().BeEquivalentTo(GetEnforcementOrderSummaryView(expectedList[0].Id));
+        }
+
+        [Fact]
+        public async Task List_WithEndDateAfterFacilityDates_ReturnsFacility()
+        {
+            var spec = new EnforcementOrderSpec
+            {
+                Facility = "Date Range Test",
+                TillDate = new DateTime(2021, 6, 1),
+            };
+
+            using var repository = CreateRepositoryHelper().GetEnforcementOrderRepository();
+            var result = await repository.ListAsync(spec, new PaginationSpec(1, 20));
+
+            var expectedList = GetEnforcementOrders
+                .Where(e => string.Equals(e.FacilityName, spec.Facility, StringComparison.Ordinal))
+                .ToList();
+
+            result.CurrentCount.Should().Be(expectedList.Count);
+            result.Items.Should().HaveCount(expectedList.Count);
+            result.PageNumber.Should().Be(1);
+            result.Items[0].Should().BeEquivalentTo(GetEnforcementOrderSummaryView(expectedList[0].Id));
+        }
+
         // ListAdminAsync
 
         [Fact]
@@ -193,8 +256,9 @@ namespace EnfoTests.Infrastructure
             var expectedList = GetEnforcementOrders
                 .OrderByDescending(e => e.ExecutedDate ?? e.ProposedOrderPostedDate)
                 .ThenBy(e => e.FacilityName)
-                .Where(e => !e.Deleted
-                    && (e.Cause.Contains(spec.Text) || e.Requirements.Contains(spec.Text)))
+                .Where(e => !e.Deleted)
+                .Where(e => e.Cause != null && e.Cause.Contains(spec.Text) ||
+                    e.Requirements != null && e.Requirements.Contains(spec.Text))
                 .ToList();
 
             result.CurrentCount.Should().Be(expectedList.Count);
