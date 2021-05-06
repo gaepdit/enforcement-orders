@@ -26,17 +26,18 @@
                 i <= Math.Min(Model.Paging.PageNumber + 2, Model.Paging.TotalPages);
                 i++)
             {
-                @if (i == Model.Paging.PageNumber)
+                var index = i;
+                @if (index == Model.Paging.PageNumber)
                 {
                     <a class="gaepd-pagination-active">
-                        @i <span class="usa-sr-only">(current)</span>
+                        @index <span class="usa-sr-only">(current)</span>
                     </a>
                 }
                 else
                 {
                     <a asp-fragment="search-results" asp-all-route-data="@Model.RouteValues"
-                       asp-route-p="@i" asp-route-handler="search">
-                        @i
+                       asp-route-p="@index" asp-route-handler="search">
+                        @index
                     </a>
                 }
             }
