@@ -7,13 +7,7 @@ using Enfo.Domain.Resources.LegalAuthority;
 using Enfo.Domain.Specs;
 using Enfo.WebApp.Pages;
 using FluentAssertions;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Microsoft.AspNetCore.Routing;
 using Moq;
 using Xunit;
 using Xunit.Extensions.AssertExtensions;
@@ -26,17 +20,10 @@ namespace EnfoTests.WebApp.Pages
         [Fact]
         public async Task OnGet_ReturnsWithDefaults()
         {
-            // Initialize Page ViewData
-            var httpContext = new DefaultHttpContext();
-            var modelState = new ModelStateDictionary();
-            var viewData = new ViewDataDictionary(new EmptyModelMetadataProvider(), modelState);
-            var actionContext = new ActionContext(httpContext, new RouteData(), new PageActionDescriptor(), modelState);
-            var pageContext = new PageContext(actionContext) {ViewData = viewData};
-
             var orderRepo = new Mock<IEnforcementOrderRepository>();
             var legalRepo = new Mock<ILegalAuthorityRepository>();
             legalRepo.Setup(l => l.ListAsync(false)).ReturnsAsync(GetLegalAuthorityViewList());
-            var page = new Search(orderRepo.Object, legalRepo.Object) {PageContext = pageContext};
+            var page = new Search(orderRepo.Object, legalRepo.Object);
 
             await page.OnGetAsync();
 
