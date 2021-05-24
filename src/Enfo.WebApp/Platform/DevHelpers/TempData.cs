@@ -7,6 +7,7 @@ using Enfo.Domain.Utils;
 using Enfo.Infrastructure.Contexts;
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
+
 // ReSharper disable StringLiteralTypo
 
 namespace Enfo.WebApp.Platform.DevHelpers

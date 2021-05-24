@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using Enfo.Domain.Entities.Users;
@@ -23,15 +22,14 @@ namespace Enfo.WebApp.Services
         private readonly IServiceProvider _serviceProvider;
         public MigratorHostedService(IServiceProvider serviceProvider) => _serviceProvider = serviceProvider;
 
-        [SuppressMessage("ReSharper", "S125", Justification = "Local dev code has optional EF migration call.")]
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            // Create a new scope to retrieve scoped services
+            // Create a new scope to retrieve scoped services.
             using var scope = _serviceProvider.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<EnfoDbContext>();
             var env = scope.ServiceProvider.GetRequiredService<IWebHostEnvironment>();
 
-            // Initialize database
+            // Initialize database.
             if (env.IsLocalDev())
             {
                 if (Environment.GetEnvironmentVariable("ENABLE_EF_MIGRATIONS") == "true")
@@ -46,16 +44,16 @@ namespace Enfo.WebApp.Services
                     await context.Database.EnsureCreatedAsync(cancellationToken);
                 }
 
-                // Seed initial data
+                // Seed initial data in local environment.
                 await context.SeedTempDataAsync(cancellationToken);
             }
             else
             {
-                // Run database migrations
+                // Run database migrations if not local.
                 await context.Database.MigrateAsync(cancellationToken);
             }
 
-            // Initialize roles
+            // Initialize any new roles.
             var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
             foreach (var role in UserRole.AllRoles.Keys)
                 if (!await context.Roles.AnyAsync(e => e.Name == role, cancellationToken))
