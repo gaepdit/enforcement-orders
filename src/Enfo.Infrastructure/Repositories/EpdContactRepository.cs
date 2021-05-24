@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Enfo.Domain.Mapping;
+using Enfo.Domain.Entities;
 using Enfo.Domain.Repositories;
-using Enfo.Domain.Resources;
 using Enfo.Domain.Resources.EpdContact;
 using Enfo.Domain.Utils;
 using Enfo.Infrastructure.Contexts;
@@ -32,49 +31,20 @@ namespace Enfo.Infrastructure.Repositories
                 .Select(e => new EpdContactView(e))
                 .ToListAsync().ConfigureAwait(false);
 
-        public async Task<int> CreateAsync(EpdContactCreate resource)
+        public async Task<int> CreateAsync(EpdContactCommand resource)
         {
-            Guard.NotNull(resource, nameof(resource));
-            Guard.NotNullOrWhiteSpace(resource.ContactName, nameof(resource.ContactName));
-            Guard.NotNullOrWhiteSpace(resource.Title, nameof(resource.Title));
-            Guard.NotNullOrWhiteSpace(resource.Organization, nameof(resource.Organization));
-            Guard.RegexMatch(resource.Telephone, nameof(resource.Telephone), ResourceRegex.Telephone);
-            Guard.RegexMatch(resource.Email, nameof(resource.Email), ResourceRegex.Email);
-            Guard.NotNullOrWhiteSpace(resource.City, nameof(resource.City));
-            Guard.NotNullOrWhiteSpace(resource.State, nameof(resource.State));
-            Guard.NotNullOrWhiteSpace(resource.Street, nameof(resource.Street));
-            Guard.NotNullOrWhiteSpace(resource.PostalCode, nameof(resource.PostalCode));
-            Guard.RegexMatch(resource.PostalCode, nameof(resource.PostalCode), ResourceRegex.PostalCode);
-
-            var item = resource.ToEpdContactEntity();
+            var item = new EpdContact(resource);
             await _context.EpdContacts.AddAsync(item).ConfigureAwait(false);
             await _context.SaveChangesAsync().ConfigureAwait(false);
-
             return item.Id;
         }
 
-        public async Task UpdateAsync(int id, EpdContactUpdate resource)
+        public async Task UpdateAsync(int id, EpdContactCommand resource)
         {
-            Guard.NotNull(resource, nameof(resource));
-            Guard.NotNullOrWhiteSpace(resource.ContactName, nameof(resource.ContactName));
-            Guard.NotNullOrWhiteSpace(resource.Title, nameof(resource.Title));
-            Guard.NotNullOrWhiteSpace(resource.Organization, nameof(resource.Organization));
-            Guard.RegexMatch(resource.Telephone, nameof(resource.Telephone), ResourceRegex.Telephone);
-            Guard.RegexMatch(resource.Email, nameof(resource.Email), ResourceRegex.Email);
-            Guard.NotNullOrWhiteSpace(resource.City, nameof(resource.City));
-            Guard.NotNullOrWhiteSpace(resource.State, nameof(resource.State));
-            Guard.NotNullOrWhiteSpace(resource.Street, nameof(resource.Street));
-            Guard.NotNullOrWhiteSpace(resource.PostalCode, nameof(resource.PostalCode));
-            Guard.RegexMatch(resource.PostalCode, nameof(resource.PostalCode), ResourceRegex.PostalCode);
+            var item = (await _context.EpdContacts.FindAsync(id).ConfigureAwait(false))
+                ?? throw new ArgumentException($"ID ({id}) not found.", nameof(id));
 
-            var item = await _context.EpdContacts.FindAsync(id).ConfigureAwait(false);
-
-            if (item == null)
-            {
-                throw new ArgumentException($"ID ({id}) not found.", nameof(id));
-            }
-
-            item.UpdateEntityFrom(resource);
+            item.ApplyUpdate(resource);
             await _context.SaveChangesAsync().ConfigureAwait(false);
         }
 

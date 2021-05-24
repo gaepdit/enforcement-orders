@@ -21,30 +21,23 @@ namespace Enfo.Domain.Utils
             return value;
         }
 
-        public static int NotNegative(int value, string parameterName)
+        public static int NotNegative(int value, string parameterName) =>
+            value >= 0
+                ? value
+                : throw new ArgumentException($"{parameterName} cannot be negative.", parameterName);
+
+        public static int Positive(int value, string parameterName) =>
+            value > 0
+                ? value
+                : throw new ArgumentException($"{parameterName} must be positive (greater than zero).", parameterName);
+
+        public static string RegexMatch(string value, string parameterName, string pattern)
         {
-            if (value < 0)
-                throw new ArgumentException($"{parameterName} cannot be negative.", parameterName);
+            if (value is null) return null;
 
-            return value;
-        }
-
-        public static int Positive(int value, string parameterName)
-        {
-            if (value <= 0)
-                throw new ArgumentException($"{parameterName} must be positive (greater than zero).", parameterName);
-
-            return value;
-        }
-
-        public static void RegexMatch(string value, string parameterName, string pattern)
-        {
-            NotNull(pattern, nameof(pattern));
-
-            if (value == null) return;
-
-            if (!Regex.IsMatch(value, pattern))
-                throw new ArgumentException($"Value ({value}) is not valid.", parameterName);
+            return Regex.IsMatch(value, NotNull(pattern, nameof(pattern)))
+                ? value
+                : throw new ArgumentException($"Value ({value}) is not valid.", parameterName);
         }
     }
 }

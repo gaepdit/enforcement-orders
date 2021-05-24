@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using Enfo.Domain.Mapping;
 using Enfo.Domain.Repositories;
 using Enfo.Domain.Resources.EpdContact;
 using Enfo.WebApp.Models;
@@ -30,7 +29,7 @@ namespace EnfoTests.WebApp.Pages.Admin.Maintenance.Contacts
 
             await page.OnGetAsync(item.Id);
 
-            page.Item.Should().BeEquivalentTo(EpdContactMapping.ToEpdContactUpdate(item));
+            page.Item.Should().BeEquivalentTo(new EpdContactCommand(item));
             page.Id.ShouldEqual(item.Id);
         }
 
@@ -107,7 +106,7 @@ namespace EnfoTests.WebApp.Pages.Admin.Maintenance.Contacts
             // Initialize Page TempData
             var httpContext = new DefaultHttpContext();
             var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
-            var page = new Edit(repo.Object) 
+            var page = new Edit(repo.Object)
                 {TempData = tempData, Id = 0};
 
             var result = await page.OnPostAsync();
@@ -123,11 +122,11 @@ namespace EnfoTests.WebApp.Pages.Admin.Maintenance.Contacts
         [Fact]
         public async Task OnPost_GivenSuccess_ReturnsRedirectWithDisplayMessage()
         {
-            var item = EpdContactMapping.ToEpdContactUpdate(GetEpdContactViewList()[0]);
+            var item = new EpdContactCommand(GetEpdContactViewList()[0]);
             var repo = new Mock<IEpdContactRepository> {DefaultValue = DefaultValue.Mock};
             repo.Setup(l => l.GetAsync(It.IsAny<int>()))
                 .ReturnsAsync(GetEpdContactViewList()[0]);
-            
+
             // Initialize Page TempData
             var httpContext = new DefaultHttpContext();
             var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
@@ -149,7 +148,7 @@ namespace EnfoTests.WebApp.Pages.Admin.Maintenance.Contacts
             var repo = new Mock<IEpdContactRepository> {DefaultValue = DefaultValue.Mock};
             repo.Setup(l => l.GetAsync(It.IsAny<int>()))
                 .ReturnsAsync(GetEpdContactViewList()[0]);
-            var page = new Edit(repo.Object) {Item = new EpdContactUpdate()};
+            var page = new Edit(repo.Object) {Item = new EpdContactCommand()};
             page.ModelState.AddModelError("key", "message");
 
             var result = await page.OnPostAsync();

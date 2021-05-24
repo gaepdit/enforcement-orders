@@ -20,13 +20,13 @@ namespace EnfoTests.WebApp.Pages.Admin.Maintenance.Contacts
         [Fact]
         public async Task OnPost_GivenSuccess_ReturnsRedirectWithDisplayMessage()
         {
-            var item = new EpdContactCreate
+            var item = new EpdContactCommand
             {
                 Email = "abc", Organization = "abc", Telephone = "abc", Title = "abc", ContactName = "abc",
                 City = "abc", State = "GA", Street = "123", PostalCode = "01234",
             };
             var repo = new Mock<IEpdContactRepository> {DefaultValue = DefaultValue.Mock};
-            repo.Setup(l => l.CreateAsync(It.IsAny<EpdContactCreate>()))
+            repo.Setup(l => l.CreateAsync(It.IsAny<EpdContactCommand>()))
                 .ReturnsAsync(1);
 
             // Initialize Page TempData
@@ -49,7 +49,7 @@ namespace EnfoTests.WebApp.Pages.Admin.Maintenance.Contacts
         public async Task OnPost_GivenModelError_ReturnsPageWithModelError()
         {
             var repo = new Mock<IEpdContactRepository> {DefaultValue = DefaultValue.Mock};
-            var page = new Add {Item = new EpdContactCreate()};
+            var page = new Add {Item = new EpdContactCommand()};
             page.ModelState.AddModelError("key", "message");
 
             var result = await page.OnPostAsync(repo.Object);
