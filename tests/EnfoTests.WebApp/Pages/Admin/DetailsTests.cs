@@ -44,7 +44,7 @@ namespace EnfoTests.WebApp.Pages.Admin
             // Initialize Page TempData
             var httpContext = new DefaultHttpContext();
             var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
-            var page = new Details() {TempData = tempData};
+            var page = new Details {TempData = tempData};
 
             page.TempData.SetDisplayMessage(Context.Info, "Info message");
             await page.OnGetAsync(repo.Object, itemId);

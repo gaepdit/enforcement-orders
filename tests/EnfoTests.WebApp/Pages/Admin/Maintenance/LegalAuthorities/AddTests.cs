@@ -20,11 +20,11 @@ namespace EnfoTests.WebApp.Pages.Admin.Maintenance.LegalAuthorities
         [Fact]
         public async Task OnPost_GivenSuccess_ReturnsRedirectWithDisplayMessage()
         {
-            var item = new LegalAuthorityCreate {AuthorityName = "test"};
+            var item = new LegalAuthorityCommand {AuthorityName = "test"};
             var repo = new Mock<ILegalAuthorityRepository> {DefaultValue = DefaultValue.Mock};
             repo.Setup(l => l.NameExistsAsync(It.IsAny<string>(), null))
                 .ReturnsAsync(false);
-            repo.Setup(l => l.CreateAsync(It.IsAny<LegalAuthorityCreate>()))
+            repo.Setup(l => l.CreateAsync(It.IsAny<LegalAuthorityCommand>()))
                 .ReturnsAsync(1);
 
             // Initialize Page TempData
@@ -47,7 +47,7 @@ namespace EnfoTests.WebApp.Pages.Admin.Maintenance.LegalAuthorities
         public async Task OnPost_GivenModelError_ReturnsPageWithModelError()
         {
             var repo = new Mock<ILegalAuthorityRepository> {DefaultValue = DefaultValue.Mock};
-            var page = new Add {Item = new LegalAuthorityCreate()};
+            var page = new Add {Item = new LegalAuthorityCommand()};
             page.ModelState.AddModelError("key", "message");
 
             var result = await page.OnPostAsync(repo.Object);
@@ -59,7 +59,7 @@ namespace EnfoTests.WebApp.Pages.Admin.Maintenance.LegalAuthorities
         [Fact]
         public async Task OnPost_GivenNameExists_ReturnsPageWithModelError()
         {
-            var item = new LegalAuthorityCreate {AuthorityName = "test"};
+            var item = new LegalAuthorityCommand {AuthorityName = "test"};
             var repo = new Mock<ILegalAuthorityRepository> {DefaultValue = DefaultValue.Mock};
             repo.Setup(l => l.NameExistsAsync(It.IsAny<string>(), null))
                 .ReturnsAsync(true);

@@ -49,7 +49,7 @@ namespace EnfoTests.WebApp.Pages.Admin.Maintenance.Contacts
         public async Task OnPost_GivenModelError_ReturnsPageWithModelError()
         {
             var repo = new Mock<IEpdContactRepository> {DefaultValue = DefaultValue.Mock};
-            var page = new Add() {Item = new EpdContactCreate()};
+            var page = new Add {Item = new EpdContactCreate()};
             page.ModelState.AddModelError("key", "message");
 
             var result = await page.OnPostAsync(repo.Object);

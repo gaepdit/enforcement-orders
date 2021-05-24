@@ -16,10 +16,9 @@ namespace Enfo.Domain.Resources.LegalAuthority
         }
 
         public int Id { get; }
+        public bool Active { get; }
 
         [DisplayName("Legal Authority Name")]
-        public string AuthorityName { get; set; }
-
-        public bool Active { get; }
+        public string AuthorityName { get; init; }
     }
 }
