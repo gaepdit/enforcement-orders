@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using Enfo.Domain.Entities.Users;
-using Enfo.Domain.Mapping;
 using Enfo.Domain.Repositories;
 using Enfo.Domain.Resources.EnforcementOrder;
 using Enfo.Domain.Resources.EpdContact;
@@ -55,7 +54,7 @@ namespace Enfo.WebApp.Pages.Admin
                 return RedirectToPage("Details", new {id});
             }
 
-            Item = EnforcementOrderMapping.ToEnforcementOrderUpdate(originalItem);
+            Item = new EnforcementOrderUpdate(originalItem);
             Id = id.Value;
             OriginalOrderNumber = originalItem.OrderNumber;
             await PopulateSelectListsAsync();

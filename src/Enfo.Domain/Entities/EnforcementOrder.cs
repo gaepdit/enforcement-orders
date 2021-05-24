@@ -3,11 +3,50 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Enfo.Domain.Entities.Base;
+using Enfo.Domain.Resources.EnforcementOrder;
+using Enfo.Domain.Utils;
 
 namespace Enfo.Domain.Entities
 {
     public class EnforcementOrder : BaseEntity
     {
+        public EnforcementOrder() { }
+
+        public EnforcementOrder(EnforcementOrderCreate resource)
+        {
+            Guard.NotNull(resource, nameof(resource));
+
+            Cause = Guard.NotNullOrWhiteSpace(resource.Cause, nameof(resource.Cause));
+            CommentContactId = resource.CreateAs == NewEnforcementOrderType.Proposed
+                ? resource.CommentContactId
+                : null;
+            CommentPeriodClosesDate = resource.CreateAs == NewEnforcementOrderType.Proposed
+                ? resource.CommentPeriodClosesDate
+                : null;
+            County = Guard.NotNullOrWhiteSpace(resource.County, nameof(resource.County));
+            ExecutedDate = resource.CreateAs == NewEnforcementOrderType.Executed ? resource.ExecutedDate : null;
+            ExecutedOrderPostedDate = resource.CreateAs == NewEnforcementOrderType.Executed
+                ? resource.ExecutedOrderPostedDate
+                : null;
+            FacilityName = Guard.NotNullOrWhiteSpace(resource.FacilityName, nameof(resource.FacilityName));
+            HearingCommentPeriodClosesDate =
+                resource.IsHearingScheduled ? resource.HearingCommentPeriodClosesDate : null;
+            HearingContactId = resource.IsHearingScheduled ? resource.HearingContactId : null;
+            HearingDate = resource.IsHearingScheduled ? resource.HearingDate : null;
+            HearingLocation = resource.IsHearingScheduled ? resource.HearingLocation : null;
+            IsExecutedOrder = resource.CreateAs == NewEnforcementOrderType.Executed;
+            IsHearingScheduled = resource.IsHearingScheduled;
+            IsProposedOrder = resource.CreateAs == NewEnforcementOrderType.Proposed;
+            LegalAuthorityId = resource.LegalAuthorityId ?? 0;
+            OrderNumber = Guard.NotNullOrWhiteSpace(resource.OrderNumber, nameof(resource.OrderNumber));
+            ProposedOrderPostedDate = resource.CreateAs == NewEnforcementOrderType.Proposed
+                ? resource.ProposedOrderPostedDate
+                : null;
+            PublicationStatus = GetEntityPublicationProgress(resource.Progress);
+            Requirements = resource.Requirements;
+            SettlementAmount = resource.SettlementAmount;
+        }
+
         // enums
         public enum PublicationState
         {
@@ -48,7 +87,7 @@ namespace Enfo.Domain.Entities
         public string OrderNumber { get; set; }
 
         // Calculated properties
-        
+
         public DateTime? GetLastPostedDate => ExecutedDate ?? ProposedOrderPostedDate;
         public bool GetIsPublic => GetIsPublicExecutedOrder || GetIsPublicProposedOrder;
 
@@ -112,5 +151,40 @@ namespace Enfo.Domain.Entities
 
         public EpdContact HearingContact { get; set; }
         public int? HearingContactId { get; set; }
+
+        public void ApplyUpdate(EnforcementOrderUpdate resource)
+        {
+            Guard.NotNull(resource, nameof(resource));
+
+            Cause = Guard.NotNullOrWhiteSpace(resource.Cause, nameof(resource.Cause));
+            CommentContactId = IsProposedOrder ? resource.CommentContactId : null;
+            CommentPeriodClosesDate = IsProposedOrder ? resource.HearingCommentPeriodClosesDate : null;
+            County = Guard.NotNullOrWhiteSpace(resource.County, nameof(resource.County));
+            ExecutedDate = resource.IsExecutedOrder ? resource.ExecutedDate : null;
+            ExecutedOrderPostedDate = resource.IsExecutedOrder ? resource.ExecutedOrderPostedDate : null;
+            FacilityName = Guard.NotNullOrWhiteSpace(resource.FacilityName, nameof(resource.FacilityName));
+            HearingCommentPeriodClosesDate =
+                resource.IsHearingScheduled ? resource.HearingCommentPeriodClosesDate : null;
+            HearingContactId = resource.IsHearingScheduled ? resource.HearingContactId : null;
+            HearingDate = resource.IsHearingScheduled ? resource.HearingDate : null;
+            HearingLocation = resource.IsHearingScheduled ? resource.HearingLocation : null;
+            IsProposedOrder = resource.IsProposedOrder;
+            IsExecutedOrder = resource.IsExecutedOrder;
+            IsHearingScheduled = resource.IsHearingScheduled;
+            LegalAuthorityId = resource.LegalAuthorityId;
+            OrderNumber = Guard.NotNullOrWhiteSpace(resource.OrderNumber, nameof(resource.OrderNumber));
+            ProposedOrderPostedDate = IsProposedOrder ? resource.ProposedOrderPostedDate : null;
+            PublicationStatus = GetEntityPublicationProgress(resource.Progress);
+            Requirements = resource.Requirements;
+            SettlementAmount = resource.SettlementAmount;
+        }
+
+        private static PublicationState GetEntityPublicationProgress(PublicationProgress status) =>
+            status switch
+            {
+                PublicationProgress.Draft => PublicationState.Draft,
+                PublicationProgress.Published => PublicationState.Published,
+                _ => throw new InvalidEnumArgumentException(nameof(status), (int)status, typeof(PublicationState))
+            };
     }
 }

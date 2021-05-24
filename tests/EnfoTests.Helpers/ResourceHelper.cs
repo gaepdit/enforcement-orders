@@ -65,7 +65,7 @@ namespace EnfoTests.Helpers
             LegalAuthorityId = 1,
             OrderNumber = "EPD-ACQ-7936",
             ProposedOrderPostedDate = new DateTime(2012, 10, 16),
-            Progress = PublicationState.Published,
+            Progress = PublicationProgress.Published,
             Requirements = "Duis ut diam quam nulla porttitor massa id neque. A lacus vestibulum.",
             SettlementAmount = 2000,
         };
@@ -88,7 +88,7 @@ namespace EnfoTests.Helpers
             LegalAuthorityId = 1,
             OrderNumber = "EPD-ACQ-7936",
             ProposedOrderPostedDate = new DateTime(2012, 10, 16),
-            Progress = PublicationState.Published,
+            Progress = PublicationProgress.Published,
             Requirements =
                 "Duis ut diam quam nulla porttitor massa id neque. A lacus vestibulum sed arcu non. Amet massa vitae tortor condimentum. Magnis dis parturient montes nascetur ridiculus mus mauris. Arcu risus quis varius quam quisque id diam. Pellentesque massa placerat duis ultricies lacus sed. Tellus in hac habitasse platea dictumst vestibulum. Justo nec ultrices dui sapien eget. Ac odio tempor orci dapibus ultrices in. Lacus sed viverra tellus in hac habitasse platea dictumst vestibulum. Donec et odio pellentesque diam volutpat. Nunc faucibus a pellentesque sit amet porttitor eget dolor morbi. Neque ornare aenean euismod elementum nisi quis eleifend quam. Praesent elementum facilisis leo vel fringilla est ullamcorper eget. Et netus et malesuada fames. Urna et pharetra pharetra massa massa ultricies mi quis. Sit amet consectetur adipiscing elit. Felis donec et odio pellentesque diam volutpat commodo sed egestas. Adipiscing elit pellentesque habitant morbi.",
             SettlementAmount = 2000,

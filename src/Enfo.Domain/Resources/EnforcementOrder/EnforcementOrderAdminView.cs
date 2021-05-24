@@ -29,18 +29,18 @@ namespace Enfo.Domain.Resources.EnforcementOrder
             ExecutedOrderPostedDate = item.ExecutedOrderPostedDate;
         }
 
-        private static PublicationState GetResourcePublicationState(
+        private static PublicationProgress GetResourcePublicationState(
             Domain.Entities.EnforcementOrder.PublicationState status) =>
             status switch
             {
-                Entities.EnforcementOrder.PublicationState.Draft => PublicationState.Draft,
-                Entities.EnforcementOrder.PublicationState.Published => PublicationState.Published,
+                Entities.EnforcementOrder.PublicationState.Draft => PublicationProgress.Draft,
+                Entities.EnforcementOrder.PublicationState.Published => PublicationProgress.Published,
                 _ => throw new InvalidEnumArgumentException(nameof(status), (int) status,
                     typeof(Domain.Entities.EnforcementOrder.PublicationState))
             };
 
         [DisplayName("Progress")]
-        public PublicationState PublicationStatus { get; }
+        public PublicationProgress PublicationStatus { get; }
 
         // Common data elements
 
