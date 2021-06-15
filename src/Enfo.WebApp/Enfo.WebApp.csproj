@@ -86,8 +86,8 @@
     <Target Name="RunWebpackProd" BeforeTargets="Build" DependsOnTargets="InstallNodeModules" 
             Condition=" '$(Configuration)' != 'Debug' ">
         <Message Importance="high" Text="Running webpack (prod)..." />
-        <Exec Command="pnpm run pack" Condition=" '$(PnpmExitCode)' == '0' " />
-        <Exec Command="npm run pack" Condition=" '$(NpmExitCode)' == '0' " />
+        <Exec Command="pnpm run pack-prod" Condition=" '$(PnpmExitCode)' == '0' " />
+        <Exec Command="npm run pack-prod" Condition=" '$(NpmExitCode)' == '0' " />
     </Target>
 
     <Target Name="NpmClean" BeforeTargets="Clean">
