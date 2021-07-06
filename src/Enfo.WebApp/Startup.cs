@@ -75,7 +75,7 @@ namespace Enfo.WebApp
             services.AddRazorPages();
 
             // Configure HSTS
-            services.AddHsts(opts => opts.MaxAge = TimeSpan.FromDays(30));
+            services.AddHsts(opts => opts.MaxAge = TimeSpan.FromSeconds(63072000));
 
             // Configure Raygun
             services.AddRaygun(Configuration,
