@@ -46,7 +46,7 @@ namespace Enfo.Domain.Resources.EpdContact
 
         [DisplayName("Postal Code")]
         public string PostalCode { get; }
-        
+
         public string AsLinearString
         {
             get

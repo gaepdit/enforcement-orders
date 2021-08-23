@@ -65,6 +65,8 @@ namespace Enfo.WebApp
                 opts.UsePkce = true;
             });
 #pragma warning restore 618
+
+            // Persist data protection keys
             var keysFolder = Path.Combine(Configuration["PersistedFilesBasePath"], "DataProtectionKeys");
             services.AddDataProtection().PersistKeysToFileSystem(Directory.CreateDirectory(keysFolder));
 
@@ -95,25 +97,24 @@ namespace Enfo.WebApp
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public static void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsLocalDev())
+            if (env.IsLocalDev() || env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-            }
-            else if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-                app.UseRaygun();
-                app.UseHsts();
             }
             else
             {
                 app.UseExceptionHandler("/Error");
+            }
+
+            if (!env.IsLocalDev())
+            {
                 app.UseRaygun();
                 app.UseHsts();
             }
 
+            app.UseStatusCodePages();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();

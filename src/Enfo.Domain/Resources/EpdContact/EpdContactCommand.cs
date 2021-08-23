@@ -3,8 +3,24 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Enfo.Domain.Resources.EpdContact
 {
-    public class EpdContactUpdate
+    public class EpdContactCommand
     {
+        public EpdContactCommand() { }
+
+        public EpdContactCommand(EpdContactView item)
+        {
+            ContactName = item.ContactName;
+            Email = item.Email;
+            Organization = item.Organization;
+            Telephone = item.Telephone;
+            Title = item.Title;
+            City = item.City;
+            PostalCode = item.PostalCode;
+            State = item.State;
+            Street = item.Street;
+            Street2 = item.Street2;
+        }
+
         [DisplayName("Contact Full Name")]
         [Required(ErrorMessage = "Contact Name is required.")]
         [StringLength(250)]

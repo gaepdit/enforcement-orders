@@ -7,8 +7,6 @@ using Xunit;
 
 namespace EnfoTests.Domain.PaginationTests
 {
-    [SuppressMessage("ReSharper", "ObjectCreationAsStatement")]
-    [SuppressMessage("ReSharper", "CA1806")]
     public class ConstructingPaginatedResult
     {
         private readonly string[] _items = {"abc", "def"};
@@ -50,6 +48,8 @@ namespace EnfoTests.Domain.PaginationTests
         }
 
         [Fact]
+        [SuppressMessage("ReSharper", "ObjectCreationAsStatement")]
+        [SuppressMessage("ReSharper", "CA1806")]
         public void ThrowsExceptionGivenNegativeCount()
         {
             Action action = () => new PaginatedResult<string>(_items, -1,
@@ -59,6 +59,8 @@ namespace EnfoTests.Domain.PaginationTests
         }
 
         [Fact]
+        [SuppressMessage("ReSharper", "ObjectCreationAsStatement")]
+        [SuppressMessage("ReSharper", "CA1806")]
         public void ThrowsExceptionGivenZeroPageNum()
         {
             Action action = () => new PaginatedResult<string>(_items, _items.Length,
@@ -68,6 +70,8 @@ namespace EnfoTests.Domain.PaginationTests
         }
 
         [Fact]
+        [SuppressMessage("ReSharper", "ObjectCreationAsStatement")]
+        [SuppressMessage("ReSharper", "CA1806")]
         public void ThrowsExceptionGivenZeroPageSize()
         {
             Action action = () => new PaginatedResult<string>(_items, _items.Length,

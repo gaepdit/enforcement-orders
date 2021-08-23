@@ -1,9 +1,7 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Enfo.Domain.Entities;
-using Enfo.Domain.Mapping;
 using Enfo.Domain.Resources.EnforcementOrder;
 using Enfo.Domain.Specs;
 using FluentAssertions;
@@ -12,7 +10,6 @@ using static Enfo.Domain.Utils.DateUtils;
 using static EnfoTests.Helpers.DataHelper;
 using static EnfoTests.Helpers.RepositoryHelper;
 using static EnfoTests.Helpers.ResourceHelper;
-using PublicationState = Enfo.Domain.Resources.EnforcementOrder.PublicationState;
 
 namespace EnfoTests.Infrastructure
 {
@@ -407,7 +404,7 @@ namespace EnfoTests.Infrastructure
             FacilityName = "abc",
             County = "Fulton",
             LegalAuthorityId = GetLegalAuthorities.First().Id,
-            Progress = PublicationState.Draft,
+            Progress = PublicationProgress.Draft,
             OrderNumber = "NEW-1",
             CreateAs = NewEnforcementOrderType.Proposed,
             CommentPeriodClosesDate = DateTime.Today.AddDays(1),
@@ -424,8 +421,7 @@ namespace EnfoTests.Infrastructure
             var newId = await repository.CreateAsync(_sampleCreate);
             repositoryHelper.ClearChangeTracker();
 
-            var order = _sampleCreate.ToEnforcementOrder();
-            order.Id = newId;
+            var order = new EnforcementOrder(_sampleCreate) {Id = newId};
             var expected = new EnforcementOrderAdminView(FillNavigationProperties(order));
 
             var item = await repository.GetAdminViewAsync(newId);
@@ -461,8 +457,8 @@ namespace EnfoTests.Infrastructure
             HearingLocation = order.HearingLocation,
             OrderNumber = order.OrderNumber,
             Progress = order.PublicationStatus == EnforcementOrder.PublicationState.Draft
-                ? PublicationState.Draft
-                : PublicationState.Published,
+                ? PublicationProgress.Draft
+                : PublicationProgress.Published,
             SettlementAmount = order.SettlementAmount,
             CommentContactId = order.CommentContactId,
             HearingContactId = order.HearingContactId,

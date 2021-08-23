@@ -3,7 +3,7 @@
     /// <summary>
     /// PublicationState determines whether an Order is draft or published
     /// </summary>
-    public enum PublicationState
+    public enum PublicationProgress
     {
         Draft,
         Published

@@ -11,7 +11,7 @@ namespace Enfo.Domain.Validation
         {
             var result = new ResourceValidationResult();
 
-            if (resource.Progress != PublicationState.Published) return result;
+            if (resource.Progress != PublicationProgress.Published) return result;
             
             if (resource.SettlementAmount is < 0)
                 result.AddErrorMessage(nameof(EnforcementOrderCreate.SettlementAmount),
@@ -92,7 +92,7 @@ namespace Enfo.Domain.Validation
                     "Executed Order details are required for this Enforcement Order.");
             }
 
-            if (resource.Progress != PublicationState.Published) return result;
+            if (resource.Progress != PublicationProgress.Published) return result;
 
             if (resource.SettlementAmount is < 0)
                 result.AddErrorMessage(nameof(EnforcementOrderCreate.SettlementAmount),

@@ -9,8 +9,8 @@ namespace Enfo.Domain.Repositories
     {
         Task<EpdContactView> GetAsync(int id);
         Task<IReadOnlyList<EpdContactView>> ListAsync(bool includeInactive = false);
-        Task<int> CreateAsync(EpdContactCreate resource);
-        Task UpdateAsync(int id, EpdContactUpdate resource);
+        Task<int> CreateAsync(EpdContactCommand resource);
+        Task UpdateAsync(int id, EpdContactCommand resource);
         Task UpdateStatusAsync(int id, bool newActiveStatus);
         Task<bool> ExistsAsync(int id);
     }

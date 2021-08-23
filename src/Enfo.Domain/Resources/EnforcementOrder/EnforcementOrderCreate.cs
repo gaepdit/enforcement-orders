@@ -7,8 +7,6 @@ namespace Enfo.Domain.Resources.EnforcementOrder
 {
     public class EnforcementOrderCreate
     {
-        //  Determines the type of Enforcement Order created
-
         // Common data elements
 
         [DisplayName("Facility")]
@@ -36,13 +34,14 @@ namespace Enfo.Domain.Resources.EnforcementOrder
         [DataType(DataType.Currency)]
         public decimal? SettlementAmount { get; set; }
 
-        public PublicationState Progress { get; set; } = PublicationState.Published;
+        public PublicationProgress Progress { get; set; } = PublicationProgress.Published;
 
         [DisplayName("Order Number")]
         [Required(ErrorMessage = "Order Number is required.")]
         [StringLength(50)]
         public string OrderNumber { get; set; }
 
+        //  Determines the type of Enforcement Order created
         [DisplayName("Status")]
         public NewEnforcementOrderType CreateAs { get; set; } = NewEnforcementOrderType.Proposed;
 

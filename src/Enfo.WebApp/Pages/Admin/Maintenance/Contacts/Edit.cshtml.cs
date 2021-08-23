@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using Enfo.Domain.Entities.Users;
-using Enfo.Domain.Mapping;
 using Enfo.Domain.Repositories;
 using Enfo.Domain.Resources.EpdContact;
 using Enfo.WebApp.Models;
@@ -17,7 +16,7 @@ namespace Enfo.WebApp.Pages.Admin.Maintenance.Contacts
     public class Edit : PageModel
     {
         [BindProperty]
-        public EpdContactUpdate Item { get; set; }
+        public EpdContactCommand Item { get; set; }
 
         [BindProperty]
         [HiddenInput]
@@ -44,7 +43,7 @@ namespace Enfo.WebApp.Pages.Admin.Maintenance.Contacts
                 return RedirectToPage("Index");
             }
 
-            Item = EpdContactMapping.ToEpdContactUpdate(originalItem);
+            Item = new EpdContactCommand(originalItem);
             Id = id.Value;
             return Page();
         }

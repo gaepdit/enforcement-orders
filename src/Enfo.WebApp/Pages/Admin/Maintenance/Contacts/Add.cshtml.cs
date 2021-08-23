@@ -15,7 +15,7 @@ namespace Enfo.WebApp.Pages.Admin.Maintenance.Contacts
     public class Add : PageModel
     {
         [BindProperty]
-        public EpdContactCreate Item { get; init; }
+        public EpdContactCommand Item { get; init; }
 
         public static MaintenanceOption ThisOption => MaintenanceOption.EpdContact;
 

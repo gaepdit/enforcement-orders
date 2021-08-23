@@ -1,3 +1,5 @@
+### Generic ###
+# Generated 2021-05-11
 
 # Created by https://www.toptal.com/developers/gitignore/api/visualstudio,visualstudiocode,rider,cypressio
 # Edit at https://www.toptal.com/developers/gitignore?templates=visualstudio,visualstudiocode,rider,cypressio
@@ -86,8 +88,10 @@ fabric.properties
 
 ### VisualStudioCode ###
 .vscode/*
+!.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
+!.vscode/extensions.json
 *.code-workspace
 
 ### VisualStudioCode Patch ###
@@ -121,6 +125,7 @@ mono_crash.*
 [Rr]eleases/
 x64/
 x86/
+[Ww][Ii][Nn]32/
 [Aa][Rr][Mm]/
 [Aa][Rr][Mm]64/
 bld/
@@ -158,6 +163,9 @@ BenchmarkDotNet.Artifacts/
 project.lock.json
 project.fragment.lock.json
 artifacts/
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
 
 # StyleCop
 StyleCopReport.xml
@@ -236,7 +244,8 @@ _TeamCity*
 !.axoCover/settings.json
 
 # Coverlet is a free, cross platform Code Coverage Tool
-coverage*[.json, .xml, .info]
+coverage*.[ji][sn][of][no]
+coverage*.xml
 
 # Visual Studio code coverage results
 *.coverage
@@ -450,13 +459,16 @@ MigrationBackup/
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
 
+# Fody - auto-generated XML schema
+FodyWeavers.xsd
+
+### VisualStudio Patch ###
+# Additional files built by Visual Studio
+*.tlog
+
 # End of https://www.toptal.com/developers/gitignore/api/visualstudio,visualstudiocode,rider,cypressio
 
 ### Repo-specific ###
-
-# Dev database
-EnfoSqliteDatabase\.db
-EnfoSqliteDatabase\.db-*
 
 # Build artifacts
 **/wwwroot/dist/

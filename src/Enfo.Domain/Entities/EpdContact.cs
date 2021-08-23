@@ -1,11 +1,19 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using Enfo.Domain.Entities.Base;
+using Enfo.Domain.Resources;
+using Enfo.Domain.Resources.EpdContact;
+using Enfo.Domain.Utils;
 
 namespace Enfo.Domain.Entities
 {
     public class EpdContact : BaseActiveEntity
     {
+        public EpdContact() { }
+
+        public EpdContact(EpdContactCommand resource) =>
+            this.ApplyUpdate(resource);
+
         [Required]
         [StringLength(250)]
         public string ContactName { get; set; }
@@ -23,7 +31,7 @@ namespace Enfo.Domain.Entities
 
         [StringLength(100)]
         public string Email { get; set; }
-        
+
         // Postal (mailable) addresses only
 
         [Required]
@@ -44,5 +52,21 @@ namespace Enfo.Domain.Entities
 
         [StringLength(10)]
         public string PostalCode { get; set; }
+
+        public void ApplyUpdate(EpdContactCommand resource)
+        {
+            Guard.NotNull(resource, nameof(resource));
+
+            ContactName = Guard.NotNullOrWhiteSpace(resource.ContactName, nameof(resource.ContactName));
+            Email = Guard.RegexMatch(resource.Email, nameof(resource.Email), ResourceRegex.Email);
+            Organization = Guard.NotNullOrWhiteSpace(resource.Organization, nameof(resource.Organization));
+            Telephone = Guard.RegexMatch(resource.Telephone, nameof(resource.Telephone), ResourceRegex.Telephone);
+            Title = Guard.NotNullOrWhiteSpace(resource.Title, nameof(resource.Title));
+            City = Guard.NotNullOrWhiteSpace(resource.City, nameof(resource.City));
+            PostalCode = Guard.RegexMatch(resource.PostalCode, nameof(resource.PostalCode), ResourceRegex.PostalCode);
+            State = Guard.NotNullOrWhiteSpace(resource.State, nameof(resource.State));
+            Street = Guard.NotNullOrWhiteSpace(resource.Street, nameof(resource.Street));
+            Street2 = resource.Street2;
+        }
     }
 }

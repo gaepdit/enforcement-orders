@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Enfo.Domain.Mapping;
 using Enfo.Domain.Repositories;
 using Enfo.Domain.Resources.EnforcementOrder;
 using Enfo.Domain.Resources.EpdContact;
@@ -37,7 +36,7 @@ namespace EnfoTests.WebApp.Pages.Admin
 
             await page.OnGetAsync(1);
 
-            page.Item.Should().BeEquivalentTo(EnforcementOrderMapping.ToEnforcementOrderUpdate(item));
+            page.Item.Should().BeEquivalentTo(new EnforcementOrderUpdate(item));
             page.Id.ShouldEqual(item.Id);
             page.OriginalOrderNumber.ShouldEqual(item.OrderNumber);
         }
@@ -140,7 +139,7 @@ namespace EnfoTests.WebApp.Pages.Admin
         public async Task OnPost_GivenSuccess_ReturnsRedirectWithDisplayMessage()
         {
             var originalItem = GetEnforcementOrderAdminViewList().First(e => !e.Deleted);
-            var item = EnforcementOrderMapping.ToEnforcementOrderUpdate(originalItem);
+            var item = new EnforcementOrderUpdate(originalItem);
             var orderRepo = new Mock<IEnforcementOrderRepository> {DefaultValue = DefaultValue.Mock};
             orderRepo.Setup(l => l.GetAdminViewAsync(It.IsAny<int>()))
                 .ReturnsAsync(originalItem);
@@ -177,7 +176,7 @@ namespace EnfoTests.WebApp.Pages.Admin
             var contactRepo = new Mock<IEpdContactRepository>();
             contactRepo.Setup(l => l.ListAsync(false)).ReturnsAsync(new List<EpdContactView>());
             var page = new Edit(orderRepo.Object, legalRepo.Object, contactRepo.Object)
-                {Item = EnforcementOrderMapping.ToEnforcementOrderUpdate(item)};
+                {Item = new EnforcementOrderUpdate(item)};
             page.ModelState.AddModelError("key", "message");
 
             var result = await page.OnPostAsync();
@@ -192,8 +191,7 @@ namespace EnfoTests.WebApp.Pages.Admin
         public async Task OnPost_GivenInvalidUpdateResource_ReturnsPageWithModelError()
         {
             var item = GetEnforcementOrderAdminView(1);
-            var update = EnforcementOrderMapping.ToEnforcementOrderUpdate(item);
-            update.SettlementAmount = -1;
+            var update = new EnforcementOrderUpdate(item) {SettlementAmount = -1};
             // Mock repos
             var orderRepo = new Mock<IEnforcementOrderRepository>();
             orderRepo.Setup(l => l.GetAdminViewAsync(It.IsAny<int>())).ReturnsAsync(item);
@@ -228,7 +226,7 @@ namespace EnfoTests.WebApp.Pages.Admin
             var contactRepo = new Mock<IEpdContactRepository>();
             contactRepo.Setup(l => l.ListAsync(false)).ReturnsAsync(new List<EpdContactView>());
             var page = new Edit(orderRepo.Object, legalRepo.Object, contactRepo.Object)
-                {Item = EnforcementOrderMapping.ToEnforcementOrderUpdate(item)};
+                {Item = new EnforcementOrderUpdate(item)};
 
             var result = await page.OnPostAsync();
 

@@ -15,7 +15,7 @@ namespace Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthorities
     public class Add : PageModel
     {
         [BindProperty]
-        public LegalAuthorityCreate Item { get; init; }
+        public LegalAuthorityCommand Item { get; init; }
 
         public static MaintenanceOption ThisOption => MaintenanceOption.LegalAuthority;
 

@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using Enfo.Domain.Mapping;
 using Enfo.Domain.Repositories;
 using Enfo.Domain.Resources.LegalAuthority;
 using Enfo.WebApp.Models;
@@ -30,7 +29,7 @@ namespace EnfoTests.WebApp.Pages.Admin.Maintenance.LegalAuthorities
 
             await page.OnGetAsync(item.Id);
 
-            page.Item.Should().BeEquivalentTo(LegalAuthorityMapping.ToLegalAuthorityUpdate(item));
+            page.Item.Should().BeEquivalentTo(new LegalAuthorityCommand(item));
             page.Id.ShouldEqual(item.Id);
             page.OriginalName.ShouldEqual(item.AuthorityName);
         }
@@ -123,7 +122,7 @@ namespace EnfoTests.WebApp.Pages.Admin.Maintenance.LegalAuthorities
         [Fact]
         public async Task OnPost_GivenSuccess_ReturnsRedirectWithDisplayMessage()
         {
-            var item = LegalAuthorityMapping.ToLegalAuthorityUpdate(GetLegalAuthorityViewList()[0]);
+            var item = new LegalAuthorityCommand(GetLegalAuthorityViewList()[0]);
             var repo = new Mock<ILegalAuthorityRepository> {DefaultValue = DefaultValue.Mock};
             repo.Setup(l => l.GetAsync(It.IsAny<int>()))
                 .ReturnsAsync(GetLegalAuthorityViewList()[0]);
@@ -151,7 +150,7 @@ namespace EnfoTests.WebApp.Pages.Admin.Maintenance.LegalAuthorities
             var repo = new Mock<ILegalAuthorityRepository> {DefaultValue = DefaultValue.Mock};
             repo.Setup(l => l.GetAsync(It.IsAny<int>()))
                 .ReturnsAsync(GetLegalAuthorityViewList()[0]);
-            var page = new Edit(repo.Object) {Item = new LegalAuthorityUpdate()};
+            var page = new Edit(repo.Object) {Item = new LegalAuthorityCommand()};
             page.ModelState.AddModelError("key", "message");
 
             var result = await page.OnPostAsync();
@@ -163,7 +162,7 @@ namespace EnfoTests.WebApp.Pages.Admin.Maintenance.LegalAuthorities
         [Fact]
         public async Task OnPost_GivenNameExists_ReturnsPageWithModelError()
         {
-            var item = LegalAuthorityMapping.ToLegalAuthorityUpdate(GetLegalAuthorityViewList()[0]);
+            var item = new LegalAuthorityCommand(GetLegalAuthorityViewList()[0]);
             var repo = new Mock<ILegalAuthorityRepository> {DefaultValue = DefaultValue.Mock};
             repo.Setup(l => l.GetAsync(It.IsAny<int>()))
                 .ReturnsAsync(GetLegalAuthorityViewList()[0]);

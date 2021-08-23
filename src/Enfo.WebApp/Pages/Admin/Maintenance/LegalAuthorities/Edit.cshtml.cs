@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using Enfo.Domain.Entities.Users;
-using Enfo.Domain.Mapping;
 using Enfo.Domain.Repositories;
 using Enfo.Domain.Resources.LegalAuthority;
 using Enfo.WebApp.Models;
@@ -17,7 +16,7 @@ namespace Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthorities
     public class Edit : PageModel
     {
         [BindProperty]
-        public LegalAuthorityUpdate Item { get; set; }
+        public LegalAuthorityCommand Item { get; set; }
 
         [BindProperty]
         [HiddenInput]
@@ -45,7 +44,7 @@ namespace Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthorities
                 return RedirectToPage("Index");
             }
 
-            Item = LegalAuthorityMapping.ToLegalAuthorityUpdate(originalItem);
+            Item = new LegalAuthorityCommand(originalItem);
             Id = id.Value;
             OriginalName = originalItem.AuthorityName;
             return Page();

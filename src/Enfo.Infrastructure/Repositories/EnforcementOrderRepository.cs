@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Enfo.Domain.Mapping;
+using Enfo.Domain.Entities;
 using Enfo.Domain.Repositories;
 using Enfo.Domain.Resources;
 using Enfo.Domain.Resources.EnforcementOrder;
@@ -159,7 +159,7 @@ namespace Enfo.Infrastructure.Repositories
                 throw new ArgumentException(validationResult.ErrorMessages.DictionaryToString(), nameof(resource));
             }
 
-            var item = resource.ToEnforcementOrder();
+            var item = new EnforcementOrder(resource);
             await _context.EnforcementOrders.AddAsync(item).ConfigureAwait(false);
             await _context.SaveChangesAsync().ConfigureAwait(false);
             return item.Id;
@@ -169,12 +169,8 @@ namespace Enfo.Infrastructure.Repositories
         {
             Guard.NotNull(resource, nameof(resource));
 
-            var item = await _context.EnforcementOrders.FindAsync(id).ConfigureAwait(false);
-
-            if (item == null)
-            {
-                throw new ArgumentException($"ID ({id}) not found.", nameof(id));
-            }
+            var item = await _context.EnforcementOrders.FindAsync(id).ConfigureAwait(false)
+                ?? throw new ArgumentException($"ID ({id}) not found.", nameof(id));
 
             var validationResult = ValidateEnforcementOrderUpdate(new EnforcementOrderAdminView(item), resource);
 
@@ -189,7 +185,7 @@ namespace Enfo.Infrastructure.Repositories
                 throw new ArgumentException(validationResult.ErrorMessages.DictionaryToString(), nameof(resource));
             }
 
-            item.UpdateFrom(resource);
+            item.ApplyUpdate(resource);
             await _context.SaveChangesAsync().ConfigureAwait(false);
         }
 

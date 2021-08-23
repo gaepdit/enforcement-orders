@@ -1,5 +1,4 @@
 using System.Linq;
-using Enfo.Domain.Mapping;
 using Enfo.Domain.Resources.EnforcementOrder;
 using EnfoTests.Helpers;
 using FluentAssertions;
@@ -36,10 +35,10 @@ namespace EnfoTests.Domain.ValidationTests
         {
             var order = GetEnforcementOrderAdminView(DataHelper.GetEnforcementOrders.First(e => e.IsProposedOrder).Id);
 
-            var orderUpdate = EnforcementOrderMapping.ToEnforcementOrderUpdate(order);
-            orderUpdate.ExecutedDate = null;
-            orderUpdate.ExecutedOrderPostedDate = null;
-            orderUpdate.IsExecutedOrder = false;
+            var orderUpdate = new EnforcementOrderUpdate(order)
+            {
+                ExecutedDate = null, ExecutedOrderPostedDate = null, IsExecutedOrder = false
+            };
 
             var result = ValidateEnforcementOrderUpdate(order, orderUpdate);
 
@@ -51,10 +50,10 @@ namespace EnfoTests.Domain.ValidationTests
         public void FailsWhenRemovingExecutedOrderIfNotProposedOrder()
         {
             var order = GetEnforcementOrderAdminView(DataHelper.GetEnforcementOrders.First(e => !e.IsProposedOrder).Id);
-            var orderUpdate = EnforcementOrderMapping.ToEnforcementOrderUpdate(order);
-            orderUpdate.ExecutedDate = null;
-            orderUpdate.ExecutedOrderPostedDate = null;
-            orderUpdate.IsExecutedOrder = false;
+            var orderUpdate = new EnforcementOrderUpdate(order)
+            {
+                ExecutedDate = null, ExecutedOrderPostedDate = null, IsExecutedOrder = false
+            };
 
             var result = ValidateEnforcementOrderUpdate(order, orderUpdate);
 

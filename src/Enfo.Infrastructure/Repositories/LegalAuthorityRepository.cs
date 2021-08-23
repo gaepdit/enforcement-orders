@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Enfo.Domain.Mapping;
+using Enfo.Domain.Entities;
 using Enfo.Domain.Repositories;
 using Enfo.Domain.Resources.LegalAuthority;
 using Enfo.Domain.Utils;
@@ -32,31 +32,21 @@ namespace Enfo.Infrastructure.Repositories
                 .ToListAsync().ConfigureAwait(false);
 
 
-        public async Task<int> CreateAsync(LegalAuthorityCreate resource)
+        public async Task<int> CreateAsync(LegalAuthorityCommand resource)
         {
-            Guard.NotNull(resource, nameof(resource));
-            Guard.NotNullOrWhiteSpace(resource.AuthorityName, nameof(resource.AuthorityName));
-
-            var item = resource.ToLegalAuthorityEntity();
+            var item = new LegalAuthority(resource);
             await _context.LegalAuthorities.AddAsync(item).ConfigureAwait(false);
             await _context.SaveChangesAsync().ConfigureAwait(false);
 
             return item.Id;
         }
 
-        public async Task UpdateAsync(int id, LegalAuthorityUpdate resource)
+        public async Task UpdateAsync(int id, LegalAuthorityCommand resource)
         {
-            Guard.NotNull(resource, nameof(resource));
-            Guard.NotNullOrWhiteSpace(resource.AuthorityName, nameof(resource.AuthorityName));
+            var item = (await _context.LegalAuthorities.FindAsync(id).ConfigureAwait(false))
+                ?? throw new ArgumentException($"ID ({id}) not found.", nameof(id));
 
-            var item = await _context.LegalAuthorities.FindAsync(id).ConfigureAwait(false);
-
-            if (item == null)
-            {
-                throw new ArgumentException($"ID ({id}) not found.", nameof(id));
-            }
-
-            item.UpdateEntityFrom(resource);
+            item.ApplyUpdate(resource);
             await _context.SaveChangesAsync().ConfigureAwait(false);
         }
 

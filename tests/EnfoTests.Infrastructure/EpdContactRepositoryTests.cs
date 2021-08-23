@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Enfo.Domain.Mapping;
+using Enfo.Domain.Entities;
 using Enfo.Domain.Resources.EpdContact;
 using FluentAssertions;
 using Xunit;
@@ -70,7 +70,7 @@ namespace EnfoTests.Infrastructure
         [Fact]
         public async Task Create_AddsNewItem()
         {
-            var itemCreate = new EpdContactCreate()
+            var itemCreate = new EpdContactCommand()
             {
                 Email = null,
                 Organization = "EPD",
@@ -89,8 +89,7 @@ namespace EnfoTests.Infrastructure
             var itemId = await repository.CreateAsync(itemCreate);
             repositoryHelper.ClearChangeTracker();
 
-            var epdContact = itemCreate.ToEpdContactEntity();
-            epdContact.Id = itemId;
+            var epdContact = new EpdContact(itemCreate) {Id = itemId};
             var expected = new EpdContactView(epdContact);
 
             (await repository.GetAsync(itemId)).Should().BeEquivalentTo(expected);
@@ -99,7 +98,7 @@ namespace EnfoTests.Infrastructure
         [Fact]
         public async Task Create_GivenNullName_ThrowsException()
         {
-            var itemCreate = new EpdContactCreate()
+            var itemCreate = new EpdContactCommand()
             {
                 Email = null,
                 Organization = "EPD",
@@ -119,13 +118,13 @@ namespace EnfoTests.Infrastructure
             };
 
             (await action.Should().ThrowAsync<ArgumentException>())
-                .And.ParamName.Should().Be(nameof(EpdContactCreate.ContactName));
+                .And.ParamName.Should().Be(nameof(EpdContactCommand.ContactName));
         }
 
         [Fact]
         public async Task Create_GivenInvalidEmail_ThrowsException()
         {
-            var itemCreate = new EpdContactCreate()
+            var itemCreate = new EpdContactCommand()
             {
                 Email = "abc",
                 Organization = "EPD",
@@ -152,7 +151,7 @@ namespace EnfoTests.Infrastructure
         [Fact]
         public async Task Create_GivenInvalidTelephone_ThrowsException()
         {
-            var itemCreate = new EpdContactCreate()
+            var itemCreate = new EpdContactCommand()
             {
                 Email = null,
                 Organization = "EPD",
@@ -172,14 +171,15 @@ namespace EnfoTests.Infrastructure
             };
 
             (await action.Should().ThrowAsync<ArgumentException>())
-                .WithMessage($"Value ({itemCreate.Telephone}) is not valid. (Parameter '{nameof(itemCreate.Telephone)}')")
+                .WithMessage(
+                    $"Value ({itemCreate.Telephone}) is not valid. (Parameter '{nameof(itemCreate.Telephone)}')")
                 .And.ParamName.Should().Be(nameof(itemCreate.Telephone));
         }
 
         [Fact]
         public async Task Create_GivenNullStreet_ThrowsException()
         {
-            var itemCreate = new EpdContactCreate()
+            var itemCreate = new EpdContactCommand()
             {
                 Email = null,
                 Organization = "EPD",
@@ -206,7 +206,7 @@ namespace EnfoTests.Infrastructure
         [Fact]
         public async Task Create_GivenInvalidZIP_ThrowsException()
         {
-            var itemCreate = new EpdContactCreate()
+            var itemCreate = new EpdContactCommand()
             {
                 Email = null,
                 Organization = "EPD",
@@ -237,7 +237,7 @@ namespace EnfoTests.Infrastructure
         public async Task Update_SuccessfullyUpdatesItem()
         {
             var itemId = GetEpdContacts.First(e => e.Active).Id;
-            var itemUpdate = new EpdContactUpdate()
+            var itemUpdate = new EpdContactCommand()
             {
                 Email = null,
                 Organization = "New Org",
@@ -266,7 +266,7 @@ namespace EnfoTests.Infrastructure
         {
             var original = GetEpdContacts.First(e => e.Active);
             var itemId = original.Id;
-            var itemUpdate = new EpdContactUpdate()
+            var itemUpdate = new EpdContactCommand()
             {
                 Email = original.Email,
                 Organization = original.Organization,
@@ -294,7 +294,7 @@ namespace EnfoTests.Infrastructure
         public async Task Update_GivenNullName_ThrowsException()
         {
             var itemId = GetEpdContacts.First(e => e.Active).Id;
-            var itemUpdate = new EpdContactUpdate()
+            var itemUpdate = new EpdContactCommand()
             {
                 Email = null,
                 Organization = "EPD",
@@ -321,7 +321,7 @@ namespace EnfoTests.Infrastructure
         public async Task Update_GivenInvalidEmail_ThrowsException()
         {
             var itemId = GetEpdContacts.First(e => e.Active).Id;
-            var itemUpdate = new EpdContactUpdate()
+            var itemUpdate = new EpdContactCommand()
             {
                 Email = "abc",
                 Organization = "EPD",
@@ -349,7 +349,7 @@ namespace EnfoTests.Infrastructure
         public async Task Update_GivenInvalidTelephone_ThrowsException()
         {
             var itemId = GetEpdContacts.First(e => e.Active).Id;
-            var itemUpdate = new EpdContactUpdate()
+            var itemUpdate = new EpdContactCommand()
             {
                 Email = null,
                 Organization = "EPD",
@@ -369,7 +369,8 @@ namespace EnfoTests.Infrastructure
             };
 
             (await action.Should().ThrowAsync<ArgumentException>())
-                .WithMessage($"Value ({itemUpdate.Telephone}) is not valid. (Parameter '{nameof(itemUpdate.Telephone)}')")
+                .WithMessage(
+                    $"Value ({itemUpdate.Telephone}) is not valid. (Parameter '{nameof(itemUpdate.Telephone)}')")
                 .And.ParamName.Should().Be(nameof(itemUpdate.Telephone));
         }
 
@@ -377,7 +378,7 @@ namespace EnfoTests.Infrastructure
         public async Task Update_GivenNullStreet_ThrowsException()
         {
             var itemId = GetEpdContacts.First(e => e.Active).Id;
-            var itemUpdate = new EpdContactUpdate()
+            var itemUpdate = new EpdContactCommand()
             {
                 Email = null,
                 Organization = "EPD",
@@ -405,7 +406,7 @@ namespace EnfoTests.Infrastructure
         public async Task Update_GivenInvalidZIP_ThrowsException()
         {
             var itemId = GetEpdContacts.First(e => e.Active).Id;
-            var itemUpdate = new EpdContactUpdate()
+            var itemUpdate = new EpdContactCommand()
             {
                 Email = null,
                 Organization = "EPD",
@@ -425,14 +426,15 @@ namespace EnfoTests.Infrastructure
             };
 
             (await action.Should().ThrowAsync<ArgumentException>())
-                .WithMessage($"Value ({itemUpdate.PostalCode}) is not valid. (Parameter '{nameof(itemUpdate.PostalCode)}')")
+                .WithMessage(
+                    $"Value ({itemUpdate.PostalCode}) is not valid. (Parameter '{nameof(itemUpdate.PostalCode)}')")
                 .And.ParamName.Should().Be(nameof(itemUpdate.PostalCode));
         }
 
         [Fact]
         public async Task Update_GivenMissingId_ThrowsException()
         {
-            var itemUpdate = new EpdContactUpdate()
+            var itemUpdate = new EpdContactCommand()
             {
                 Email = null,
                 Organization = "New Org",
