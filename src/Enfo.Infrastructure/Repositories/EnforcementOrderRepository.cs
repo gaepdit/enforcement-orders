@@ -63,6 +63,29 @@ namespace Enfo.Infrastructure.Repositories
             return new PaginatedResult<EnforcementOrderSummaryView>(items, count, paging);
         }
 
+        public async Task<PaginatedResult<EnforcementOrderDetailedView>> ListDetailedAsync(
+            EnforcementOrderSpec spec, PaginationSpec paging)
+        {
+            Guard.NotNull(spec, nameof(spec));
+            Guard.NotNull(paging, nameof(paging));
+
+            var filteredItems = _context.EnforcementOrders.AsNoTracking()
+                .ApplySpecFilter(spec);
+
+            var items = await filteredItems
+                .ApplySorting(spec.Sort)
+                .Include(e => e.CommentContact)
+                .Include(e => e.HearingContact)
+                .Include(e => e.LegalAuthority)
+                .ApplyPagination(paging)
+                .Select(e => new EnforcementOrderDetailedView(e))
+                .ToListAsync().ConfigureAwait(false);
+
+            var count = await filteredItems.CountAsync().ConfigureAwait(false);
+
+            return new PaginatedResult<EnforcementOrderDetailedView>(items, count, paging);
+        }
+
         public async Task<PaginatedResult<EnforcementOrderAdminSummaryView>> ListAdminAsync(
             EnforcementOrderAdminSpec spec, PaginationSpec paging)
         {

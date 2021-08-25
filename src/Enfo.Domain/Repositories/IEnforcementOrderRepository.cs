@@ -12,6 +12,7 @@ namespace Enfo.Domain.Repositories
         Task<EnforcementOrderDetailedView> GetAsync(int id);
         Task<EnforcementOrderAdminView> GetAdminViewAsync(int id);
         Task<PaginatedResult<EnforcementOrderSummaryView>> ListAsync(EnforcementOrderSpec spec, PaginationSpec paging);
+        Task<PaginatedResult<EnforcementOrderDetailedView>> ListDetailedAsync(EnforcementOrderSpec spec, PaginationSpec paging);
         Task<PaginatedResult<EnforcementOrderAdminSummaryView>> ListAdminAsync(EnforcementOrderAdminSpec spec, PaginationSpec paging);
         Task<bool> ExistsAsync(int id, bool onlyPublic = true);
         Task<bool> OrderNumberExistsAsync(string orderNumber, int? ignoreId = null);

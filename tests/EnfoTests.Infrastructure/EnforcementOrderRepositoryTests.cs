@@ -178,6 +178,114 @@ namespace EnfoTests.Infrastructure
             result.Items[0].Should().BeEquivalentTo(GetEnforcementOrderSummaryView(expectedList[0].Id));
         }
 
+        // ListDetailedAsync
+
+        [Fact]
+        public async Task ListDetailed_ByDefault_ReturnsOnlyPublic()
+        {
+            using var repository = CreateRepositoryHelper().GetEnforcementOrderRepository();
+            var result = await repository.ListDetailedAsync(new EnforcementOrderSpec(), new PaginationSpec(1, 20));
+
+            result.CurrentCount.Should().Be(GetEnforcementOrders.Count(e => e.GetIsPublic));
+            result.Items.Should().HaveCount(GetEnforcementOrders.Count(e => e.GetIsPublic));
+            result.PageNumber.Should().Be(1);
+            result.Items[0].Should().BeEquivalentTo(
+                GetEnforcementOrderDetailedView(GetEnforcementOrders
+                    .OrderByDescending(e => e.ExecutedDate ?? e.ProposedOrderPostedDate)
+                    .ThenBy(e => e.FacilityName)
+                    .First(e => e.GetIsPublic).Id));
+        }
+
+        [Fact]
+        public async Task ListDetailed_WithFacilityNameSpec_ReturnsMatches()
+        {
+            var spec = new EnforcementOrderSpec
+            {
+                Facility = GetEnforcementOrders.First(e => !e.Deleted).FacilityName
+            };
+
+            using var repository = CreateRepositoryHelper().GetEnforcementOrderRepository();
+            var result = await repository.ListDetailedAsync(spec, new PaginationSpec(1, 20));
+
+            var expectedList = GetEnforcementOrders
+                .OrderByDescending(e => e.ExecutedDate ?? e.ProposedOrderPostedDate)
+                .ThenBy(e => e.FacilityName)
+                .Where(e =>
+                    !e.Deleted
+                    && string.Equals(e.FacilityName, spec.Facility, StringComparison.Ordinal))
+                .ToList();
+
+            result.CurrentCount.Should().Be(expectedList.Count);
+            result.Items.Should().HaveCount(expectedList.Count);
+            result.PageNumber.Should().Be(1);
+            result.Items[0].Should().BeEquivalentTo(
+                GetEnforcementOrderDetailedView(expectedList[0].Id));
+        }
+
+        [Fact]
+        public async Task ListDetailed_WithDateRangeBetweenProposedAndExecutedDates_ReturnsNone()
+        {
+            var spec = new EnforcementOrderSpec
+            {
+                Facility = "Date Range Test",
+                FromDate = new DateTime(2021, 3, 1),
+                TillDate = new DateTime(2021, 4, 1),
+            };
+
+            using var repository = CreateRepositoryHelper().GetEnforcementOrderRepository();
+            var result = await repository.ListDetailedAsync(spec, new PaginationSpec(1, 20));
+
+            result.CurrentCount.Should().Be(0);
+            result.Items.Should().HaveCount(0);
+            result.PageNumber.Should().Be(1);
+        }
+
+        [Fact]
+        public async Task ListDetailed_WithStartDateBeforeFacilityDates_ReturnsFacility()
+        {
+            var spec = new EnforcementOrderSpec
+            {
+                Facility = "Date Range Test",
+                FromDate = new DateTime(2021, 1, 1),
+            };
+
+            using var repository = CreateRepositoryHelper().GetEnforcementOrderRepository();
+            var result = await repository.ListDetailedAsync(spec, new PaginationSpec(1, 20));
+
+            var expectedList = GetEnforcementOrders
+                .Where(e => string.Equals(e.FacilityName, spec.Facility, StringComparison.Ordinal))
+                .ToList();
+
+            result.CurrentCount.Should().Be(expectedList.Count);
+            result.Items.Should().HaveCount(expectedList.Count);
+            result.PageNumber.Should().Be(1);
+            result.Items[0].Should().BeEquivalentTo(
+                GetEnforcementOrderDetailedView(expectedList[0].Id));
+        }
+
+        [Fact]
+        public async Task ListDetailed_WithEndDateAfterFacilityDates_ReturnsFacility()
+        {
+            var spec = new EnforcementOrderSpec
+            {
+                Facility = "Date Range Test",
+                TillDate = new DateTime(2021, 6, 1),
+            };
+
+            using var repository = CreateRepositoryHelper().GetEnforcementOrderRepository();
+            var result = await repository.ListDetailedAsync(spec, new PaginationSpec(1, 20));
+
+            var expectedList = GetEnforcementOrders
+                .Where(e => string.Equals(e.FacilityName, spec.Facility, StringComparison.Ordinal))
+                .ToList();
+
+            result.CurrentCount.Should().Be(expectedList.Count);
+            result.Items.Should().HaveCount(expectedList.Count);
+            result.PageNumber.Should().Be(1);
+            result.Items[0].Should().BeEquivalentTo(
+                GetEnforcementOrderDetailedView(expectedList[0].Id));
+        }
+
         // ListAdminAsync
 
         [Fact]
