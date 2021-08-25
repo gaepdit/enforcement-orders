@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using Enfo.Domain.Resources;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace Enfo.Domain.Specs
 {
@@ -18,10 +19,12 @@ namespace Enfo.Domain.Specs
 
         [DisplayName("Beginning Date")]
         [DisplayFormat(DataFormatString = DisplayFormats.EditDate, ApplyFormatInEditMode = true)]
+        [SwaggerSchema(Format = "date")]
         public DateTime? FromDate { get; set; }
 
         [DisplayName("Ending Date")]
         [DisplayFormat(DataFormatString = DisplayFormats.EditDate, ApplyFormatInEditMode = true)]
+        [SwaggerSchema(Format = "date")]
         public DateTime? TillDate { get; set; }
 
         [DisplayName("Enforcement Order Status")]
@@ -50,7 +53,7 @@ namespace Enfo.Domain.Specs
             Text = Text?.Trim();
         }
 
-        public IDictionary<string, string> AsRouteValues => new Dictionary<string, string>()
+        public IDictionary<string, string> AsRouteValues() => new Dictionary<string, string>()
         {
             {nameof(Facility), Facility},
             {nameof(County), County},

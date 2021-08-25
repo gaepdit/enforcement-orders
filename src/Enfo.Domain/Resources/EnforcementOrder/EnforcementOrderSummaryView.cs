@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 using Enfo.Domain.Resources.LegalAuthority;
 using Enfo.Domain.Utils;
 using JetBrains.Annotations;
@@ -48,6 +49,7 @@ namespace Enfo.Domain.Resources.EnforcementOrder
         public bool IsPublicProposedOrder { get; }
 
         [DisplayName("Proposed Order Public Noticed")]
+        [JsonIgnore]
         public bool IsProposedOrder { get; }
 
         [DisplayName("Date Comment Period Closes")]
@@ -63,6 +65,7 @@ namespace Enfo.Domain.Resources.EnforcementOrder
         public bool IsPublicExecutedOrder { get; }
 
         [DisplayName("Enforcement Order Executed")]
+        [JsonIgnore]
         public bool IsExecutedOrder { get; }
 
         [DisplayName("Date Executed")]
@@ -72,12 +75,5 @@ namespace Enfo.Domain.Resources.EnforcementOrder
         [DisplayName("Publication Date For Executed Order")]
         [DisplayFormat(DataFormatString = DisplayFormats.ShortDateComposite)]
         public DateTime? ExecutedOrderPostedDate { get; }
-
-        // Calculated properties
-
-        [DisplayFormat(DataFormatString = DisplayFormats.ShortDateComposite)]
-        public DateTime? LastPostedDate => ExecutedDate ?? ProposedOrderPostedDate;
-
-        public bool IsPublic => IsPublicExecutedOrder || IsPublicProposedOrder;
     }
 }

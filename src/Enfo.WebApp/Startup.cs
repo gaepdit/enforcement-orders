@@ -20,6 +20,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 using Mindscape.Raygun4Net.AspNetCore;
 
 namespace Enfo.WebApp
@@ -76,12 +77,29 @@ namespace Enfo.WebApp
             // Configure UI
             services.AddRazorPages();
 
+            // Add API documentation
+            services.AddSwaggerGen(c =>
+            {
+                c.EnableAnnotations();
+                c.IgnoreObsoleteActions();
+                c.SwaggerDoc("v2", new OpenApiInfo
+                {
+                    Version = "v2",
+                    Title = "Georgia EPD Enforcement Orders API",
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Georgia EPD-IT Support",
+                        Email = Configuration["SupportEmail"]
+                    }
+                });
+            });
+
             // Configure HSTS
             services.AddHsts(opts => opts.MaxAge = TimeSpan.FromSeconds(63072000));
 
             // Configure Raygun
             services.AddRaygun(Configuration,
-                new RaygunMiddlewareSettings {ClientProvider = new RaygunClientProvider()});
+                new RaygunMiddlewareSettings { ClientProvider = new RaygunClientProvider() });
 
             // Register IHttpContextAccessor (needed by RaygunScriptPartial)
             services.AddHttpContextAccessor();
@@ -121,6 +139,14 @@ namespace Enfo.WebApp
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            // Configure API documentation
+            app.UseSwagger(c => { c.RouteTemplate = "api/{documentName}/openapi.json"; });
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/api/v2/openapi.json", "ENFO API v2");
+                c.RoutePrefix = "api";
+            });
 
             app.UseEndpoints(endpoints =>
             {

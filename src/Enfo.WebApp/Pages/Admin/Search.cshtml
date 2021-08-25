@@ -144,7 +144,7 @@
         else
         {
             <partial name="_PaginationCount" model="Model.OrdersList" />
-            <partial name="_PaginationNav" model="(Model.OrdersList, Model.Spec.AsRouteValues)" />
+            <partial name="_PaginationNav" model="(Model.OrdersList, Model.Spec.AsRouteValues())" />
             <table class="usa-table-borderless gaepd-table-responsive">
                 <thead>
                 <tr>
@@ -158,7 +158,7 @@
                             @:aria-sort="descending"
                         }
                         data-label="Sort by">
-                        <a asp-fragment="search-results" asp-all-route-data="Model.Spec.AsRouteValues"
+                        <a asp-fragment="search-results" asp-all-route-data="Model.Spec.AsRouteValues()"
                            asp-route-Sort="@(Model.Spec.Sort == OrderSorting.FacilityAsc ? OrderSorting.FacilityDesc : OrderSorting.FacilityAsc)"
                            asp-route-handler="search">
                             Facility
@@ -175,7 +175,7 @@
                             @:aria-sort="descending"
                         }
                         data-label="Sort by">
-                        <a asp-fragment="search-results" asp-all-route-data="Model.Spec.AsRouteValues"
+                        <a asp-fragment="search-results" asp-all-route-data="Model.Spec.AsRouteValues()"
                            asp-route-Sort="@(Model.Spec.Sort == OrderSorting.DateAsc ? OrderSorting.DateDesc : OrderSorting.DateAsc)"
                            asp-route-handler="search">
                             Status/Date
@@ -221,7 +221,7 @@
                 </tbody>
             </table>
 
-            <partial name="_PaginationNav" model="(Model.OrdersList, Model.Spec.AsRouteValues)" />
+            <partial name="_PaginationNav" model="(Model.OrdersList, Model.Spec.AsRouteValues())" />
         }
     </div>
 }
