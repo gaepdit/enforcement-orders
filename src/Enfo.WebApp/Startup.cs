@@ -141,11 +141,12 @@ namespace Enfo.WebApp
             app.UseAuthorization();
 
             // Configure API documentation
-            app.UseSwagger(c => { c.RouteTemplate = "api/{documentName}/openapi.json"; });
+            app.UseSwagger(c => { c.RouteTemplate = "api-docs/{documentName}/openapi.json"; });
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/api/v2/openapi.json", "ENFO API v2");
-                c.RoutePrefix = "api";
+                c.SwaggerEndpoint("/api-docs/v2/openapi.json", "ENFO API v2");
+                c.RoutePrefix = "api-docs";
+                c.DocumentTitle = "Georgia EPD Enforcement Orders API";
             });
 
             app.UseEndpoints(endpoints =>

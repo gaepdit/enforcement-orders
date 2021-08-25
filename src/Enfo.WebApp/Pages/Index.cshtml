@@ -3,7 +3,7 @@
 @using Enfo.Domain.Utils
 @model Enfo.WebApp.Pages.Index
 @{
-    ViewData["Title"] = "Enforcement Orders";
+    ViewData["Title"] = "";
 }
 
 <partial name="_AlertPartial" for="Message" />
@@ -135,5 +135,17 @@
         Mail subscriptions to these notices are available at a cost of $50 per year. That fee provides the subscriber with all notices of proposed
         and executed orders issued from July 1 through June 30 of the following year. For information about subscriptions, call Georgia EPD at
         (404) 657-5947 (inside the Atlanta calling area), or toll-free within Georgia at (888) 373-5947.
+    </p>
+</section>
+
+<section>
+    <h2>API Access</h2>
+    <p>
+        In an effort to increase open access to government data, we have released
+        an API (application programming interface) with access to the entire 
+        public set of enforcement orders. 
+    </p>
+    <p>
+        View details at the <a href="~/api-docs/">API documentation site</a>.
     </p>
 </section>

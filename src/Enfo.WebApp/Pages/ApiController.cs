@@ -12,6 +12,7 @@ namespace Enfo.WebApp.Pages.Api
 {
     [ApiController]
     [Route("api")]
+    [Produces("application/json")]
     public class ApiController : ControllerBase
     {
         private readonly IEnforcementOrderRepository _order;
