@@ -158,8 +158,9 @@
                             @:aria-sort="descending"
                         }
                         data-label="Sort by">
-                        <a asp-fragment="search-results" asp-all-route-data="Model.Spec.AsRouteValues" asp-route-handler="search"
-                           asp-route-SortOrder="@(Model.Spec.Sort == OrderSorting.FacilityAsc ? OrderSorting.FacilityDesc : OrderSorting.FacilityAsc)">
+                        <a asp-fragment="search-results" asp-all-route-data="Model.Spec.AsRouteValues"
+                           asp-route-Sort="@(Model.Spec.Sort == OrderSorting.FacilityAsc ? OrderSorting.FacilityDesc : OrderSorting.FacilityAsc)"
+                           asp-route-handler="search">
                             Facility
                         </a>
                     </th>
@@ -174,8 +175,9 @@
                             @:aria-sort="descending"
                         }
                         data-label="Sort by">
-                        <a asp-fragment="search-results" asp-all-route-data="Model.Spec.AsRouteValues" asp-route-handler="search"
-                           asp-route-SortOrder="@(Model.Spec.Sort == OrderSorting.DateAsc ? OrderSorting.DateDesc : OrderSorting.DateAsc)">
+                        <a asp-fragment="search-results" asp-all-route-data="Model.Spec.AsRouteValues"
+                           asp-route-Sort="@(Model.Spec.Sort == OrderSorting.DateAsc ? OrderSorting.DateDesc : OrderSorting.DateAsc)"
+                           asp-route-handler="search">
                             Status/Date
                         </a>
                     </th>

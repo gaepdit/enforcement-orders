@@ -106,11 +106,6 @@ namespace Enfo.Domain.Specs
             [NotNull] this IQueryable<EnforcementOrder> query) =>
             query.Where(e => e.CommentPeriodClosesDate >= DateTime.Today);
 
-        public static IQueryable<EnforcementOrder> FilterByIsPublic(
-            [NotNull] this IQueryable<EnforcementOrder> query,
-            bool onlyPublic) =>
-            onlyPublic ? query.FilterForOnlyPublic() : query;
-
         public static IQueryable<EnforcementOrder> FilterForOnlyPublic(
             [NotNull] this IQueryable<EnforcementOrder> query) =>
             query.Where(e =>

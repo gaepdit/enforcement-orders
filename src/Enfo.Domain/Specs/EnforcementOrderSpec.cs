@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -48,7 +48,6 @@ namespace Enfo.Domain.Specs
             {nameof(TillDate), TillDate?.ToString()},
             {nameof(Status), Status.ToString()},
             {nameof(OrderNumber), OrderNumber},
-            {nameof(Sort), Sort.ToString()},
         };
     }
 }

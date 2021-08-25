@@ -62,7 +62,6 @@ namespace Enfo.Domain.Specs
             {nameof(OrderNumber), OrderNumber},
             {nameof(Text), Text},
             {nameof(ShowDeleted), ShowDeleted.ToString()},
-            {nameof(Sort), Sort.ToString()},
         };
     }
 }

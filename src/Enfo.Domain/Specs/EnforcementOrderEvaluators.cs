@@ -38,10 +38,10 @@ namespace Enfo.Domain.Specs
                 OrderSorting.DateDesc =>
                     query.OrderByDescending(e => e.ExecutedDate ?? e.ProposedOrderPostedDate)
                         .ThenBy(e => e.FacilityName),
-                OrderSorting.FacilityDesc =>
+                OrderSorting.FacilityAsc =>
                     query.OrderBy(e => e.FacilityName)
                         .ThenBy(e => e.ExecutedDate ?? e.ProposedOrderPostedDate),
-                OrderSorting.FacilityAsc =>
+                OrderSorting.FacilityDesc =>
                     query.OrderByDescending(e => e.FacilityName)
                         .ThenBy(e => e.ExecutedDate ?? e.ProposedOrderPostedDate),
                 _ => query.OrderBy(e => 1)
