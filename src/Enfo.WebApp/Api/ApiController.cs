@@ -8,41 +8,43 @@ using Enfo.Domain.Resources.LegalAuthority;
 using Enfo.Domain.Specs;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Enfo.WebApp.Pages.Api
+namespace Enfo.WebApp.Api
 {
     [ApiController]
     [Route("api")]
     [Produces("application/json")]
     public class ApiController : ControllerBase
     {
-        private readonly IEnforcementOrderRepository _order;
-        private readonly ILegalAuthorityRepository _legalAuthority;
-
-        public ApiController(
-            IEnforcementOrderRepository order,
-            ILegalAuthorityRepository legalAuthority) =>
-            (_order, _legalAuthority) = (order, legalAuthority);
-
         [HttpGet(nameof(EnforcementOrder))]
         public Task<PaginatedResult<EnforcementOrderDetailedView>> ListOrdersAsync(
+            [FromServices] IEnforcementOrderRepository order,
             [FromQuery] EnforcementOrderSpec spec,
             [FromQuery] int page = 1,
             [FromQuery] int pageSize = 25) =>
-            _order.ListDetailedAsync(spec, new PaginationSpec(page, pageSize));
+            order.ListDetailedAsync(spec, new PaginationSpec(page, pageSize));
 
         [HttpGet(nameof(EnforcementOrder) + "/{id:int}")]
-        public Task<EnforcementOrderDetailedView> GetOrderAsync(
-            [FromRoute] int id) =>
-            _order.GetAsync(id);
+        public async Task<ActionResult<EnforcementOrderDetailedView>> GetOrderAsync(
+            [FromServices] IEnforcementOrderRepository order,
+            [FromRoute] int id)
+        {
+            var item = await order.GetAsync(id);
+            return item != null ? Ok(item) : Problem("ID not found.", statusCode: 404);
+        }
 
         [HttpGet(nameof(LegalAuthority))]
         public Task<IReadOnlyList<LegalAuthorityView>> ListLegalAuthoritiesAsync(
+            [FromServices] ILegalAuthorityRepository legalAuthority,
             [FromQuery] bool includeInactive = false) =>
-            _legalAuthority.ListAsync(includeInactive);
+            legalAuthority.ListAsync(includeInactive);
 
         [HttpGet(nameof(LegalAuthority) + "/{id:int}")]
-        public Task<LegalAuthorityView> GetLegalAuthorityAsync(
-            [FromRoute] int id) =>
-            _legalAuthority.GetAsync(id);
+        public async Task<ActionResult<LegalAuthorityView>> GetLegalAuthorityAsync(
+            [FromServices] ILegalAuthorityRepository legalAuthority,
+            [FromRoute] int id)
+        {
+            var item = await legalAuthority.GetAsync(id);
+            return item != null ? Ok(item) : Problem("ID not found.", statusCode: 404);
+        }
     }
 }
