@@ -42,8 +42,5 @@ namespace Enfo.Domain.Entities.Users
 
         public string DisplayName =>
             string.Join(" ", new[] {GivenName, FamilyName}.Where(s => !string.IsNullOrEmpty(s)));
-
-        public string SortableFullName =>
-            string.Join(", ", new[] {FamilyName, GivenName}.Where(s => !string.IsNullOrEmpty(s)));
     }
 }

@@ -35,35 +35,29 @@ namespace Enfo.Domain.Specs
         {
             if (fromDate is null && tillDate is null) return query;
 
-            switch (status)
+            return status switch
             {
-                case ActivityState.All:
-                    if (tillDate is null)
-                        return query.Where(e => e.ProposedOrderPostedDate >= fromDate || e.ExecutedDate >= fromDate);
-                    if (fromDate is null)
-                        return query.Where(e => e.ProposedOrderPostedDate <= tillDate || e.ExecutedDate <= tillDate);
-                    return query.Where(e =>
-                        e.ProposedOrderPostedDate >= fromDate && e.ProposedOrderPostedDate <= tillDate
-                        || e.ExecutedDate >= fromDate && e.ExecutedDate <= tillDate);
-
-                case ActivityState.Executed:
-                    if (tillDate is null)
-                        return query.Where(e => e.ExecutedDate >= fromDate);
-                    if (fromDate is null)
-                        return query.Where(e => e.ExecutedDate <= tillDate);
-                    return query.Where(e => e.ExecutedDate >= fromDate && e.ExecutedDate <= tillDate);
-
-                case ActivityState.Proposed:
-                    if (tillDate is null)
-                        return query.Where(e => e.ProposedOrderPostedDate >= fromDate);
-                    if (fromDate is null)
-                        return query.Where(e => e.ProposedOrderPostedDate <= tillDate);
-                    return query.Where(e =>
-                        e.ProposedOrderPostedDate >= fromDate && e.ProposedOrderPostedDate <= tillDate);
-
-                default:
-                    return query;
-            }
+                ActivityState.All when tillDate is null =>
+                    query.Where(e => e.ProposedOrderPostedDate >= fromDate || e.ExecutedDate >= fromDate),
+                ActivityState.All when fromDate is null =>
+                    query.Where(e => e.ProposedOrderPostedDate <= tillDate || e.ExecutedDate <= tillDate),
+                ActivityState.All =>
+                    query.Where(e => e.ProposedOrderPostedDate >= fromDate && e.ProposedOrderPostedDate <= tillDate
+                        || e.ExecutedDate >= fromDate && e.ExecutedDate <= tillDate),
+                ActivityState.Executed when tillDate is null =>
+                    query.Where(e => e.ExecutedDate >= fromDate),
+                ActivityState.Executed when fromDate is null =>
+                    query.Where(e => e.ExecutedDate <= tillDate),
+                ActivityState.Executed =>
+                    query.Where(e => e.ExecutedDate >= fromDate && e.ExecutedDate <= tillDate),
+                ActivityState.Proposed when tillDate is null =>
+                    query.Where(e => e.ProposedOrderPostedDate >= fromDate),
+                ActivityState.Proposed when fromDate is null =>
+                    query.Where(e => e.ProposedOrderPostedDate <= tillDate),
+                ActivityState.Proposed =>
+                    query.Where(e => e.ProposedOrderPostedDate >= fromDate && e.ProposedOrderPostedDate <= tillDate),
+                _ => query
+            };
         }
 
         internal static IQueryable<EnforcementOrder> FilterByActivityStatus(
@@ -148,12 +142,12 @@ namespace Enfo.Domain.Specs
             query.FilterForPublicProposed().FilterForOpenCommentPeriod();
 
         // Recently Executed are public executed orders with 
-        // publication date within current week
+        // publication date of most recent Monday (or between
+        // most recent Monday and today)
         public static IQueryable<EnforcementOrder> FilterForRecentlyExecuted(
             [NotNull] this IQueryable<EnforcementOrder> query) =>
             query.FilterForPublicExecuted()
-                .Where(e => e.ExecutedOrderPostedDate >= MostRecentMonday()
-                    && e.ExecutedOrderPostedDate <= MostRecentMonday().AddDays(7));
+                .Where(e => e.ExecutedOrderPostedDate >= MostRecentMonday());
 
         // Draft are orders with publication status set to Draft
         // or are missing publication dates
