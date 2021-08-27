@@ -20,7 +20,7 @@ ENFO is written using .NET 5.
 
 * [Visual Studio](https://www.visualstudio.com/vs/), [VS Code](https://code.visualstudio.com/), or equivalent IDE.
 
-* [pnpm](https://pnpm.io/) package manager.
+* [pnpm](https://pnpm.io/) or [npm](https://www.npmjs.com/) package manager.
 
 ## Project organization
 
