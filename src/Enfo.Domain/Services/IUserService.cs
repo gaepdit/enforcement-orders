@@ -13,7 +13,7 @@ namespace Enfo.Domain.Services
     {
         public Task<UserView> GetCurrentUserAsync();
         public Task<IList<string>> GetCurrentUserRolesAsync();
-        public Task<List<UserView>> GetUsersAsync(string nameFilter, string emailFilter);
+        public Task<List<UserView>> GetUsersAsync(string nameFilter, string emailFilter, string role);
         public Task<UserView> GetUserByIdAsync(Guid id);
         public Task<IList<string>> GetUserRolesAsync(Guid id);
         public Task<IdentityResult> UpdateUserRolesAsync(Guid id, Dictionary<string, bool> roleUpdates);

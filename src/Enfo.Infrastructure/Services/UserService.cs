@@ -40,15 +40,30 @@ namespace Enfo.Infrastructure.Services
         public async Task<IList<string>> GetCurrentUserRolesAsync() =>
             await _userManager.GetRolesAsync(await GetCurrentApplicationUserAsync());
 
-        public Task<List<UserView>> GetUsersAsync(string nameFilter, string emailFilter) =>
-            _context.Users.AsNoTracking()
+        public async Task<List<UserView>> GetUsersAsync(
+            string nameFilter, string emailFilter, string role)
+        {
+            if (string.IsNullOrWhiteSpace(role))
+            {
+                return await _context.Users.AsNoTracking()
+                    .Where(m => string.IsNullOrEmpty(nameFilter)
+                        || m.GivenName.Contains(nameFilter)
+                        || m.FamilyName.Contains(nameFilter))
+                    .Where(m => string.IsNullOrEmpty(emailFilter) || m.Email == emailFilter)
+                    .OrderBy(m => m.FamilyName).ThenBy(m => m.GivenName)
+                    .Select(e => new UserView(e))
+                    .ToListAsync();
+            }
+
+            return (await _userManager.GetUsersInRoleAsync(role))
                 .Where(m => string.IsNullOrEmpty(nameFilter)
                     || m.GivenName.Contains(nameFilter)
                     || m.FamilyName.Contains(nameFilter))
                 .Where(m => string.IsNullOrEmpty(emailFilter) || m.Email == emailFilter)
                 .OrderBy(m => m.FamilyName).ThenBy(m => m.GivenName)
                 .Select(e => new UserView(e))
-                .ToListAsync();
+                .ToList();
+        }
 
         public async Task<UserView> GetUserByIdAsync(Guid id)
         {

@@ -15,6 +15,11 @@
         <label asp-for="Email"></label>
         <input asp-for="Email" />
 
+        <label asp-for="Role"></label>
+        <select asp-for="Role" asp-items="Model.RoleItems">
+            <option value="">(any)</option>
+        </select>
+
         <div class="gaepd-buttonrow">
             <input type="hidden" name="handler" value="search" />
             <button id="SearchButton" type="submit">Search</button>
