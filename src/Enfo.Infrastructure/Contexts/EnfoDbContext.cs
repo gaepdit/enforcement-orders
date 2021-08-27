@@ -62,7 +62,7 @@ namespace Enfo.Infrastructure.Contexts
 
         private void SetAuditProperties()
         {
-            var currentUser = _httpContextAccessor?.HttpContext?.User?.Identity?.Name;
+            var currentUser = _httpContextAccessor?.HttpContext?.User.Identity?.Name;
 
             var entries = ChangeTracker.Entries()
                 .Where(e => (e.State is EntityState.Added or EntityState.Modified) && e.Entity is IBaseEntity);
