@@ -398,7 +398,7 @@ hr {
     background-color: #ff7800;
 }
 
-.gaepd-label-dev, .gaepd-label-local {
+.gaepd-label-dev {
     text-transform: none;
     background: linear-gradient(124deg,
     #ff2400,
