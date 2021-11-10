@@ -81,7 +81,7 @@ namespace EnfoTests.Infrastructure
             var result = await repository.ListAsync(new EnforcementOrderSpec(), new PaginationSpec(1, 20));
 
             result.CurrentCount.Should().Be(GetEnforcementOrders.Count(e => e.GetIsPublic));
-            result.Items.Should().HaveCount(GetEnforcementOrders.Count(e => e.GetIsPublic));
+            result.Items.Cast<EnforcementOrderSummaryView>().Should().HaveCount(GetEnforcementOrders.Count(e => e.GetIsPublic));
             result.PageNumber.Should().Be(1);
             result.Items[0].Should().BeEquivalentTo(
                 GetEnforcementOrderSummaryView(GetEnforcementOrders
@@ -110,7 +110,7 @@ namespace EnfoTests.Infrastructure
                 .ToList();
 
             result.CurrentCount.Should().Be(expectedList.Count);
-            result.Items.Should().HaveCount(expectedList.Count);
+            result.Items.Cast<EnforcementOrderSummaryView>().Should().HaveCount(expectedList.Count);
             result.PageNumber.Should().Be(1);
             result.Items[0].Should().BeEquivalentTo(
                 GetEnforcementOrderSummaryView(expectedList[0].Id));
@@ -130,7 +130,7 @@ namespace EnfoTests.Infrastructure
             var result = await repository.ListAsync(spec, new PaginationSpec(1, 20));
 
             result.CurrentCount.Should().Be(0);
-            result.Items.Should().HaveCount(0);
+            result.Items.Cast<EnforcementOrderSummaryView>().Should().HaveCount(0);
             result.PageNumber.Should().Be(1);
         }
 
@@ -151,7 +151,7 @@ namespace EnfoTests.Infrastructure
                 .ToList();
 
             result.CurrentCount.Should().Be(expectedList.Count);
-            result.Items.Should().HaveCount(expectedList.Count);
+            result.Items.Cast<EnforcementOrderSummaryView>().Should().HaveCount(expectedList.Count);
             result.PageNumber.Should().Be(1);
             result.Items[0].Should().BeEquivalentTo(GetEnforcementOrderSummaryView(expectedList[0].Id));
         }
@@ -173,7 +173,7 @@ namespace EnfoTests.Infrastructure
                 .ToList();
 
             result.CurrentCount.Should().Be(expectedList.Count);
-            result.Items.Should().HaveCount(expectedList.Count);
+            result.Items.Cast<EnforcementOrderSummaryView>().Should().HaveCount(expectedList.Count);
             result.PageNumber.Should().Be(1);
             result.Items[0].Should().BeEquivalentTo(GetEnforcementOrderSummaryView(expectedList[0].Id));
         }
@@ -187,7 +187,7 @@ namespace EnfoTests.Infrastructure
             var result = await repository.ListDetailedAsync(new EnforcementOrderSpec(), new PaginationSpec(1, 20));
 
             result.CurrentCount.Should().Be(GetEnforcementOrders.Count(e => e.GetIsPublic));
-            result.Items.Should().HaveCount(GetEnforcementOrders.Count(e => e.GetIsPublic));
+            result.Items.Cast<EnforcementOrderDetailedView>().Should().HaveCount(GetEnforcementOrders.Count(e => e.GetIsPublic));
             result.PageNumber.Should().Be(1);
             result.Items[0].Should().BeEquivalentTo(
                 GetEnforcementOrderDetailedView(GetEnforcementOrders
@@ -216,7 +216,7 @@ namespace EnfoTests.Infrastructure
                 .ToList();
 
             result.CurrentCount.Should().Be(expectedList.Count);
-            result.Items.Should().HaveCount(expectedList.Count);
+            result.Items.Cast<EnforcementOrderDetailedView>().Should().HaveCount(expectedList.Count);
             result.PageNumber.Should().Be(1);
             result.Items[0].Should().BeEquivalentTo(
                 GetEnforcementOrderDetailedView(expectedList[0].Id));
@@ -236,7 +236,7 @@ namespace EnfoTests.Infrastructure
             var result = await repository.ListDetailedAsync(spec, new PaginationSpec(1, 20));
 
             result.CurrentCount.Should().Be(0);
-            result.Items.Should().HaveCount(0);
+            result.Items.Cast<EnforcementOrderDetailedView>().Should().HaveCount(0);
             result.PageNumber.Should().Be(1);
         }
 
@@ -257,7 +257,7 @@ namespace EnfoTests.Infrastructure
                 .ToList();
 
             result.CurrentCount.Should().Be(expectedList.Count);
-            result.Items.Should().HaveCount(expectedList.Count);
+            result.Items.Cast<EnforcementOrderDetailedView>().Should().HaveCount(expectedList.Count);
             result.PageNumber.Should().Be(1);
             result.Items[0].Should().BeEquivalentTo(
                 GetEnforcementOrderDetailedView(expectedList[0].Id));
@@ -280,7 +280,7 @@ namespace EnfoTests.Infrastructure
                 .ToList();
 
             result.CurrentCount.Should().Be(expectedList.Count);
-            result.Items.Should().HaveCount(expectedList.Count);
+            result.Items.Cast<EnforcementOrderDetailedView>().Should().HaveCount(expectedList.Count);
             result.PageNumber.Should().Be(1);
             result.Items[0].Should().BeEquivalentTo(
                 GetEnforcementOrderDetailedView(expectedList[0].Id));
@@ -295,7 +295,7 @@ namespace EnfoTests.Infrastructure
             var result = await repository.ListAdminAsync(new EnforcementOrderAdminSpec(), new PaginationSpec(1, 20));
 
             result.CurrentCount.Should().Be(GetEnforcementOrders.Count(e => !e.Deleted));
-            result.Items.Should().HaveCount(GetEnforcementOrders.Count(e => !e.Deleted));
+            result.Items.Cast<EnforcementOrderAdminSummaryView>().Should().HaveCount(GetEnforcementOrders.Count(e => !e.Deleted));
             result.PageNumber.Should().Be(1);
             result.Items[0].Should().BeEquivalentTo(
                 GetEnforcementOrderAdminSummaryView(GetEnforcementOrders
@@ -313,7 +313,7 @@ namespace EnfoTests.Infrastructure
             var result = await repository.ListAdminAsync(spec, new PaginationSpec(1, 20));
 
             result.CurrentCount.Should().Be(GetEnforcementOrders.Count(e => e.Deleted));
-            result.Items.Should().HaveCount(GetEnforcementOrders.Count(e => e.Deleted));
+            result.Items.Cast<EnforcementOrderAdminSummaryView>().Should().HaveCount(GetEnforcementOrders.Count(e => e.Deleted));
             result.PageNumber.Should().Be(1);
             result.Items[0].Should().BeEquivalentTo(
                 GetEnforcementOrderAdminSummaryView(GetEnforcementOrders
@@ -341,7 +341,7 @@ namespace EnfoTests.Infrastructure
                 .ToList();
 
             result.CurrentCount.Should().Be(expectedList.Count);
-            result.Items.Should().HaveCount(expectedList.Count);
+            result.Items.Cast<EnforcementOrderAdminSummaryView>().Should().HaveCount(expectedList.Count);
             result.PageNumber.Should().Be(1);
             result.Items[0].Should().BeEquivalentTo(
                 GetEnforcementOrderAdminSummaryView(expectedList[0].Id));
@@ -352,7 +352,7 @@ namespace EnfoTests.Infrastructure
         {
             var spec = new EnforcementOrderAdminSpec
             {
-                Text = GetEnforcementOrders.First(e => !e.Deleted).Cause.Substring(0, 4).ToLowerInvariant()
+                Text = GetEnforcementOrders.First(e => !e.Deleted).Cause[..4].ToLowerInvariant()
             };
 
             using var repository = CreateRepositoryHelper().GetEnforcementOrderRepository();
@@ -367,7 +367,7 @@ namespace EnfoTests.Infrastructure
                 .ToList();
 
             result.CurrentCount.Should().Be(expectedList.Count);
-            result.Items.Should().HaveCount(expectedList.Count);
+            result.Items.Cast<EnforcementOrderAdminSummaryView>().Should().HaveCount(expectedList.Count);
             result.PageNumber.Should().Be(1);
             result.Items[0].Should().BeEquivalentTo(
                 GetEnforcementOrderAdminSummaryView(expectedList[0].Id));

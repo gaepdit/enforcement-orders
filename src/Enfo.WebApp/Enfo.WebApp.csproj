@@ -12,15 +12,15 @@
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.AzureAD.UI" Version="5.0.5" />
-        <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="5.0.5" Condition="'$(Configuration)' == 'Debug'" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.5" />
-        <PackageReference Include="Mindscape.Raygun4Net.AspNetCore" Version="6.5.0" />
-        <PackageReference Include="SonarAnalyzer.CSharp" Version="8.20.0.28934" Condition="'$(Configuration)' == 'Debug'">
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.AzureAD.UI" Version="6.0.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.0" Condition="'$(Configuration)' == 'Debug'" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.0" />
+        <PackageReference Include="Mindscape.Raygun4Net.AspNetCore" Version="6.6.2" />
+        <PackageReference Include="SonarAnalyzer.CSharp" Version="8.31.0.39249" Condition="'$(Configuration)' == 'Debug'">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.5" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
     </ItemGroup>
 
     <ItemGroup>

@@ -27,7 +27,7 @@ namespace EnfoTests.WebApp.Api
             var result = await controller.ListOrdersAsync(repository, new EnforcementOrderSpec(), 1, 100);
 
             result.CurrentCount.Should().Be(GetEnforcementOrders.Count(e => e.GetIsPublic));
-            result.Items.Should().HaveCount(GetEnforcementOrders.Count(e => e.GetIsPublic));
+            result.Items.Cast<EnforcementOrderDetailedView>().Should().HaveCount(GetEnforcementOrders.Count(e => e.GetIsPublic));
             result.PageNumber.Should().Be(1);
             result.Items[0].Should().BeEquivalentTo(
                 GetEnforcementOrderSummaryView(GetEnforcementOrders

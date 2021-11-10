@@ -39,12 +39,12 @@ namespace Enfo.Infrastructure.Contexts
 
             // Add audit properties to all entities
             foreach (var entityType in builder.Model.GetEntityTypes()
-                .Where(e => typeof(IBaseEntity).IsAssignableFrom(e.ClrType)))
+                .Where(e => typeof(IBaseEntity).IsAssignableFrom(e.ClrType)).Select(e => e.ClrType))
             {
-                builder.Entity(entityType.ClrType).Property<DateTimeOffset?>(AuditProperties.CreatedAt);
-                builder.Entity(entityType.ClrType).Property<DateTimeOffset?>(AuditProperties.UpdatedAt);
-                builder.Entity(entityType.ClrType).Property<string>(AuditProperties.CreatedBy);
-                builder.Entity(entityType.ClrType).Property<string>(AuditProperties.UpdatedBy);
+                builder.Entity(entityType).Property<DateTimeOffset?>(AuditProperties.CreatedAt);
+                builder.Entity(entityType).Property<DateTimeOffset?>(AuditProperties.UpdatedAt);
+                builder.Entity(entityType).Property<string>(AuditProperties.CreatedBy);
+                builder.Entity(entityType).Property<string>(AuditProperties.UpdatedBy);
             }
         }
 
