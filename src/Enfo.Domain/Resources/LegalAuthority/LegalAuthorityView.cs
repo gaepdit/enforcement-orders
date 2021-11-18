@@ -6,7 +6,7 @@ namespace Enfo.Domain.Resources.LegalAuthority
 {
     public class LegalAuthorityView
     {
-        public LegalAuthorityView([NotNull] Domain.Entities.LegalAuthority item)
+        public LegalAuthorityView([NotNull] Entities.LegalAuthority item)
         {
             Guard.NotNull(item, nameof(item));
 

@@ -20,11 +20,12 @@
             <input asp-for="Id" />
             <button type="submit">Save Changes</button>
             <a asp-page="Index" class="usa-button usa-button-secondary">Cancel</a>
+            <input asp-for="OriginalName" />
         </div>
     </form>
 </div>
 
 @section ScriptFiles
 {
-    <script src="~/dist/formValidation.bundle.js" asp-append-version="true" type="text/javascript" defer></script>
+<script src="~/dist/formValidation.bundle.js" asp-append-version="true" type="text/javascript" defer></script>
 }

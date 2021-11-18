@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Enfo.Domain.Entities.Users;
+﻿using Enfo.Domain.Entities.Users;
 using Enfo.Domain.Repositories;
 using Enfo.Domain.Resources.LegalAuthority;
 using Enfo.WebApp.Models;
@@ -8,6 +7,7 @@ using JetBrains.Annotations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Threading.Tasks;
 
 namespace Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthorities
 {
@@ -31,18 +31,23 @@ namespace Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthorities
         [UsedImplicitly]
         public async Task<IActionResult> OnPostAsync([FromServices] ILegalAuthorityRepository repository)
         {
-            Item.TrimAll();
-
-            if (await repository.NameExistsAsync(Item.AuthorityName))
-            {
-                ModelState.AddModelError("Item.AuthorityName", "The authority name entered already exists.");
-            }
-
             if (!ModelState.IsValid) return Page();
 
-            HighlightId = await repository.CreateAsync(Item);
-            TempData?.SetDisplayMessage(Context.Success, $"{Item.AuthorityName} successfully added.");
-            return RedirectToPage("Index");
+            var result = await Item.TrySaveNew(repository);
+
+            if (result.Success)
+            {
+                HighlightId = result.NewId.GetValueOrDefault();
+                TempData?.SetDisplayMessage(Context.Success, $"{Item.AuthorityName} successfully added.");
+                return RedirectToPage("Index");
+            }
+
+            foreach (var (key, value) in result.ValidationErrors)
+            {
+                ModelState.AddModelError(string.Concat(nameof(Item), ".", key), value);
+            }
+
+            return Page();
         }
     }
 }

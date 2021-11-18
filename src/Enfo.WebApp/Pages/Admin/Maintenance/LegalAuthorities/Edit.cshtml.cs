@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Enfo.Domain.Entities.Users;
+﻿using Enfo.Domain.Entities.Users;
 using Enfo.Domain.Repositories;
 using Enfo.Domain.Resources.LegalAuthority;
 using Enfo.WebApp.Models;
@@ -8,7 +7,7 @@ using JetBrains.Annotations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthorities
 {
@@ -18,14 +17,14 @@ namespace Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthorities
         [BindProperty]
         public LegalAuthorityCommand Item { get; set; }
 
-        [BindProperty]
-        [HiddenInput]
+        [BindProperty, HiddenInput]
         public int Id { get; set; }
 
         [TempData, UsedImplicitly]
         public int HighlightId { [UsedImplicitly] get; set; }
 
-        public string OriginalName { get; private set; }
+        [BindProperty, HiddenInput]
+        public string OriginalName { get; set; }
         public static MaintenanceOption ThisOption => MaintenanceOption.LegalAuthority;
 
         private readonly ILegalAuthorityRepository _repository;
@@ -53,39 +52,34 @@ namespace Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthorities
         [UsedImplicitly]
         public async Task<IActionResult> OnPostAsync()
         {
-            var originalItem = await _repository.GetAsync(Id);
-            if (originalItem == null) return NotFound();
+            if (!ModelState.IsValid) return Page();
 
-            if (!originalItem.Active)
+            var result = await Item.TryUpdate(_repository, Id);
+
+            if (result.Success)
+            {
+                HighlightId = Id;
+                TempData?.SetDisplayMessage(Context.Success, $"{Item.AuthorityName} successfully updated.");
+                return RedirectToPage("Index");
+            }
+
+            if (result.OriginalItem is null)
+            {
+                return NotFound();
+            }
+
+            if (!result.OriginalItem.Active)
             {
                 TempData?.SetDisplayMessage(Context.Warning, $"Inactive {ThisOption.PluralName} cannot be edited.");
                 return RedirectToPage("Index");
             }
 
-            OriginalName = originalItem.AuthorityName;
-
-            Item.TrimAll();
-
-            if (await _repository.NameExistsAsync(Item.AuthorityName, Id))
+            foreach (var (key, value) in result.ValidationErrors)
             {
-                ModelState.AddModelError("Item.AuthorityName", "The authority name entered already exists.");
+                ModelState.AddModelError(string.Concat(nameof(Item), ".", key), value);
             }
 
-            if (!ModelState.IsValid) return Page();
-
-            try
-            {
-                await _repository.UpdateAsync(Id, Item);
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!await _repository.ExistsAsync(Id)) return NotFound();
-                throw;
-            }
-
-            HighlightId = Id;
-            TempData?.SetDisplayMessage(Context.Success, $"{Item.AuthorityName} successfully updated.");
-            return RedirectToPage("Index");
+            return Page();
         }
     }
 }
