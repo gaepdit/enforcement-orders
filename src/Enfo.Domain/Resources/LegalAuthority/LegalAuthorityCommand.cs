@@ -1,76 +1,72 @@
-﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using System.Threading.Tasks;
-using Enfo.Domain.Repositories;
+﻿using Enfo.Domain.Repositories;
 
-namespace Enfo.Domain.Resources.LegalAuthority
+namespace Enfo.Domain.Resources.LegalAuthority;
+
+public class LegalAuthorityCommand
 {
-    public class LegalAuthorityCommand
+    public LegalAuthorityCommand() { }
+
+    public LegalAuthorityCommand(LegalAuthorityView item) =>
+        AuthorityName = item.AuthorityName;
+
+    [Required(ErrorMessage = "Legal Authority Name is required.")]
+    [DisplayName("Legal Authority Name")]
+    public string AuthorityName { get; set; }
+
+    private void TrimAll()
     {
-        public LegalAuthorityCommand() { }
+        AuthorityName = AuthorityName?.Trim();
+    }
 
-        public LegalAuthorityCommand(LegalAuthorityView item) =>
-            AuthorityName = item.AuthorityName;
+    public async Task<ResourceSaveResult> TrySaveNew(ILegalAuthorityRepository repository)
+    {
+        TrimAll();
 
-        [Required(ErrorMessage = "Legal Authority Name is required.")]
-        [DisplayName("Legal Authority Name")]
-        public string AuthorityName { get; set; }
+        var result = new ResourceSaveResult();
 
-        private void TrimAll()
+        if (await repository.NameExistsAsync(AuthorityName))
         {
-            AuthorityName = AuthorityName?.Trim();
+            result.AddValidationError(nameof(AuthorityName),
+                $"The authority name entered ({AuthorityName}) already exists.");
         }
 
-        public async Task<ResourceSaveResult> TrySaveNew(ILegalAuthorityRepository repository)
+        if (result.IsValid)
         {
-            TrimAll();
+            result.NewId = await repository.CreateAsync(this);
+            result.Success = true;
+        }
 
-            var result = new ResourceSaveResult();
+        return result;
+    }
 
-            if (await repository.NameExistsAsync(AuthorityName))
-            {
-                result.AddValidationError(nameof(AuthorityName),
-                    $"The authority name entered ({AuthorityName}) already exists.");
-            }
+    public async Task<ResourceUpdateResult<LegalAuthorityView>> TryUpdate(
+        ILegalAuthorityRepository repository,
+        int Id)
+    {
+        var result = new ResourceUpdateResult<LegalAuthorityView>
+        {
+            OriginalItem = await repository.GetAsync(Id)
+        };
 
-            if (result.IsValid)
-            {
-                result.NewId = await repository.CreateAsync(this);
-                result.Success = true;
-            }
-
+        if (result.OriginalItem is null || !result.OriginalItem.Active)
+        {
             return result;
         }
 
-        public async Task<ResourceUpdateResult<LegalAuthorityView>> TryUpdate(
-            ILegalAuthorityRepository repository,
-            int Id)
+        TrimAll();
+
+        if (await repository.NameExistsAsync(AuthorityName, Id))
         {
-            var result = new ResourceUpdateResult<LegalAuthorityView>
-            {
-                OriginalItem = await repository.GetAsync(Id)
-            };
-
-            if (result.OriginalItem is null || !result.OriginalItem.Active)
-            {
-                return result;
-            }
-
-            TrimAll();
-
-            if (await repository.NameExistsAsync(AuthorityName, Id))
-            {
-                result.AddValidationError(nameof(AuthorityName),
-                    $"The authority name entered ({AuthorityName}) already exists.");
-            }
-
-            if (result.IsValid)
-            {
-                await repository.UpdateAsync(Id, this);
-                result.Success = true;
-            }
-
-            return result;
+            result.AddValidationError(nameof(AuthorityName),
+                $"The authority name entered ({AuthorityName}) already exists.");
         }
+
+        if (result.IsValid)
+        {
+            await repository.UpdateAsync(Id, this);
+            result.Success = true;
+        }
+
+        return result;
     }
 }

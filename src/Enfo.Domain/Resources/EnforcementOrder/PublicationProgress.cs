@@ -1,11 +1,10 @@
-﻿namespace Enfo.Domain.Resources.EnforcementOrder
+﻿namespace Enfo.Domain.Resources.EnforcementOrder;
+
+/// <summary>
+/// PublicationState determines whether an Order is draft or published
+/// </summary>
+public enum PublicationProgress
 {
-    /// <summary>
-    /// PublicationState determines whether an Order is draft or published
-    /// </summary>
-    public enum PublicationProgress
-    {
-        Draft,
-        Published
-    }
+    Draft,
+    Published
 }

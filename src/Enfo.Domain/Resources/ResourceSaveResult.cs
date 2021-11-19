@@ -1,7 +1,6 @@
-﻿namespace Enfo.Domain.Resources
+﻿namespace Enfo.Domain.Resources;
+
+public class ResourceSaveResult : ResourceCommandResult
 {
-    public class ResourceSaveResult : ResourceCommandResult
-    {
-        public int? NewId { get; set; }
-    }
+    public int? NewId { get; set; }
 }

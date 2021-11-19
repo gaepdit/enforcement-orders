@@ -1,7 +1,6 @@
-﻿namespace Enfo.Domain.Entities.Base
+﻿namespace Enfo.Domain.Entities.Base;
+
+public abstract class BaseActiveEntity : BaseEntity
 {
-    public abstract class BaseActiveEntity : BaseEntity
-    {
-        public bool Active { get; set; } = true;
-    }
+    public bool Active { get; set; } = true;
 }

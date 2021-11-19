@@ -1,7 +1,6 @@
-﻿namespace Enfo.Domain.Resources
+﻿namespace Enfo.Domain.Resources;
+
+public class ResourceUpdateResult<T> : ResourceCommandResult
 {
-    public class ResourceUpdateResult<T> : ResourceCommandResult
-    {
-        public T OriginalItem { get; set; }
-    }
+    public T OriginalItem { get; set; }
 }
