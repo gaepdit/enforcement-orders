@@ -9,11 +9,10 @@
       "type": "coreclr",
       "request": "launch",
       "preLaunchTask": "build",
-      "program": "${workspaceFolder}/artifacts/Enfo.WebApp/bin/Debug/net5.0/Enfo.WebApp.dll",
+      "program": "${workspaceFolder}/artifacts/Enfo.WebApp/bin/Debug/net6.0/Enfo.WebApp.dll",
       "args": [],
       "cwd": "${workspaceFolder}/src/Enfo.WebApp",
       "stopAtEntry": false,
-      "logging": { "moduleLoad": false },
       "console": "internalConsole",
       "env": {
         "ASPNETCORE_ENVIRONMENT": "Local",
