@@ -54,7 +54,7 @@ namespace Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthorities
         {
             if (!ModelState.IsValid) return Page();
 
-            var result = await Item.TryUpdate(_repository, Id);
+            var result = await Item.TryUpdateAsync(_repository, Id);
 
             if (result.Success)
             {

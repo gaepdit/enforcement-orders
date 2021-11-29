@@ -18,7 +18,14 @@ public class LegalAuthorityCommand
         AuthorityName = AuthorityName?.Trim();
     }
 
-    public async Task<ResourceSaveResult> TrySaveNew(ILegalAuthorityRepository repository)
+    public Task<ResourceSaveResult> TrySaveNewAsync(ILegalAuthorityRepository repository)
+    {
+        if (repository == null) throw new ArgumentNullException(nameof(repository));
+        return TrySaveNewInternalAsync(repository);
+    }
+
+    public async Task<ResourceSaveResult> TrySaveNewInternalAsync(
+       [NotNull] ILegalAuthorityRepository repository)
     {
         TrimAll();
 
@@ -39,8 +46,16 @@ public class LegalAuthorityCommand
         return result;
     }
 
-    public async Task<ResourceUpdateResult<LegalAuthorityView>> TryUpdate(
+    public Task<ResourceUpdateResult<LegalAuthorityView>> TryUpdateAsync(
         ILegalAuthorityRepository repository,
+        int Id)
+    {
+        if (repository == null) throw new ArgumentNullException(nameof(repository));
+        return TryUpdateInternalAsync(repository, Id);
+    }
+
+    public async Task<ResourceUpdateResult<LegalAuthorityView>> TryUpdateInternalAsync(
+        [NotNull] ILegalAuthorityRepository repository,
         int Id)
     {
         var result = new ResourceUpdateResult<LegalAuthorityView>

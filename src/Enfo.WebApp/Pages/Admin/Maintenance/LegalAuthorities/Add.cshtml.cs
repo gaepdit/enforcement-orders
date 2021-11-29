@@ -33,7 +33,7 @@ namespace Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthorities
         {
             if (!ModelState.IsValid) return Page();
 
-            var result = await Item.TrySaveNew(repository);
+            var result = await Item.TrySaveNewAsync(repository);
 
             if (result.Success)
             {

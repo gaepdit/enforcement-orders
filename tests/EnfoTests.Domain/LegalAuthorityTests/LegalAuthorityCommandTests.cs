@@ -22,7 +22,7 @@ namespace EnfoTests.Domain.LegalAuthorityTests
             repo.Setup(l => l.CreateAsync(item))
                 .ReturnsAsync(1);
 
-            var result = await item.TrySaveNew(repo.Object);
+            var result = await item.TrySaveNewAsync(repo.Object);
 
             result.IsValid.ShouldBeTrue();
             result.Success.ShouldBeTrue();
@@ -38,7 +38,7 @@ namespace EnfoTests.Domain.LegalAuthorityTests
             repo.Setup(l => l.NameExistsAsync(It.IsAny<string>(), null))
                 .ReturnsAsync(true);
 
-            var result = await item.TrySaveNew(repo.Object);
+            var result = await item.TrySaveNewAsync(repo.Object);
 
             result.IsValid.ShouldBeFalse();
             result.Success.ShouldBeFalse();
@@ -60,7 +60,7 @@ namespace EnfoTests.Domain.LegalAuthorityTests
                 .ReturnsAsync(false);
 
 
-            var result = await item.TryUpdate(repo.Object, default);
+            var result = await item.TryUpdateAsync(repo.Object, default);
 
             result.IsValid.Should().BeTrue();
             result.Success.Should().BeTrue();
@@ -79,7 +79,7 @@ namespace EnfoTests.Domain.LegalAuthorityTests
             repo.Setup(l => l.NameExistsAsync(It.IsAny<string>(), It.IsAny<int?>()))
                 .ReturnsAsync(true);
 
-            var result = await item.TryUpdate(repo.Object, default);
+            var result = await item.TryUpdateAsync(repo.Object, default);
 
             result.IsValid.Should().BeFalse();
             result.Success.Should().BeFalse();
