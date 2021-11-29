@@ -1,10 +1,10 @@
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 using Enfo.Domain.Entities;
 using Enfo.Domain.Resources.EnforcementOrder;
 using Enfo.Domain.Specs;
 using FluentAssertions;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 using static Enfo.Domain.Utils.DateUtils;
 using static EnfoTests.Helpers.DataHelper;
@@ -307,7 +307,7 @@ namespace EnfoTests.Infrastructure
         [Fact]
         public async Task ListAdmin_WithSpecShowDeleted_ReturnsOnlyDeleted()
         {
-            var spec = new EnforcementOrderAdminSpec {ShowDeleted = true};
+            var spec = new EnforcementOrderAdminSpec { ShowDeleted = true };
 
             using var repository = CreateRepositoryHelper().GetEnforcementOrderRepository();
             var result = await repository.ListAdminAsync(spec, new PaginationSpec(1, 20));
@@ -521,15 +521,15 @@ namespace EnfoTests.Infrastructure
         };
 
         [Fact]
-        public async Task Create_AddsNewItem()
+        public async Task CreateOrder_AddsNewItem()
         {
             using var repositoryHelper = CreateRepositoryHelper();
             using var repository = repositoryHelper.GetEnforcementOrderRepository();
 
-            var newId = await repository.CreateAsync(_sampleCreate);
+            var newId = (await _sampleCreate.TrySaveNewAsync(repository)).NewId.GetValueOrDefault();
             repositoryHelper.ClearChangeTracker();
 
-            var order = new EnforcementOrder(_sampleCreate) {Id = newId};
+            var order = new EnforcementOrder(_sampleCreate) { Id = newId };
             var expected = new EnforcementOrderAdminView(FillNavigationProperties(order));
 
             var item = await repository.GetAdminViewAsync(newId);
@@ -537,18 +537,50 @@ namespace EnfoTests.Infrastructure
         }
 
         [Fact]
+        public async Task CreateOrder_ValidationIfValid_Succeeds()
+        {
+            using var repository = CreateRepositoryHelper().GetEnforcementOrderRepository();
+
+            var result = await _sampleCreate.TrySaveNewAsync(repository);
+
+            result.IsValid.Should().BeTrue();
+            result.ValidationErrors.Should().BeEmpty();
+        }
+
+        [Fact]
+        public async Task CreateOrder_ValidationIfMissingRequiredProperties_Fails()
+        {
+            _sampleCreate.Progress = PublicationProgress.Published;
+            _sampleCreate.CommentContactId = null;
+            _sampleCreate.CommentPeriodClosesDate = null;
+
+            using var repository = CreateRepositoryHelper().GetEnforcementOrderRepository();
+
+            var result = await _sampleCreate.TrySaveNewAsync(repository);
+
+            result.IsValid.Should().BeFalse();
+            result.ValidationErrors.Should().NotBeEmpty()
+                .And.HaveCount(2)
+                .And.ContainKeys(
+                "CommentContactId",
+                "CommentPeriodClosesDate");
+        }
+
+        [Fact]
         public async Task CreateOrder_WithDuplicateOrderNumber_Fails()
         {
+            _sampleCreate.Progress = PublicationProgress.Published;
             _sampleCreate.OrderNumber = GetEnforcementOrders.First(e => !e.Deleted).OrderNumber;
 
-            Func<Task> action = async () =>
-            {
-                using var repository = CreateRepositoryHelper().GetEnforcementOrderRepository();
-                await repository.CreateAsync(_sampleCreate);
-            };
+            using var repository = CreateRepositoryHelper().GetEnforcementOrderRepository();
 
-            (await action.Should().ThrowAsync<ArgumentException>())
-                .And.ParamName.Should().Be("resource");
+            var result = await _sampleCreate.TrySaveNewAsync(repository);
+
+            result.IsValid.Should().BeFalse();
+            result.ValidationErrors.Should().NotBeEmpty()
+                .And.HaveCount(1)
+                .And.ContainKeys(
+                "OrderNumber");
         }
 
         // UpdateAsync
