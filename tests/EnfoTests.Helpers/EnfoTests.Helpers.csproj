@@ -1,16 +1,16 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
-    </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+	</PropertyGroup>
 
-    <ItemGroup>
-        <PackageReference Include="EfCore.TestSupport" Version="5.1.0" />
-    </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="EfCore.TestSupport" Version="5.2.1" />
+	</ItemGroup>
 
-    <ItemGroup>
-        <ProjectReference Include="..\..\src\Enfo.Domain\Enfo.Domain.csproj" />
-        <ProjectReference Include="..\..\src\Enfo.Infrastructure\Enfo.Infrastructure.csproj" />
-    </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\src\Enfo.Domain\Enfo.Domain.csproj" />
+		<ProjectReference Include="..\..\src\Enfo.Infrastructure\Enfo.Infrastructure.csproj" />
+	</ItemGroup>
 
 </Project>

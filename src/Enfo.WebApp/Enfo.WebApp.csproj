@@ -1,90 +1,90 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
-    <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
-        <UserSecretsId>aspnet-Enfo.WebApp-A834A848-D8DF-4E5F-B1E2-7EE74113BF3E</UserSecretsId>
-        <DefaultItemExcludes>$(DefaultItemExcludes);node_modules\**</DefaultItemExcludes>
-        <AssemblyVersion>2021.11.19</AssemblyVersion>
-    </PropertyGroup>
-    
-    <ItemGroup>
-        <PackageReference Include="AsyncFixer" Version="1.5.1" Condition="'$(Configuration)' == 'Debug'">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.AzureAD.UI" Version="6.0.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.0" Condition="'$(Configuration)' == 'Debug'" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.0" />
-        <PackageReference Include="Mindscape.Raygun4Net.AspNetCore" Version="6.6.2" />
-        <PackageReference Include="SonarAnalyzer.CSharp" Version="8.31.0.39249" Condition="'$(Configuration)' == 'Debug'">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
-    </ItemGroup>
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<UserSecretsId>aspnet-Enfo.WebApp-A834A848-D8DF-4E5F-B1E2-7EE74113BF3E</UserSecretsId>
+		<DefaultItemExcludes>$(DefaultItemExcludes);node_modules\**</DefaultItemExcludes>
+		<AssemblyVersion>2021.11.19</AssemblyVersion>
+	</PropertyGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\Enfo.Infrastructure\Enfo.Infrastructure.csproj" />
-    </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="AsyncFixer" Version="1.5.1" Condition="'$(Configuration)' == 'Debug'">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.AzureAD.UI" Version="6.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.0" Condition="'$(Configuration)' == 'Debug'" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.0" />
+		<PackageReference Include="Mindscape.Raygun4Net.AspNetCore" Version="6.6.2" />
+		<PackageReference Include="SonarAnalyzer.CSharp" Version="8.32.0.39516" Condition="'$(Configuration)' == 'Debug'">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+	</ItemGroup>
 
-    <ItemGroup>
-      <Content Update="appsettings.Development.json">
-        <DependentUpon>appsettings.json</DependentUpon>
-      </Content>
-      <Content Update="appsettings.Local.json">
-        <DependentUpon>appsettings.json</DependentUpon>
-      </Content>
-    </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Enfo.Infrastructure\Enfo.Infrastructure.csproj" />
+	</ItemGroup>
 
-    <!-- Determine if Node.js and either PNPM or NPM are installed. -->
-    <Target Name="TestForPackageManager" BeforeTargets="Build">
-        <!-- Ensure Node.js is installed -->
-        <Exec Command="node --version" ContinueOnError="true">
-            <Output TaskParameter="ExitCode" PropertyName="NodeExitCode" />
-        </Exec>
-        <Error Condition=" '$(NodeExitCode)' != '0' " Text="This project requires Node.js. To continue, please install Node.js." />
+	<ItemGroup>
+		<Content Update="appsettings.Development.json">
+			<DependentUpon>appsettings.json</DependentUpon>
+		</Content>
+		<Content Update="appsettings.Local.json">
+			<DependentUpon>appsettings.json</DependentUpon>
+		</Content>
+	</ItemGroup>
 
-        <!-- Ensure pnpm or npm is installed -->
-        <Exec Command="pnpm --version" ContinueOnError="true">
-            <Output TaskParameter="ExitCode" PropertyName="PnpmExitCode" />
-        </Exec>
-        <Exec Command="npm --version" ContinueOnError="true" Condition=" '$(PnpmExitCode)' != '0' ">
-            <Output TaskParameter="ExitCode" PropertyName="NpmExitCode" />
-        </Exec>
-        <Error Condition=" '$(PnpmExitCode)' != '0' And '$(NpmExitCode)' != '0' " Text="This project requires either pnpm or npm. To continue, please install pnpm or npm." />
-    </Target>
+	<!-- Determine if Node.js and either PNPM or NPM are installed. -->
+	<Target Name="TestForPackageManager" BeforeTargets="Build">
+		<!-- Ensure Node.js is installed -->
+		<Exec Command="node --version" ContinueOnError="true">
+			<Output TaskParameter="ExitCode" PropertyName="NodeExitCode" />
+		</Exec>
+		<Error Condition=" '$(NodeExitCode)' != '0' " Text="This project requires Node.js. To continue, please install Node.js." />
 
-    <!-- Install node modules if node_modules folder is missing. -->
-    <Target Name="InstallNodeModules" BeforeTargets="Build" DependsOnTargets="TestForPackageManager" Condition="!Exists('node_modules') ">
-        <Message Importance="high" Condition=" '$(PnpmExitCode)' == '0' " Text="Restoring dependencies using 'pnpm'. This may take several minutes..." />
-        <Exec Command="pnpm install" Condition=" '$(PnpmExitCode)' == '0' " />
-        <Message Importance="high" Condition=" '$(NpmExitCode)' == '0' " Text="Restoring dependencies using 'npm'. This may take several minutes..." />
-        <Exec Command="npm install" Condition=" '$(NpmExitCode)' == '0' " />
-    </Target>
-        
-    <!-- Run webpack if JS source file has changed... -->
-    <Target Name="RunWebpackJs" BeforeTargets="Build" DependsOnTargets="InstallNodeModules" Condition=" '$(Configuration)' == 'Debug' " Inputs="Client/site.js" Outputs="wwwroot/dist/site.bundle.js">
-        <Message Importance="high" Text="Running webpack (JS file updated)..." />
-        <Exec Command="pnpm run pack" Condition=" '$(PnpmExitCode)' == '0' " />
-        <Exec Command="npm run pack" Condition=" '$(NpmExitCode)' == '0' " />
-    </Target>
+		<!-- Ensure pnpm or npm is installed -->
+		<Exec Command="pnpm --version" ContinueOnError="true">
+			<Output TaskParameter="ExitCode" PropertyName="PnpmExitCode" />
+		</Exec>
+		<Exec Command="npm --version" ContinueOnError="true" Condition=" '$(PnpmExitCode)' != '0' ">
+			<Output TaskParameter="ExitCode" PropertyName="NpmExitCode" />
+		</Exec>
+		<Error Condition=" '$(PnpmExitCode)' != '0' And '$(NpmExitCode)' != '0' " Text="This project requires either pnpm or npm. To continue, please install pnpm or npm." />
+	</Target>
 
-    <!-- ... or run webpack if CSS source file has changed. -->
-    <Target Name="RunWebpackCss" BeforeTargets="Build" DependsOnTargets="InstallNodeModules" Condition=" '$(Configuration)' == 'Debug' " Inputs="Client/site.css" Outputs="wwwroot/dist/site.css">
-        <Message Importance="high" Text="Running webpack (CSS file updated)..." />
-        <Exec Command="pnpm run pack" Condition=" '$(PnpmExitCode)' == '0' " />
-        <Exec Command="npm run pack" Condition=" '$(NpmExitCode)' == '0' " />
-    </Target>
+	<!-- Install node modules if node_modules folder is missing. -->
+	<Target Name="InstallNodeModules" BeforeTargets="Build" DependsOnTargets="TestForPackageManager" Condition="!Exists('node_modules') ">
+		<Message Importance="high" Condition=" '$(PnpmExitCode)' == '0' " Text="Restoring dependencies using 'pnpm'. This may take several minutes..." />
+		<Exec Command="pnpm install" Condition=" '$(PnpmExitCode)' == '0' " />
+		<Message Importance="high" Condition=" '$(NpmExitCode)' == '0' " Text="Restoring dependencies using 'npm'. This may take several minutes..." />
+		<Exec Command="npm install" Condition=" '$(NpmExitCode)' == '0' " />
+	</Target>
 
-    <!-- Run webpack in prod mode if building for Release. -->
-    <Target Name="RunWebpackProd" BeforeTargets="Build" DependsOnTargets="InstallNodeModules" Condition=" '$(Configuration)' != 'Debug' ">
-        <Message Importance="high" Text="Running webpack (prod)..." />
-        <Exec Command="pnpm run pack-prod" Condition=" '$(PnpmExitCode)' == '0' " />
-        <Exec Command="npm run pack-prod" Condition=" '$(NpmExitCode)' == '0' " />
-    </Target>
+	<!-- Run webpack if JS source file has changed... -->
+	<Target Name="RunWebpackJs" BeforeTargets="Build" DependsOnTargets="InstallNodeModules" Condition=" '$(Configuration)' == 'Debug' " Inputs="Client/site.js" Outputs="wwwroot/dist/site.bundle.js">
+		<Message Importance="high" Text="Running webpack (JS file updated)..." />
+		<Exec Command="pnpm run pack" Condition=" '$(PnpmExitCode)' == '0' " />
+		<Exec Command="npm run pack" Condition=" '$(NpmExitCode)' == '0' " />
+	</Target>
 
-    <Target Name="NpmClean" BeforeTargets="Clean">
-        <RemoveDir Directories="wwwroot/dist" />
-    </Target>
+	<!-- ... or run webpack if CSS source file has changed. -->
+	<Target Name="RunWebpackCss" BeforeTargets="Build" DependsOnTargets="InstallNodeModules" Condition=" '$(Configuration)' == 'Debug' " Inputs="Client/site.css" Outputs="wwwroot/dist/site.css">
+		<Message Importance="high" Text="Running webpack (CSS file updated)..." />
+		<Exec Command="pnpm run pack" Condition=" '$(PnpmExitCode)' == '0' " />
+		<Exec Command="npm run pack" Condition=" '$(NpmExitCode)' == '0' " />
+	</Target>
+
+	<!-- Run webpack in prod mode if building for Release. -->
+	<Target Name="RunWebpackProd" BeforeTargets="Build" DependsOnTargets="InstallNodeModules" Condition=" '$(Configuration)' != 'Debug' ">
+		<Message Importance="high" Text="Running webpack (prod)..." />
+		<Exec Command="pnpm run pack-prod" Condition=" '$(PnpmExitCode)' == '0' " />
+		<Exec Command="npm run pack-prod" Condition=" '$(NpmExitCode)' == '0' " />
+	</Target>
+
+	<Target Name="NpmClean" BeforeTargets="Clean">
+		<RemoveDir Directories="wwwroot/dist" />
+	</Target>
 
 </Project>
