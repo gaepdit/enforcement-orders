@@ -8,17 +8,20 @@ using Enfo.Infrastructure.Repositories;
 using Enfo.Infrastructure.Services;
 using Enfo.WebApp.Platform.DevHelpers;
 using Enfo.WebApp.Services;
+using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.AzureAD.UI;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Mindscape.Raygun4Net.AspNetCore;
@@ -94,6 +97,18 @@ namespace Enfo.WebApp
                 });
             });
 
+            // Configure health checks
+            services.AddHealthChecks()
+                .AddCheck(
+                    "Web application",
+                    () => HealthCheckResult.Healthy(),
+                    tags: new[] { "app" })
+                // .AddCheck("Sample", () => HealthCheckResult.Unhealthy("An unhealthy result."))
+                // .AddCheck("Sample2", () => HealthCheckResult.Degraded("A degraded result."))
+                .AddDbContextCheck<EnfoDbContext>(
+                    "Database connection",
+                    tags: new[] { "db" });
+
             // Configure HSTS
             services.AddHsts(opts => opts.MaxAge = TimeSpan.FromSeconds(63072000));
 
@@ -149,6 +164,23 @@ namespace Enfo.WebApp
                 c.DocumentTitle = "Georgia EPD Enforcement Orders API";
             });
 
+            app
+                .UseHealthChecks("/health")
+                .UseHealthChecks("/health/app", new HealthCheckOptions
+                {
+                    Predicate = h => h.Tags.Contains("app")
+                })
+                .UseHealthChecks("/health/db", new HealthCheckOptions
+                {
+                    Predicate = h => h.Tags.Contains("db")
+                })
+                .UseHealthChecks("/health/api", new HealthCheckOptions
+                {
+                    Predicate = _ => true,
+                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                });
+
+            // Map endpoints
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapRazorPages();
