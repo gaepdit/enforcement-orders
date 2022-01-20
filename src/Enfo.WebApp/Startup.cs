@@ -109,6 +109,9 @@ namespace Enfo.WebApp
                     "Database connection",
                     tags: new[] { "db" });
 
+            services.AddHealthChecksUI(o => { o.AddHealthCheckEndpoint("Health checks", "/health/api"); })
+                .AddInMemoryStorage();
+
             // Configure HSTS
             services.AddHsts(opts => opts.MaxAge = TimeSpan.FromSeconds(63072000));
 
@@ -185,6 +188,12 @@ namespace Enfo.WebApp
             {
                 endpoints.MapRazorPages();
                 endpoints.MapControllers();
+                endpoints.MapHealthChecksUI(opts =>
+                {
+                    opts.UIPath = "/health/ui";
+                    opts.UseRelativeResourcesPath = false;
+                    opts.UseRelativeApiPath = false;
+                });
             });
         }
     }
