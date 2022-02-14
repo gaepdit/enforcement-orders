@@ -9,7 +9,7 @@
 <h1>@ViewData["Title"]</h1>
 <p>(Notices that change weekly)</p>
 <p>
-    <i>Date of Posting: @DateUtils.MostRecentMonday().ToString(DisplayFormats.LongDate)</i>
+    <em>Date of Posting: @DateUtils.MostRecentMonday().ToString(DisplayFormats.LongDate)</em>
 </p>
 
 @if (Model.Orders == null || Model.Orders.Count == 0)
