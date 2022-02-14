@@ -1,12 +1,11 @@
-﻿using System.Text.Json.Serialization;
-using Enfo.Domain.Resources.LegalAuthority;
+﻿using Enfo.Domain.Resources.LegalAuthority;
 using Enfo.Domain.Utils;
 
 namespace Enfo.Domain.Resources.EnforcementOrder;
 
 public class EnforcementOrderSummaryView
 {
-    public EnforcementOrderSummaryView([NotNull] Domain.Entities.EnforcementOrder item)
+    public EnforcementOrderSummaryView([NotNull] Entities.EnforcementOrder item)
     {
         Guard.NotNull(item, nameof(item));
 

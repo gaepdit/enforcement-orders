@@ -82,12 +82,6 @@ $(document).ready(function () {
         return $(item).slideUp(400);
     }
 
-    function switchItems(hideItem, showItem) {
-        return $(hideItem).slideUp(400, function () {
-            return $(showItem).slideDown(400);
-        });
-    }
-
     function hideItemsByIds(ids) {
         $(ids.join()).each(function (i, item) {
             return $(item).hide();

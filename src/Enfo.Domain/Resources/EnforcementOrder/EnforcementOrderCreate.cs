@@ -17,7 +17,7 @@ public class EnforcementOrderCreate
 
     [DisplayName("Legal Authority")]
     [Required(ErrorMessage = "Legal Authority is required.")]
-    public int? LegalAuthorityId { get; set; }
+    public int? LegalAuthorityId { get; init; }
 
     [DisplayName("Cause of Order")]
     [Required(ErrorMessage = "Cause of Order is required.")]
@@ -30,7 +30,7 @@ public class EnforcementOrderCreate
 
     [DisplayName("Settlement Amount")]
     [DataType(DataType.Currency)]
-    public decimal? SettlementAmount { get; set; }
+    public decimal? SettlementAmount { get; init; }
 
     public PublicationProgress Progress { get; set; } = PublicationProgress.Published;
 
@@ -41,7 +41,7 @@ public class EnforcementOrderCreate
 
     //  Determines the type of Enforcement Order created
     [DisplayName("Status")]
-    public NewEnforcementOrderType CreateAs { get; set; } = NewEnforcementOrderType.Proposed;
+    public NewEnforcementOrderType CreateAs { get; init; } = NewEnforcementOrderType.Proposed;
 
     // Proposed orders
 
@@ -63,22 +63,22 @@ public class EnforcementOrderCreate
     [DisplayName("Date Executed")]
     [DataType(DataType.Date)]
     [DisplayFormat(DataFormatString = DisplayFormats.EditDate, ApplyFormatInEditMode = true)]
-    public DateTime? ExecutedDate { get; set; }
+    public DateTime? ExecutedDate { get; init; }
 
     [DisplayName("Publication Date For Executed Order")]
     [DataType(DataType.Date)]
     [DisplayFormat(DataFormatString = DisplayFormats.EditDate, ApplyFormatInEditMode = true)]
-    public DateTime? ExecutedOrderPostedDate { get; set; } = DateUtils.NextMonday();
+    public DateTime? ExecutedOrderPostedDate { get; init; } = DateUtils.NextMonday();
 
     // Hearing info
 
     [DisplayName("Public Hearing Scheduled")]
-    public bool IsHearingScheduled { get; set; }
+    public bool IsHearingScheduled { get; init; }
 
     [DisplayName("Hearing Date/Time")]
     [DataType(DataType.DateTime)]
     [DisplayFormat(DataFormatString = DisplayFormats.EditDateTime, ApplyFormatInEditMode = true)]
-    public DateTime? HearingDate { get; set; } = DateTime.Today.AddHours(12);
+    public DateTime? HearingDate { get; init; } = DateTime.Today.AddHours(12);
 
     [DisplayName("Hearing Location")]
     [DataType(DataType.MultilineText)]
@@ -87,10 +87,10 @@ public class EnforcementOrderCreate
     [DisplayName("Date Hearing Comment Period Closes")]
     [DataType(DataType.Date)]
     [DisplayFormat(DataFormatString = DisplayFormats.EditDate, ApplyFormatInEditMode = true)]
-    public DateTime? HearingCommentPeriodClosesDate { get; set; }
+    public DateTime? HearingCommentPeriodClosesDate { get; init; }
 
     [DisplayName("Hearing Information Contact")]
-    public int? HearingContactId { get; set; }
+    public int? HearingContactId { get; init; }
 
     private void TrimAll()
     {
@@ -134,66 +134,63 @@ public class EnforcementOrderCreate
         var result = new ResourceSaveResult();
 
         if (await repository.OrderNumberExistsAsync(OrderNumber).ConfigureAwait(false))
-            result.AddValidationError(nameof(EnforcementOrderCreate.OrderNumber),
+            result.AddValidationError(nameof(OrderNumber),
                 $"An Order with the same number ({OrderNumber}) already exists.");
 
         if (Progress != PublicationProgress.Published) return result;
 
         if (SettlementAmount is < 0)
-            result.AddValidationError(nameof(EnforcementOrderCreate.SettlementAmount),
+            result.AddValidationError(nameof(SettlementAmount),
                 "Settlement Amount cannot be less than zero.");
 
         switch (CreateAs)
         {
             case NewEnforcementOrderType.Proposed:
-                {
-                    if (CommentContactId is null)
-                        result.AddValidationError(nameof(EnforcementOrderCreate.CommentContactId),
-                            "A contact for comments is required for proposed orders.");
+            {
+                if (CommentContactId is null)
+                    result.AddValidationError(nameof(CommentContactId),
+                        "A contact for comments is required for proposed orders.");
 
-                    if (!CommentPeriodClosesDate.HasValue)
-                        result.AddValidationError(nameof(EnforcementOrderCreate.CommentPeriodClosesDate),
-                            "A closing date for comments is required for proposed orders.");
+                if (!CommentPeriodClosesDate.HasValue)
+                    result.AddValidationError(nameof(CommentPeriodClosesDate),
+                        "A closing date for comments is required for proposed orders.");
 
-                    if (!ProposedOrderPostedDate.HasValue)
-                        result.AddValidationError(nameof(EnforcementOrderCreate.ProposedOrderPostedDate),
-                            "A publication date is required for proposed orders.");
+                if (!ProposedOrderPostedDate.HasValue)
+                    result.AddValidationError(nameof(ProposedOrderPostedDate),
+                        "A publication date is required for proposed orders.");
 
-                    break;
-                }
-            case NewEnforcementOrderType.Executed:
-                {
-                    if (!ExecutedDate.HasValue)
-                        result.AddValidationError(nameof(EnforcementOrderCreate.ExecutedDate),
-                            "An execution date is required for executed orders.");
-
-                    if (!ExecutedOrderPostedDate.HasValue)
-                        result.AddValidationError(nameof(EnforcementOrderCreate.ExecutedOrderPostedDate),
-                            "A publication date is required for executed orders.");
-
-                    break;
-                }
-
-            default:
                 break;
+            }
+            case NewEnforcementOrderType.Executed:
+            {
+                if (!ExecutedDate.HasValue)
+                    result.AddValidationError(nameof(ExecutedDate),
+                        "An execution date is required for executed orders.");
+
+                if (!ExecutedOrderPostedDate.HasValue)
+                    result.AddValidationError(nameof(ExecutedOrderPostedDate),
+                        "A publication date is required for executed orders.");
+
+                break;
+            }
         }
 
         if (!IsHearingScheduled) return result;
 
         if (HearingDate is null)
-            result.AddValidationError(nameof(EnforcementOrderCreate.HearingDate),
+            result.AddValidationError(nameof(HearingDate),
                 "A hearing date is required if a hearing is scheduled.");
 
         if (string.IsNullOrEmpty(HearingLocation))
-            result.AddValidationError(nameof(EnforcementOrderCreate.HearingLocation),
+            result.AddValidationError(nameof(HearingLocation),
                 "A hearing location is required if a hearing is scheduled.");
 
         if (HearingCommentPeriodClosesDate is null)
-            result.AddValidationError(nameof(EnforcementOrderCreate.HearingCommentPeriodClosesDate),
+            result.AddValidationError(nameof(HearingCommentPeriodClosesDate),
                 "A closing date for hearing comments is required if a hearing is scheduled.");
 
         if (HearingContactId is null)
-            result.AddValidationError(nameof(EnforcementOrderCreate.HearingContactId),
+            result.AddValidationError(nameof(HearingContactId),
                 "A contact for hearings is required if a hearing is scheduled.");
 
         return result;

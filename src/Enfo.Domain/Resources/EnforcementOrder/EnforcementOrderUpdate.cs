@@ -136,19 +136,19 @@ public class EnforcementOrderUpdate
     }
 
     public Task<ResourceUpdateResult<EnforcementOrderAdminView>> TryUpdateAsync(
-        IEnforcementOrderRepository repository, int Id)
+        IEnforcementOrderRepository repository, int id)
     {
         if (repository == null) throw new ArgumentNullException(nameof(repository));
-        return TryUpdateInternalAsync(repository, Id);
+        return TryUpdateInternalAsync(repository, id);
     }
 
-    public async Task<ResourceUpdateResult<EnforcementOrderAdminView>> TryUpdateInternalAsync(
-        [NotNull] IEnforcementOrderRepository repository, int Id)
+    private async Task<ResourceUpdateResult<EnforcementOrderAdminView>> TryUpdateInternalAsync(
+        [NotNull] IEnforcementOrderRepository repository, int id)
     {
 
         var result = new ResourceUpdateResult<EnforcementOrderAdminView>
         {
-            OriginalItem = await repository.GetAdminViewAsync(Id)
+            OriginalItem = await repository.GetAdminViewAsync(id)
         };
 
         if (result.OriginalItem is null || result.OriginalItem.Deleted)
@@ -162,7 +162,7 @@ public class EnforcementOrderUpdate
 
         if (result.IsValid)
         {
-            await repository.UpdateAsync(Id, this);
+            await repository.UpdateAsync(id, this);
             result.Success = true;
         }
 
@@ -184,7 +184,7 @@ public class EnforcementOrderUpdate
         // Executed order info can only be removed if proposed order info exists.
         if (!IsExecutedOrder && order.IsExecutedOrder && !order.IsProposedOrder)
         {
-            result.AddValidationError(nameof(EnforcementOrderUpdate.IsExecutedOrder),
+            result.AddValidationError(nameof(IsExecutedOrder),
                 "Executed Order details are required for this Enforcement Order.");
         }
 
@@ -198,48 +198,46 @@ public class EnforcementOrderUpdate
         if (order.IsProposedOrder)
         {
             if (CommentContactId is null)
-                result.AddValidationError(nameof(EnforcementOrderUpdate.CommentContactId),
+                result.AddValidationError(nameof(CommentContactId),
                     "A contact for comments is required for proposed orders.");
 
             if (!CommentPeriodClosesDate.HasValue)
-                result.AddValidationError(nameof(EnforcementOrderUpdate.CommentPeriodClosesDate),
+                result.AddValidationError(nameof(CommentPeriodClosesDate),
                     "A closing date for comments is required for proposed orders.");
 
             if (!ProposedOrderPostedDate.HasValue)
-                result.AddValidationError(nameof(EnforcementOrderUpdate.ProposedOrderPostedDate),
+                result.AddValidationError(nameof(ProposedOrderPostedDate),
                     "A publication date is required for proposed orders.");
         }
 
         if (IsExecutedOrder)
         {
             if (!ExecutedDate.HasValue)
-                result.AddValidationError(nameof(EnforcementOrderUpdate.ExecutedDate),
+                result.AddValidationError(nameof(ExecutedDate),
                     "An execution date is required for executed orders.");
 
             if (!ExecutedOrderPostedDate.HasValue)
-                result.AddValidationError(nameof(EnforcementOrderUpdate.ExecutedOrderPostedDate),
+                result.AddValidationError(nameof(ExecutedOrderPostedDate),
                     "A publication date is required for executed orders.");
         }
 
         if (!IsHearingScheduled) return;
 
         if (!HearingDate.HasValue)
-            result.AddValidationError(nameof(EnforcementOrderUpdate.HearingDate),
+            result.AddValidationError(nameof(HearingDate),
                 "A hearing date is required if a hearing is scheduled.");
 
         if (string.IsNullOrEmpty(HearingLocation))
-            result.AddValidationError(nameof(EnforcementOrderUpdate.HearingLocation),
+            result.AddValidationError(nameof(HearingLocation),
                 "A hearing location is required if a hearing is scheduled.");
 
         if (!HearingCommentPeriodClosesDate.HasValue)
-            result.AddValidationError(nameof(EnforcementOrderUpdate.HearingCommentPeriodClosesDate),
+            result.AddValidationError(nameof(HearingCommentPeriodClosesDate),
                 "A closing date for hearing comments is required if a hearing is scheduled.");
 
         if (HearingContactId is null)
-            result.AddValidationError(nameof(EnforcementOrderUpdate.HearingContactId),
+            result.AddValidationError(nameof(HearingContactId),
                 "A contact for hearings is required if a hearing is scheduled.");
-
-        return;
     }
 
 }
