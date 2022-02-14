@@ -167,21 +167,6 @@ namespace Enfo.Infrastructure.Repositories
 
         public async Task<int> CreateAsync(EnforcementOrderCreate resource)
         {
-            Guard.NotNull(resource, nameof(resource));
-
-            var validationResult = ValidateNewEnforcementOrder(resource);
-
-            if (await OrderNumberExistsAsync(resource.OrderNumber).ConfigureAwait(false))
-            {
-                validationResult.AddErrorMessage("OrderNumber",
-                    $"An Order with the same number ({resource.OrderNumber}) already exists.");
-            }
-
-            if (!validationResult.IsValid)
-            {
-                throw new ArgumentException(validationResult.ErrorMessages.DictionaryToString(), nameof(resource));
-            }
-
             var item = new EnforcementOrder(resource);
             await _context.EnforcementOrders.AddAsync(item).ConfigureAwait(false);
             await _context.SaveChangesAsync().ConfigureAwait(false);

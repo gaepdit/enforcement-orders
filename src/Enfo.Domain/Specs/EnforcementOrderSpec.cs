@@ -1,48 +1,44 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using Enfo.Domain.Resources;
+﻿using Enfo.Domain.Resources;
 using Swashbuckle.AspNetCore.Annotations;
 
-namespace Enfo.Domain.Specs
+namespace Enfo.Domain.Specs;
+
+public class EnforcementOrderSpec
 {
-    public class EnforcementOrderSpec
+    [DisplayName("Facility")]
+    public string Facility { get; set; }
+
+    public string County { get; set; }
+
+    [DisplayName("Order Number")]
+    public string OrderNumber { get; set; }
+
+    [DisplayName("Legal Authority")]
+    public int? LegalAuth { get; set; }
+
+    [DisplayName("Beginning Date")]
+    [DisplayFormat(DataFormatString = DisplayFormats.EditDate, ApplyFormatInEditMode = true)]
+    [SwaggerSchema(Format = "date")]
+    public DateTime? FromDate { get; set; }
+
+    [DisplayName("Ending Date")]
+    [DisplayFormat(DataFormatString = DisplayFormats.EditDate, ApplyFormatInEditMode = true)]
+    [SwaggerSchema(Format = "date")]
+    public DateTime? TillDate { get; set; }
+
+    [DisplayName("Enforcement Order Status")]
+    public ActivityState Status { get; set; } = ActivityState.All;
+
+    public OrderSorting Sort { get; set; } = OrderSorting.DateDesc;
+
+    public void TrimAll()
     {
-        [DisplayName("Facility")]
-        public string Facility { get; set; }
+        County = County?.Trim();
+        Facility = Facility?.Trim();
+        OrderNumber = OrderNumber?.Trim();
+    }
 
-        public string County { get; set; }
-
-        [DisplayName("Order Number")]
-        public string OrderNumber { get; set; }
-
-        [DisplayName("Legal Authority")]
-        public int? LegalAuth { get; set; }
-
-        [DisplayName("Beginning Date")]
-        [DisplayFormat(DataFormatString = DisplayFormats.EditDate, ApplyFormatInEditMode = true)]
-        [SwaggerSchema(Format = "date")]
-        public DateTime? FromDate { get; set; }
-
-        [DisplayName("Ending Date")]
-        [DisplayFormat(DataFormatString = DisplayFormats.EditDate, ApplyFormatInEditMode = true)]
-        [SwaggerSchema(Format = "date")]
-        public DateTime? TillDate { get; set; }
-
-        [DisplayName("Enforcement Order Status")]
-        public ActivityState Status { get; set; } = ActivityState.All;
-
-        public OrderSorting Sort { get; set; } = OrderSorting.DateDesc;
-
-        public void TrimAll()
-        {
-            County = County?.Trim();
-            Facility = Facility?.Trim();
-            OrderNumber = OrderNumber?.Trim();
-        }
-
-        public IDictionary<string, string> AsRouteValues() => new Dictionary<string, string>()
+    public IDictionary<string, string> AsRouteValues() => new Dictionary<string, string>()
         {
             {nameof(Facility), Facility},
             {nameof(County), County},
@@ -52,5 +48,4 @@ namespace Enfo.Domain.Specs
             {nameof(Status), Status.ToString()},
             {nameof(OrderNumber), OrderNumber},
         };
-    }
 }

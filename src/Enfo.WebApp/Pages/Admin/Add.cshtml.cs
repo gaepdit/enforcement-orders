@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Enfo.Domain.Entities.Users;
+﻿using Enfo.Domain.Entities.Users;
 using Enfo.Domain.Repositories;
 using Enfo.Domain.Resources.EnforcementOrder;
 using Enfo.Domain.Resources.EpdContact;
@@ -11,7 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using static Enfo.Domain.Validation.EnforcementOrderValidation;
+using System.Threading.Tasks;
 
 namespace Enfo.WebApp.Pages.Admin
 {
@@ -44,32 +43,27 @@ namespace Enfo.WebApp.Pages.Admin
         [UsedImplicitly]
         public async Task<IActionResult> OnPostAsync()
         {
-            Item.TrimAll();
-            var validationResult = ValidateNewEnforcementOrder(Item);
-
-            if (await _order.OrderNumberExistsAsync(Item.OrderNumber).ConfigureAwait(false))
-            {
-                validationResult.AddErrorMessage(nameof(EnforcementOrderCreate.OrderNumber),
-                    $"An Order with the same number ({Item.OrderNumber}) already exists.");
-            }
-
-            if (!validationResult.IsValid)
-            {
-                foreach (var (key, value) in validationResult.ErrorMessages)
-                {
-                    ModelState.AddModelError(string.Concat(nameof(Item), ".", key), value);
-                }
-            }
-
             if (!ModelState.IsValid)
             {
                 await PopulateSelectListsAsync();
                 return Page();
             }
 
-            var id = await _order.CreateAsync(Item);
-            TempData?.SetDisplayMessage(Context.Success, "The new Enforcement Order has been successfully added.");
-            return RedirectToPage("Details", new {id});
+            var result = await Item.TrySaveNewAsync(_order);
+
+            if (result.Success)
+            {
+                TempData?.SetDisplayMessage(Context.Success, "The new Enforcement Order has been successfully added.");
+                return RedirectToPage("Details", new { id = result.NewId.GetValueOrDefault() });
+            }
+
+            foreach (var (key, value) in result.ValidationErrors)
+            {
+                ModelState.AddModelError(string.Concat(nameof(Item), ".", key), value);
+            }
+
+            await PopulateSelectListsAsync();
+            return Page();
         }
 
         private async Task PopulateSelectListsAsync()

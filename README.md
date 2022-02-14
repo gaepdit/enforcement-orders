@@ -2,6 +2,10 @@
 
 Enforcement Orders (ENFO) is an online application to allow EPD staff to publish enforcement order notices online and to allow the public to view and search those orders.
 
+[![.NET build and test](https://github.com/gaepdit/enforcement-orders/actions/workflows/dotnet.yml/badge.svg)](https://github.com/gaepdit/enforcement-orders/actions/workflows/dotnet.yml)
+[![CodeQL](https://github.com/gaepdit/enforcement-orders/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/gaepdit/enforcement-orders/actions/workflows/codeql-analysis.yml)
+[![Raygun Deployment Tracking](https://github.com/gaepdit/enforcement-orders/actions/workflows/raygun-deployment.yml/badge.svg)](https://github.com/gaepdit/enforcement-orders/actions/workflows/raygun-deployment.yml)
+
 ## Background
 
 The Georgia Environmental Protection Division is mandated by Rule 391-1-3-.01 to "issue notices of proposed or final administrative orders and proposed or final administrative consent orders." The Rule requires these notices to be posted on the Environmental Protection Division's Internet Web Site.

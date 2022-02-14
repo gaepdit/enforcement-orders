@@ -13,7 +13,6 @@
       "args": [],
       "cwd": "${workspaceFolder}/src/Enfo.WebApp",
       "stopAtEntry": false,
-      "logging": { "moduleLoad": false },
       "console": "internalConsole",
       "env": {
         "ASPNETCORE_ENVIRONMENT": "Local",

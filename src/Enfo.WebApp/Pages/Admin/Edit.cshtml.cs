@@ -1,10 +1,8 @@
-﻿using System.Threading.Tasks;
-using Enfo.Domain.Entities.Users;
+﻿using Enfo.Domain.Entities.Users;
 using Enfo.Domain.Repositories;
 using Enfo.Domain.Resources.EnforcementOrder;
 using Enfo.Domain.Resources.EpdContact;
 using Enfo.Domain.Resources.LegalAuthority;
-using Enfo.Domain.Validation;
 using Enfo.WebApp.Models;
 using Enfo.WebApp.Platform.Extensions;
 using JetBrains.Annotations;
@@ -12,7 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace Enfo.WebApp.Pages.Admin
 {
@@ -22,11 +20,11 @@ namespace Enfo.WebApp.Pages.Admin
         [BindProperty]
         public EnforcementOrderUpdate Item { get; set; }
 
-        [BindProperty]
-        [HiddenInput]
+        [BindProperty, HiddenInput]
         public int Id { get; set; }
 
-        public string OriginalOrderNumber { get; private set; }
+        [BindProperty, HiddenInput]
+        public string OriginalOrderNumber { get; set; }
 
         // Select Lists
         public SelectList EpdContactsSelectList { get; private set; }
@@ -51,7 +49,7 @@ namespace Enfo.WebApp.Pages.Admin
             if (originalItem.Deleted)
             {
                 TempData?.SetDisplayMessage(Context.Warning, "This Enforcement Order is deleted and cannot be edited.");
-                return RedirectToPage("Details", new {id});
+                return RedirectToPage("Details", new { id });
             }
 
             Item = new EnforcementOrderUpdate(originalItem);
@@ -64,51 +62,37 @@ namespace Enfo.WebApp.Pages.Admin
         [UsedImplicitly]
         public async Task<IActionResult> OnPostAsync()
         {
-            var originalItem = await _order.GetAdminViewAsync(Id);
-            if (originalItem == null) return NotFound();
-
-            if (originalItem.Deleted)
-            {
-                TempData?.SetDisplayMessage(Context.Warning, "This Enforcement Order is deleted and cannot be edited.");
-                return RedirectToPage("Details", new {Id});
-            }
-
-            Item.TrimAll();
-            var validationResult = EnforcementOrderValidation.ValidateEnforcementOrderUpdate(originalItem, Item);
-
-            if (await _order.OrderNumberExistsAsync(Item.OrderNumber, Id).ConfigureAwait(false))
-            {
-                validationResult.AddErrorMessage(nameof(EnforcementOrderCreate.OrderNumber),
-                    $"An Order with the same number ({Item.OrderNumber}) already exists.");
-            }
-
-            if (!validationResult.IsValid)
-            {
-                foreach (var (key, value) in validationResult.ErrorMessages)
-                {
-                    ModelState.AddModelError(string.Concat(nameof(Item), ".", key), value);
-                }
-            }
-
             if (!ModelState.IsValid)
             {
-                OriginalOrderNumber = originalItem.OrderNumber;
                 await PopulateSelectListsAsync();
                 return Page();
             }
 
-            try
+            var result = await Item.TryUpdateAsync(_order, Id);
+
+            if (result.Success)
             {
-                await _order.UpdateAsync(Id, Item);
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!await _order.ExistsAsync(Id)) return NotFound();
-                throw;
+                TempData?.SetDisplayMessage(Context.Success, "The Enforcement Order has been successfully updated.");
+                return RedirectToPage("Details", new { Id });
             }
 
-            TempData?.SetDisplayMessage(Context.Success, "The Enforcement Order has been successfully updated.");
-            return RedirectToPage("Details", new {Id});
+            if (result.OriginalItem is null)
+            {
+                return NotFound();
+            }
+
+            if (result.OriginalItem.Deleted)
+            {
+                TempData?.SetDisplayMessage(Context.Warning, "This Enforcement Order is deleted and cannot be edited.");
+                return RedirectToPage("Details", new { Id });
+            }
+
+            foreach (var (key, value) in result.ValidationErrors)
+            {
+                ModelState.AddModelError(string.Concat(nameof(Item), ".", key), value);
+            }
+
+            return Page();
         }
 
         private async Task PopulateSelectListsAsync()

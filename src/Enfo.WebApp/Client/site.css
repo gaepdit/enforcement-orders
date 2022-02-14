@@ -298,6 +298,10 @@ table tfoot td {
     text-align: right;
 }
 
+.gaepd-table-responsive td form {
+    display: inline-block;
+}
+
 @media screen and (max-width: 600px) {
     .gaepd-table-responsive {
         border: 0;
