@@ -22,8 +22,8 @@ else
 {
     @foreach (var enfo in Model.Orders)
     {
-        <h3>Enforcement Order @Html.DisplayFor(m => enfo.OrderNumber)</h3>
-        <table class="gaepd-table-compact gaepd-table-rowheadings gaepd-table-autowidth">
+        <h3 id="enforcement-order-@enfo.Id">Enforcement Order @Html.DisplayFor(m => enfo.OrderNumber)</h3>
+        <table class="gaepd-table-compact gaepd-table-rowheadings gaepd-table-autowidth" aria-labelledby="enforcement-order-@enfo.Id">
             <tbody>
             <tr>
                 <th scope="row">@Html.DisplayNameFor(m => enfo.FacilityName)</th>
