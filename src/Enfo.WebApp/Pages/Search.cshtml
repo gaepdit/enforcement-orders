@@ -157,19 +157,19 @@
                         <td data-label="Status/Date">
                             @if (enfo.IsExecutedOrder)
                             {
-                                <b>Executed&nbsp;On</b>
+                                <strong>Executed&nbsp;On</strong>
                                 <br />
                                 @Html.DisplayFor(m => enfo.ExecutedDate)
                             }
                             else if (enfo.IsProposedOrder)
                             {
-                                <b>Proposed&nbsp;On</b>
+                                <strong>Proposed&nbsp;On</strong>
                                 <br />
                                 @Html.DisplayFor(m => enfo.ProposedOrderPostedDate)
                             }
                             else
                             {
-                                <b>error</b>
+                                <strong>error</strong>
                             }
                         </td>
                         <td class="gaepd-tablecell-nolabel">

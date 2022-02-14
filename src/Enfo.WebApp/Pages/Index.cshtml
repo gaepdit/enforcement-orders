@@ -25,7 +25,7 @@
 <h2>Current Orders (notices that change weekly)</h2>
 
 <p>
-    <b>Date of Posting: @DateUtils.MostRecentMonday().ToString(DisplayFormats.LongDate)</b>
+    <strong>Date of Posting: @DateUtils.MostRecentMonday().ToString(DisplayFormats.LongDate)</strong>
 </p>
 
 <section class="usa-grid-full">
@@ -44,7 +44,7 @@
         @if (Model.CurrentProposedOrders == null || Model.CurrentProposedOrders.Count == 0)
         {
             <p>
-                <b>No Current Proposed Orders</b>
+                <strong>No Current Proposed Orders</strong>
             </p>
         }
         else
@@ -94,7 +94,7 @@
         @if (Model.RecentExecutedOrders == null || Model.RecentExecutedOrders.Count == 0)
         {
             <p>
-                <b>No Current Executed Orders</b>
+                <strong>No Current Executed Orders</strong>
             </p>
         }
         else
