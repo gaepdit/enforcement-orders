@@ -2,9 +2,10 @@
 
 Enforcement Orders (ENFO) is an online application to allow EPD staff to publish enforcement order notices online and to allow the public to view and search those orders.
 
-[![.NET build and test](https://github.com/gaepdit/enforcement-orders/actions/workflows/dotnet.yml/badge.svg)](https://github.com/gaepdit/enforcement-orders/actions/workflows/dotnet.yml)
+[![.NET Test](https://github.com/gaepdit/enforcement-orders/actions/workflows/dotnet.yml/badge.svg)](https://github.com/gaepdit/enforcement-orders/actions/workflows/dotnet.yml)
 [![CodeQL](https://github.com/gaepdit/enforcement-orders/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/gaepdit/enforcement-orders/actions/workflows/codeql-analysis.yml)
-[![Raygun Deployment Tracking](https://github.com/gaepdit/enforcement-orders/actions/workflows/raygun-deployment.yml/badge.svg)](https://github.com/gaepdit/enforcement-orders/actions/workflows/raygun-deployment.yml)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=gaepdit_enforcement-orders&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=gaepdit_enforcement-orders)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=gaepdit_enforcement-orders&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=gaepdit_enforcement-orders)
 
 ## Background
 
