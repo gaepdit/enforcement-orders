@@ -66,7 +66,7 @@ namespace Enfo.WebApp.Pages.Account
                 }
 
                 await _signInManager.SignInAsync(userExists ?? user, false);
-                return LocalRedirect(returnUrl);
+                return LocalRedirect(returnUrl ?? "/");
             }
         }
 
@@ -76,7 +76,7 @@ namespace Enfo.WebApp.Pages.Account
         {
             if (remoteError != null)
             {
-                TempData?.SetDisplayMessage(Context.Error, $"Error from work account provider: {remoteError}");
+                TempData.SetDisplayMessage(Context.Error, $"Error from work account provider: {remoteError}");
                 return RedirectToPage("./Login", new {ReturnUrl = returnUrl});
             }
 
@@ -87,7 +87,7 @@ namespace Enfo.WebApp.Pages.Account
                 || !externalLoginInfo.Principal.HasClaim(c => c.Type == ClaimTypes.NameIdentifier)
                 || !externalLoginInfo.Principal.HasClaim(c => c.Type == ClaimTypes.Email))
             {
-                TempData?.SetDisplayMessage(Context.Error, "Error loading work account information.");
+                TempData.SetDisplayMessage(Context.Error, "Error loading work account information.");
                 return RedirectToPage("./Login", new {ReturnUrl = returnUrl});
             }
 
@@ -95,7 +95,7 @@ namespace Enfo.WebApp.Pages.Account
             var signInResult = await _signInManager.ExternalLoginSignInAsync(externalLoginInfo.LoginProvider,
                 externalLoginInfo.ProviderKey, true, true);
 
-            if (signInResult.Succeeded) return LocalRedirect(returnUrl);
+            if (signInResult.Succeeded) return LocalRedirect(returnUrl ?? "/");
 
             if (signInResult.IsLockedOut || signInResult.IsNotAllowed || signInResult.RequiresTwoFactor)
                 return RedirectToPage("./Unavailable");
@@ -145,7 +145,7 @@ namespace Enfo.WebApp.Pages.Account
                 props.IsPersistent = true;
 
                 await _signInManager.SignInAsync(user, true);
-                return LocalRedirect(returnUrl);
+                return LocalRedirect(returnUrl ?? "/");
             }
 
             // Local function: Add errors from failed login and return this Page.

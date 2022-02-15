@@ -25,12 +25,12 @@
 <section>
     <h2>Currently Published Orders</h2>
     <p>
-        <i>
+        <em>
             These Enforcement Orders are currently displayed on the
             <a asp-page="/Index">Public&nbsp;Website</a>.
             <br />
             Date of Posting: @DateUtils.MostRecentMonday().ToString(DisplayFormats.LongDate)
-        </i>
+        </em>
     </p>
 
     <div class="usa-grid-full">
@@ -40,12 +40,12 @@
             @if (Model.CurrentProposedOrders == null || Model.CurrentProposedOrders.Count == 0)
             {
                 <p>
-                    <b>No Current Proposed Orders</b>
+                    <strong>No Current Proposed Orders</strong>
                 </p>
             }
             else
             {
-                <table class="gaepd-table-compact">
+                <table class="gaepd-table-compact" aria-label="Current proposed orders">
                     <thead>
                     <tr>
                         <th scope="col">Facility</th>
@@ -59,7 +59,7 @@
                         <tr>
                             <th scope="row">
                                 @item.FacilityName <br />
-                                <i>@item.County County</i>
+                                <em>@item.County County</em>
                             </th>
                             <td data-label="Date Comment Period Closes" class="gaepd-tablecell-alignright">
                                 @(item.CommentPeriodClosesDate?.ToString(DisplayFormats.ShortDate) ?? "not entered")
@@ -80,12 +80,12 @@
             @if (Model.RecentExecutedOrders == null || Model.RecentExecutedOrders.Count == 0)
             {
                 <p>
-                    <b>No Current Executed Orders</b>
+                    <strong>No Current Executed Orders</strong>
                 </p>
             }
             else
             {
-                <table class="gaepd-table-compact">
+                <table class="gaepd-table-compact" aria-label="Current executed orders">
                     <thead>
                     <tr>
                         <th scope="col">Facility</th>
@@ -99,7 +99,7 @@
                         <tr>
                             <th scope="row">
                                 @item.FacilityName <br />
-                                <i>@item.County County</i>
+                                <em>@item.County County</em>
                             </th>
                             <td class="gaepd-tablecell-alignright">
                                 @(item.ExecutedDate?.ToString(DisplayFormats.ShortDate) ?? "not entered")
@@ -126,18 +126,18 @@
                 <h3>Pending Orders</h3>
 
                 <p>
-                    <i>These Enforcement Orders are scheduled to be published in the future. They are not <em>yet</em> accessible on the Public Website.</i>
+                    <em>These Enforcement Orders are scheduled to be published in the future. They are not <strong>yet</strong> accessible on the Public Website.</em>
                 </p>
 
                 @if (Model.PendingOrders == null || Model.PendingOrders.Count == 0)
                 {
                     <p>
-                        <b>No Pending Orders</b>
+                        <strong>No Pending Orders</strong>
                     </p>
                 }
                 else
                 {
-                    <table class="gaepd-table-compact">
+                    <table class="gaepd-table-compact" aria-label="Pending orders">
                         <thead>
                         <tr>
                             <th scope="col">Facility</th>
@@ -151,7 +151,7 @@
                             <tr>
                                 <th scope="row">
                                     @item.FacilityName <br />
-                                    <i>@item.County County</i>
+                                    <em>@item.County County</em>
                                 </th>
                                 <td class="gaepd-tablecell-alignright">
                                     @(item.PendingPublicationDate?.ToString(DisplayFormats.ShortDate) ?? "error")
@@ -170,18 +170,18 @@
                 <h3>Draft Orders</h3>
 
                 <p>
-                    <i>These Enforcement Orders have been saved as draft. They are not accessible on the Public Website.</i>
+                    <em>These Enforcement Orders have been saved as draft. They are not accessible on the Public Website.</em>
                 </p>
 
                 @if (Model.DraftOrders == null || Model.DraftOrders.Count == 0)
                 {
                     <p>
-                        <b>No Draft Orders</b>
+                        <strong>No Draft Orders</strong>
                     </p>
                 }
                 else
                 {
-                    <table class="gaepd-table-compact">
+                    <table class="gaepd-table-compact" aria-label="Draft orders">
                         <thead>
                         <tr>
                             <th scope="col">Facility</th>
@@ -194,7 +194,7 @@
                             <tr>
                                 <th scope="row">
                                     @item.FacilityName <br />
-                                    <i>@item.County County</i>
+                                    <em>@item.County County</em>
                                 </th>
                                 <td class="gaepd-tablecell-nolabel">
                                     <a asp-page="Edit" asp-route-id="@item.Id">Edit</a>

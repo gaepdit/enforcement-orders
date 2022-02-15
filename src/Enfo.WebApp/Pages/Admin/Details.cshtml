@@ -9,7 +9,7 @@
 <partial name="_AlertPartial" for="Message" />
 
 <h1>
-    <i>Admin View:</i> @ViewData["Title"]
+    <em>Admin View:</em> @ViewData["Title"]
 </h1>
 
 @if (Model.Item.Deleted)
@@ -28,7 +28,7 @@ else
     <div>This Order is not publicly viewable.</div>
 }
 
-<table class="gaepd-table-compact gaepd-table-rowheadings gaepd-table-autowidth">
+<table class="gaepd-table-compact gaepd-table-rowheadings gaepd-table-autowidth" aria-label="Enforcement order details">
     <tbody>
     <tr>
         <th scope="row">@Html.DisplayNameFor(m => m.Item.PublicationStatus)</th>

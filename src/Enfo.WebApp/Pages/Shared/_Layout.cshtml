@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"]@(string.IsNullOrWhiteSpace(ViewData["Title"].ToString()) ? "" : " | ") Georgia EPD Enforcement Orders</title>
+    <title>@ViewData["Title"]@(string.IsNullOrWhiteSpace(ViewData["Title"]?.ToString()) ? "" : " | ") Georgia EPD Enforcement Orders</title>
     <partial name="_FaviconPartial" />
     <link rel="stylesheet" href="~/dist/site.css" asp-append-version="true" />
     <environment exclude="Local">
@@ -40,16 +40,16 @@
 <div class="gaepd-footer">
     <ul class="gaepd-footer-menu">
         <li>
-            <a href="https://epd.georgia.gov/" target="_blank">Environmental Protection Division</a>
+            <a href="https://epd.georgia.gov/" target="_blank" rel="noopener">Environmental Protection Division</a>
         </li>
         <li>
-            <a href="https://georgia.gov/accessibility" target="_blank">Accessibility</a>
+            <a href="https://georgia.gov/accessibility" target="_blank" rel="noopener">Accessibility</a>
         </li>
         <li>
-            <a href="https://www.gadnr.org/ada" target="_blank">DNR Accessibility Notice</a>
+            <a href="https://www.gadnr.org/ada" target="_blank" rel="noopener">DNR Accessibility Notice</a>
         </li>
         <li>
-            <a href="https://georgia.gov/privacysecurity" target="_blank">Privacy/Security</a>
+            <a href="https://georgia.gov/privacysecurity" target="_blank" rel="noopener">Privacy/Security</a>
         </li>
     </ul>
     <environment exclude="Local">

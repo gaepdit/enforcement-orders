@@ -9,13 +9,13 @@
 <h1>@ViewData["Title"]</h1>
 <p>(Notices that change weekly)</p>
 <p>
-    <i>Date of Posting: @DateUtils.MostRecentMonday().ToString(DisplayFormats.LongDate)</i>
+    <em>Date of Posting: @DateUtils.MostRecentMonday().ToString(DisplayFormats.LongDate)</em>
 </p>
 
 @if (Model.Orders == null || Model.Orders.Count == 0)
 {
     <p>
-        <b>No Current Proposed Orders</b>
+        <strong>No Current Proposed Orders</strong>
     </p>
 }
 else
@@ -23,7 +23,7 @@ else
     @foreach (var enfo in Model.Orders)
     {
         <h3>Enforcement Order @Html.DisplayFor(m => enfo.OrderNumber)</h3>
-        <table class="gaepd-table-compact gaepd-table-rowheadings gaepd-table-autowidth">
+        <table class="gaepd-table-compact gaepd-table-rowheadings gaepd-table-autowidth" aria-label="Current proposed orders">
             <tbody>
             <tr>
                 <th scope="row">@Html.DisplayNameFor(m => enfo.FacilityName)</th>
