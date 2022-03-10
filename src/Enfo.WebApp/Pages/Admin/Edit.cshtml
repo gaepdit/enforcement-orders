@@ -167,9 +167,9 @@
         </fieldset>
 
         <div class="gaepd-buttonrow">
-            <input asp-for="Id" />
+            <input asp-for="Item.Id" type="hidden" />
             <button type="submit">Save Changes</button>
-            <a asp-page="Details" asp-route-id="@Model.Id" class="usa-button usa-button-secondary">Cancel</a>
+            <a asp-page="Details" asp-route-id="@Model.Item.Id" class="usa-button usa-button-secondary">Cancel</a>
             <input asp-for="OriginalOrderNumber" />
         </div>
     </form>

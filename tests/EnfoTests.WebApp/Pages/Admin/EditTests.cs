@@ -37,7 +37,7 @@ namespace EnfoTests.WebApp.Pages.Admin
             await page.OnGetAsync(1);
 
             page.Item.Should().BeEquivalentTo(new EnforcementOrderUpdate(item));
-            page.Id.ShouldEqual(item.Id);
+            page.Item.Id.ShouldEqual(item.Id);
             page.OriginalOrderNumber.ShouldEqual(item.OrderNumber);
         }
 
@@ -81,8 +81,8 @@ namespace EnfoTests.WebApp.Pages.Admin
             var httpContext = new DefaultHttpContext();
             var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
             var page = new Edit(orderRepo.Object, Mock.Of<ILegalAuthorityRepository>(),
-                Mock.Of<IEpdContactRepository>())
-            { TempData = tempData };
+                    Mock.Of<IEpdContactRepository>())
+                { TempData = tempData };
 
             var result = await page.OnGetAsync(item.Id);
 
@@ -105,7 +105,6 @@ namespace EnfoTests.WebApp.Pages.Admin
             var page = new Edit(orderRepo.Object, Mock.Of<ILegalAuthorityRepository>(),
                 Mock.Of<IEpdContactRepository>())
             {
-                Id = 0,
                 Item = new EnforcementOrderUpdate(),
             };
 
@@ -129,8 +128,7 @@ namespace EnfoTests.WebApp.Pages.Admin
                 Mock.Of<IEpdContactRepository>())
             {
                 TempData = tempData,
-                Id = item.Id,
-                Item = new EnforcementOrderUpdate(),
+                Item = new EnforcementOrderUpdate { Id = item.Id },
             };
 
             var result = await page.OnPostAsync();
@@ -141,7 +139,7 @@ namespace EnfoTests.WebApp.Pages.Admin
 
             result.Should().BeOfType<RedirectToPageResult>();
             ((RedirectToPageResult)result).PageName.ShouldEqual("Details");
-            ((RedirectToPageResult)result).RouteValues["id"].ShouldEqual(item.Id);
+            ((RedirectToPageResult)result).RouteValues!["id"].ShouldEqual(item.Id);
         }
 
         [Fact]
@@ -160,7 +158,7 @@ namespace EnfoTests.WebApp.Pages.Admin
             var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
             var page = new Edit(orderRepo.Object, Mock.Of<ILegalAuthorityRepository>(),
                     Mock.Of<IEpdContactRepository>())
-            { TempData = tempData, Item = item, Id = originalItem.Id };
+                { TempData = tempData, Item = item };
 
             var result = await page.OnPostAsync();
 
@@ -169,7 +167,7 @@ namespace EnfoTests.WebApp.Pages.Admin
             page.TempData?.GetDisplayMessage().Should().BeEquivalentTo(expected);
             result.Should().BeOfType<RedirectToPageResult>();
             ((RedirectToPageResult)result).PageName.ShouldEqual("Details");
-            ((RedirectToPageResult)result).RouteValues["Id"].ShouldEqual(originalItem.Id);
+            ((RedirectToPageResult)result).RouteValues!["Id"].ShouldEqual(originalItem.Id);
         }
 
         [Fact]
@@ -215,7 +213,7 @@ namespace EnfoTests.WebApp.Pages.Admin
             contactRepo.Setup(l => l.ListAsync(false)).ReturnsAsync(new List<EpdContactView>());
             // Construct Page
             var page = new Edit(orderRepo.Object, legalRepo.Object, contactRepo.Object)
-            { Item = update };
+                { Item = update };
 
             var result = await page.OnPostAsync();
 
@@ -238,7 +236,7 @@ namespace EnfoTests.WebApp.Pages.Admin
             var contactRepo = new Mock<IEpdContactRepository>();
             contactRepo.Setup(l => l.ListAsync(false)).ReturnsAsync(new List<EpdContactView>());
             var page = new Edit(orderRepo.Object, legalRepo.Object, contactRepo.Object)
-            { Item = new EnforcementOrderUpdate(item) };
+                { Item = new EnforcementOrderUpdate(item) };
 
             var result = await page.OnPostAsync();
 

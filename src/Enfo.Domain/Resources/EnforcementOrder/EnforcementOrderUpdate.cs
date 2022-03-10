@@ -8,6 +8,7 @@ public class EnforcementOrderUpdate
 
     public EnforcementOrderUpdate(EnforcementOrderAdminView item)
     {
+        Id = item.Id;
         Cause = item.Cause;
         County = item.County;
         Requirements = item.Requirements;
@@ -33,6 +34,8 @@ public class EnforcementOrderUpdate
     }
 
     // Common data elements
+
+    public int Id { get; set; }
 
     [DisplayName("Facility")]
     [Required(ErrorMessage = "Facility Name is required.")]
@@ -135,20 +138,12 @@ public class EnforcementOrderUpdate
         OrderNumber = OrderNumber?.Trim();
     }
 
-    public Task<ResourceUpdateResult<EnforcementOrderAdminView>> TryUpdateAsync(
-        IEnforcementOrderRepository repository, int id)
+    public async Task<ResourceUpdateResult<EnforcementOrderAdminView>> TryUpdateAsync(
+        IEnforcementOrderRepository repository)
     {
-        if (repository == null) throw new ArgumentNullException(nameof(repository));
-        return TryUpdateInternalAsync(repository, id);
-    }
-
-    private async Task<ResourceUpdateResult<EnforcementOrderAdminView>> TryUpdateInternalAsync(
-        [NotNull] IEnforcementOrderRepository repository, int id)
-    {
-
         var result = new ResourceUpdateResult<EnforcementOrderAdminView>
         {
-            OriginalItem = await repository.GetAdminViewAsync(id)
+            OriginalItem = await repository.GetAdminViewAsync(Id),
         };
 
         if (result.OriginalItem is null || result.OriginalItem.Deleted)
@@ -162,7 +157,7 @@ public class EnforcementOrderUpdate
 
         if (result.IsValid)
         {
-            await repository.UpdateAsync(id, this);
+            await repository.UpdateAsync(Id, this);
             result.Success = true;
         }
 
