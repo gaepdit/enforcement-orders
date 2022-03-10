@@ -43,7 +43,7 @@ namespace Enfo.WebApp.Pages.Admin.Users
         [UsedImplicitly]
         public async Task<IActionResult> OnPostAsync()
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 DisplayUser = await _userService.GetUserByIdAsync(UserId);
                 if (DisplayUser == null) return NotFound();
