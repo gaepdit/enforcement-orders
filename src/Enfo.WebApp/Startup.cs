@@ -119,17 +119,19 @@ namespace Enfo.WebApp
         {
             if (env.IsLocalDev() || env.IsDevelopment())
             {
+                // Local or Dev server
                 app.UseDeveloperExceptionPage();
             }
             else
             {
+                // Production or Staging
                 app.UseExceptionHandler("/Error");
+                app.UseHsts();
             }
 
             if (!env.IsLocalDev())
             {
                 app.UseRaygun();
-                app.UseHsts();
             }
 
             app.UseStatusCodePages();
