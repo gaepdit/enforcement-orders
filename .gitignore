@@ -479,5 +479,6 @@ appsettings\.Staging\.json
 appsettings\.Development\.json
 appsettings\.Local\.json
 
-# SonarList Rider plugin
+# SonarLint Rider plugin
 .idea/sonarlint/issuestore/
+.idea/.idea.enforcement-orders/.idea/sonarlint-state.xml
