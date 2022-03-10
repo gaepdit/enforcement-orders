@@ -92,7 +92,7 @@ public class EnforcementOrderCreate
     [DisplayName("Hearing Information Contact")]
     public int? HearingContactId { get; init; }
 
-    private void TrimAll()
+    public void TrimAll()
     {
         County = County?.Trim();
         FacilityName = FacilityName?.Trim();
@@ -100,17 +100,6 @@ public class EnforcementOrderCreate
         Requirements = Requirements?.Trim();
         OrderNumber = OrderNumber?.Trim();
         HearingLocation = HearingLocation?.Trim();
-    }
-
-    public Task<int> SaveAsync(IEnforcementOrderRepository repository)
-    {
-        if (repository == null) throw new ArgumentNullException(nameof(repository));
-
-        if (!Enum.IsDefined(CreateAs))
-            throw new InvalidEnumArgumentException(nameof(CreateAs), (int)CreateAs, typeof(NewEnforcementOrderType));
-
-        TrimAll();
-        return repository.CreateAsync(this);
     }
 }
 

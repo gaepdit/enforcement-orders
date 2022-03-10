@@ -530,7 +530,7 @@ namespace EnfoTests.Infrastructure
             using var repositoryHelper = CreateRepositoryHelper();
             using var repository = repositoryHelper.GetEnforcementOrderRepository();
 
-            var newId = await _sampleCreate.SaveAsync(repository);
+            var newId = await repository.CreateAsync(_sampleCreate);
             repositoryHelper.ClearChangeTracker();
 
             var order = new EnforcementOrder(_sampleCreate) { Id = newId };

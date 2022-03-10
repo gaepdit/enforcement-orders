@@ -167,6 +167,7 @@ namespace Enfo.Infrastructure.Repositories
 
         public async Task<int> CreateAsync(EnforcementOrderCreate resource)
         {
+            resource.TrimAll();
             var item = new EnforcementOrder(resource);
             await _context.EnforcementOrders.AddAsync(item).ConfigureAwait(false);
             await _context.SaveChangesAsync().ConfigureAwait(false);
