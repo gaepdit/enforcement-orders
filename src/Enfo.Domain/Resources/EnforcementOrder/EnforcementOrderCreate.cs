@@ -1,4 +1,4 @@
-﻿using Enfo.Domain.Repositories;
+using Enfo.Domain.Repositories;
 using Enfo.Domain.Utils;
 
 namespace Enfo.Domain.Resources.EnforcementOrder;
@@ -102,103 +102,20 @@ public class EnforcementOrderCreate
         HearingLocation = HearingLocation?.Trim();
     }
 
-    public Task<ResourceSaveResult> TrySaveNewAsync(IEnforcementOrderRepository repository)
+    public Task<int> SaveAsync(IEnforcementOrderRepository repository)
     {
         if (repository == null) throw new ArgumentNullException(nameof(repository));
 
         if (!Enum.IsDefined(CreateAs))
             throw new InvalidEnumArgumentException(nameof(CreateAs), (int)CreateAs, typeof(NewEnforcementOrderType));
 
-        return TrySaveNewInternalAsync(repository);
-    }
-
-    private async Task<ResourceSaveResult> TrySaveNewInternalAsync(
-        [NotNull] IEnforcementOrderRepository repository)
-    {
         TrimAll();
-
-        var result = await ValidateNewEnforcementOrderAsync(repository);
-
-        if (result.IsValid)
-        {
-            result.NewId = await repository.CreateAsync(this);
-            result.Success = true;
-        }
-
-        return result;
-    }
-
-    private async Task<ResourceSaveResult> ValidateNewEnforcementOrderAsync(
-        [NotNull] IEnforcementOrderRepository repository)
-    {
-        var result = new ResourceSaveResult();
-
-        if (await repository.OrderNumberExistsAsync(OrderNumber).ConfigureAwait(false))
-            result.AddValidationError(nameof(OrderNumber),
-                $"An Order with the same number ({OrderNumber}) already exists.");
-
-        if (Progress != PublicationProgress.Published) return result;
-
-        if (SettlementAmount is < 0)
-            result.AddValidationError(nameof(SettlementAmount),
-                "Settlement Amount cannot be less than zero.");
-
-        switch (CreateAs)
-        {
-            case NewEnforcementOrderType.Proposed:
-            {
-                if (CommentContactId is null)
-                    result.AddValidationError(nameof(CommentContactId),
-                        "A contact for comments is required for proposed orders.");
-
-                if (!CommentPeriodClosesDate.HasValue)
-                    result.AddValidationError(nameof(CommentPeriodClosesDate),
-                        "A closing date for comments is required for proposed orders.");
-
-                if (!ProposedOrderPostedDate.HasValue)
-                    result.AddValidationError(nameof(ProposedOrderPostedDate),
-                        "A publication date is required for proposed orders.");
-
-                break;
-            }
-            case NewEnforcementOrderType.Executed:
-            {
-                if (!ExecutedDate.HasValue)
-                    result.AddValidationError(nameof(ExecutedDate),
-                        "An execution date is required for executed orders.");
-
-                if (!ExecutedOrderPostedDate.HasValue)
-                    result.AddValidationError(nameof(ExecutedOrderPostedDate),
-                        "A publication date is required for executed orders.");
-
-                break;
-            }
-        }
-
-        if (!IsHearingScheduled) return result;
-
-        if (HearingDate is null)
-            result.AddValidationError(nameof(HearingDate),
-                "A hearing date is required if a hearing is scheduled.");
-
-        if (string.IsNullOrEmpty(HearingLocation))
-            result.AddValidationError(nameof(HearingLocation),
-                "A hearing location is required if a hearing is scheduled.");
-
-        if (HearingCommentPeriodClosesDate is null)
-            result.AddValidationError(nameof(HearingCommentPeriodClosesDate),
-                "A closing date for hearing comments is required if a hearing is scheduled.");
-
-        if (HearingContactId is null)
-            result.AddValidationError(nameof(HearingContactId),
-                "A contact for hearings is required if a hearing is scheduled.");
-
-        return result;
+        return repository.CreateAsync(this);
     }
 }
 
 public enum NewEnforcementOrderType
 {
     Proposed,
-    Executed
+    Executed,
 }

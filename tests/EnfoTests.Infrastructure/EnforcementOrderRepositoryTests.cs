@@ -81,7 +81,8 @@ namespace EnfoTests.Infrastructure
             var result = await repository.ListAsync(new EnforcementOrderSpec(), new PaginationSpec(1, 20));
 
             result.CurrentCount.Should().Be(GetEnforcementOrders.Count(e => e.GetIsPublic));
-            result.Items.Cast<EnforcementOrderSummaryView>().Should().HaveCount(GetEnforcementOrders.Count(e => e.GetIsPublic));
+            result.Items.Cast<EnforcementOrderSummaryView>().Should()
+                .HaveCount(GetEnforcementOrders.Count(e => e.GetIsPublic));
             result.PageNumber.Should().Be(1);
             result.Items[0].Should().BeEquivalentTo(
                 GetEnforcementOrderSummaryView(GetEnforcementOrders
@@ -187,7 +188,8 @@ namespace EnfoTests.Infrastructure
             var result = await repository.ListDetailedAsync(new EnforcementOrderSpec(), new PaginationSpec(1, 20));
 
             result.CurrentCount.Should().Be(GetEnforcementOrders.Count(e => e.GetIsPublic));
-            result.Items.Cast<EnforcementOrderDetailedView>().Should().HaveCount(GetEnforcementOrders.Count(e => e.GetIsPublic));
+            result.Items.Cast<EnforcementOrderDetailedView>().Should()
+                .HaveCount(GetEnforcementOrders.Count(e => e.GetIsPublic));
             result.PageNumber.Should().Be(1);
             result.Items[0].Should().BeEquivalentTo(
                 GetEnforcementOrderDetailedView(GetEnforcementOrders
@@ -295,7 +297,8 @@ namespace EnfoTests.Infrastructure
             var result = await repository.ListAdminAsync(new EnforcementOrderAdminSpec(), new PaginationSpec(1, 20));
 
             result.CurrentCount.Should().Be(GetEnforcementOrders.Count(e => !e.Deleted));
-            result.Items.Cast<EnforcementOrderAdminSummaryView>().Should().HaveCount(GetEnforcementOrders.Count(e => !e.Deleted));
+            result.Items.Cast<EnforcementOrderAdminSummaryView>().Should()
+                .HaveCount(GetEnforcementOrders.Count(e => !e.Deleted));
             result.PageNumber.Should().Be(1);
             result.Items[0].Should().BeEquivalentTo(
                 GetEnforcementOrderAdminSummaryView(GetEnforcementOrders
@@ -313,7 +316,8 @@ namespace EnfoTests.Infrastructure
             var result = await repository.ListAdminAsync(spec, new PaginationSpec(1, 20));
 
             result.CurrentCount.Should().Be(GetEnforcementOrders.Count(e => e.Deleted));
-            result.Items.Cast<EnforcementOrderAdminSummaryView>().Should().HaveCount(GetEnforcementOrders.Count(e => e.Deleted));
+            result.Items.Cast<EnforcementOrderAdminSummaryView>().Should()
+                .HaveCount(GetEnforcementOrders.Count(e => e.Deleted));
             result.PageNumber.Should().Be(1);
             result.Items[0].Should().BeEquivalentTo(
                 GetEnforcementOrderAdminSummaryView(GetEnforcementOrders
@@ -526,7 +530,7 @@ namespace EnfoTests.Infrastructure
             using var repositoryHelper = CreateRepositoryHelper();
             using var repository = repositoryHelper.GetEnforcementOrderRepository();
 
-            var newId = (await _sampleCreate.TrySaveNewAsync(repository)).NewId.GetValueOrDefault();
+            var newId = await _sampleCreate.SaveAsync(repository);
             repositoryHelper.ClearChangeTracker();
 
             var order = new EnforcementOrder(_sampleCreate) { Id = newId };
@@ -534,53 +538,6 @@ namespace EnfoTests.Infrastructure
 
             var item = await repository.GetAdminViewAsync(newId);
             item.Should().BeEquivalentTo(expected);
-        }
-
-        [Fact]
-        public async Task CreateOrder_ValidationIfValid_Succeeds()
-        {
-            using var repository = CreateRepositoryHelper().GetEnforcementOrderRepository();
-
-            var result = await _sampleCreate.TrySaveNewAsync(repository);
-
-            result.IsValid.Should().BeTrue();
-            result.ValidationErrors.Should().BeEmpty();
-        }
-
-        [Fact]
-        public async Task CreateOrder_ValidationIfMissingRequiredProperties_Fails()
-        {
-            _sampleCreate.Progress = PublicationProgress.Published;
-            _sampleCreate.CommentContactId = null;
-            _sampleCreate.CommentPeriodClosesDate = null;
-
-            using var repository = CreateRepositoryHelper().GetEnforcementOrderRepository();
-
-            var result = await _sampleCreate.TrySaveNewAsync(repository);
-
-            result.IsValid.Should().BeFalse();
-            result.ValidationErrors.Should().NotBeEmpty()
-                .And.HaveCount(2)
-                .And.ContainKeys(
-                "CommentContactId",
-                "CommentPeriodClosesDate");
-        }
-
-        [Fact]
-        public async Task CreateOrder_WithDuplicateOrderNumber_Fails()
-        {
-            _sampleCreate.Progress = PublicationProgress.Published;
-            _sampleCreate.OrderNumber = GetEnforcementOrders.First(e => !e.Deleted).OrderNumber;
-
-            using var repository = CreateRepositoryHelper().GetEnforcementOrderRepository();
-
-            var result = await _sampleCreate.TrySaveNewAsync(repository);
-
-            result.IsValid.Should().BeFalse();
-            result.ValidationErrors.Should().NotBeEmpty()
-                .And.HaveCount(1)
-                .And.ContainKeys(
-                "OrderNumber");
         }
 
         // UpdateAsync

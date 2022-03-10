@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Enfo.Domain.Repositories;
+﻿using Enfo.Domain.Repositories;
 using Enfo.Domain.Resources.EnforcementOrder;
 using Enfo.Domain.Resources.EpdContact;
 using Enfo.Domain.Resources.LegalAuthority;
@@ -13,6 +11,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Moq;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Xunit;
 using Xunit.Extensions.AssertExtensions;
 using static EnfoTests.Helpers.ResourceHelper;
@@ -48,16 +48,16 @@ namespace EnfoTests.WebApp.Pages.Admin
             orderRepo.Setup(l => l.CreateAsync(item)).ReturnsAsync(9);
             // Construct Page
             var page = new Add(orderRepo.Object, Mock.Of<ILegalAuthorityRepository>(), Mock.Of<IEpdContactRepository>())
-                {TempData = tempData, Item = item};
+                { TempData = tempData, Item = item };
 
             var result = await page.OnPostAsync();
 
             var expected = new DisplayMessage(Context.Success,
                 "The new Enforcement Order has been successfully added.");
-            page.TempData?.GetDisplayMessage().Should().BeEquivalentTo(expected);
+            page.TempData.GetDisplayMessage().Should().BeEquivalentTo(expected);
             result.Should().BeOfType<RedirectToPageResult>();
-            ((RedirectToPageResult) result).PageName.ShouldEqual("Details");
-            ((RedirectToPageResult) result).RouteValues["id"].ShouldEqual(9);
+            ((RedirectToPageResult)result).PageName.ShouldEqual("Details");
+            ((RedirectToPageResult)result).RouteValues!["id"].ShouldEqual(9);
         }
 
         [Fact]
@@ -74,56 +74,8 @@ namespace EnfoTests.WebApp.Pages.Admin
                 .ReturnsAsync(false);
             // Construct Page
             var page = new Add(orderRepo.Object, legalRepo.Object, contactRepo.Object)
-                {Item = item};
+                { Item = item };
             page.ModelState.AddModelError("key", "message");
-
-            var result = await page.OnPostAsync();
-
-            result.Should().BeOfType<PageResult>();
-            page.ModelState.IsValid.ShouldBeFalse();
-            page.ModelState.ErrorCount.ShouldEqual(1);
-        }
-
-        [Fact]
-        public async Task OnPost_GivenInvalidResource_ReturnsPageWithModelError()
-        {
-            var item = GetValidEnforcementOrderCreate();
-            item.CommentContactId = null;
-            item.CommentPeriodClosesDate = null;
-            item.ProposedOrderPostedDate = null;
-            // Mock repos
-            var legalRepo = new Mock<ILegalAuthorityRepository>();
-            legalRepo.Setup(l => l.ListAsync(false)).ReturnsAsync(new List<LegalAuthorityView>());
-            var contactRepo = new Mock<IEpdContactRepository>();
-            contactRepo.Setup(l => l.ListAsync(false)).ReturnsAsync(new List<EpdContactView>());
-            var orderRepo = new Mock<IEnforcementOrderRepository>();
-            orderRepo.Setup(l => l.OrderNumberExistsAsync(It.IsAny<string>(), It.IsAny<int?>()))
-                .ReturnsAsync(false);
-            // Construct Page
-            var page = new Add(orderRepo.Object, legalRepo.Object, contactRepo.Object)
-                {Item = item};
-
-            var result = await page.OnPostAsync();
-
-            result.Should().BeOfType<PageResult>();
-            page.ModelState.IsValid.ShouldBeFalse();
-            page.ModelState.ErrorCount.ShouldEqual(3);
-        }
-        [Fact]
-        public async Task OnPost_GivenOrderNumberExists_ReturnsPageWithModelError()
-        {
-            var item = GetValidEnforcementOrderCreate();
-            // Mock repos
-            var legalRepo = new Mock<ILegalAuthorityRepository>();
-            legalRepo.Setup(l => l.ListAsync(false)).ReturnsAsync(new List<LegalAuthorityView>());
-            var contactRepo = new Mock<IEpdContactRepository>();
-            contactRepo.Setup(l => l.ListAsync(false)).ReturnsAsync(new List<EpdContactView>());
-            var orderRepo = new Mock<IEnforcementOrderRepository>();
-            orderRepo.Setup(l => l.OrderNumberExistsAsync(It.IsAny<string>(), It.IsAny<int?>()))
-                .ReturnsAsync(true);
-            // Construct Page
-            var page = new Add(orderRepo.Object, legalRepo.Object, contactRepo.Object)
-                {Item = item};
 
             var result = await page.OnPostAsync();
 
