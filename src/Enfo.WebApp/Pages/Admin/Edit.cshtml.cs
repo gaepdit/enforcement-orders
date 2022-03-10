@@ -92,6 +92,7 @@ namespace Enfo.WebApp.Pages.Admin
                 ModelState.AddModelError(string.Concat(nameof(Item), ".", key), value);
             }
 
+            await PopulateSelectListsAsync();
             return Page();
         }
 
