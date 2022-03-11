@@ -545,6 +545,7 @@ namespace EnfoTests.Infrastructure
         // Sample data for update
         private static EnforcementOrderUpdate NewSampleUpdate(EnforcementOrder order) => new()
         {
+            Id = order.Id,
             Cause = order.Cause,
             County = order.County,
             Requirements = order.Requirements,
@@ -580,7 +581,7 @@ namespace EnfoTests.Infrastructure
             using var repositoryHelper = CreateRepositoryHelper();
             using var repository = repositoryHelper.GetEnforcementOrderRepository();
 
-            await repository.UpdateAsync(itemId, itemUpdate);
+            await repository.UpdateAsync(itemUpdate);
             repositoryHelper.ClearChangeTracker();
 
             (await repository.GetAsync(itemId)).Cause.Should().Be("abc");
@@ -590,17 +591,16 @@ namespace EnfoTests.Infrastructure
         public async Task Update_DeletedOrder_ThrowsException()
         {
             var existingOrder = GetEnforcementOrders.First(e => e.Deleted);
-            var itemId = existingOrder.Id;
             var itemUpdate = NewSampleUpdate(existingOrder);
 
-            Func<Task> action = async () =>
+            var action = async () =>
             {
                 using var repository = CreateRepositoryHelper().GetEnforcementOrderRepository();
-                await repository.UpdateAsync(itemId, itemUpdate);
+                await repository.UpdateAsync(itemUpdate);
             };
 
             (await action.Should().ThrowAsync<ArgumentException>())
-                .WithMessage("Id: A deleted Enforcement Order cannot be modified. (Parameter 'resource')")
+                .WithMessage("A deleted Enforcement Order cannot be modified. (Parameter 'resource')")
                 .And.ParamName.Should().Be("resource");
         }
 
@@ -608,19 +608,18 @@ namespace EnfoTests.Infrastructure
         public async Task Update_WithDuplicateOrderNumber_Fails()
         {
             var existingOrder = GetEnforcementOrders.First(e => !e.Deleted);
-            var itemId = existingOrder.Id;
 
             var itemUpdate = NewSampleUpdate(existingOrder);
             itemUpdate.OrderNumber = GetEnforcementOrders.Last(e => !e.Deleted).OrderNumber;
 
-            Func<Task> action = async () =>
+            var action = async () =>
             {
                 using var repository = CreateRepositoryHelper().GetEnforcementOrderRepository();
-                await repository.UpdateAsync(itemId, itemUpdate);
+                await repository.UpdateAsync(itemUpdate);
             };
 
             (await action.Should().ThrowAsync<ArgumentException>())
-                .And.ParamName.Should().Be("resource");
+                .And.ParamName.Should().Be("OrderNumber");
         }
 
         // DeleteAsync

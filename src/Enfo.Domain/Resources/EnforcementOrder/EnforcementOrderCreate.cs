@@ -1,4 +1,3 @@
-using Enfo.Domain.Repositories;
 using Enfo.Domain.Utils;
 
 namespace Enfo.Domain.Resources.EnforcementOrder;
@@ -56,7 +55,7 @@ public class EnforcementOrderCreate
     [DisplayName("Publication Date For Proposed Order")]
     [DataType(DataType.Date)]
     [DisplayFormat(DataFormatString = DisplayFormats.EditDate, ApplyFormatInEditMode = true)]
-    public DateTime? ProposedOrderPostedDate { get; set; } = DateUtils.NextMonday();
+    public DateTime? ProposedOrderPostedDate { get; init; } = DateUtils.NextMonday();
 
     // Executed orders
 

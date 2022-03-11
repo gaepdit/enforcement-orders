@@ -18,7 +18,7 @@ namespace Enfo.WebApp.Pages.Account
         {
             ReturnUrl = returnUrl ?? "/Admin/Index";
 
-            if (User?.Identity?.IsAuthenticated ?? false)
+            if (User.Identity?.IsAuthenticated ?? false)
             {
                 return LocalRedirect(ReturnUrl);
             }

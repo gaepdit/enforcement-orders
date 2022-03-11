@@ -117,7 +117,9 @@ namespace Enfo.WebApp
             // Initialize database
             services.AddHostedService<MigratorHostedService>();
 
+            // Configure validators
             services.AddTransient<IValidator<EnforcementOrderCreate>, EnforcementOrderCreateValidator>();
+            services.AddTransient<IValidator<EnforcementOrderUpdate>, EnforcementOrderUpdateValidator>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

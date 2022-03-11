@@ -4,16 +4,17 @@ using FluentValidation;
 
 namespace Enfo.Domain.Validation;
 
-public class EnforcementOrderCreateValidator : BaseEnforcementOrderValidator<EnforcementOrderCreate>
+public class EnforcementOrderUpdateValidator : BaseEnforcementOrderValidator<EnforcementOrderUpdate>
 {
-    public EnforcementOrderCreateValidator(IEnforcementOrderRepository repository) : base(repository)
+    public EnforcementOrderUpdateValidator(IEnforcementOrderRepository repository) : base(repository)
     {
         RuleFor(e => e.OrderNumber)
-            .MustAsync(async (orderNumber, _) => await NotDuplicateOrderNumber(orderNumber))
+            .MustAsync(async (e, orderNumber, _) => await NotDuplicateOrderNumber(orderNumber, e.Id))
             .WithMessage(e => $"An Order with the same number ({e.OrderNumber.Trim()}) already exists.");
 
-        RuleFor(e => e.CreateAs)
-            .IsInEnum();
+        RuleFor(e => e.IsProposedOrder)
+            .Equal(true).When(e => !e.IsExecutedOrder)
+            .WithMessage("Executed Order details cannot be removed from this Enforcement Order.");
 
         RuleFor(e => e.SettlementAmount)
             .GreaterThanOrEqualTo(0).WithMessage("Settlement Amount cannot be less than zero.");
@@ -21,8 +22,8 @@ public class EnforcementOrderCreateValidator : BaseEnforcementOrderValidator<Enf
         // The following rules don't necessarily apply to draft orders
         When(e => e.Progress == PublicationProgress.Published, () =>
         {
-            // The following rules only apply to Proposed Orders
-            When(e => e.CreateAs == NewEnforcementOrderType.Proposed, () =>
+            // The following rules apply to Proposed Orders
+            When(e => e.IsProposedOrder, () =>
             {
                 RuleFor(e => e.CommentContactId)
                     .NotNull().WithMessage("A contact for comments is required for proposed orders.");
@@ -35,7 +36,7 @@ public class EnforcementOrderCreateValidator : BaseEnforcementOrderValidator<Enf
             });
 
             // The following rules only apply to Executed Orders
-            When(e => e.CreateAs == NewEnforcementOrderType.Executed, () =>
+            When(e => e.IsExecutedOrder, () =>
             {
                 RuleFor(e => e.ExecutedDate)
                     .NotNull().WithMessage("An execution date is required for executed orders.");
