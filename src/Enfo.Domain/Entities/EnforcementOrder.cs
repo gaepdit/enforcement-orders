@@ -1,4 +1,4 @@
-﻿using Enfo.Domain.Entities.Base;
+using Enfo.Domain.Entities.Base;
 using Enfo.Domain.Resources.EnforcementOrder;
 using Enfo.Domain.Utils;
 
@@ -154,7 +154,7 @@ public class EnforcementOrder : BaseEntity
 
         Cause = Guard.NotNullOrWhiteSpace(resource.Cause, nameof(resource.Cause));
         CommentContactId = IsProposedOrder ? resource.CommentContactId : null;
-        CommentPeriodClosesDate = IsProposedOrder ? resource.HearingCommentPeriodClosesDate : null;
+        CommentPeriodClosesDate = IsProposedOrder ? resource.CommentPeriodClosesDate : null;
         County = Guard.NotNullOrWhiteSpace(resource.County, nameof(resource.County));
         ExecutedDate = resource.IsExecutedOrder ? resource.ExecutedDate : null;
         ExecutedOrderPostedDate = resource.IsExecutedOrder ? resource.ExecutedOrderPostedDate : null;
