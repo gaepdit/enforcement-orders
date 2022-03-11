@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Enfo.Domain.Entities.Users;
+﻿using Enfo.Domain.Entities.Users;
 using Enfo.Domain.Resources.Users;
 using Enfo.Domain.Services;
 using Enfo.WebApp.Models;
@@ -11,6 +7,10 @@ using JetBrains.Annotations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Enfo.WebApp.Pages.Admin.Users
 {
@@ -50,8 +50,8 @@ namespace Enfo.WebApp.Pages.Admin.Users
 
             if (result.Succeeded)
             {
-                TempData?.SetDisplayMessage(Context.Success, "User roles successfully updated.");
-                return RedirectToPage("Details", new {id = UserId});
+                TempData.SetDisplayMessage(Context.Success, "User roles successfully updated.");
+                return RedirectToPage("Details", new { id = UserId });
             }
 
             DisplayUser = await _userService.GetUserByIdAsync(UserId);

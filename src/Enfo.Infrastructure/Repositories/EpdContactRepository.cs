@@ -39,11 +39,12 @@ namespace Enfo.Infrastructure.Repositories
             return item.Id;
         }
 
-        public async Task UpdateAsync(int id, EpdContactCommand resource)
+        public async Task UpdateAsync(EpdContactCommand resource)
         {
-            var item = (await _context.EpdContacts.FindAsync(id).ConfigureAwait(false))
-                ?? throw new ArgumentException($"ID ({id}) not found.", nameof(id));
+            var item = (await _context.EpdContacts.FindAsync(resource.Id).ConfigureAwait(false))
+                ?? throw new ArgumentException($"ID ({resource.Id}) not found.", nameof(resource));
 
+            resource.TrimAll();
             item.ApplyUpdate(resource);
             await _context.SaveChangesAsync().ConfigureAwait(false);
         }

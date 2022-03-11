@@ -1,8 +1,7 @@
-using System;
-using System.IO;
 using Enfo.Domain.Entities.Users;
 using Enfo.Domain.Repositories;
 using Enfo.Domain.Resources.EnforcementOrder;
+using Enfo.Domain.Resources.LegalAuthority;
 using Enfo.Domain.Services;
 using Enfo.Domain.Validation;
 using Enfo.Infrastructure.Contexts;
@@ -26,6 +25,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Mindscape.Raygun4Net.AspNetCore;
+using System;
+using System.IO;
 
 namespace Enfo.WebApp
 {
@@ -113,13 +114,14 @@ namespace Enfo.WebApp
             services.AddScoped<IEnforcementOrderRepository, EnforcementOrderRepository>();
             services.AddScoped<IEpdContactRepository, EpdContactRepository>();
             services.AddScoped<ILegalAuthorityRepository, LegalAuthorityRepository>();
-            
+
             // Initialize database
             services.AddHostedService<MigratorHostedService>();
 
             // Configure validators
             services.AddTransient<IValidator<EnforcementOrderCreate>, EnforcementOrderCreateValidator>();
             services.AddTransient<IValidator<EnforcementOrderUpdate>, EnforcementOrderUpdateValidator>();
+            services.AddTransient<IValidator<LegalAuthorityCommand>, LegalAuthorityValidator>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

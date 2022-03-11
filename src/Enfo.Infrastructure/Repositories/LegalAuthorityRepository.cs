@@ -41,11 +41,14 @@ namespace Enfo.Infrastructure.Repositories
             return item.Id;
         }
 
-        public async Task UpdateAsync(int id, LegalAuthorityCommand resource)
+        public async Task UpdateAsync(LegalAuthorityCommand resource)
         {
-            var item = (await _context.LegalAuthorities.FindAsync(id).ConfigureAwait(false))
-                ?? throw new ArgumentException($"ID ({id}) not found.", nameof(id));
+            var item = (await _context.LegalAuthorities.FindAsync(resource.Id).ConfigureAwait(false))
+                ?? throw new ArgumentException($"ID ({resource.Id}) not found.", nameof(resource));
 
+            if (!item.Active) throw new ArgumentException("Only active items can be edited.", nameof(resource));
+
+            resource.TrimAll();
             item.ApplyUpdate(resource);
             await _context.SaveChangesAsync().ConfigureAwait(false);
         }

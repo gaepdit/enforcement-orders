@@ -117,7 +117,7 @@
                 <span asp-validation-for="Item.HearingDate" class="usa-input-error-message"></span>
 
                 <label asp-for="Item.HearingLocation"></label>
-                @Html.EditorFor(m => m.Item.HearingLocation, new {htmlAttributes = new {@class = "hearing-item"}})
+                @Html.EditorFor(m => m.Item.HearingLocation, new { htmlAttributes = new { @class = "hearing-item" } })
                 <span asp-validation-for="Item.HearingLocation" class="usa-input-error-message"></span>
 
                 <label asp-for="Item.HearingContactId"></label>
@@ -167,7 +167,7 @@
         </fieldset>
 
         <div class="gaepd-buttonrow">
-            <input asp-for="Item.Id" type="hidden" />
+            <input asp-for="Item.Id" />
             <button type="submit">Save Changes</button>
             <a asp-page="Details" asp-route-id="@Model.Item.Id" class="usa-button usa-button-secondary">Cancel</a>
             <input asp-for="OriginalOrderNumber" />

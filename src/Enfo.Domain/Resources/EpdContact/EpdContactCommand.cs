@@ -1,4 +1,6 @@
-﻿namespace Enfo.Domain.Resources.EpdContact;
+﻿using Microsoft.AspNetCore.Mvc;
+
+namespace Enfo.Domain.Resources.EpdContact;
 
 public class EpdContactCommand
 {
@@ -6,6 +8,7 @@ public class EpdContactCommand
 
     public EpdContactCommand(EpdContactView item)
     {
+        Id = item.Id;
         ContactName = item.ContactName;
         Email = item.Email;
         Organization = item.Organization;
@@ -17,6 +20,9 @@ public class EpdContactCommand
         Street = item.Street;
         Street2 = item.Street2;
     }
+
+    [HiddenInput]
+    public int? Id { get; init; }
 
     [DisplayName("Contact Full Name")]
     [Required(ErrorMessage = "Contact Name is required.")]

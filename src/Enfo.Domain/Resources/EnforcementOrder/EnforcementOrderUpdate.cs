@@ -1,4 +1,6 @@
-﻿namespace Enfo.Domain.Resources.EnforcementOrder;
+﻿using Microsoft.AspNetCore.Mvc;
+
+namespace Enfo.Domain.Resources.EnforcementOrder;
 
 public class EnforcementOrderUpdate
 {
@@ -33,6 +35,7 @@ public class EnforcementOrderUpdate
 
     // Common data elements
 
+    [HiddenInput]
     public int Id { get; init; }
 
     [DisplayName("Facility")]

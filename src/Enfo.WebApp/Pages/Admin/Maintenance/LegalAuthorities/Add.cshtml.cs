@@ -9,45 +9,34 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Threading.Tasks;
 
-namespace Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthorities
+namespace Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthorities;
+
+[Authorize(Roles = UserRole.SiteMaintenance)]
+public class Add : PageModel
 {
-    [Authorize(Roles = UserRole.SiteMaintenance)]
-    public class Add : PageModel
+    [BindProperty]
+    public LegalAuthorityCommand Item { get; init; }
+
+    public static MaintenanceOption ThisOption => MaintenanceOption.LegalAuthority;
+
+    [TempData]
+    public int HighlightId { get; [UsedImplicitly] set; }
+
+    [UsedImplicitly]
+    public static void OnGet()
     {
-        [BindProperty]
-        public LegalAuthorityCommand Item { get; init; }
+        // Method intentionally left empty.
+    }
 
-        public static MaintenanceOption ThisOption => MaintenanceOption.LegalAuthority;
+    [UsedImplicitly]
+    public async Task<IActionResult> OnPostAsync([FromServices] ILegalAuthorityRepository repository)
+    {
+        if (!ModelState.IsValid) return Page();
 
-        [TempData]
-        public int HighlightId { get; [UsedImplicitly] set; }
+        var id = await repository.CreateAsync(Item);
 
-        [UsedImplicitly]
-        public static void OnGet()
-        {
-            // Method intentionally left empty.
-        }
-
-        [UsedImplicitly]
-        public async Task<IActionResult> OnPostAsync([FromServices] ILegalAuthorityRepository repository)
-        {
-            if (!ModelState.IsValid) return Page();
-
-            var result = await Item.TrySaveNewAsync(repository);
-
-            if (result.Success)
-            {
-                HighlightId = result.NewId.GetValueOrDefault();
-                TempData?.SetDisplayMessage(Context.Success, $"{Item.AuthorityName} successfully added.");
-                return RedirectToPage("Index");
-            }
-
-            foreach (var (key, value) in result.ValidationErrors)
-            {
-                ModelState.AddModelError(string.Concat(nameof(Item), ".", key), value);
-            }
-
-            return Page();
-        }
+        HighlightId = id;
+        TempData.SetDisplayMessage(Context.Success, $"{Item.AuthorityName} successfully added.");
+        return RedirectToPage("Index");
     }
 }

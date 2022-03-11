@@ -7,6 +7,7 @@ using JetBrains.Annotations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 
 namespace Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthorities
@@ -17,14 +18,12 @@ namespace Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthorities
         [BindProperty]
         public LegalAuthorityCommand Item { get; set; }
 
-        [BindProperty, HiddenInput]
-        public int Id { get; set; }
-
         [TempData, UsedImplicitly]
         public int HighlightId { [UsedImplicitly] get; set; }
 
         [BindProperty, HiddenInput]
         public string OriginalName { get; set; }
+
         public static MaintenanceOption ThisOption => MaintenanceOption.LegalAuthority;
 
         private readonly ILegalAuthorityRepository _repository;
@@ -39,12 +38,11 @@ namespace Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthorities
 
             if (!originalItem.Active)
             {
-                TempData?.SetDisplayMessage(Context.Warning, $"Inactive {ThisOption.PluralName} cannot be edited.");
+                TempData.SetDisplayMessage(Context.Warning, $"Inactive {ThisOption.PluralName} cannot be edited.");
                 return RedirectToPage("Index");
             }
 
             Item = new LegalAuthorityCommand(originalItem);
-            Id = id.Value;
             OriginalName = originalItem.AuthorityName;
             return Page();
         }
@@ -52,34 +50,32 @@ namespace Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthorities
         [UsedImplicitly]
         public async Task<IActionResult> OnPostAsync()
         {
+            if (Item.Id is null) return BadRequest();
+
+            var originalItem = await _repository.GetAsync(Item.Id.Value);
+            if (originalItem == null) return NotFound();
+
+            if (!originalItem.Active)
+            {
+                TempData.SetDisplayMessage(Context.Warning, $"Inactive {ThisOption.PluralName} cannot be edited.");
+                return RedirectToPage("Index");
+            }
+
             if (!ModelState.IsValid) return Page();
 
-            var result = await Item.TryUpdateAsync(_repository, Id);
-
-            if (result.Success)
+            try
             {
-                HighlightId = Id;
-                TempData?.SetDisplayMessage(Context.Success, $"{Item.AuthorityName} successfully updated.");
-                return RedirectToPage("Index");
+                await _repository.UpdateAsync(Item);
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!await _repository.ExistsAsync(Item.Id.Value)) return NotFound();
+                throw;
             }
 
-            if (result.OriginalItem is null)
-            {
-                return NotFound();
-            }
-
-            if (!result.OriginalItem.Active)
-            {
-                TempData?.SetDisplayMessage(Context.Warning, $"Inactive {ThisOption.PluralName} cannot be edited.");
-                return RedirectToPage("Index");
-            }
-
-            foreach (var (key, value) in result.ValidationErrors)
-            {
-                ModelState.AddModelError(string.Concat(nameof(Item), ".", key), value);
-            }
-
-            return Page();
+            HighlightId = Item.Id.Value;
+            TempData.SetDisplayMessage(Context.Success, $"{Item.AuthorityName} successfully updated.");
+            return RedirectToPage("Index");
         }
     }
 }

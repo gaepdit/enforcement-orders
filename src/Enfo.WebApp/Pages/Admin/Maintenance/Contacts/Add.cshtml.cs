@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Enfo.Domain.Entities.Users;
+﻿using Enfo.Domain.Entities.Users;
 using Enfo.Domain.Repositories;
 using Enfo.Domain.Resources.EpdContact;
 using Enfo.WebApp.Models;
@@ -8,6 +7,7 @@ using JetBrains.Annotations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Threading.Tasks;
 
 namespace Enfo.WebApp.Pages.Admin.Maintenance.Contacts
 {
@@ -34,7 +34,7 @@ namespace Enfo.WebApp.Pages.Admin.Maintenance.Contacts
             Item.TrimAll();
             if (!ModelState.IsValid) return Page();
             HighlightId = await repository.CreateAsync(Item);
-            TempData?.SetDisplayMessage(Context.Success, $"{ThisOption.SingularName} successfully added.");
+            TempData.SetDisplayMessage(Context.Success, $"{ThisOption.SingularName} successfully added.");
             return RedirectToPage("Index");
         }
     }

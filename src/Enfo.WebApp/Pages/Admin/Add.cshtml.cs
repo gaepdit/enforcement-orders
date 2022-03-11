@@ -50,7 +50,7 @@ namespace Enfo.WebApp.Pages.Admin
             }
 
             var id = await _order.CreateAsync(Item);
-            TempData?.SetDisplayMessage(Context.Success, "The new Enforcement Order has been successfully added.");
+            TempData.SetDisplayMessage(Context.Success, "The new Enforcement Order has been successfully added.");
             return RedirectToPage("Details", new { id });
         }
 

@@ -6,7 +6,6 @@ using Enfo.WebApp.Platform.Extensions;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Moq;
 using System.Linq;
@@ -30,7 +29,7 @@ namespace EnfoTests.WebApp.Pages.Admin.Maintenance.LegalAuthorities
             await page.OnGetAsync(item.Id);
 
             page.Item.Should().BeEquivalentTo(new LegalAuthorityCommand(item));
-            page.Id.ShouldEqual(item.Id);
+            page.Item.Id.ShouldEqual(item.Id);
             page.OriginalName.ShouldEqual(item.AuthorityName);
         }
 
@@ -76,7 +75,7 @@ namespace EnfoTests.WebApp.Pages.Admin.Maintenance.LegalAuthorities
 
             var expected = new DisplayMessage(Context.Warning,
                 $"Inactive {Edit.ThisOption.PluralName} cannot be edited.");
-            page.TempData?.GetDisplayMessage().Should().BeEquivalentTo(expected);
+            page.TempData.GetDisplayMessage().Should().BeEquivalentTo(expected);
 
             result.Should().BeOfType<RedirectToPageResult>();
             ((RedirectToPageResult)result).PageName.ShouldEqual("Index");
@@ -88,7 +87,7 @@ namespace EnfoTests.WebApp.Pages.Admin.Maintenance.LegalAuthorities
         {
             var repo = new Mock<ILegalAuthorityRepository>();
             repo.Setup(l => l.GetAsync(It.IsAny<int>())).ReturnsAsync(null as LegalAuthorityView);
-            var page = new Edit(repo.Object) { Id = 0, Item = new LegalAuthorityCommand() };
+            var page = new Edit(repo.Object) { Item = new LegalAuthorityCommand { Id = 0 } };
 
             var result = await page.OnPostAsync();
 
@@ -109,15 +108,14 @@ namespace EnfoTests.WebApp.Pages.Admin.Maintenance.LegalAuthorities
             var page = new Edit(repo.Object)
             {
                 TempData = tempData,
-                Id = 0,
-                Item = new LegalAuthorityCommand(item)
+                Item = new LegalAuthorityCommand(item),
             };
 
             var result = await page.OnPostAsync();
 
             var expected = new DisplayMessage(Context.Warning,
                 $"Inactive {Edit.ThisOption.PluralName} cannot be edited.");
-            page.TempData?.GetDisplayMessage().Should().BeEquivalentTo(expected);
+            page.TempData.GetDisplayMessage().Should().BeEquivalentTo(expected);
 
             result.Should().BeOfType<RedirectToPageResult>();
             ((RedirectToPageResult)result).PageName.ShouldEqual("Index");
@@ -142,47 +140,10 @@ namespace EnfoTests.WebApp.Pages.Admin.Maintenance.LegalAuthorities
 
             var expected = new DisplayMessage(Context.Success,
                 $"{item.AuthorityName} successfully updated.");
-            page.TempData?.GetDisplayMessage().Should().BeEquivalentTo(expected);
+            page.TempData.GetDisplayMessage().Should().BeEquivalentTo(expected);
 
             result.Should().BeOfType<RedirectToPageResult>();
             ((RedirectToPageResult)result).PageName.ShouldEqual("Index");
-        }
-
-        [Fact]
-        public async Task OnPost_GivenModelError_ReturnsPageWithModelError()
-        {
-            var repo = new Mock<ILegalAuthorityRepository> { DefaultValue = DefaultValue.Mock };
-            repo.Setup(l => l.GetAsync(It.IsAny<int>()))
-                .ReturnsAsync(GetLegalAuthorityViewList()[0]);
-            var page = new Edit(repo.Object)
-            {
-                Item = new LegalAuthorityCommand(),
-                OriginalName = "original name",
-            };
-            page.ModelState.AddModelError("key", "message");
-
-            var result = await page.OnPostAsync();
-
-            result.Should().BeOfType<PageResult>();
-            page.ModelState.IsValid.ShouldBeFalse();
-            page.OriginalName.ShouldEqual("original name");
-        }
-
-        [Fact]
-        public async Task OnPost_GivenNameExists_ReturnsPageWithModelError()
-        {
-            var item = new LegalAuthorityCommand(GetLegalAuthorityViewList()[0]);
-            var repo = new Mock<ILegalAuthorityRepository> { DefaultValue = DefaultValue.Mock };
-            repo.Setup(l => l.GetAsync(It.IsAny<int>()))
-                .ReturnsAsync(GetLegalAuthorityViewList()[0]);
-            repo.Setup(l => l.NameExistsAsync(It.IsAny<string>(), It.IsAny<int?>()))
-                .ReturnsAsync(true);
-            var page = new Edit(repo.Object) { Item = item };
-
-            var result = await page.OnPostAsync();
-
-            result.Should().BeOfType<PageResult>();
-            page.ModelState.IsValid.ShouldBeFalse();
         }
     }
 }
