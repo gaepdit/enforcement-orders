@@ -92,17 +92,19 @@
             {
                 @Html.EditorFor(m => m.Item.IsExecutedOrder)
                 <label asp-for="Item.IsExecutedOrder"></label>
+                <div id="executed-details">
+                    <label asp-for="Item.ExecutedDate"></label>
+                    <input type="datetime" asp-for="Item.ExecutedDate" class="date-picker usa-input-medium executed-item" />
+                    <span asp-validation-for="Item.ExecutedDate" class="usa-input-error-message"></span>
+                </div>
             }
             else
             {
                 @Html.HiddenFor(m => m.Item.IsExecutedOrder)
-            }
-
-            <div id="executed-details">
                 <label asp-for="Item.ExecutedDate"></label>
                 <input type="datetime" asp-for="Item.ExecutedDate" class="date-picker usa-input-medium executed-item" />
                 <span asp-validation-for="Item.ExecutedDate" class="usa-input-error-message"></span>
-            </div>
+            }
         </fieldset>
 
         <fieldset>
