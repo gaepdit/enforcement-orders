@@ -37,7 +37,7 @@ namespace EnfoTests.WebApp.Pages.Admin
             await page.OnGetAsync(1);
 
             page.Item.Should().BeEquivalentTo(new EnforcementOrderUpdate(item));
-            page.Id.ShouldEqual(item.Id);
+            page.Item.Id.ShouldEqual(item.Id);
             page.OriginalOrderNumber.ShouldEqual(item.OrderNumber);
         }
 
@@ -81,18 +81,18 @@ namespace EnfoTests.WebApp.Pages.Admin
             var httpContext = new DefaultHttpContext();
             var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
             var page = new Edit(orderRepo.Object, Mock.Of<ILegalAuthorityRepository>(),
-                Mock.Of<IEpdContactRepository>())
-            { TempData = tempData };
+                    Mock.Of<IEpdContactRepository>())
+                { TempData = tempData };
 
             var result = await page.OnGetAsync(item.Id);
 
             var expected = new DisplayMessage(Context.Warning,
                 "This Enforcement Order is deleted and cannot be edited.");
-            page.TempData?.GetDisplayMessage().Should().BeEquivalentTo(expected);
+            page.TempData.GetDisplayMessage().Should().BeEquivalentTo(expected);
 
             result.Should().BeOfType<RedirectToPageResult>();
             ((RedirectToPageResult)result).PageName.ShouldEqual("Details");
-            ((RedirectToPageResult)result).RouteValues["id"].ShouldEqual(item.Id);
+            ((RedirectToPageResult)result).RouteValues!["id"].ShouldEqual(item.Id);
         }
 
 
@@ -105,7 +105,6 @@ namespace EnfoTests.WebApp.Pages.Admin
             var page = new Edit(orderRepo.Object, Mock.Of<ILegalAuthorityRepository>(),
                 Mock.Of<IEpdContactRepository>())
             {
-                Id = 0,
                 Item = new EnforcementOrderUpdate(),
             };
 
@@ -129,19 +128,18 @@ namespace EnfoTests.WebApp.Pages.Admin
                 Mock.Of<IEpdContactRepository>())
             {
                 TempData = tempData,
-                Id = item.Id,
-                Item = new EnforcementOrderUpdate(),
+                Item = new EnforcementOrderUpdate { Id = item.Id },
             };
 
             var result = await page.OnPostAsync();
 
             var expected = new DisplayMessage(Context.Warning,
                 "This Enforcement Order is deleted and cannot be edited.");
-            page.TempData?.GetDisplayMessage().Should().BeEquivalentTo(expected);
+            page.TempData.GetDisplayMessage().Should().BeEquivalentTo(expected);
 
             result.Should().BeOfType<RedirectToPageResult>();
             ((RedirectToPageResult)result).PageName.ShouldEqual("Details");
-            ((RedirectToPageResult)result).RouteValues["id"].ShouldEqual(item.Id);
+            ((RedirectToPageResult)result).RouteValues!["id"].ShouldEqual(item.Id);
         }
 
         [Fact]
@@ -160,16 +158,16 @@ namespace EnfoTests.WebApp.Pages.Admin
             var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
             var page = new Edit(orderRepo.Object, Mock.Of<ILegalAuthorityRepository>(),
                     Mock.Of<IEpdContactRepository>())
-            { TempData = tempData, Item = item, Id = originalItem.Id };
+                { TempData = tempData, Item = item };
 
             var result = await page.OnPostAsync();
 
             var expected = new DisplayMessage(Context.Success,
                 "The Enforcement Order has been successfully updated.");
-            page.TempData?.GetDisplayMessage().Should().BeEquivalentTo(expected);
+            page.TempData.GetDisplayMessage().Should().BeEquivalentTo(expected);
             result.Should().BeOfType<RedirectToPageResult>();
             ((RedirectToPageResult)result).PageName.ShouldEqual("Details");
-            ((RedirectToPageResult)result).RouteValues["Id"].ShouldEqual(originalItem.Id);
+            ((RedirectToPageResult)result).RouteValues!["Id"].ShouldEqual(originalItem.Id);
         }
 
         [Fact]
@@ -197,54 +195,6 @@ namespace EnfoTests.WebApp.Pages.Admin
             page.ModelState.IsValid.ShouldBeFalse();
             page.ModelState.ErrorCount.ShouldEqual(1);
             page.OriginalOrderNumber.ShouldEqual("original order number");
-        }
-
-        [Fact]
-        public async Task OnPost_GivenInvalidUpdateResource_ReturnsPageWithModelError()
-        {
-            var item = GetEnforcementOrderAdminView(1);
-            var update = new EnforcementOrderUpdate(item) { SettlementAmount = -1 };
-            // Mock repos
-            var orderRepo = new Mock<IEnforcementOrderRepository>();
-            orderRepo.Setup(l => l.GetAdminViewAsync(It.IsAny<int>())).ReturnsAsync(item);
-            orderRepo.Setup(l => l.OrderNumberExistsAsync(It.IsAny<string>(), It.IsAny<int?>()))
-                .ReturnsAsync(false);
-            var legalRepo = new Mock<ILegalAuthorityRepository>();
-            legalRepo.Setup(l => l.ListAsync(false)).ReturnsAsync(new List<LegalAuthorityView>());
-            var contactRepo = new Mock<IEpdContactRepository>();
-            contactRepo.Setup(l => l.ListAsync(false)).ReturnsAsync(new List<EpdContactView>());
-            // Construct Page
-            var page = new Edit(orderRepo.Object, legalRepo.Object, contactRepo.Object)
-            { Item = update };
-
-            var result = await page.OnPostAsync();
-
-            result.Should().BeOfType<PageResult>();
-            page.ModelState.IsValid.ShouldBeFalse();
-            page.ModelState.ErrorCount.ShouldEqual(1);
-        }
-
-        [Fact]
-        public async Task OnPost_GivenOrderNumberExists_ReturnsPageWithModelError()
-        {
-            var item = GetEnforcementOrderAdminView(1);
-            var orderRepo = new Mock<IEnforcementOrderRepository>();
-            orderRepo.Setup(l => l.GetAdminViewAsync(It.IsAny<int>()))
-                .ReturnsAsync(item);
-            orderRepo.Setup(l => l.OrderNumberExistsAsync(It.IsAny<string>(), It.IsAny<int?>()))
-                .ReturnsAsync(true);
-            var legalRepo = new Mock<ILegalAuthorityRepository>();
-            legalRepo.Setup(l => l.ListAsync(false)).ReturnsAsync(new List<LegalAuthorityView>());
-            var contactRepo = new Mock<IEpdContactRepository>();
-            contactRepo.Setup(l => l.ListAsync(false)).ReturnsAsync(new List<EpdContactView>());
-            var page = new Edit(orderRepo.Object, legalRepo.Object, contactRepo.Object)
-            { Item = new EnforcementOrderUpdate(item) };
-
-            var result = await page.OnPostAsync();
-
-            result.Should().BeOfType<PageResult>();
-            page.ModelState.IsValid.ShouldBeFalse();
-            page.ModelState.ErrorCount.ShouldEqual(1);
         }
     }
 }

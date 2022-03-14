@@ -36,7 +36,7 @@ namespace EnfoTests.WebApp.Pages.Admin.Maintenance.LegalAuthorities
 
             var expected = new DisplayMessage(Context.Success,
                 $"{item.AuthorityName} successfully added.");
-            page.TempData?.GetDisplayMessage().Should().BeEquivalentTo(expected);
+            page.TempData.GetDisplayMessage().Should().BeEquivalentTo(expected);
             page.HighlightId.ShouldEqual(1);
 
             result.Should().BeOfType<RedirectToPageResult>();
@@ -49,21 +49,6 @@ namespace EnfoTests.WebApp.Pages.Admin.Maintenance.LegalAuthorities
             var repo = new Mock<ILegalAuthorityRepository> { DefaultValue = DefaultValue.Mock };
             var page = new Add { Item = new LegalAuthorityCommand() };
             page.ModelState.AddModelError("key", "message");
-
-            var result = await page.OnPostAsync(repo.Object);
-
-            result.Should().BeOfType<PageResult>();
-            page.ModelState.IsValid.ShouldBeFalse();
-        }
-
-        [Fact]
-        public async Task OnPost_GivenNameExists_ReturnsPageWithModelError()
-        {
-            var item = new LegalAuthorityCommand { AuthorityName = "test" };
-            var repo = new Mock<ILegalAuthorityRepository> { DefaultValue = DefaultValue.Mock };
-            repo.Setup(l => l.NameExistsAsync(It.IsAny<string>(), null))
-                .ReturnsAsync(true);
-            var page = new Add { Item = item };
 
             var result = await page.OnPostAsync(repo.Object);
 

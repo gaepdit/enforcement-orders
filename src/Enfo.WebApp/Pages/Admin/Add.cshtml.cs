@@ -49,21 +49,9 @@ namespace Enfo.WebApp.Pages.Admin
                 return Page();
             }
 
-            var result = await Item.TrySaveNewAsync(_order);
-
-            if (result.Success)
-            {
-                TempData?.SetDisplayMessage(Context.Success, "The new Enforcement Order has been successfully added.");
-                return RedirectToPage("Details", new { id = result.NewId.GetValueOrDefault() });
-            }
-
-            foreach (var (key, value) in result.ValidationErrors)
-            {
-                ModelState.AddModelError(string.Concat(nameof(Item), ".", key), value);
-            }
-
-            await PopulateSelectListsAsync();
-            return Page();
+            var id = await _order.CreateAsync(Item);
+            TempData.SetDisplayMessage(Context.Success, "The new Enforcement Order has been successfully added.");
+            return RedirectToPage("Details", new { id });
         }
 
         private async Task PopulateSelectListsAsync()

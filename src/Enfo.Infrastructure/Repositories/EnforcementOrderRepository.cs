@@ -10,7 +10,6 @@ using Enfo.Domain.Specs;
 using Enfo.Domain.Utils;
 using Enfo.Infrastructure.Contexts;
 using Microsoft.EntityFrameworkCore;
-using static Enfo.Domain.Validation.EnforcementOrderValidation;
 
 namespace Enfo.Infrastructure.Repositories
 {
@@ -167,31 +166,22 @@ namespace Enfo.Infrastructure.Repositories
 
         public async Task<int> CreateAsync(EnforcementOrderCreate resource)
         {
+            resource.TrimAll();
             var item = new EnforcementOrder(resource);
             await _context.EnforcementOrders.AddAsync(item).ConfigureAwait(false);
             await _context.SaveChangesAsync().ConfigureAwait(false);
             return item.Id;
         }
 
-        public async Task UpdateAsync(int id, EnforcementOrderUpdate resource)
+        public async Task UpdateAsync(EnforcementOrderUpdate resource)
         {
             Guard.NotNull(resource, nameof(resource));
 
-            var item = await _context.EnforcementOrders.FindAsync(id).ConfigureAwait(false)
-                ?? throw new ArgumentException($"ID ({id}) not found.", nameof(id));
+            var item = await _context.EnforcementOrders.FindAsync(resource.Id).ConfigureAwait(false)
+                ?? throw new ArgumentException($"ID ({resource.Id}) not found.", nameof(resource));
 
-            var validationResult = ValidateEnforcementOrderUpdate(new EnforcementOrderAdminView(item), resource);
-
-            if (await OrderNumberExistsAsync(resource.OrderNumber, id).ConfigureAwait(false))
-            {
-                validationResult.AddErrorMessage("OrderNumber",
-                    $"An Order with the same number ({resource.OrderNumber}) already exists.");
-            }
-
-            if (!validationResult.IsValid)
-            {
-                throw new ArgumentException(validationResult.ErrorMessages.DictionaryToString(), nameof(resource));
-            }
+            if (item.Deleted)
+                throw new ArgumentException("A deleted Enforcement Order cannot be modified.", nameof(resource));
 
             item.ApplyUpdate(resource);
             await _context.SaveChangesAsync().ConfigureAwait(false);

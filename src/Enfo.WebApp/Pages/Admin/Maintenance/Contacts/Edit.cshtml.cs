@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Enfo.Domain.Entities.Users;
+﻿using Enfo.Domain.Entities.Users;
 using Enfo.Domain.Repositories;
 using Enfo.Domain.Resources.EpdContact;
 using Enfo.WebApp.Models;
@@ -9,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace Enfo.WebApp.Pages.Admin.Maintenance.Contacts
 {
@@ -17,10 +17,6 @@ namespace Enfo.WebApp.Pages.Admin.Maintenance.Contacts
     {
         [BindProperty]
         public EpdContactCommand Item { get; set; }
-
-        [BindProperty]
-        [HiddenInput]
-        public int Id { get; set; }
 
         [TempData, UsedImplicitly]
         public int HighlightId { [UsedImplicitly] get; set; }
@@ -39,43 +35,42 @@ namespace Enfo.WebApp.Pages.Admin.Maintenance.Contacts
 
             if (!originalItem.Active)
             {
-                TempData?.SetDisplayMessage(Context.Warning, $"Inactive {ThisOption.PluralName} cannot be edited.");
+                TempData.SetDisplayMessage(Context.Warning, $"Inactive {ThisOption.PluralName} cannot be edited.");
                 return RedirectToPage("Index");
             }
 
             Item = new EpdContactCommand(originalItem);
-            Id = id.Value;
             return Page();
         }
 
         [UsedImplicitly]
         public async Task<IActionResult> OnPostAsync()
         {
-            var originalItem = await _repository.GetAsync(Id);
+            if (Item.Id is null) return BadRequest();
+
+            var originalItem = await _repository.GetAsync(Item.Id.Value);
             if (originalItem == null) return NotFound();
 
             if (!originalItem.Active)
             {
-                TempData?.SetDisplayMessage(Context.Warning, $"Inactive {ThisOption.PluralName} cannot be edited.");
+                TempData.SetDisplayMessage(Context.Warning, $"Inactive {ThisOption.PluralName} cannot be edited.");
                 return RedirectToPage("Index");
             }
-
-            Item.TrimAll();
 
             if (!ModelState.IsValid) return Page();
 
             try
             {
-                await _repository.UpdateAsync(Id, Item);
+                await _repository.UpdateAsync(Item);
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!await _repository.ExistsAsync(Id)) return NotFound();
+                if (!await _repository.ExistsAsync(Item.Id.Value)) return NotFound();
                 throw;
             }
 
-            HighlightId = Id;
-            TempData?.SetDisplayMessage(Context.Success, $"{ThisOption.SingularName} successfully updated.");
+            HighlightId = Item.Id.Value;
+            TempData.SetDisplayMessage(Context.Success, $"{ThisOption.SingularName} successfully updated.");
             return RedirectToPage("Index");
         }
     }

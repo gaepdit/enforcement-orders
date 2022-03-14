@@ -1,9 +1,12 @@
-using System.Linq;
 using Enfo.Domain.Resources.EnforcementOrder;
-using EnfoTests.Helpers;
+using Enfo.Domain.Validation;
 using FluentAssertions;
+using FluentValidation.TestHelper;
+using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
-using static Enfo.Domain.Validation.EnforcementOrderValidation;
+using static EnfoTests.Helpers.DataHelper;
+using static EnfoTests.Helpers.RepositoryHelper;
 using static EnfoTests.Helpers.ResourceHelper;
 
 namespace EnfoTests.Domain.ValidationTests
@@ -11,104 +14,104 @@ namespace EnfoTests.Domain.ValidationTests
     public class ValidatingEnforcementOrderUpdate
     {
         [Fact]
-        public void SucceedsGivenValidUpdates()
+        public async Task SucceedsGivenValidUpdates()
         {
-            ValidateEnforcementOrderUpdate(GetEnforcementOrderAdminView(1), GetValidEnforcementOrderUpdate())
-                .IsValid.Should().BeTrue();
+            var model = GetValidEnforcementOrderUpdate(1);
+            using var repository = CreateRepositoryHelper().GetEnforcementOrderRepository();
+            var validator = new EnforcementOrderUpdateValidator(repository);
+
+            var result = await validator.TestValidateAsync(model);
+
+            result.IsValid.Should().BeTrue();
+            result.Errors.Should().BeEmpty();
         }
 
         [Fact]
-        public void FailsGivenDeletedOrder()
+        public async Task SucceedsWhenRemovingExecutedOrderGivenProposedOrder()
         {
-            var order = DataHelper.GetEnforcementOrders.First(e => e.Deleted);
-            var result = ValidateEnforcementOrderUpdate(new EnforcementOrderAdminView(order),
-                GetValidEnforcementOrderUpdate());
+            var order = GetEnforcementOrderAdminView(GetEnforcementOrders.First(e => e.IsProposedOrder).Id);
 
-            result.IsValid.Should().BeFalse();
-            result.ErrorMessages.Should().NotBeEmpty()
-                .And.HaveCount(1)
-                .And.ContainKey("Id");
-        }
-
-        [Fact]
-        public void SucceedsWhenRemovingExecutedOrderGivenProposedOrder()
-        {
-            var order = GetEnforcementOrderAdminView(DataHelper.GetEnforcementOrders.First(e => e.IsProposedOrder).Id);
-
-            var orderUpdate = new EnforcementOrderUpdate(order)
+            var model = new EnforcementOrderUpdate(order)
             {
                 ExecutedDate = null, ExecutedOrderPostedDate = null, IsExecutedOrder = false
             };
 
-            var result = ValidateEnforcementOrderUpdate(order, orderUpdate);
+            using var repository = CreateRepositoryHelper().GetEnforcementOrderRepository();
+            var validator = new EnforcementOrderUpdateValidator(repository);
+
+            var result = await validator.TestValidateAsync(model);
 
             result.IsValid.Should().BeTrue();
-            result.ErrorMessages.Should().BeEmpty();
         }
 
         [Fact]
-        public void FailsWhenRemovingExecutedOrderIfNotProposedOrder()
+        public async Task FailsWhenRemovingExecutedOrderIfNotProposedOrder()
         {
-            var order = GetEnforcementOrderAdminView(DataHelper.GetEnforcementOrders.First(e => !e.IsProposedOrder).Id);
-            var orderUpdate = new EnforcementOrderUpdate(order)
+            var order = GetEnforcementOrderAdminView(GetEnforcementOrders.First(e => !e.IsProposedOrder).Id);
+            var model = new EnforcementOrderUpdate(order)
             {
-                ExecutedDate = null, ExecutedOrderPostedDate = null, IsExecutedOrder = false
+                ExecutedDate = null, ExecutedOrderPostedDate = null, IsExecutedOrder = false,
             };
 
-            var result = ValidateEnforcementOrderUpdate(order, orderUpdate);
+            using var repository = CreateRepositoryHelper().GetEnforcementOrderRepository();
+            var validator = new EnforcementOrderUpdateValidator(repository);
+
+            var result = await validator.TestValidateAsync(model);
 
             result.IsValid.Should().BeFalse();
-            result.ErrorMessages.Should().NotBeEmpty()
-                .And.HaveCount(1)
-                .And.ContainKey("IsExecutedOrder");
+            result.ShouldHaveValidationErrorFor(e => e.IsProposedOrder);
         }
 
         [Fact]
-        public void FailsWhenRemovingExecutedOrderDetails()
+        public async Task FailsWhenRemovingExecutedOrderDetails()
         {
-            var orderUpdate = GetValidEnforcementOrderUpdate();
-            orderUpdate.ExecutedDate = null;
-            orderUpdate.ExecutedOrderPostedDate = null;
+            var model = GetValidEnforcementOrderUpdate(1);
+            model.ExecutedDate = null;
+            model.ExecutedOrderPostedDate = null;
 
-            var result = ValidateEnforcementOrderUpdate(GetEnforcementOrderAdminView(1), orderUpdate);
+            using var repository = CreateRepositoryHelper().GetEnforcementOrderRepository();
+            var validator = new EnforcementOrderUpdateValidator(repository);
+
+            var result = await validator.TestValidateAsync(model);
 
             result.IsValid.Should().BeFalse();
-            result.ErrorMessages.Should().NotBeEmpty()
-                .And.HaveCount(2)
-                .And.ContainKeys("ExecutedDate", "ExecutedOrderPostedDate");
+            result.ShouldHaveValidationErrorFor(e => e.ExecutedDate);
+            result.ShouldHaveValidationErrorFor(e => e.ExecutedOrderPostedDate);
         }
 
         [Fact]
-        public void SucceedsWhenRemovingHearing()
+        public async Task SucceedsWhenRemovingHearing()
         {
-            var orderUpdate = GetValidEnforcementOrderUpdate();
-            orderUpdate.IsHearingScheduled = false;
+            var model = GetValidEnforcementOrderUpdate(1);
+            model.IsHearingScheduled = false;
 
-            var result = ValidateEnforcementOrderUpdate(GetEnforcementOrderAdminView(1), orderUpdate);
+            using var repository = CreateRepositoryHelper().GetEnforcementOrderRepository();
+            var validator = new EnforcementOrderUpdateValidator(repository);
+
+            var result = await validator.TestValidateAsync(model);
 
             result.IsValid.Should().BeTrue();
-            result.ErrorMessages.Should().BeEmpty();
         }
 
         [Fact]
-        public void FailsWhenRemovingHearingDetailsIfHearingStillTrue()
+        public async Task FailsWhenRemovingHearingDetailsIfHearingStillTrue()
         {
-            var orderUpdate = GetValidEnforcementOrderUpdate();
-            orderUpdate.HearingCommentPeriodClosesDate = null;
-            orderUpdate.HearingContactId = null;
-            orderUpdate.HearingDate = null;
-            orderUpdate.HearingLocation = null;
+            var model = GetValidEnforcementOrderUpdate(1);
+            model.HearingCommentPeriodClosesDate = null;
+            model.HearingContactId = null;
+            model.HearingDate = null;
+            model.HearingLocation = null;
 
-            var result = ValidateEnforcementOrderUpdate(GetEnforcementOrderAdminView(1), orderUpdate);
+            using var repository = CreateRepositoryHelper().GetEnforcementOrderRepository();
+            var validator = new EnforcementOrderUpdateValidator(repository);
+
+            var result = await validator.TestValidateAsync(model);
 
             result.IsValid.Should().BeFalse();
-            result.ErrorMessages.Should().NotBeEmpty()
-                .And.HaveCount(4)
-                .And.ContainKeys(
-                    "HearingDate",
-                    "HearingLocation",
-                    "HearingCommentPeriodClosesDate",
-                    "HearingContactId");
+            result.ShouldHaveValidationErrorFor(e => e.HearingDate);
+            result.ShouldHaveValidationErrorFor(e => e.HearingLocation);
+            result.ShouldHaveValidationErrorFor(e => e.HearingCommentPeriodClosesDate);
+            result.ShouldHaveValidationErrorFor(e => e.HearingContactId);
         }
     }
 }

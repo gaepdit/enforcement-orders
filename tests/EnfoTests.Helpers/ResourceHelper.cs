@@ -22,7 +22,7 @@ namespace EnfoTests.Helpers
             new(FillNavigationProperties(GetEnforcementOrders.Single(e => e.Id == id)));
 
         public static List<EnforcementOrderSummaryView> GetEnforcementOrderSummaryViewListOfOne() =>
-            new() {GetEnforcementOrderSummaryView(GetEnforcementOrders.First().Id)};
+            new() { GetEnforcementOrderSummaryView(GetEnforcementOrders.First().Id) };
 
         public static EnforcementOrderAdminView GetEnforcementOrderAdminView(int id) =>
             new(FillNavigationProperties(GetEnforcementOrders.Single(e => e.Id == id)));
@@ -37,7 +37,7 @@ namespace EnfoTests.Helpers
             GetEnforcementOrders.Select(e => GetEnforcementOrderAdminView(e.Id)).ToList();
 
         public static List<EnforcementOrderAdminSummaryView> GetEnforcementOrderAdminSummaryViewListOfOne() =>
-            new() {GetEnforcementOrderAdminSummaryView(GetEnforcementOrders.First().Id)};
+            new() { GetEnforcementOrderAdminSummaryView(GetEnforcementOrders.First().Id) };
 
         public static EnforcementOrder FillNavigationProperties(EnforcementOrder order)
         {
@@ -70,8 +70,9 @@ namespace EnfoTests.Helpers
             SettlementAmount = 2000,
         };
 
-        public static EnforcementOrderUpdate GetValidEnforcementOrderUpdate() => new()
+        public static EnforcementOrderUpdate GetValidEnforcementOrderUpdate(int id) => new()
         {
+            Id = id,
             Cause = "Integer feugiat scelerisque varius morbi enim nunc faucibus a.",
             CommentContactId = 2000,
             CommentPeriodClosesDate = new DateTime(2012, 11, 15),

@@ -1,9 +1,9 @@
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 using Enfo.Domain.Entities;
 using Enfo.Domain.Resources.LegalAuthority;
 using FluentAssertions;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 using Xunit.Extensions.AssertExtensions;
 using static EnfoTests.Helpers.DataHelper;
@@ -58,7 +58,7 @@ namespace EnfoTests.Infrastructure
         [Fact]
         public async Task Create_AddsNewItem()
         {
-            var itemCreate = new LegalAuthorityCommand {AuthorityName = "New Item"};
+            var itemCreate = new LegalAuthorityCommand { AuthorityName = "New Item" };
 
             using var repositoryHelper = CreateRepositoryHelper();
             using var repository = repositoryHelper.GetLegalAuthorityRepository();
@@ -66,7 +66,7 @@ namespace EnfoTests.Infrastructure
             var itemId = await repository.CreateAsync(itemCreate);
             repositoryHelper.ClearChangeTracker();
 
-            var item = new LegalAuthority(itemCreate) {Id = itemId};
+            var item = new LegalAuthority(itemCreate) { Id = itemId };
             var expected = new LegalAuthorityView(item);
             (await repository.GetAsync(itemId))
                 .Should().BeEquivalentTo(expected);
@@ -75,9 +75,9 @@ namespace EnfoTests.Infrastructure
         [Fact]
         public async Task Create_GivenNullName_ThrowsException()
         {
-            var itemCreate = new LegalAuthorityCommand {AuthorityName = null};
+            var itemCreate = new LegalAuthorityCommand { AuthorityName = null };
 
-            Func<Task> action = async () =>
+            var action = async () =>
             {
                 using var repository = CreateRepositoryHelper().GetLegalAuthorityRepository();
                 await repository.CreateAsync(itemCreate);
@@ -93,12 +93,12 @@ namespace EnfoTests.Infrastructure
         public async Task Update_SuccessfullyUpdatesItem()
         {
             var itemId = GetLegalAuthorities.First(e => e.Active).Id;
-            var itemUpdate = new LegalAuthorityCommand {AuthorityName = "New Name"};
+            var itemUpdate = new LegalAuthorityCommand { Id = itemId, AuthorityName = "New Name" };
 
             using var repositoryHelper = CreateRepositoryHelper();
             using var repository = repositoryHelper.GetLegalAuthorityRepository();
 
-            await repository.UpdateAsync(itemId, itemUpdate);
+            await repository.UpdateAsync(itemUpdate);
             repositoryHelper.ClearChangeTracker();
 
             var item = await repository.GetAsync(itemId);
@@ -109,29 +109,28 @@ namespace EnfoTests.Infrastructure
         public async Task Update_WithNoChanges_Succeeds()
         {
             var original = GetLegalAuthorities.First(e => e.Active);
-            var itemId = original.Id;
-            var itemUpdate = new LegalAuthorityCommand {AuthorityName = original.AuthorityName};
+            var itemUpdate = new LegalAuthorityCommand { Id = original.Id, AuthorityName = original.AuthorityName };
 
             using var repositoryHelper = CreateRepositoryHelper();
             using var repository = repositoryHelper.GetLegalAuthorityRepository();
 
-            await repository.UpdateAsync(itemId, itemUpdate);
+            await repository.UpdateAsync(itemUpdate);
             repositoryHelper.ClearChangeTracker();
 
-            var item = await repository.GetAsync(itemId);
+            var item = await repository.GetAsync(original.Id);
             item.Should().BeEquivalentTo(new LegalAuthorityView(original));
         }
 
         [Fact]
-        public async Task Update_GivenNullStreet_ThrowsException()
+        public async Task Update_GivenNullName_ThrowsException()
         {
             var itemId = GetLegalAuthorities.First(e => e.Active).Id;
-            var itemUpdate = new LegalAuthorityCommand {AuthorityName = null};
+            var itemUpdate = new LegalAuthorityCommand { Id = itemId, AuthorityName = null };
 
-            Func<Task> action = async () =>
+            var action = async () =>
             {
                 using var repository = CreateRepositoryHelper().GetLegalAuthorityRepository();
-                await repository.UpdateAsync(itemId, itemUpdate);
+                await repository.UpdateAsync(itemUpdate);
             };
 
             (await action.Should().ThrowAsync<ArgumentException>())
@@ -141,18 +140,18 @@ namespace EnfoTests.Infrastructure
         [Fact]
         public async Task Update_GivenMissingId_ThrowsException()
         {
-            var itemUpdate = new LegalAuthorityCommand {AuthorityName = "New Name"};
             const int itemId = -1;
+            var itemUpdate = new LegalAuthorityCommand { Id = itemId, AuthorityName = "New Name" };
 
-            Func<Task> action = async () =>
+            var action = async () =>
             {
                 using var repository = CreateRepositoryHelper().GetLegalAuthorityRepository();
-                await repository.UpdateAsync(itemId, itemUpdate);
+                await repository.UpdateAsync(itemUpdate);
             };
 
             (await action.Should().ThrowAsync<ArgumentException>())
-                .WithMessage($"ID ({itemId}) not found. (Parameter 'id')")
-                .And.ParamName.Should().Be("id");
+                .WithMessage($"ID ({itemId}) not found. (Parameter 'resource')")
+                .And.ParamName.Should().Be("resource");
         }
 
         // UpdateStatusAsync
@@ -222,7 +221,7 @@ namespace EnfoTests.Infrastructure
         {
             const int itemId = -1;
 
-            Func<Task> action = async () =>
+            var action = async () =>
             {
                 using var repository = CreateRepositoryHelper().GetLegalAuthorityRepository();
                 await repository.UpdateStatusAsync(itemId, true);

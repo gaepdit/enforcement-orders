@@ -18,7 +18,7 @@ public interface IEnforcementOrderRepository : IDisposable
     Task<IReadOnlyList<EnforcementOrderAdminSummaryView>> ListDraftEnforcementOrdersAsync();
     Task<IReadOnlyList<EnforcementOrderAdminSummaryView>> ListPendingEnforcementOrdersAsync();
     Task<int> CreateAsync(EnforcementOrderCreate resource);
-    Task UpdateAsync(int id, EnforcementOrderUpdate resource);
+    Task UpdateAsync(EnforcementOrderUpdate resource);
     Task DeleteAsync(int id);
     Task RestoreAsync(int id);
 }
