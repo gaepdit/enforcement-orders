@@ -43,7 +43,13 @@ namespace Enfo.WebApp.Pages.Admin.Users
         [UsedImplicitly]
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid) return Page();
+            if (!ModelState.IsValid)
+            {
+                DisplayUser = await _userService.GetUserByIdAsync(UserId);
+                if (DisplayUser == null) return NotFound();
+                await PopulateRoleSettingsAsync();
+                return Page();
+            }
 
             var roleUpdates = UserRoleSettings.ToDictionary(r => r.Name, r => r.IsSelected);
             var result = await _userService.UpdateUserRolesAsync(UserId, roleUpdates);
@@ -54,12 +60,11 @@ namespace Enfo.WebApp.Pages.Admin.Users
                 return RedirectToPage("Details", new {id = UserId});
             }
 
-            DisplayUser = await _userService.GetUserByIdAsync(UserId);
-            if (DisplayUser == null) return NotFound();
-
             foreach (var err in result.Errors)
                 ModelState.AddModelError(string.Empty, string.Concat(err.Code, ": ", err.Description));
 
+            DisplayUser = await _userService.GetUserByIdAsync(UserId);
+            if (DisplayUser == null) return NotFound();
             await PopulateRoleSettingsAsync();
             return Page();
         }
