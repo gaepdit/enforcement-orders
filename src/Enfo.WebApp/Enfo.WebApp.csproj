@@ -4,7 +4,7 @@
 		<TargetFramework>net6.0</TargetFramework>
 		<UserSecretsId>aspnet-Enfo.WebApp-A834A848-D8DF-4E5F-B1E2-7EE74113BF3E</UserSecretsId>
 		<DefaultItemExcludes>$(DefaultItemExcludes);node_modules\**</DefaultItemExcludes>
-		<AssemblyVersion>2021.11.19</AssemblyVersion>
+		<AssemblyVersion>2022.3.16</AssemblyVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
