@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Publish Prod" type="DotNetMsBuildPublish" factoryName="Publish to IIS" editBeforeRun="true">
-    <riderPublish publish_profile="Production-Server.pubxml" user_name="dwaldron" uuid_high="9206070616877911985" uuid_low="-4890550986794930577" />
+    <riderPublish configuration="Release" platform="Any CPU" publish_profile="Production-Server.pubxml" user_name="dwaldron" uuid_high="9206070616877911985" uuid_low="-4890550986794930577" />
     <method v="2" />
   </configuration>
 </component>
