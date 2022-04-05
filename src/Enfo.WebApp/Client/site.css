@@ -780,6 +780,23 @@ table {
     outline: 3px solid #3e94cf;
 }
 
+/* Test site banner */
+
+.banner-test-site {
+    position: sticky;
+    top: 0;
+    z-index: 1020;
+    opacity: .9;
+    color: #333;
+    font-weight: 700;
+    font-size: 16px;
+    font-family: system-ui;
+    text-transform: uppercase;
+    text-align: center;
+    text-shadow: 0 0 4px white;
+    background: repeating-linear-gradient(135deg, #f6da52bb, #f6da52bb 10px, #ffef80bb 10px, #ffef80bb 20px);
+}
+
 /*
     Print stylesheets
 */
@@ -930,5 +947,15 @@ table {
 
     .gaepd-file_item svg {
         height: 1.5em;
+    }
+
+    .banner-test-site {
+        position: static;
+        text-shadow: none;
+        border: 1px solid;
+    }
+
+    .banner-test-site::after {
+        content: "—Not for public distribution";
     }
 }
