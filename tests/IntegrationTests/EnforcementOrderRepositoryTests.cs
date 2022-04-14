@@ -1,6 +1,7 @@
-using Enfo.Domain.Entities;
-using Enfo.Domain.Resources.EnforcementOrder;
-using Enfo.Domain.Specs;
+using Enfo.Domain.EnforcementOrders.Entities;
+using Enfo.Domain.EnforcementOrders.Resources;
+using Enfo.Domain.EnforcementOrders.Specs;
+using Enfo.Domain.Pagination;
 using FluentAssertions;
 using System;
 using System.Linq;

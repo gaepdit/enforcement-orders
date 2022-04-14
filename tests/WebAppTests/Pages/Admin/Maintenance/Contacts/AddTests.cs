@@ -1,5 +1,5 @@
-﻿using Enfo.Domain.Repositories;
-using Enfo.Domain.Resources.EpdContact;
+﻿using Enfo.Domain.EpdContacts.Repositories;
+using Enfo.Domain.EpdContacts.Resources;
 using Enfo.WebApp.Models;
 using Enfo.WebApp.Pages.Admin.Maintenance.Contacts;
 using Enfo.WebApp.Platform.Extensions;

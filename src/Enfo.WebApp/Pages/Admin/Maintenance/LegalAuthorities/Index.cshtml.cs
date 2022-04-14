@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using Enfo.Domain.LegalAuthorities.Repositories;
+using Enfo.Domain.LegalAuthorities.Resources;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using Enfo.Domain.Repositories;
-using Enfo.Domain.Resources.LegalAuthority;
 using Enfo.WebApp.Models;
 using Enfo.WebApp.Platform.Extensions;
 using JetBrains.Annotations;

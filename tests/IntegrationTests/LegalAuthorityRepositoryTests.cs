@@ -1,5 +1,5 @@
-using Enfo.Domain.Entities;
-using Enfo.Domain.Resources.LegalAuthority;
+using Enfo.Domain.LegalAuthorities.Entities;
+using Enfo.Domain.LegalAuthorities.Resources;
 using FluentAssertions;
 using System;
 using System.Linq;

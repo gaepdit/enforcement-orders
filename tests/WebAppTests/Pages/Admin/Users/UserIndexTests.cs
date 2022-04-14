@@ -1,7 +1,7 @@
-﻿using System.Linq;
+﻿using Enfo.Domain.Users.Resources;
+using Enfo.Domain.Users.Services;
+using System.Linq;
 using System.Threading.Tasks;
-using Enfo.Domain.Resources.Users;
-using Enfo.Domain.Services;
 using Enfo.WebApp.Pages.Admin.Users;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.RazorPages;

@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Enfo.Domain.EnforcementOrders.Entities;
+using Enfo.Domain.EpdContacts.Entities;
+using Enfo.Domain.LegalAuthorities.Entities;
+using System;
 using System.Collections.Generic;
-using Enfo.Domain.Entities;
 
 namespace EnfoTests.Helpers
 {

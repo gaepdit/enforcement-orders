@@ -1,6 +1,6 @@
-﻿using Enfo.Domain.Entities.Users;
-using Enfo.Domain.Resources.Users;
-using Enfo.Domain.Services;
+﻿using Enfo.Domain.Users.Entities;
+using Enfo.Domain.Users.Resources;
+using Enfo.Domain.Users.Services;
 using Enfo.WebApp.Models;
 using Enfo.WebApp.Pages.Admin.Users;
 using Enfo.WebApp.Platform.Extensions;

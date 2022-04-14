@@ -1,6 +1,6 @@
+using Enfo.Domain.Pagination;
 using System;
 using System.Diagnostics.CodeAnalysis;
-using Enfo.Domain.Specs;
 using FluentAssertions;
 using Xunit;
 

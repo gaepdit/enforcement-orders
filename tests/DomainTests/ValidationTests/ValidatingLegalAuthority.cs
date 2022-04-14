@@ -1,5 +1,5 @@
-using Enfo.Domain.Resources.LegalAuthority;
-using Enfo.Domain.Validation;
+using Enfo.Domain.LegalAuthorities.Resources;
+using Enfo.Domain.LegalAuthorities.Resources.Validation;
 using FluentAssertions;
 using FluentValidation.TestHelper;
 using System.Linq;

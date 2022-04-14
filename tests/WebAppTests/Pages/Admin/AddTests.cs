@@ -1,7 +1,9 @@
-﻿using Enfo.Domain.Repositories;
-using Enfo.Domain.Resources.EnforcementOrder;
-using Enfo.Domain.Resources.EpdContact;
-using Enfo.Domain.Resources.LegalAuthority;
+﻿using Enfo.Domain.EnforcementOrders.Repositories;
+using Enfo.Domain.EnforcementOrders.Resources;
+using Enfo.Domain.EpdContacts.Repositories;
+using Enfo.Domain.EpdContacts.Resources;
+using Enfo.Domain.LegalAuthorities.Repositories;
+using Enfo.Domain.LegalAuthorities.Resources;
 using Enfo.WebApp.Models;
 using Enfo.WebApp.Pages.Admin;
 using Enfo.WebApp.Platform.Extensions;

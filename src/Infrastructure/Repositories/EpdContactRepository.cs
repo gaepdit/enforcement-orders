@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Enfo.Domain.Entities;
-using Enfo.Domain.Repositories;
-using Enfo.Domain.Resources.EpdContact;
+using Enfo.Domain.EpdContacts.Entities;
+using Enfo.Domain.EpdContacts.Repositories;
+using Enfo.Domain.EpdContacts.Resources;
 using Enfo.Domain.Utils;
 using Enfo.Infrastructure.Contexts;
 using Microsoft.EntityFrameworkCore;

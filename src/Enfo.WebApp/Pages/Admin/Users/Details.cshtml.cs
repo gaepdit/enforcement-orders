@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Enfo.Domain.Users.Resources;
+using Enfo.Domain.Users.Services;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Enfo.Domain.Resources.Users;
-using Enfo.Domain.Services;
 using Enfo.WebApp.Models;
 using Enfo.WebApp.Platform.Extensions;
 using JetBrains.Annotations;

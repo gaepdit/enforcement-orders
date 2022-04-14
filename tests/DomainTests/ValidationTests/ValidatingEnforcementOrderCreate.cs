@@ -1,5 +1,5 @@
-using Enfo.Domain.Resources.EnforcementOrder;
-using Enfo.Domain.Validation;
+using Enfo.Domain.EnforcementOrders.Resources;
+using Enfo.Domain.EnforcementOrders.Resources.Validation;
 using FluentAssertions;
 using FluentValidation.TestHelper;
 using System;

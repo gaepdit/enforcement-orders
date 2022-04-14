@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Enfo.Domain.Users.Entities;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Enfo.Domain.Entities.Users;
 using Enfo.Infrastructure.Contexts;
 using Enfo.WebApp.Platform.DevHelpers;
 using Microsoft.AspNetCore.Hosting;

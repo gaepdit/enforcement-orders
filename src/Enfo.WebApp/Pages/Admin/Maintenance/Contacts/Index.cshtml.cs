@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using Enfo.Domain.EpdContacts.Repositories;
+using Enfo.Domain.EpdContacts.Resources;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using Enfo.Domain.Repositories;
-using Enfo.Domain.Resources.EpdContact;
 using Enfo.WebApp.Models;
 using Enfo.WebApp.Platform.Extensions;
 using JetBrains.Annotations;

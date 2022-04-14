@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Enfo.Domain.Entities;
-using Enfo.Domain.Repositories;
-using Enfo.Domain.Resources.LegalAuthority;
+using Enfo.Domain.LegalAuthorities.Entities;
+using Enfo.Domain.LegalAuthorities.Repositories;
+using Enfo.Domain.LegalAuthorities.Resources;
 using Enfo.Domain.Utils;
 using Enfo.Infrastructure.Contexts;
 using Microsoft.EntityFrameworkCore;

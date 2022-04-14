@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Enfo.Domain.Users.Entities;
+using System;
 using System.Threading.Tasks;
-using Enfo.Domain.Entities.Users;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Authentication.AzureAD.UI;
 using Microsoft.AspNetCore.Authorization;

@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Enfo.Domain.Users.Entities;
+using System;
 using System.Collections.Generic;
-using Enfo.Domain.Entities.Users;
 
 namespace EnfoTests.WebApp.Pages.Admin.Users
 {

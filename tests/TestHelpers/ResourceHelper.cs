@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Enfo.Domain.EnforcementOrders.Entities;
+using Enfo.Domain.EnforcementOrders.Resources;
+using Enfo.Domain.EpdContacts.Resources;
+using Enfo.Domain.LegalAuthorities.Resources;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Enfo.Domain.Entities;
-using Enfo.Domain.Resources.EnforcementOrder;
-using Enfo.Domain.Resources.EpdContact;
-using Enfo.Domain.Resources.LegalAuthority;
 using static EnfoTests.Helpers.DataHelper;
 
 namespace EnfoTests.Helpers

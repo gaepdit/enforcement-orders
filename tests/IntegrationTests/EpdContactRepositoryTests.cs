@@ -1,5 +1,5 @@
-using Enfo.Domain.Entities;
-using Enfo.Domain.Resources.EpdContact;
+using Enfo.Domain.EpdContacts.Entities;
+using Enfo.Domain.EpdContacts.Resources;
 using FluentAssertions;
 using System;
 using System.Linq;

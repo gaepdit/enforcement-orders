@@ -1,8 +1,9 @@
-﻿using System.Threading.Tasks;
-using Enfo.Domain.Repositories;
-using Enfo.Domain.Resources;
-using Enfo.Domain.Resources.LegalAuthority;
-using Enfo.Domain.Specs;
+﻿using Enfo.Domain.EnforcementOrders.Repositories;
+using Enfo.Domain.EnforcementOrders.Specs;
+using Enfo.Domain.LegalAuthorities.Repositories;
+using Enfo.Domain.LegalAuthorities.Resources;
+using Enfo.Domain.Pagination;
+using System.Threading.Tasks;
 using Enfo.WebApp.Platform;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Authorization;

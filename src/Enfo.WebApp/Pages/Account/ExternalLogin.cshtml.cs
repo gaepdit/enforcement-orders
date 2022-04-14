@@ -1,8 +1,8 @@
+using Enfo.Domain.Users.Entities;
 using System;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Enfo.Domain.Entities.Users;
 using Enfo.WebApp.Models;
 using Enfo.WebApp.Platform;
 using Enfo.WebApp.Platform.Extensions;

@@ -2,9 +2,11 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Enfo.Domain.Entities;
-using Enfo.Domain.Entities.Base;
-using Enfo.Domain.Entities.Users;
+using Enfo.Domain.BaseEntities;
+using Enfo.Domain.EnforcementOrders.Entities;
+using Enfo.Domain.EpdContacts.Entities;
+using Enfo.Domain.LegalAuthorities.Entities;
+using Enfo.Domain.Users.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;

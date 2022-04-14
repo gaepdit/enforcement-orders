@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Enfo.Domain.EnforcementOrders.Entities;
+using Enfo.Domain.EpdContacts.Entities;
+using Enfo.Domain.LegalAuthorities.Entities;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Enfo.Domain.Entities;
 using Enfo.Domain.Utils;
 using Enfo.Infrastructure.Contexts;
 using JetBrains.Annotations;
