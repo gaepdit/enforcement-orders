@@ -42,7 +42,7 @@ namespace Enfo.WebApp
             // Configure database
             services.AddDbContext<EnfoDbContext>(opts =>
                 opts.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"),
-                    x => x.MigrationsAssembly("Enfo.Infrastructure")));
+                    x => x.MigrationsAssembly("Infrastructure")));
 
             // Configure Identity
             services.AddIdentity<ApplicationUser, IdentityRole<Guid>>()
