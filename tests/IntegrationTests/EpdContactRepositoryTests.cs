@@ -5,562 +5,531 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
-using Xunit.Extensions.AssertExtensions;
 using static EnfoTests.Helpers.DataHelper;
 using static EnfoTests.Helpers.RepositoryHelper;
 
-namespace EnfoTests.Infrastructure
+namespace EnfoTests.Infrastructure;
+
+public class EpdContactRepositoryTests
 {
-    public class EpdContactRepositoryTests
+    // GetAsync
+
+    [Theory]
+    [InlineData(2000)]
+    [InlineData(2001)]
+    public async Task Get_WhenItemExists_ReturnsItem(int id)
     {
-        // GetAsync
+        using var repository = CreateRepositoryHelper().GetEpdContactRepository();
+        var item = await repository.GetAsync(id);
 
-        [Theory]
-        [InlineData(2000)]
-        [InlineData(2001)]
-        public async Task Get_ReturnsItem(int id)
+        var epdContact = GetEpdContacts.Single(e => e.Id == id);
+        var expected = new EpdContactView(epdContact);
+
+        item.Should().BeEquivalentTo(expected);
+    }
+
+    [Fact]
+    public async Task Get_WhenNotExists_ReturnsNull()
+    {
+        using var repository = CreateRepositoryHelper().GetEpdContactRepository();
+        var item = await repository.GetAsync(-1);
+        item.Should().BeNull();
+    }
+
+    // ListAsync
+
+    [Fact]
+    public async Task List_ByDefault_ReturnsOnlyActive()
+    {
+        using var repository = CreateRepositoryHelper().GetEpdContactRepository();
+        var items = await repository.ListAsync();
+        items.Should().HaveCount(GetEpdContacts.Count(e => e.Active));
+
+        var epdContact = GetEpdContacts.First(e => e.Active);
+        var expected = new EpdContactView(epdContact);
+
+        items[0].Should().BeEquivalentTo(expected);
+    }
+
+    [Fact]
+    public async Task List_IfIncludeAll_ReturnsAll()
+    {
+        using var repository = CreateRepositoryHelper().GetEpdContactRepository();
+        var items = await repository.ListAsync(true);
+        items.Should().HaveCount(GetEpdContacts.Count());
+
+        var epdContact = GetEpdContacts.First();
+        var expected = new EpdContactView(epdContact);
+
+        items[0].Should().BeEquivalentTo(expected);
+    }
+
+    // CreateAsync
+
+    [Fact]
+    public async Task Create_FromValidItem_AddsNewItem()
+    {
+        var resource = new EpdContactCommand
+        {
+            Email = null,
+            Organization = "EPD",
+            Telephone = null,
+            Title = "Title",
+            ContactName = "C. Patel",
+            City = "Abc",
+            State = "GA",
+            Street = "123 St",
+            PostalCode = "00000",
+        };
+
+        using var repositoryHelper = CreateRepositoryHelper();
+        using var repository = repositoryHelper.GetEpdContactRepository();
+
+        var itemId = await repository.CreateAsync(resource);
+        repositoryHelper.ClearChangeTracker();
+
+        var epdContact = new EpdContact(resource) { Id = itemId };
+        var expected = new EpdContactView(epdContact);
+
+        (await repository.GetAsync(itemId)).Should().BeEquivalentTo(expected);
+    }
+
+    [Fact]
+    public async Task Create_FromInvalidItem_ThrowsException()
+    {
+        var resource = new EpdContactCommand
+        {
+            Email = null,
+            Organization = "EPD",
+            Telephone = null,
+            Title = "Title",
+            ContactName = null,
+            City = "Abc",
+            State = "GA",
+            Street = "123 St",
+            PostalCode = "00000",
+        };
+
+        var action = async () =>
         {
             using var repository = CreateRepositoryHelper().GetEpdContactRepository();
-            var item = await repository.GetAsync(id);
+            await repository.CreateAsync(resource);
+        };
 
-            var epdContact = GetEpdContacts.Single(e => e.Id == id);
-            var expected = new EpdContactView(epdContact);
+        (await action.Should().ThrowAsync<ArgumentException>())
+            .And.ParamName.Should().Be(nameof(EpdContactCommand.ContactName));
+    }
 
-            item.Should().BeEquivalentTo(expected);
-        }
+    [Fact]
+    public async Task Create_GivenInvalidEmail_ThrowsException()
+    {
+        var resource = new EpdContactCommand
+        {
+            Email = "abc",
+            Organization = "EPD",
+            Telephone = null,
+            Title = "Title",
+            ContactName = "C. Patel",
+            City = "Abc",
+            State = "GA",
+            Street = "123 St",
+            PostalCode = "00000",
+        };
 
-        [Fact]
-        public async Task Get_GivenMissingId_ReturnsNull()
+        var action = async () =>
         {
             using var repository = CreateRepositoryHelper().GetEpdContactRepository();
-            var item = await repository.GetAsync(-1);
-            item.Should().BeNull();
-        }
+            await repository.CreateAsync(resource);
+        };
 
-        // ListAsync
+        (await action.Should().ThrowAsync<ArgumentException>())
+            .WithMessage($"Value ({resource.Email}) is not valid. (Parameter '{nameof(resource.Email)}')")
+            .And.ParamName.Should().Be(nameof(resource.Email));
+    }
 
-        [Fact]
-        public async Task List_ByDefault_ReturnsAllActive()
+    [Fact]
+    public async Task Create_GivenInvalidTelephone_ThrowsException()
+    {
+        var resource = new EpdContactCommand
+        {
+            Email = null,
+            Organization = "EPD",
+            Telephone = "abc",
+            Title = "Title",
+            ContactName = "C. Patel",
+            City = "Abc",
+            State = "GA",
+            Street = "123 St",
+            PostalCode = "00000",
+        };
+
+        var action = async () =>
         {
             using var repository = CreateRepositoryHelper().GetEpdContactRepository();
-            var items = await repository.ListAsync();
-            items.Should().HaveCount(GetEpdContacts.Count(e => e.Active));
+            await repository.CreateAsync(resource);
+        };
 
-            var epdContact = GetEpdContacts.First(e => e.Active);
-            var expected = new EpdContactView(epdContact);
+        (await action.Should().ThrowAsync<ArgumentException>())
+            .WithMessage($"Value ({resource.Telephone}) is not valid. (Parameter '{nameof(resource.Telephone)}')")
+            .And.ParamName.Should().Be(nameof(resource.Telephone));
+    }
 
-            items[0].Should().BeEquivalentTo(expected);
-        }
+    [Fact]
+    public async Task Create_GivenNullStreet_ThrowsException()
+    {
+        var resource = new EpdContactCommand
+        {
+            Email = null,
+            Organization = "EPD",
+            Telephone = null,
+            Title = "Title",
+            ContactName = "C. Patel",
+            City = "Abc",
+            State = "GA",
+            Street = null,
+            PostalCode = "00000",
+        };
 
-        [Fact]
-        public async Task List_WithInactive_ReturnsAll()
+        var action = async () =>
         {
             using var repository = CreateRepositoryHelper().GetEpdContactRepository();
-            var items = await repository.ListAsync(true);
-            items.Should().HaveCount(GetEpdContacts.Count());
+            await repository.CreateAsync(resource);
+        };
 
-            var epdContact = GetEpdContacts.First();
-            var expected = new EpdContactView(epdContact);
+        (await action.Should().ThrowAsync<ArgumentException>())
+            .WithMessage($"Value cannot be null. (Parameter '{nameof(resource.Street)}')")
+            .And.ParamName.Should().Be(nameof(resource.Street));
+    }
 
-            items[0].Should().BeEquivalentTo(expected);
-        }
-
-        // CreateAsync
-
-        [Fact]
-        public async Task Create_AddsNewItem()
+    [Fact]
+    public async Task Create_GivenInvalidZIP_ThrowsException()
+    {
+        var resource = new EpdContactCommand
         {
-            var itemCreate = new EpdContactCommand()
-            {
-                Email = null,
-                Organization = "EPD",
-                Telephone = null,
-                Title = "Title",
-                ContactName = "C. Patel",
-                City = "Abc",
-                State = "GA",
-                Street = "123 St",
-                PostalCode = "00000"
-            };
+            Email = null,
+            Organization = "EPD",
+            Telephone = null,
+            Title = "Title",
+            ContactName = "C. Patel",
+            City = "Abc",
+            State = "GA",
+            Street = "123 St",
+            PostalCode = "123",
+        };
 
-            using var repositoryHelper = CreateRepositoryHelper();
-            using var repository = repositoryHelper.GetEpdContactRepository();
-
-            var itemId = await repository.CreateAsync(itemCreate);
-            repositoryHelper.ClearChangeTracker();
-
-            var epdContact = new EpdContact(itemCreate) { Id = itemId };
-            var expected = new EpdContactView(epdContact);
-
-            (await repository.GetAsync(itemId)).Should().BeEquivalentTo(expected);
-        }
-
-        [Fact]
-        public async Task Create_GivenNullName_ThrowsException()
+        var action = async () =>
         {
-            var itemCreate = new EpdContactCommand()
-            {
-                Email = null,
-                Organization = "EPD",
-                Telephone = null,
-                Title = "Title",
-                ContactName = null,
-                City = "Abc",
-                State = "GA",
-                Street = "123 St",
-                PostalCode = "00000"
-            };
+            using var repository = CreateRepositoryHelper().GetEpdContactRepository();
+            await repository.CreateAsync(resource);
+        };
 
-            var action = async () =>
-            {
-                using var repository = CreateRepositoryHelper().GetEpdContactRepository();
-                await repository.CreateAsync(itemCreate);
-            };
+        (await action.Should().ThrowAsync<ArgumentException>())
+            .WithMessage($"Value ({resource.PostalCode}) is not valid. (Parameter '{nameof(resource.PostalCode)}')")
+            .And.ParamName.Should().Be(nameof(resource.PostalCode));
+    }
 
-            (await action.Should().ThrowAsync<ArgumentException>())
-                .And.ParamName.Should().Be(nameof(EpdContactCommand.ContactName));
-        }
+    // UpdateAsync
 
-        [Fact]
-        public async Task Create_GivenInvalidEmail_ThrowsException()
+    [Fact]
+    public async Task Update_FromValidItem_Updates()
+    {
+        var itemId = GetEpdContacts.First(e => e.Active).Id;
+        var resource = new EpdContactCommand
         {
-            var itemCreate = new EpdContactCommand()
-            {
-                Email = "abc",
-                Organization = "EPD",
-                Telephone = null,
-                Title = "Title",
-                ContactName = "C. Patel",
-                City = "Abc",
-                State = "GA",
-                Street = "123 St",
-                PostalCode = "00000"
-            };
+            Id = itemId,
+            Email = null,
+            Organization = "New Org",
+            Telephone = null,
+            Title = "Title",
+            ContactName = "C. Patel",
+            City = "Abc",
+            State = "GA",
+            Street = "123 St",
+            PostalCode = "00000",
+        };
 
-            var action = async () =>
-            {
-                using var repository = CreateRepositoryHelper().GetEpdContactRepository();
-                await repository.CreateAsync(itemCreate);
-            };
+        using var repositoryHelper = CreateRepositoryHelper();
+        using var repository = repositoryHelper.GetEpdContactRepository();
 
-            (await action.Should().ThrowAsync<ArgumentException>())
-                .WithMessage($"Value ({itemCreate.Email}) is not valid. (Parameter '{nameof(itemCreate.Email)}')")
-                .And.ParamName.Should().Be(nameof(itemCreate.Email));
-        }
+        await repository.UpdateAsync(resource);
+        repositoryHelper.ClearChangeTracker();
 
-        [Fact]
-        public async Task Create_GivenInvalidTelephone_ThrowsException()
+        var item = await repository.GetAsync(itemId);
+        item.Organization.Should().Be(resource.Organization);
+        item.ContactName.Should().Be(resource.ContactName);
+    }
+
+    [Fact]
+    public async Task Update_WithNoChanges_Succeeds()
+    {
+        var original = GetEpdContacts.First(e => e.Active);
+        var resource = new EpdContactCommand
         {
-            var itemCreate = new EpdContactCommand()
-            {
-                Email = null,
-                Organization = "EPD",
-                Telephone = "abc",
-                Title = "Title",
-                ContactName = "C. Patel",
-                City = "Abc",
-                State = "GA",
-                Street = "123 St",
-                PostalCode = "00000"
-            };
+            Id = original.Id,
+            Email = original.Email,
+            Organization = original.Organization,
+            Telephone = original.Telephone,
+            Title = original.Title,
+            ContactName = original.ContactName,
+            City = "Abc",
+            State = "GA",
+            Street = "123 St",
+            PostalCode = "00000",
+        };
 
-            var action = async () =>
-            {
-                using var repository = CreateRepositoryHelper().GetEpdContactRepository();
-                await repository.CreateAsync(itemCreate);
-            };
+        using var repositoryHelper = CreateRepositoryHelper();
+        using var repository = repositoryHelper.GetEpdContactRepository();
 
-            (await action.Should().ThrowAsync<ArgumentException>())
-                .WithMessage(
-                    $"Value ({itemCreate.Telephone}) is not valid. (Parameter '{nameof(itemCreate.Telephone)}')")
-                .And.ParamName.Should().Be(nameof(itemCreate.Telephone));
-        }
+        await repository.UpdateAsync(resource);
+        repositoryHelper.ClearChangeTracker();
 
-        [Fact]
-        public async Task Create_GivenNullStreet_ThrowsException()
+        var item = await repository.GetAsync(original.Id);
+        item.Organization.Should().Be(resource.Organization);
+        item.ContactName.Should().Be(resource.ContactName);
+    }
+
+    [Fact]
+    public async Task Update_GivenNullName_ThrowsException()
+    {
+        var itemId = GetEpdContacts.First(e => e.Active).Id;
+        var resource = new EpdContactCommand
         {
-            var itemCreate = new EpdContactCommand()
-            {
-                Email = null,
-                Organization = "EPD",
-                Telephone = null,
-                Title = "Title",
-                ContactName = "C. Patel",
-                City = "Abc",
-                State = "GA",
-                Street = null,
-                PostalCode = "00000"
-            };
+            Id = itemId,
+            Email = null,
+            Organization = "EPD",
+            Telephone = null,
+            Title = "Title",
+            ContactName = null,
+            City = "Abc",
+            State = "GA",
+            Street = "123 St",
+            PostalCode = "00000",
+        };
 
-            var action = async () =>
-            {
-                using var repository = CreateRepositoryHelper().GetEpdContactRepository();
-                await repository.CreateAsync(itemCreate);
-            };
-
-            (await action.Should().ThrowAsync<ArgumentException>())
-                .WithMessage($"Value cannot be null. (Parameter '{nameof(itemCreate.Street)}')")
-                .And.ParamName.Should().Be(nameof(itemCreate.Street));
-        }
-
-        [Fact]
-        public async Task Create_GivenInvalidZIP_ThrowsException()
+        var action = async () =>
         {
-            var itemCreate = new EpdContactCommand()
-            {
-                Email = null,
-                Organization = "EPD",
-                Telephone = null,
-                Title = "Title",
-                ContactName = "C. Patel",
-                City = "Abc",
-                State = "GA",
-                Street = "123 St",
-                PostalCode = "123"
-            };
+            using var repository = CreateRepositoryHelper().GetEpdContactRepository();
+            await repository.UpdateAsync(resource);
+        };
 
-            var action = async () =>
-            {
-                using var repository = CreateRepositoryHelper().GetEpdContactRepository();
-                await repository.CreateAsync(itemCreate);
-            };
+        (await action.Should().ThrowAsync<ArgumentException>())
+            .And.ParamName.Should().Be(nameof(resource.ContactName));
+    }
 
-            (await action.Should().ThrowAsync<ArgumentException>())
-                .WithMessage(
-                    $"Value ({itemCreate.PostalCode}) is not valid. (Parameter '{nameof(itemCreate.PostalCode)}')")
-                .And.ParamName.Should().Be(nameof(itemCreate.PostalCode));
-        }
-
-        // UpdateAsync
-
-        [Fact]
-        public async Task Update_SuccessfullyUpdatesItem()
+    [Fact]
+    public async Task Update_GivenInvalidEmail_ThrowsException()
+    {
+        var itemId = GetEpdContacts.First(e => e.Active).Id;
+        var resource = new EpdContactCommand
         {
-            var itemId = GetEpdContacts.First(e => e.Active).Id;
-            var itemUpdate = new EpdContactCommand()
-            {
-                Id = itemId,
-                Email = null,
-                Organization = "New Org",
-                Telephone = null,
-                Title = "Title",
-                ContactName = "C. Patel",
-                City = "Abc",
-                State = "GA",
-                Street = "123 St",
-                PostalCode = "00000",
-            };
+            Id = itemId,
+            Email = "abc",
+            Organization = "EPD",
+            Telephone = null,
+            Title = "Title",
+            ContactName = "C. Patel",
+            City = "Abc",
+            State = "GA",
+            Street = "123 St",
+            PostalCode = "00000",
+        };
 
-            using var repositoryHelper = CreateRepositoryHelper();
-            using var repository = repositoryHelper.GetEpdContactRepository();
-
-            await repository.UpdateAsync(itemUpdate);
-            repositoryHelper.ClearChangeTracker();
-
-            var item = await repository.GetAsync(itemId);
-            item.Organization.Should().Be(itemUpdate.Organization);
-            item.ContactName.Should().Be(itemUpdate.ContactName);
-        }
-
-        [Fact]
-        public async Task Update_WithNoChanges_Succeeds()
+        var action = async () =>
         {
-            var original = GetEpdContacts.First(e => e.Active);
-            var itemId = original.Id;
-            var itemUpdate = new EpdContactCommand()
-            {
-                Id = itemId,
-                Email = original.Email,
-                Organization = original.Organization,
-                Telephone = original.Telephone,
-                Title = original.Title,
-                ContactName = original.ContactName,
-                City = "Abc",
-                State = "GA",
-                Street = "123 St",
-                PostalCode = "00000"
-            };
+            using var repository = CreateRepositoryHelper().GetEpdContactRepository();
+            await repository.UpdateAsync(resource);
+        };
 
-            using var repositoryHelper = CreateRepositoryHelper();
-            using var repository = repositoryHelper.GetEpdContactRepository();
+        (await action.Should().ThrowAsync<ArgumentException>())
+            .WithMessage($"Value ({resource.Email}) is not valid. (Parameter '{nameof(resource.Email)}')")
+            .And.ParamName.Should().Be(nameof(resource.Email));
+    }
 
-            await repository.UpdateAsync(itemUpdate);
-            repositoryHelper.ClearChangeTracker();
-
-            var item = await repository.GetAsync(itemId);
-            item.Organization.Should().Be(itemUpdate.Organization);
-            item.ContactName.Should().Be(itemUpdate.ContactName);
-        }
-
-        [Fact]
-        public async Task Update_GivenNullName_ThrowsException()
+    [Fact]
+    public async Task Update_GivenInvalidTelephone_ThrowsException()
+    {
+        var itemId = GetEpdContacts.First(e => e.Active).Id;
+        var resource = new EpdContactCommand
         {
-            var itemId = GetEpdContacts.First(e => e.Active).Id;
-            var itemUpdate = new EpdContactCommand()
-            {
-                Id = itemId,
-                Email = null,
-                Organization = "EPD",
-                Telephone = null,
-                Title = "Title",
-                ContactName = null,
-                City = "Abc",
-                State = "GA",
-                Street = "123 St",
-                PostalCode = "00000"
-            };
+            Id = itemId,
+            Email = null,
+            Organization = "EPD",
+            Telephone = "abc",
+            Title = "Title",
+            ContactName = "C. Patel",
+            City = "Abc",
+            State = "GA",
+            Street = "123 St",
+            PostalCode = "00000",
+        };
 
-            var action = async () =>
-            {
-                using var repository = CreateRepositoryHelper().GetEpdContactRepository();
-                await repository.UpdateAsync(itemUpdate);
-            };
-
-            (await action.Should().ThrowAsync<ArgumentException>())
-                .And.ParamName.Should().Be(nameof(itemUpdate.ContactName));
-        }
-
-        [Fact]
-        public async Task Update_GivenInvalidEmail_ThrowsException()
+        var action = async () =>
         {
-            var itemId = GetEpdContacts.First(e => e.Active).Id;
-            var itemUpdate = new EpdContactCommand()
-            {
-                Id = itemId,
-                Email = "abc",
-                Organization = "EPD",
-                Telephone = null,
-                Title = "Title",
-                ContactName = "C. Patel",
-                City = "Abc",
-                State = "GA",
-                Street = "123 St",
-                PostalCode = "00000"
-            };
+            using var repository = CreateRepositoryHelper().GetEpdContactRepository();
+            await repository.UpdateAsync(resource);
+        };
 
-            var action = async () =>
-            {
-                using var repository = CreateRepositoryHelper().GetEpdContactRepository();
-                await repository.UpdateAsync(itemUpdate);
-            };
+        (await action.Should().ThrowAsync<ArgumentException>())
+            .WithMessage(
+                $"Value ({resource.Telephone}) is not valid. (Parameter '{nameof(resource.Telephone)}')")
+            .And.ParamName.Should().Be(nameof(resource.Telephone));
+    }
 
-            (await action.Should().ThrowAsync<ArgumentException>())
-                .WithMessage($"Value ({itemUpdate.Email}) is not valid. (Parameter '{nameof(itemUpdate.Email)}')")
-                .And.ParamName.Should().Be(nameof(itemUpdate.Email));
-        }
-
-        [Fact]
-        public async Task Update_GivenInvalidTelephone_ThrowsException()
+    [Fact]
+    public async Task Update_GivenNullStreet_ThrowsException()
+    {
+        var itemId = GetEpdContacts.First(e => e.Active).Id;
+        var resource = new EpdContactCommand
         {
-            var itemId = GetEpdContacts.First(e => e.Active).Id;
-            var itemUpdate = new EpdContactCommand()
-            {
-                Id = itemId,
-                Email = null,
-                Organization = "EPD",
-                Telephone = "abc",
-                Title = "Title",
-                ContactName = "C. Patel",
-                City = "Abc",
-                State = "GA",
-                Street = "123 St",
-                PostalCode = "00000"
-            };
+            Id = itemId,
+            Email = null,
+            Organization = "EPD",
+            Telephone = null,
+            Title = "Title",
+            ContactName = "C. Patel",
+            City = "Abc",
+            State = "GA",
+            Street = null,
+            PostalCode = "00000",
+        };
 
-            var action = async () =>
-            {
-                using var repository = CreateRepositoryHelper().GetEpdContactRepository();
-                await repository.UpdateAsync(itemUpdate);
-            };
-
-            (await action.Should().ThrowAsync<ArgumentException>())
-                .WithMessage(
-                    $"Value ({itemUpdate.Telephone}) is not valid. (Parameter '{nameof(itemUpdate.Telephone)}')")
-                .And.ParamName.Should().Be(nameof(itemUpdate.Telephone));
-        }
-
-        [Fact]
-        public async Task Update_GivenNullStreet_ThrowsException()
+        var action = async () =>
         {
-            var itemId = GetEpdContacts.First(e => e.Active).Id;
-            var itemUpdate = new EpdContactCommand()
-            {
-                Id = itemId,
-                Email = null,
-                Organization = "EPD",
-                Telephone = null,
-                Title = "Title",
-                ContactName = "C. Patel",
-                City = "Abc",
-                State = "GA",
-                Street = null,
-                PostalCode = "00000"
-            };
+            using var repository = CreateRepositoryHelper().GetEpdContactRepository();
+            await repository.UpdateAsync(resource);
+        };
 
-            var action = async () =>
-            {
-                using var repository = CreateRepositoryHelper().GetEpdContactRepository();
-                await repository.UpdateAsync(itemUpdate);
-            };
+        (await action.Should().ThrowAsync<ArgumentException>())
+            .WithMessage($"Value cannot be null. (Parameter '{nameof(resource.Street)}')")
+            .And.ParamName.Should().Be(nameof(resource.Street));
+    }
 
-            (await action.Should().ThrowAsync<ArgumentException>())
-                .WithMessage($"Value cannot be null. (Parameter '{nameof(itemUpdate.Street)}')")
-                .And.ParamName.Should().Be(nameof(itemUpdate.Street));
-        }
-
-        [Fact]
-        public async Task Update_GivenInvalidZIP_ThrowsException()
+    [Fact]
+    public async Task Update_GivenInvalidZIP_ThrowsException()
+    {
+        var itemId = GetEpdContacts.First(e => e.Active).Id;
+        var resource = new EpdContactCommand
         {
-            var itemId = GetEpdContacts.First(e => e.Active).Id;
-            var itemUpdate = new EpdContactCommand()
-            {
-                Id = itemId,
-                Email = null,
-                Organization = "EPD",
-                Telephone = null,
-                Title = "Title",
-                ContactName = "C. Patel",
-                City = "Abc",
-                State = "GA",
-                Street = "123 St",
-                PostalCode = "123"
-            };
+            Id = itemId,
+            Email = null,
+            Organization = "EPD",
+            Telephone = null,
+            Title = "Title",
+            ContactName = "C. Patel",
+            City = "Abc",
+            State = "GA",
+            Street = "123 St",
+            PostalCode = "123",
+        };
 
-            var action = async () =>
-            {
-                using var repository = CreateRepositoryHelper().GetEpdContactRepository();
-                await repository.UpdateAsync(itemUpdate);
-            };
-
-            (await action.Should().ThrowAsync<ArgumentException>())
-                .WithMessage(
-                    $"Value ({itemUpdate.PostalCode}) is not valid. (Parameter '{nameof(itemUpdate.PostalCode)}')")
-                .And.ParamName.Should().Be(nameof(itemUpdate.PostalCode));
-        }
-
-        [Fact]
-        public async Task Update_GivenMissingId_ThrowsException()
+        var action = async () =>
         {
-            const int itemId = -1;
-            var itemUpdate = new EpdContactCommand()
-            {
-                Id = itemId,
-                Email = null,
-                Organization = "New Org",
-                Telephone = null,
-                Title = "Title",
-                ContactName = "C. Patel",
-                City = "Abc",
-                State = "GA",
-                Street = "123 St",
-                PostalCode = "00000"
-            };
+            using var repository = CreateRepositoryHelper().GetEpdContactRepository();
+            await repository.UpdateAsync(resource);
+        };
 
-            var action = async () =>
-            {
-                using var repository = CreateRepositoryHelper().GetEpdContactRepository();
-                await repository.UpdateAsync(itemUpdate);
-            };
+        (await action.Should().ThrowAsync<ArgumentException>())
+            .WithMessage(
+                $"Value ({resource.PostalCode}) is not valid. (Parameter '{nameof(resource.PostalCode)}')")
+            .And.ParamName.Should().Be(nameof(resource.PostalCode));
+    }
 
-            (await action.Should().ThrowAsync<ArgumentException>())
-                .WithMessage($"ID ({itemId}) not found. (Parameter 'resource')")
-                .And.ParamName.Should().Be("resource");
-        }
-
-        // UpdateStatusAsync
-
-        [Fact]
-        public async Task UpdateStatusToInactive_GivenActive_Succeeds()
+    [Fact]
+    public async Task Update_GivenMissingId_ThrowsException()
+    {
+        const int itemId = -1;
+        var resource = new EpdContactCommand
         {
-            var itemId = GetEpdContacts.First(e => e.Active).Id;
+            Id = itemId,
+            Email = null,
+            Organization = "New Org",
+            Telephone = null,
+            Title = "Title",
+            ContactName = "C. Patel",
+            City = "Abc",
+            State = "GA",
+            Street = "123 St",
+            PostalCode = "00000",
+        };
 
-            using var repositoryHelper = CreateRepositoryHelper();
-            using var repository = repositoryHelper.GetEpdContactRepository();
-
-            await repository.UpdateStatusAsync(itemId, false);
-            repositoryHelper.ClearChangeTracker();
-
-            var item = await repository.GetAsync(itemId);
-            item.Active.ShouldBeFalse();
-        }
-
-        [Fact]
-        public async Task UpdateStatusToInactive_GivenInactive_Succeeds()
+        var action = async () =>
         {
-            var itemId = GetEpdContacts.First(e => !e.Active).Id;
+            using var repository = CreateRepositoryHelper().GetEpdContactRepository();
+            await repository.UpdateAsync(resource);
+        };
 
-            using var repositoryHelper = CreateRepositoryHelper();
-            using var repository = repositoryHelper.GetEpdContactRepository();
+        (await action.Should().ThrowAsync<ArgumentException>())
+            .WithMessage($"ID ({itemId}) not found. (Parameter 'resource')")
+            .And.ParamName.Should().Be("resource");
+    }
 
-            await repository.UpdateStatusAsync(itemId, false);
-            repositoryHelper.ClearChangeTracker();
+    // UpdateStatusAsync
 
-            var item = await repository.GetAsync(itemId);
-            item.Active.ShouldBeFalse();
-        }
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public async Task UpdateStatus_IfChangeStatus_Succeeds(bool newActiveStatus)
+    {
+        var itemId = GetEpdContacts.First(e => e.Active != newActiveStatus).Id;
 
-        [Fact]
-        public async Task UpdateStatusToActive_GivenActive_Succeeds()
+        using var repositoryHelper = CreateRepositoryHelper();
+        using var repository = repositoryHelper.GetEpdContactRepository();
+
+        await repository.UpdateStatusAsync(itemId, newActiveStatus);
+        repositoryHelper.ClearChangeTracker();
+
+        var item = await repository.GetAsync(itemId);
+        item.Active.Should().Be(newActiveStatus);
+    }
+
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public async Task UpdateStatus_IfStatusUnchanged_Succeeds(bool newActiveStatus)
+    {
+        var itemId = GetEpdContacts.First(e => e.Active == newActiveStatus).Id;
+
+        using var repositoryHelper = CreateRepositoryHelper();
+        using var repository = repositoryHelper.GetEpdContactRepository();
+
+        await repository.UpdateStatusAsync(itemId, newActiveStatus);
+        repositoryHelper.ClearChangeTracker();
+
+        var item = await repository.GetAsync(itemId);
+        item.Active.Should().Be(newActiveStatus);
+    }
+
+    [Fact]
+    public async Task UpdateStatus_FromMissingId_ThrowsException()
+    {
+        const int itemId = -1;
+
+        var action = async () =>
         {
-            var itemId = GetEpdContacts.First(e => e.Active).Id;
-
-            using var repositoryHelper = CreateRepositoryHelper();
-            using var repository = repositoryHelper.GetEpdContactRepository();
-
+            using var repository = CreateRepositoryHelper().GetEpdContactRepository();
             await repository.UpdateStatusAsync(itemId, true);
-            repositoryHelper.ClearChangeTracker();
+        };
 
-            var item = await repository.GetAsync(itemId);
-            item.Active.ShouldBeTrue();
-        }
+        (await action.Should().ThrowAsync<ArgumentException>())
+            .WithMessage($"ID ({itemId}) not found. (Parameter 'id')")
+            .And.ParamName.Should().Be("id");
+    }
 
-        [Fact]
-        public async Task UpdateStatusToActive_GivenInactive_Succeeds()
-        {
-            var itemId = GetEpdContacts.First(e => !e.Active).Id;
+    // ExistsAsync
 
-            using var repositoryHelper = CreateRepositoryHelper();
-            using var repository = repositoryHelper.GetEpdContactRepository();
+    [Fact]
+    public async Task Exists_GivenExists_ReturnsTrue()
+    {
+        using var repository = CreateRepositoryHelper().GetEpdContactRepository();
+        var result = await repository.ExistsAsync(GetEpdContacts.First().Id);
+        result.Should().BeTrue();
+    }
 
-            await repository.UpdateStatusAsync(itemId, true);
-            repositoryHelper.ClearChangeTracker();
-
-            var item = await repository.GetAsync(itemId);
-            item.Active.ShouldBeTrue();
-        }
-
-        [Fact]
-        public async Task UpdateStatusToInactive_GivenInvalidId_ThrowsException()
-        {
-            const int itemId = -1;
-
-            var action = async () =>
-            {
-                using var repository = CreateRepositoryHelper().GetEpdContactRepository();
-                await repository.UpdateStatusAsync(itemId, true);
-            };
-
-            (await action.Should().ThrowAsync<ArgumentException>())
-                .WithMessage($"ID ({itemId}) not found. (Parameter 'id')")
-                .And.ParamName.Should().Be("id");
-        }
-
-        // ExistsAsync
-
-        [Fact]
-        public async Task Exists_GivenExists_ReturnsTrue()
-        {
-            using var repository = CreateRepositoryHelper().GetEpdContactRepository();
-            var result = await repository.ExistsAsync(GetEpdContacts.First().Id);
-            result.Should().BeTrue();
-        }
-
-        [Fact]
-        public async Task Exists_GivenNotExists_ReturnsFalse()
-        {
-            using var repository = CreateRepositoryHelper().GetEpdContactRepository();
-            var result = await repository.ExistsAsync(-1);
-            result.Should().BeFalse();
-        }
+    [Fact]
+    public async Task Exists_GivenNotExists_ReturnsFalse()
+    {
+        using var repository = CreateRepositoryHelper().GetEpdContactRepository();
+        var result = await repository.ExistsAsync(-1);
+        result.Should().BeFalse();
     }
 }

@@ -1,4 +1,5 @@
-﻿using Enfo.Domain.LegalAuthorities.Resources;
+﻿using Enfo.Domain.LegalAuthorities.Entities;
+using Enfo.Domain.LegalAuthorities.Resources;
 using Enfo.LocalRepository.LegalAuthorities;
 using FluentAssertions;
 using NUnit.Framework;
@@ -18,14 +19,16 @@ public class CreateTests
         var expectedId = LegalAuthorityData.LegalAuthorities.Max(e => e.Id) + 1;
         var repository = new LegalAuthorityRepository();
 
-        var result = await repository.CreateAsync(resource);
-        var newItem = await repository.GetAsync(result);
+        var itemId = await repository.CreateAsync(resource);
+
+        var item = new LegalAuthority(resource) { Id = itemId };
+        var expected = new LegalAuthorityView(item);
+        var newItem = await repository.GetAsync(itemId);
 
         Assert.Multiple(() =>
         {
-            result.Should().Be(expectedId);
-            newItem.Active.Should().BeTrue();
-            newItem.AuthorityName.Should().Be(resource.AuthorityName);
+            itemId.Should().Be(expectedId);
+            newItem.Should().BeEquivalentTo(expected);
         });
     }
 
