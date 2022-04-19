@@ -2,9 +2,10 @@
 
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
 		<UserSecretsId>aspnet-Enfo.WebApp-A834A848-D8DF-4E5F-B1E2-7EE74113BF3E</UserSecretsId>
 		<DefaultItemExcludes>$(DefaultItemExcludes);node_modules\**</DefaultItemExcludes>
-		<AssemblyVersion>2022.3.16</AssemblyVersion>
+		<AssemblyVersion>2022.4.19</AssemblyVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -12,27 +13,29 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="FluentValidation.AspNetCore" Version="10.3.6" />
-		<PackageReference Include="Microsoft.AspNetCore.Authentication.AzureAD.UI" Version="6.0.0" />
-		<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.0" Condition="'$(Configuration)' == 'Debug'" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.0" />
-		<PackageReference Include="Mindscape.Raygun4Net.AspNetCore" Version="6.6.2" />
-		<PackageReference Include="SonarAnalyzer.CSharp" Version="8.32.0.39516" Condition="'$(Configuration)' == 'Debug'">
+		<PackageReference Include="FluentValidation.AspNetCore" Version="10.4.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.AzureAD.UI" Version="6.0.4" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.4" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.4" />
+		<PackageReference Include="Mindscape.Raygun4Net.AspNetCore" Version="6.6.6" />
+		<PackageReference Include="SonarAnalyzer.CSharp" Version="8.37.0.45539" Condition="'$(Configuration)' == 'Debug'">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.0" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\Enfo.Infrastructure\Enfo.Infrastructure.csproj" />
+		<ProjectReference Include="..\Domain\Domain.csproj" />
+		<ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
+		<ProjectReference Include="..\LocalRepository\LocalRepository.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<Content Update="appsettings.Development.json">
+		<Content Update="appsettings.Development.json" CopyToPublishDirectory="Never">
 			<DependentUpon>appsettings.json</DependentUpon>
 		</Content>
-		<Content Update="appsettings.Local.json">
+		<Content Update="appsettings.Local.json" CopyToPublishDirectory="Never">
 			<DependentUpon>appsettings.json</DependentUpon>
 		</Content>
 	</ItemGroup>

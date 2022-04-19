@@ -1,5 +1,5 @@
 ﻿@using System.Globalization
-@model Enfo.Domain.Resources.IPaginatedResult
+@model Enfo.Domain.Pagination.IPaginatedResult
 <div class="gaepd-pagination-count">
     Total results: @Model.TotalCount.ToString("N0", CultureInfo.InvariantCulture)
     @if (Model.TotalPages > 1)

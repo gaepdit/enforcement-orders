@@ -1,8 +1,8 @@
-﻿using Enfo.Domain.Entities.Users;
-using Enfo.Domain.Resources.Users;
-using Enfo.Domain.Services;
+﻿using Enfo.Domain.Users.Entities;
+using Enfo.Domain.Users.Resources;
+using Enfo.Domain.Users.Services;
 using Enfo.WebApp.Models;
-using Enfo.WebApp.Platform.Extensions;
+using Enfo.WebApp.Platform.RazorHelpers;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

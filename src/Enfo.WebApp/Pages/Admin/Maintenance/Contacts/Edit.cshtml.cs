@@ -1,8 +1,8 @@
-﻿using Enfo.Domain.Entities.Users;
-using Enfo.Domain.Repositories;
-using Enfo.Domain.Resources.EpdContact;
+﻿using Enfo.Domain.EpdContacts.Repositories;
+using Enfo.Domain.EpdContacts.Resources;
+using Enfo.Domain.Users.Entities;
 using Enfo.WebApp.Models;
-using Enfo.WebApp.Platform.Extensions;
+using Enfo.WebApp.Platform.RazorHelpers;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

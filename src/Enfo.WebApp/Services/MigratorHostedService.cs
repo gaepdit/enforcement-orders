@@ -1,66 +1,49 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-using Enfo.Domain.Entities.Users;
+﻿using Enfo.Domain.Users.Entities;
 using Enfo.Infrastructure.Contexts;
-using Enfo.WebApp.Platform.DevHelpers;
-using Microsoft.AspNetCore.Hosting;
+using Enfo.WebApp.Platform.Local;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 
-namespace Enfo.WebApp.Services
+namespace Enfo.WebApp.Services;
+
+/// <summary>
+/// Sets up the database. 
+/// ref: https://andrewlock.net/running-async-tasks-on-app-startup-in-asp-net-core-3/
+/// </summary>
+public class MigratorHostedService : IHostedService
 {
-    /// <summary>
-    /// Sets up the database. 
-    /// ref: https://andrewlock.net/running-async-tasks-on-app-startup-in-asp-net-core-3/
-    /// </summary>
-    public class MigratorHostedService : IHostedService
+    // We need to inject the IServiceProvider so we can create the DbContext scoped service
+    private readonly IServiceProvider _serviceProvider;
+    public MigratorHostedService(IServiceProvider serviceProvider) => _serviceProvider = serviceProvider;
+
+    public async Task StartAsync(CancellationToken cancellationToken)
     {
-        // We need to inject the IServiceProvider so we can create the DbContext scoped service
-        private readonly IServiceProvider _serviceProvider;
-        public MigratorHostedService(IServiceProvider serviceProvider) => _serviceProvider = serviceProvider;
+        // Create a new scope to retrieve scoped services.
+        using var scope = _serviceProvider.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<EnfoDbContext>();
 
-        public async Task StartAsync(CancellationToken cancellationToken)
+        var env = scope.ServiceProvider.GetRequiredService<IWebHostEnvironment>();
+
+        // Initialize database.
+        if (env.IsLocalEnv())
         {
-            // Create a new scope to retrieve scoped services.
-            using var scope = _serviceProvider.CreateScope();
-            var context = scope.ServiceProvider.GetRequiredService<EnfoDbContext>();
-            var env = scope.ServiceProvider.GetRequiredService<IWebHostEnvironment>();
-
-            // Initialize database.
-            if (env.IsLocalDev())
-            {
-                if (Environment.GetEnvironmentVariable("ENABLE_EF_MIGRATIONS") == "true")
-                {
-                    // If EF migrations are enabled, preserve database and run migrations.
-                    await context.Database.MigrateAsync(cancellationToken);
-                }
-                else
-                {
-                    // Otherwise, delete and re-create database as currently defined.
-                    await context.Database.EnsureDeletedAsync(cancellationToken);
-                    await context.Database.EnsureCreatedAsync(cancellationToken);
-                }
-
-                // Seed initial data in local environment.
-                await context.SeedTempDataAsync(cancellationToken);
-            }
-            else
-            {
-                // Run database migrations if not local.
-                await context.Database.MigrateAsync(cancellationToken);
-            }
-
-            // Initialize any new roles.
-            var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
-            foreach (var role in UserRole.AllRoles.Keys)
-                if (!await context.Roles.AnyAsync(e => e.Name == role, cancellationToken))
-                    await roleManager.CreateAsync(new IdentityRole<Guid>(role));
+            // Delete and re-create database as currently defined.
+            await context.Database.EnsureDeletedAsync(cancellationToken);
+            await context.Database.EnsureCreatedAsync(cancellationToken);
+        }
+        else
+        {
+            // Initialize database/run database migrations.
+            await context.Database.MigrateAsync(cancellationToken);
         }
 
-        // noop
-        public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
+        // Initialize any new roles.
+        var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
+        foreach (var role in UserRole.AllRoles.Keys)
+            if (!await context.Roles.AnyAsync(e => e.Name == role, cancellationToken))
+                await roleManager.CreateAsync(new IdentityRole<Guid>(role));
     }
+
+    // noop
+    public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
 }

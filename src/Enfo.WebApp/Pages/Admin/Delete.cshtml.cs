@@ -1,9 +1,9 @@
-﻿using System.Threading.Tasks;
-using Enfo.Domain.Entities.Users;
-using Enfo.Domain.Repositories;
-using Enfo.Domain.Resources.EnforcementOrder;
+﻿using Enfo.Domain.EnforcementOrders.Repositories;
+using Enfo.Domain.EnforcementOrders.Resources;
+using Enfo.Domain.Users.Entities;
+using System.Threading.Tasks;
 using Enfo.WebApp.Models;
-using Enfo.WebApp.Platform.Extensions;
+using Enfo.WebApp.Platform.RazorHelpers;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

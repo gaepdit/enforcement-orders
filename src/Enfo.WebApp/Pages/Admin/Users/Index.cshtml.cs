@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using Enfo.Domain.Users.Entities;
+using Enfo.Domain.Users.Resources;
+using Enfo.Domain.Users.Services;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
-using Enfo.Domain.Entities.Users;
-using Enfo.Domain.Resources.Users;
-using Enfo.Domain.Services;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
