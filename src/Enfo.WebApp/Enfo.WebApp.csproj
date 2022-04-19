@@ -5,7 +5,7 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<UserSecretsId>aspnet-Enfo.WebApp-A834A848-D8DF-4E5F-B1E2-7EE74113BF3E</UserSecretsId>
 		<DefaultItemExcludes>$(DefaultItemExcludes);node_modules\**</DefaultItemExcludes>
-		<AssemblyVersion>2022.3.16</AssemblyVersion>
+		<AssemblyVersion>2022.4.19</AssemblyVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
