@@ -66,10 +66,6 @@ public class ListReportsTests
     [Test]
     public async Task ListPendingEnforcementOrders_ReturnsCorrectList()
     {
-        // Ensure pending order exists
-        var order = EnforcementOrderData.EnforcementOrders.First(e => e.GetIsPublic);
-        order.ExecutedDate = DateTime.Today.AddDays(8);
-
         using var repository = new EnforcementOrderRepository();
 
         var result = await repository.ListPendingEnforcementOrdersAsync();

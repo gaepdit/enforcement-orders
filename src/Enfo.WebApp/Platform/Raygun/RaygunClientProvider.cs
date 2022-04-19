@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Http;
-using Mindscape.Raygun4Net;
+﻿using Mindscape.Raygun4Net;
 using Mindscape.Raygun4Net.AspNetCore;
+using System.Security.Claims;
 
-namespace Enfo.WebApp.Services
+namespace Enfo.WebApp.Platform.Raygun
 {
     public class RaygunClientProvider : DefaultRaygunAspNetCoreClientProvider
     {

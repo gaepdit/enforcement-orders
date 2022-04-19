@@ -3,7 +3,7 @@ using Enfo.Domain.LegalAuthorities.Resources;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Enfo.WebApp.Models;
-using Enfo.WebApp.Platform.Extensions;
+using Enfo.WebApp.Platform.RazorHelpers;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

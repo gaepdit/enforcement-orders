@@ -1,8 +1,8 @@
-using System.Text.Json;
 using Enfo.WebApp.Models;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using System.Text.Json;
 
-namespace Enfo.WebApp.Platform.Extensions
+namespace Enfo.WebApp.Platform.RazorHelpers
 {
     public static class TempDataExtensions
     {

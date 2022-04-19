@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Enfo.WebApp.Models;
 using Enfo.WebApp.Pages.Admin.Maintenance.Contacts;
-using Enfo.WebApp.Platform.Extensions;
+using Enfo.WebApp.Platform.RazorHelpers;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

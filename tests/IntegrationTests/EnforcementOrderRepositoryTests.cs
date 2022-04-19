@@ -531,7 +531,7 @@ public class EnforcementOrderRepositoryTests
         var result = await repository.ListPendingEnforcementOrdersAsync();
 
         result.Count.Should().Be(GetEnforcementOrders.Count(e =>
-            (e.GetIsPublicProposedOrder || e.GetIsPublicExecutedOrder)
+            e.PublicationStatus == EnforcementOrder.PublicationState.Published
             && e.GetLastPostedDate > MostRecentMonday()));
         result[0].Should().BeEquivalentTo(GetEnforcementOrderAdminSummaryView(order.Id));
     }

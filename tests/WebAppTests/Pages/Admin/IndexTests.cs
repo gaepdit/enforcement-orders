@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Enfo.WebApp.Models;
 using Enfo.WebApp.Pages.Admin;
-using Enfo.WebApp.Platform.Extensions;
+using Enfo.WebApp.Platform.RazorHelpers;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

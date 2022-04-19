@@ -3,7 +3,7 @@ using Enfo.Domain.Users.Resources;
 using Enfo.Domain.Users.Services;
 using Enfo.WebApp.Models;
 using Enfo.WebApp.Pages.Admin.Users;
-using Enfo.WebApp.Platform.Extensions;
+using Enfo.WebApp.Platform.RazorHelpers;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
