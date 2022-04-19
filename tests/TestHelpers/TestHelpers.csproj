@@ -6,7 +6,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="EfCore.TestSupport" Version="5.2.1" />
+		<PackageReference Include="EfCore.TestSupport" Version="5.2.2" />
 	</ItemGroup>
 
 	<ItemGroup>

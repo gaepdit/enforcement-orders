@@ -11,7 +11,7 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="SonarAnalyzer.CSharp" Version="8.32.0.39516" Condition="'$(Configuration)' == 'Debug'">
+        <PackageReference Include="SonarAnalyzer.CSharp" Version="8.37.0.45539" Condition="'$(Configuration)' == 'Debug'">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>

@@ -13,16 +13,16 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="FluentValidation.AspNetCore" Version="10.3.6" />
-		<PackageReference Include="Microsoft.AspNetCore.Authentication.AzureAD.UI" Version="6.0.0" />
+		<PackageReference Include="FluentValidation.AspNetCore" Version="10.4.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.AzureAD.UI" Version="6.0.4" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.4" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.0" />
-		<PackageReference Include="Mindscape.Raygun4Net.AspNetCore" Version="6.6.2" />
-		<PackageReference Include="SonarAnalyzer.CSharp" Version="8.32.0.39516" Condition="'$(Configuration)' == 'Debug'">
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.4" />
+		<PackageReference Include="Mindscape.Raygun4Net.AspNetCore" Version="6.6.6" />
+		<PackageReference Include="SonarAnalyzer.CSharp" Version="8.37.0.45539" Condition="'$(Configuration)' == 'Debug'">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.0" />
 	</ItemGroup>
 
 	<ItemGroup>
