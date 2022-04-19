@@ -6,6 +6,9 @@ namespace Enfo.LocalRepository.LegalAuthorities;
 
 internal static class LegalAuthorityData
 {
+    public static LegalAuthority GetLegalAuthority(int id) =>
+        LegalAuthorities.SingleOrDefault(e => e.Id == id);
+
     public static readonly List<LegalAuthority> LegalAuthorities = new()
     {
         new LegalAuthority { Id = 1, Active = true, AuthorityName = "Air Quality Act" },

@@ -11,7 +11,7 @@ namespace LocalRepositoryTests.EpdContacts;
 public class UpdateStatusTests
 {
     [Test]
-    public async Task IfChangeStatus_Succeeds([Values] bool newActiveStatus)
+    public async Task IfStatusChanged_Succeeds([Values] bool newActiveStatus)
     {
         var itemId = EpdContactData.EpdContacts.First(e => e.Active != newActiveStatus).Id;
         using var repository = new EpdContactRepository();

@@ -10,9 +10,9 @@ namespace EnfoTests.Helpers
     {
         public static readonly IEnumerable<LegalAuthority> GetLegalAuthorities = new List<LegalAuthority>
         {
-            new() {Id = 1, Active = true, AuthorityName = "Air Quality Act",},
-            new() {Id = 2, Active = true, AuthorityName = "Asbestos Safety Act",},
-            new() {Id = 3, Active = false, AuthorityName = "Obsolete Act",},
+            new() {Id = 1, Active = true, AuthorityName = "Air Quality Act"},
+            new() {Id = 2, Active = true, AuthorityName = "Asbestos Safety Act"},
+            new() {Id = 3, Active = false, AuthorityName = "Obsolete Act"},
         };
 
         public static readonly IEnumerable<EpdContact> GetEpdContacts = new List<EpdContact>
@@ -118,7 +118,7 @@ namespace EnfoTests.Helpers
                 Requirements =
                     "Ið velit meƿÞitum qui. Ei nām quaƿdo fāċilisi? Homerō nomiƿati id sit, sea tibique lūpÞǣtum āð. Ei porro nulla soleat mei, vīx " +
                     "oȝlīque ūrbǣnitas id, pro te commune scrīptorem? Fæcilis quǣēstiō has eǽ, id tinċiduƿÞ perseqūeris prō! Nam āccumsǣn forensibus cotidīēqūe cu.",
-                SettlementAmount = 5000
+                SettlementAmount = 5000,
             },
             new()
             {
@@ -150,7 +150,7 @@ namespace EnfoTests.Helpers
                     "ullamcorper a. Morbi tristique senectus et netus et malesuada fames ac turpis. Velit ut tortor pretium viverra suspendisse potenti. In arcu " +
                     "cursus euismod quis. Nulla malesuada pellentesque elit eget gravida cum sociis natoque penatibus. Mattis rhoncus urna neque viverra justo nec " +
                     "ultrices dui.",
-                SettlementAmount = 25000
+                SettlementAmount = 25000,
             },
             new()
             {
@@ -182,7 +182,7 @@ namespace EnfoTests.Helpers
                     "commodo ullamcorper a. Morbi tristique senectus et netus et malesuada fames ac turpis. Velit ut tortor pretium viverra suspendisse potenti. " +
                     "In arcu cursus euismod quis. Nulla malesuada pellentesque elit eget gravida cum sociis natoque penatibus. Mattis rhoncus urna neque viverra " +
                     "justo nec ultrices dui.",
-                SettlementAmount = 25000
+                SettlementAmount = 25000,
             },
             new()
             {
@@ -211,7 +211,7 @@ namespace EnfoTests.Helpers
                     "etiam non quam. Varius sit amet mattis vulputate. Semper quis lectus nulla at volutpat diam ut. Aliquam purus sit amet luctus venenatis. " +
                     "Semper viverra nam libero justo laoreet sit amet. Eget mauris pharetra et ultrices. Quisque non tellus orci ac auctor augue mauris augue. " +
                     "Massa enim nec dui nunc. Pulvinar etiam non quam lacus suspendisse faucibus interdum posuere lorem. Neque sodales ut etiam sit amet nisl purus.",
-                SettlementAmount = 1800
+                SettlementAmount = 1800,
             },
             new()
             {
@@ -227,7 +227,7 @@ namespace EnfoTests.Helpers
                 ProposedOrderPostedDate = new DateTime(2021, 2, 1),
                 IsExecutedOrder = true,
                 ExecutedDate = new DateTime(2021, 5, 1),
-                ExecutedOrderPostedDate = new DateTime(2021, 5, 1)
+                ExecutedOrderPostedDate = new DateTime(2021, 5, 1),
             },
         };
     }

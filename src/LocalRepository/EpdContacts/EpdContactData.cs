@@ -6,6 +6,9 @@ namespace Enfo.LocalRepository.EpdContacts;
 
 internal static class EpdContactData
 {
+    public static EpdContact GetEpdContact(int id) =>
+        EpdContacts.SingleOrDefault(e => e.Id == id);
+
     public static readonly List<EpdContact> EpdContacts = new()
     {
         new EpdContact
