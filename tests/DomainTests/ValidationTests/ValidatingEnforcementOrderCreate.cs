@@ -18,11 +18,11 @@ public class ValidatingEnforcementOrderCreate
     {
         Cause = "Cause of order",
         Requirements = "Requirements of order",
-        FacilityName = "abc",
+        FacilityName = "Facility 3",
         County = "Fulton",
         LegalAuthorityId = GetLegalAuthorities.First().Id,
         Progress = PublicationProgress.Draft,
-        OrderNumber = "NEW-1",
+        OrderNumber = "NEW-3",
         CreateAs = NewEnforcementOrderType.Proposed,
         CommentPeriodClosesDate = DateTime.Today.AddDays(1),
         CommentContactId = GetEpdContacts.First().Id,

@@ -163,8 +163,8 @@ public static class EnforcementOrderFilters
         query.FilterByIsDeleted(false)
             .Where(e =>
                 e.PublicationStatus == Entities.EnforcementOrder.PublicationState.Published
-                && (e.IsExecutedOrder && e.ExecutedOrderPostedDate.HasValue && e.ExecutedDate > MostRecentMonday())
-                || (e.IsProposedOrder && e.ProposedOrderPostedDate.HasValue &&
-                    e.ProposedOrderPostedDate > MostRecentMonday())
+                && ((e.IsExecutedOrder && e.ExecutedOrderPostedDate.HasValue && e.ExecutedDate > MostRecentMonday())
+                    || (e.IsProposedOrder && e.ProposedOrderPostedDate.HasValue &&
+                        e.ProposedOrderPostedDate > MostRecentMonday()))
             );
 }

@@ -545,11 +545,11 @@ public class EnforcementOrderRepositoryTests
     {
         Cause = "Cause of order",
         Requirements = "Requirements of order",
-        FacilityName = "abc",
+        FacilityName = "Facility 4",
         County = "Fulton",
         LegalAuthorityId = GetLegalAuthorities.First().Id,
         Progress = PublicationProgress.Draft,
-        OrderNumber = "NEW-1",
+        OrderNumber = "NEW-4",
         CreateAs = NewEnforcementOrderType.Proposed,
         CommentPeriodClosesDate = DateTime.Today.AddDays(1),
         CommentContactId = GetEpdContacts.First().Id,

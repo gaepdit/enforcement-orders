@@ -14,31 +14,31 @@ namespace LocalRepositoryTests.EnforcementOrders;
 [TestFixture]
 public class CreateTests
 {
-    // Sample data for create
-    private readonly EnforcementOrderCreate _resource = new()
-    {
-        Cause = "Cause of order",
-        Requirements = "Requirements of order",
-        FacilityName = "abc",
-        County = "Fulton",
-        LegalAuthorityId = LegalAuthorityData.LegalAuthorities.First().Id,
-        Progress = PublicationProgress.Draft,
-        OrderNumber = "NEW-1",
-        CreateAs = NewEnforcementOrderType.Proposed,
-        CommentPeriodClosesDate = DateTime.Today.AddDays(1),
-        CommentContactId = EpdContactData.EpdContacts.First().Id,
-        ProposedOrderPostedDate = DateTime.Today,
-    };
-
     [Test]
     public async Task FromValidItem_AddsNew()
     {
+        // Sample data for create
+        EnforcementOrderCreate resource = new()
+        {
+            Cause = "Cause of order",
+            Requirements = "Requirements of order",
+            FacilityName = "Facility 1",
+            County = "Fulton",
+            LegalAuthorityId = LegalAuthorityData.LegalAuthorities.First().Id,
+            Progress = PublicationProgress.Draft,
+            OrderNumber = "NEW-1",
+            CreateAs = NewEnforcementOrderType.Proposed,
+            CommentPeriodClosesDate = DateTime.Today.AddDays(1),
+            CommentContactId = EpdContactData.EpdContacts.First().Id,
+            ProposedOrderPostedDate = DateTime.Today,
+        };
+
         var expectedId = EnforcementOrderData.EnforcementOrders.Max(e => e.Id) + 1;
         using var repository = new EnforcementOrderRepository();
 
-        var itemId = await repository.CreateAsync(_resource);
+        var itemId = await repository.CreateAsync(resource);
 
-        var enforcementOrder = new EnforcementOrder(_resource) { Id = itemId };
+        var enforcementOrder = new EnforcementOrder(resource) { Id = itemId };
         var expectedItem = new EnforcementOrderAdminView(enforcementOrder);
 
         var newItem = await repository.GetAdminViewAsync(itemId);
@@ -57,11 +57,11 @@ public class CreateTests
         {
             Cause = "Cause of order",
             Requirements = "Requirements of order",
-            FacilityName = "abc",
+            FacilityName = "Facility 2",
             County = null,
             LegalAuthorityId = LegalAuthorityData.LegalAuthorities.First().Id,
             Progress = PublicationProgress.Draft,
-            OrderNumber = "NEW-1",
+            OrderNumber = "NEW-2",
             CreateAs = NewEnforcementOrderType.Proposed,
             CommentPeriodClosesDate = DateTime.Today.AddDays(1),
             CommentContactId = EpdContactData.EpdContacts.First().Id,
