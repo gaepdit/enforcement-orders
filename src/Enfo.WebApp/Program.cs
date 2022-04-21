@@ -14,6 +14,7 @@ using Enfo.LocalRepository.LegalAuthorities;
 using Enfo.LocalRepository.Users;
 using Enfo.WebApp.Platform.Local;
 using Enfo.WebApp.Platform.Raygun;
+using Enfo.WebApp.Platform.SecurityHeaders;
 using Enfo.WebApp.Services;
 using FluentValidation;
 using FluentValidation.AspNetCore;
@@ -95,9 +96,6 @@ builder.Services
         });
     });
 
-// Configure HSTS (max age: two years)
-builder.Services.AddHsts(opts => opts.MaxAge = TimeSpan.FromDays(730));
-
 // Configure application monitoring
 builder.Services.AddHttpContextAccessor() // needed by RaygunScriptPartial
     .AddRaygun(builder.Configuration,
@@ -154,9 +152,11 @@ else
 {
     // Production or Staging
     app.UseExceptionHandler("/Error");
-    app.UseHsts();
     app.UseRaygun();
 }
+
+// Configure security HTTP headers
+app.UseSecurityHeaders(policies => policies.AddEnfoSecurityHeaderPolicies());
 
 // Configure the application
 app.UseStatusCodePages();
