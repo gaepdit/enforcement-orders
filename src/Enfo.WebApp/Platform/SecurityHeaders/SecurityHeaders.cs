@@ -1,3 +1,5 @@
+using Enfo.WebApp.Platform.Settings;
+
 namespace Enfo.WebApp.Platform.SecurityHeaders;
 
 internal static class SecurityHeaders
@@ -15,7 +17,7 @@ internal static class SecurityHeaders
         policies.AddContentSecurityPolicy(builder => builder.EnfoCspBuilder());
     }
 
-#pragma warning disable S1075
+#pragma warning disable S1075 // "URIs should not be hardcoded"
     private static void EnfoCspBuilder(this CspBuilder builder)
     {
         builder.AddDefaultSrc().None();
@@ -45,6 +47,8 @@ internal static class SecurityHeaders
         builder.AddFontSrc().Self();
         builder.AddFormAction().Self();
         builder.AddManifestSrc().Self();
+        builder.AddReportUri()
+            .To($"https://report-to-api.raygun.com/reports-csp?apikey={ApplicationSettings.Raygun.ApiKey}");
     }
 #pragma warning restore S1075
 }

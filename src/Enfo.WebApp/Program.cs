@@ -15,6 +15,7 @@ using Enfo.LocalRepository.Users;
 using Enfo.WebApp.Platform.Local;
 using Enfo.WebApp.Platform.Raygun;
 using Enfo.WebApp.Platform.SecurityHeaders;
+using Enfo.WebApp.Platform.Settings;
 using Enfo.WebApp.Services;
 using FluentValidation;
 using FluentValidation.AspNetCore;
@@ -28,6 +29,9 @@ using Microsoft.OpenApi.Models;
 using Mindscape.Raygun4Net.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Set Application Settings
+builder.Configuration.GetSection(ApplicationSettings.RaygunSettingsSection).Bind(ApplicationSettings.Raygun);
 
 // Configure Identity
 builder.Services
