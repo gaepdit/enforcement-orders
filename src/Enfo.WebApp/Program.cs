@@ -91,8 +91,8 @@ builder.Services
             Contact = new OpenApiContact
             {
                 Name = "Georgia EPD-IT Support",
-                Email = builder.Configuration["SupportEmail"]
-            }
+                Email = builder.Configuration["SupportEmail"],
+            },
         });
     });
 
