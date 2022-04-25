@@ -11,7 +11,7 @@
         <link rel="stylesheet" href="https://trunk.georgia.gov/modules/custom/ga_legacy_header_footer/css/ga_legacy_footer.css" />
     </environment>
     <partial name="_RaygunScriptsPartial" />
-    <script src="~/dist/site.bundle.js" asp-append-version="true" type="text/javascript" defer></script>
+    <script src="~/dist/site.bundle.js" asp-append-version="true" defer></script>
     @await RenderSectionAsync("ScriptFiles", required: false)
 </head>
 <body>
@@ -53,7 +53,7 @@
         </li>
     </ul>
     <environment exclude="Local">
-        <script type="text/javascript" src="https://trunk.georgia.gov/ga_legacy/js_footer"></script>
+        <script src="https://trunk.georgia.gov/ga_legacy/js_footer"></script>
     </environment>
 </div>
 </body>
