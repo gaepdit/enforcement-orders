@@ -10,7 +10,7 @@ internal static class SecurityHeaders
         policies.AddXssProtectionBlock();
         policies.AddContentTypeOptionsNoSniff();
 #if !DEBUG
-        policies.AddStrictTransportSecurityMaxAge(TimeSpan.FromDays(730).Seconds);
+        policies.AddStrictTransportSecurityMaxAge((int)TimeSpan.FromDays(730).TotalSeconds);
 #endif
         policies.AddReferrerPolicyStrictOriginWhenCrossOrigin();
         policies.RemoveServerHeader();
