@@ -57,6 +57,7 @@ internal static class SecurityHeaders
         builder.AddFontSrc().Self();
         builder.AddFormAction().Self();
         builder.AddManifestSrc().Self();
+        builder.AddFrameAncestors().None();
         builder.AddReportUri()
             .To($"https://report-to-api.raygun.com/reports-csp?apikey={ApplicationSettings.Raygun.ApiKey}");
         builder.AddCustomDirective("report-to", "raygun");
