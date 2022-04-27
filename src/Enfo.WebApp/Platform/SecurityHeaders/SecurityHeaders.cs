@@ -15,6 +15,12 @@ internal static class SecurityHeaders
         policies.AddReferrerPolicyStrictOriginWhenCrossOrigin();
         policies.RemoveServerHeader();
         policies.AddContentSecurityPolicy(builder => builder.EnfoCspBuilder());
+        policies.AddCustomHeader("Report-Endpoints",
+            $"raygun=\"https://report-to-api.raygun.com/reports-csp?apikey={ApplicationSettings.Raygun.ApiKey}\"");
+        policies.AddCustomHeader("Report-To",
+            $"{{\"group\":\"raygun\",\"max_age\":2592000,\"endpoints\":[{{\"url\":\"https://report-to-api.raygun.com/reports-csp?apikey={ApplicationSettings.Raygun.ApiKey}\"}}]}}");
+        policies.AddCustomHeader("NEL",
+            "{\"report_to\": \"network-errors\", \"max_age\": 2592000}");
     }
 
 #pragma warning disable S1075 // "URIs should not be hardcoded"
@@ -22,7 +28,8 @@ internal static class SecurityHeaders
     {
         builder.AddDefaultSrc().None();
         builder.AddBaseUri().Self();
-        builder.AddScriptSrc().Self()
+        builder.AddScriptSrc()
+            .Self()
             .From(new[]
             {
                 "https://cdn.raygun.io/raygun4js/raygun.min.js",
@@ -33,15 +40,18 @@ internal static class SecurityHeaders
             .WithHash256("lyolOjFEpwMenK+1PNbcwjIW7ZjHzw+EN8xe4louCcE=")
             .WithHash256("Tui7QoFlnLXkJCSl1/JvEZdIXTmBttnWNxzJpXomQjg=")
             .WithHash256("HmCUK6tSuR+K9jivpONI9hAkeIeDysc9CTJlS6tLklo=")
-            .WithHashTagHelper();
-        builder.AddStyleSrc().Self()
+            .WithHashTagHelper()
+            .ReportSample();
+        builder.AddStyleSrc()
+            .Self()
             .From(new[]
             {
                 "https://trunk.georgia.gov/modules/custom/ga_legacy_header_footer/css/ga_legacy_footer.css",
                 "https://trunk.georgia.gov/modules/custom/ga_legacy_header_footer/css/ga_legacy_header.css",
             })
             .WithHash256("wkAU1AW/h8YFx0XlzvpTllAKnFEO2tw8aKErs5a26LY=")
-            .WithHash256("lyolOjFEpwMenK+1PNbcwjIW7ZjHzw+EN8xe4louCcE=");
+            .WithHash256("lyolOjFEpwMenK+1PNbcwjIW7ZjHzw+EN8xe4louCcE=")
+            .ReportSample();
         builder.AddImgSrc().Self().Data().From("https://trunk.georgia.gov");
         builder.AddConnectSrc().Self().From("https://api.raygun.io");
         builder.AddFontSrc().Self();
@@ -49,6 +59,7 @@ internal static class SecurityHeaders
         builder.AddManifestSrc().Self();
         builder.AddReportUri()
             .To($"https://report-to-api.raygun.com/reports-csp?apikey={ApplicationSettings.Raygun.ApiKey}");
+        builder.AddCustomDirective("report-to", "raygun");
     }
 #pragma warning restore S1075
 }
