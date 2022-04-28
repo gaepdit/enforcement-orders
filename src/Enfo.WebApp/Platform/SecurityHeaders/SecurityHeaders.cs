@@ -30,12 +30,7 @@ internal static class SecurityHeaders
         builder.AddBaseUri().Self();
         builder.AddScriptSrc()
             .Self()
-            .From(new[]
-            {
-                "https://cdn.raygun.io/raygun4js/raygun.min.js",
-                "https://trunk.georgia.gov/ga_legacy/js_header",
-                "https://trunk.georgia.gov/ga_legacy/js_footer",
-            })
+            .From("https://cdn.raygun.io/raygun4js/raygun.min.js")
             .WithHash256("k8lqom5XjWiHpIL9TqKQ7DpRVbQNTtRtBFIKZ0iQaBk=")
             .WithHash256("lyolOjFEpwMenK+1PNbcwjIW7ZjHzw+EN8xe4louCcE=")
             .WithHash256("Tui7QoFlnLXkJCSl1/JvEZdIXTmBttnWNxzJpXomQjg=")
@@ -44,15 +39,10 @@ internal static class SecurityHeaders
             .ReportSample();
         builder.AddStyleSrc()
             .Self()
-            .From(new[]
-            {
-                "https://trunk.georgia.gov/modules/custom/ga_legacy_header_footer/css/ga_legacy_footer.css",
-                "https://trunk.georgia.gov/modules/custom/ga_legacy_header_footer/css/ga_legacy_header.css",
-            })
             .WithHash256("wkAU1AW/h8YFx0XlzvpTllAKnFEO2tw8aKErs5a26LY=")
             .WithHash256("lyolOjFEpwMenK+1PNbcwjIW7ZjHzw+EN8xe4louCcE=")
             .ReportSample();
-        builder.AddImgSrc().Self().Data().From("https://trunk.georgia.gov");
+        builder.AddImgSrc().Self().Data();
         builder.AddConnectSrc().Self().From("https://api.raygun.io");
         builder.AddFontSrc().Self();
         builder.AddFormAction().Self();

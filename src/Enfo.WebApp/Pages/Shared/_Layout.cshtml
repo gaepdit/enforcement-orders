@@ -6,12 +6,6 @@
     <title>@ViewData["Title"]@(string.IsNullOrWhiteSpace(ViewData["Title"]?.ToString()) ? "" : " | ") Georgia EPD Enforcement Orders</title>
     <partial name="_FaviconPartial" />
     <link rel="stylesheet" href="~/dist/site.css" asp-append-version="true" />
-    <environment exclude="Local">
-        <link rel="stylesheet" href="https://trunk.georgia.gov/modules/custom/ga_legacy_header_footer/css/ga_legacy_header.css"
-              integrity="sha384-02SuA0HBIRTwLIhbu1vYvptV3fB+uhvRKjM4M0JY/j2c8FYUFZ8rMEKSbeQ6u2Ww" crossorigin="anonymous" />
-        <link rel="stylesheet" href="https://trunk.georgia.gov/modules/custom/ga_legacy_header_footer/css/ga_legacy_footer.css"
-              integrity="sha384-DlhC3Gi+sZSJhxr/RR3eRPteqOp1hdHsMSh5U41c40k2RuCgrShGC4wsX4Lij4HW" crossorigin="anonymous" />
-    </environment>
     <partial name="_RaygunScriptsPartial" />
     <script src="~/dist/site.bundle.js" asp-append-version="true" defer></script>
     @await RenderSectionAsync("ScriptFiles", required: false)
@@ -24,9 +18,6 @@
 </environment>
 
 <a class="usa-skipnav" href="#main-content">Skip to main content</a>
-<environment exclude="Local">
-    <script src="https://trunk.georgia.gov/ga_legacy/js_header"></script>
-</environment>
 
 <partial name="_MenuPartial" />
 
@@ -38,25 +29,6 @@
     <div class="usa-grid usa-footer-return-to-top">
         <a href="#">Return to top</a>
     </div>
-</div>
-<div class="gaepd-footer">
-    <ul class="gaepd-footer-menu">
-        <li>
-            <a href="https://epd.georgia.gov/" target="_blank" rel="noopener">Environmental Protection Division</a>
-        </li>
-        <li>
-            <a href="https://georgia.gov/accessibility" target="_blank" rel="noopener">Accessibility</a>
-        </li>
-        <li>
-            <a href="https://www.gadnr.org/ada" target="_blank" rel="noopener">DNR Accessibility Notice</a>
-        </li>
-        <li>
-            <a href="https://georgia.gov/privacysecurity" target="_blank" rel="noopener">Privacy/Security</a>
-        </li>
-    </ul>
-    <environment exclude="Local">
-        <script src="https://trunk.georgia.gov/ga_legacy/js_footer"></script>
-    </environment>
 </div>
 </body>
 </html>
