@@ -27,7 +27,7 @@ internal static class SecurityHeaders
     private static void EnfoCspBuilder(this CspBuilder builder)
     {
         builder.AddDefaultSrc().None();
-        builder.AddBaseUri().Self();
+        builder.AddBaseUri().None();
         builder.AddScriptSrc()
             .Self()
             .From("https://cdn.raygun.io/raygun4js/raygun.min.js")
