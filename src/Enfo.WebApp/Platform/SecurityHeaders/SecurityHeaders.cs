@@ -45,7 +45,9 @@ internal static class SecurityHeaders
         builder.AddImgSrc().Self().Data();
         builder.AddConnectSrc().Self().From("https://api.raygun.io");
         builder.AddFontSrc().Self();
-        builder.AddFormAction().Self();
+        builder.AddFormAction()
+            .Self()
+            .From("https://login.microsoftonline.com");
         builder.AddManifestSrc().Self();
         builder.AddFrameAncestors().None();
         builder.AddReportUri()
