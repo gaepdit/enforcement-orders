@@ -100,10 +100,13 @@ builder.Services
         });
     });
 
+// Configure HSTS (max age: two years)
+builder.Services.AddHsts(opts => opts.MaxAge = TimeSpan.FromDays(730));
+
 // Configure application monitoring
-builder.Services.AddHttpContextAccessor() // needed by RaygunScriptPartial
-    .AddRaygun(builder.Configuration,
-        new RaygunMiddlewareSettings { ClientProvider = new RaygunClientProvider() });
+builder.Services.AddRaygun(builder.Configuration,
+    new RaygunMiddlewareSettings { ClientProvider = new RaygunClientProvider() });
+builder.Services.AddHttpContextAccessor(); // needed by RaygunScriptPartial
 
 // Configure the data repositories
 if (builder.Environment.IsLocalEnv())
@@ -156,11 +159,12 @@ else
 {
     // Production or Staging
     app.UseExceptionHandler("/Error");
+    app.UseHsts();
     app.UseRaygun();
 }
 
 // Configure security HTTP headers
-app.UseSecurityHeaders(policies => policies.AddEnfoSecurityHeaderPolicies());
+app.UseSecurityHeaders(policies => policies.AddSecurityHeaderPolicies());
 
 // Configure the application
 app.UseStatusCodePages();

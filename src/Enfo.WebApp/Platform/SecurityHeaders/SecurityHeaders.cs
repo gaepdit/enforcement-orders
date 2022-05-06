@@ -4,17 +4,14 @@ namespace Enfo.WebApp.Platform.SecurityHeaders;
 
 internal static class SecurityHeaders
 {
-    internal static void AddEnfoSecurityHeaderPolicies(this HeaderPolicyCollection policies)
+    internal static void AddSecurityHeaderPolicies(this HeaderPolicyCollection policies)
     {
         policies.AddFrameOptionsDeny();
         policies.AddXssProtectionBlock();
         policies.AddContentTypeOptionsNoSniff();
-#if !DEBUG
-        policies.AddStrictTransportSecurityMaxAge((int)TimeSpan.FromDays(730).TotalSeconds);
-#endif
         policies.AddReferrerPolicyStrictOriginWhenCrossOrigin();
         policies.RemoveServerHeader();
-        policies.AddContentSecurityPolicy(builder => builder.EnfoCspBuilder());
+        policies.AddContentSecurityPolicy(builder => builder.CspBuilder());
         policies.AddCustomHeader("Report-Endpoints",
             $"raygun=\"https://report-to-api.raygun.com/reports-csp?apikey={ApplicationSettings.Raygun.ApiKey}\"");
         policies.AddCustomHeader("Report-To",
@@ -24,7 +21,7 @@ internal static class SecurityHeaders
     }
 
 #pragma warning disable S1075 // "URIs should not be hardcoded"
-    private static void EnfoCspBuilder(this CspBuilder builder)
+    private static void CspBuilder(this CspBuilder builder)
     {
         builder.AddDefaultSrc().None();
         builder.AddBaseUri().None();
