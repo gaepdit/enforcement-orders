@@ -1,3 +1,15 @@
+# Build artifacts
+**/wwwroot/dist/
+
+# Server settings files
+appsettings\.Production\.json
+appsettings\.Staging\.json
+appsettings\.Development\.json
+
+# SonarLint Rider plugin
+.idea/sonarlint/issuestore/
+.idea/.idea.enforcement-orders/.idea/sonarlint-state.xml
+
 ### Generic ###
 # Generated 2021-05-11
 
@@ -467,18 +479,3 @@ FodyWeavers.xsd
 *.tlog
 
 # End of https://www.toptal.com/developers/gitignore/api/visualstudio,visualstudiocode,rider,cypressio
-
-### Repo-specific ###
-
-# Build artifacts
-**/wwwroot/dist/
-
-# Server settings files
-appsettings\.Production\.json
-appsettings\.Staging\.json
-appsettings\.Development\.json
-appsettings\.Local\.json
-
-# SonarLint Rider plugin
-.idea/sonarlint/issuestore/
-.idea/.idea.enforcement-orders/.idea/sonarlint-state.xml
