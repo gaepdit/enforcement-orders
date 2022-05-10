@@ -4,7 +4,7 @@ using Enfo.Domain.Utils;
 
 namespace Enfo.Domain.LegalAuthorities.Entities;
 
-public class LegalAuthority : BaseActiveEntity
+public class LegalAuthority : IdentifiedEntity, IAuditable
 {
     public LegalAuthority() { }
 
@@ -14,6 +14,8 @@ public class LegalAuthority : BaseActiveEntity
     [Required]
     [StringLength(100)]
     public string AuthorityName { get; set; }
+
+    public bool Active { get; set; } = true;
 
     public void ApplyUpdate(LegalAuthorityCommand resource)
     {

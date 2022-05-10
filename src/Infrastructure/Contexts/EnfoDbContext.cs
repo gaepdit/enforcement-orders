@@ -39,9 +39,9 @@ namespace Enfo.Infrastructure.Contexts
             builder.Entity<IdentityUserRole<Guid>>().ToTable("AppUserRoles");
             builder.Entity<IdentityUserToken<Guid>>().ToTable("AppUserTokens");
 
-            // Add audit properties to all entities
+            // Add audit properties to auditable entities
             foreach (var entityType in builder.Model.GetEntityTypes()
-                .Where(e => typeof(IBaseEntity).IsAssignableFrom(e.ClrType)).Select(e => e.ClrType))
+                .Where(e => typeof(IAuditable).IsAssignableFrom(e.ClrType)).Select(e => e.ClrType))
             {
                 builder.Entity(entityType).Property<DateTimeOffset?>(AuditProperties.CreatedAt);
                 builder.Entity(entityType).Property<DateTimeOffset?>(AuditProperties.UpdatedAt);
@@ -67,7 +67,7 @@ namespace Enfo.Infrastructure.Contexts
             var currentUser = _httpContextAccessor?.HttpContext?.User.Identity?.Name;
 
             var entries = ChangeTracker.Entries()
-                .Where(e => (e.State is EntityState.Added or EntityState.Modified) && e.Entity is IBaseEntity);
+                .Where(e => (e.State is EntityState.Added or EntityState.Modified) && e.Entity is IAuditable);
 
             foreach (var entry in entries)
             {

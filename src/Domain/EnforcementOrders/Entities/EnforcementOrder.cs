@@ -6,7 +6,7 @@ using Enfo.Domain.Utils;
 
 namespace Enfo.Domain.EnforcementOrders.Entities;
 
-public class EnforcementOrder : BaseEntity
+public class EnforcementOrder : IdentifiedEntity, IAuditable
 {
     public EnforcementOrder() { }
 
@@ -49,7 +49,7 @@ public class EnforcementOrder : BaseEntity
     public enum PublicationState
     {
         Draft,
-        Published
+        Published,
     }
 
     // Common data elements

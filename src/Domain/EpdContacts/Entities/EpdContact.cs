@@ -4,7 +4,7 @@ using Enfo.Domain.Utils;
 
 namespace Enfo.Domain.EpdContacts.Entities;
 
-public class EpdContact : BaseActiveEntity
+public class EpdContact : IdentifiedEntity, IAuditable
 {
     public EpdContact() { }
 
@@ -48,6 +48,8 @@ public class EpdContact : BaseActiveEntity
 
     [StringLength(10)]
     public string PostalCode { get; set; }
+
+    public bool Active { get; set; } = true;
 
     public void ApplyUpdate(EpdContactCommand resource)
     {

@@ -4,7 +4,7 @@ using Enfo.WebApp.Platform.Local;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-namespace Enfo.WebApp.Services;
+namespace Enfo.WebApp.Platform.Migrator;
 
 /// <summary>
 /// Sets up the database. 
