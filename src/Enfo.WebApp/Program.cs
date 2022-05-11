@@ -111,9 +111,19 @@ builder.Services.AddHttpContextAccessor(); // needed by RaygunScriptPartial
 // Configure the data repositories
 if (builder.Environment.IsLocalEnv())
 {
-    // When running locally, use an in-memory database (only used for Identity)
-    builder.Services.AddDbContext<EnfoDbContext>(opts =>
-        opts.UseInMemoryDatabase("Local_DB"));
+    // When running locally, you have the option to build the database using LocalDB or InMemory.
+    // Either way, only the Identity tables are used by the application. The data tables are 
+    // built but the data comes from the LocalRepository data files.
+    if (builder.Configuration.GetValue<bool>("BuildLocalDb"))
+    {
+        builder.Services.AddDbContext<EnfoDbContext>(opts =>
+            opts.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    }
+    else
+    {
+        builder.Services.AddDbContext<EnfoDbContext>(opts =>
+            opts.UseInMemoryDatabase("Enfo_DB"));
+    }
 
     // Uses static data when running locally
     builder.Services.AddScoped<IUserService, UserService>();
