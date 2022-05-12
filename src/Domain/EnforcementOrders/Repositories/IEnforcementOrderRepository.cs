@@ -1,4 +1,4 @@
-﻿using Enfo.Domain.EnforcementOrders.Resources;
+using Enfo.Domain.EnforcementOrders.Resources;
 using Enfo.Domain.EnforcementOrders.Specs;
 using Enfo.Domain.Pagination;
 
@@ -8,6 +8,7 @@ public interface IEnforcementOrderRepository : IDisposable
 {
     Task<EnforcementOrderDetailedView> GetAsync(int id);
     Task<EnforcementOrderAdminView> GetAdminViewAsync(int id);
+    Task<AttachmentView> GetAttachmentAsync(Guid id);
     Task<PaginatedResult<EnforcementOrderSummaryView>> ListAsync(EnforcementOrderSpec spec, PaginationSpec paging);
     Task<PaginatedResult<EnforcementOrderDetailedView>> ListDetailedAsync(EnforcementOrderSpec spec, PaginationSpec paging);
     Task<PaginatedResult<EnforcementOrderAdminSummaryView>> ListAdminAsync(EnforcementOrderAdminSpec spec, PaginationSpec paging);

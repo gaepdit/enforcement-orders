@@ -5,9 +5,11 @@ using Enfo.Domain.EpdContacts.Repositories;
 using Enfo.Domain.LegalAuthorities.Repositories;
 using Enfo.Domain.LegalAuthorities.Resources;
 using Enfo.Domain.LegalAuthorities.Resources.Validation;
+using Enfo.Domain.Services;
 using Enfo.Domain.Users.Entities;
 using Enfo.Domain.Users.Services;
 using Enfo.Infrastructure.Contexts;
+using Enfo.LocalRepository.Attachments;
 using Enfo.LocalRepository.EnforcementOrders;
 using Enfo.LocalRepository.EpdContacts;
 using Enfo.LocalRepository.LegalAuthorities;
@@ -108,12 +110,12 @@ builder.Services.AddRaygun(builder.Configuration,
     new RaygunMiddlewareSettings { ClientProvider = new RaygunClientProvider() });
 builder.Services.AddHttpContextAccessor(); // needed by RaygunScriptPartial
 
-// Configure the data repositories
+// Configure the database contexts, data repositories, and services
 if (builder.Environment.IsLocalEnv())
 {
     // When running locally, you have the option to build the database using LocalDB or InMemory.
-    // Either way, only the Identity tables are used by the application. The data tables are 
-    // built but the data comes from the LocalRepository data files.
+    // Either way, only the Identity tables are used by the application. The data tables are created,
+    // but the data comes from the LocalRepository data files.
     if (builder.Configuration.GetValue<bool>("BuildLocalDb"))
     {
         builder.Services.AddDbContext<EnfoDbContext>(opts =>
@@ -127,6 +129,7 @@ if (builder.Environment.IsLocalEnv())
 
     // Uses static data when running locally
     builder.Services.AddScoped<IUserService, UserService>();
+    builder.Services.AddScoped<IFileService, FileService>();
     builder.Services.AddScoped<IEnforcementOrderRepository, EnforcementOrderRepository>();
     builder.Services.AddScoped<IEpdContactRepository, EpdContactRepository>();
     builder.Services.AddScoped<ILegalAuthorityRepository, LegalAuthorityRepository>();
@@ -140,6 +143,9 @@ else
 
     builder.Services.AddScoped<IUserService,
         Enfo.Infrastructure.Services.UserService>();
+    builder.Services.AddScoped<IFileService,
+        Enfo.Infrastructure.Services.FileService>(s => new Enfo.Infrastructure.Services.FileService(
+        Path.Combine(builder.Configuration["PersistedFilesBasePath"], "Attachments")));
     builder.Services.AddScoped<IEnforcementOrderRepository,
         Enfo.Infrastructure.Repositories.EnforcementOrderRepository>();
     builder.Services.AddScoped<IEpdContactRepository,

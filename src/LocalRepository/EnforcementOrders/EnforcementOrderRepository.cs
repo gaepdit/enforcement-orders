@@ -1,9 +1,10 @@
-﻿using Enfo.Domain.EnforcementOrders.Entities;
+using Enfo.Domain.EnforcementOrders.Entities;
 using Enfo.Domain.EnforcementOrders.Repositories;
 using Enfo.Domain.EnforcementOrders.Resources;
 using Enfo.Domain.EnforcementOrders.Specs;
 using Enfo.Domain.Pagination;
 using Enfo.Domain.Utils;
+using Enfo.LocalRepository.Attachments;
 
 namespace Enfo.LocalRepository.EnforcementOrders;
 
@@ -39,6 +40,12 @@ public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
 
         return Task.FromResult(order);
     }
+
+    public Task<AttachmentView> GetAttachmentAsync(Guid id) =>
+        AttachmentData.Attachments.Any(e => e.Id == id && !e.Deleted)
+            ? Task.FromResult(new AttachmentView(
+                AttachmentData.Attachments.Single(e => e.Id == id)!))
+            : Task.FromResult(null as AttachmentView);
 
     public Task<PaginatedResult<EnforcementOrderSummaryView>> ListAsync(
         EnforcementOrderSpec spec, PaginationSpec paging)

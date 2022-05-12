@@ -41,6 +41,11 @@ public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
         return item == null ? null : new EnforcementOrderAdminView(item);
     }
 
+    public async Task<AttachmentView> GetAttachmentAsync(Guid id)
+    {
+        throw new NotImplementedException();
+    }
+
     public async Task<PaginatedResult<EnforcementOrderSummaryView>> ListAsync(
         EnforcementOrderSpec spec, PaginationSpec paging)
     {

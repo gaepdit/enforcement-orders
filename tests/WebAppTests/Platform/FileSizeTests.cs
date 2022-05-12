@@ -1,4 +1,4 @@
-using Enfo.WebApp.Platform.Display;
+using Enfo.WebApp.Platform.Attachments;
 using Xunit;
 using Xunit.Extensions.AssertExtensions;
 

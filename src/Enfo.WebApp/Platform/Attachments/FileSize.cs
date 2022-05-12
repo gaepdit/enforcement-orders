@@ -1,7 +1,7 @@
 ﻿using JetBrains.Annotations;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Enfo.WebApp.Platform.Display;
+namespace Enfo.WebApp.Platform.Attachments;
 
 public static class FileSize
 {

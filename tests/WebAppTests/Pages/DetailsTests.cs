@@ -16,8 +16,7 @@ using static EnfoTests.Helpers.DataHelper;
 
 namespace EnfoTests.WebApp.Pages
 {
-    public class
-        DetailsTests
+    public class DetailsTests
     {
         [Fact]
         public async Task OnGet_ReturnsWithOrder()

@@ -1,6 +1,7 @@
 ﻿using Enfo.Domain.EnforcementOrders.Entities;
 using Enfo.Domain.EnforcementOrders.Resources;
 using Enfo.Domain.Utils;
+using Enfo.LocalRepository.Attachments;
 using Enfo.LocalRepository.EpdContacts;
 using Enfo.LocalRepository.LegalAuthorities;
 

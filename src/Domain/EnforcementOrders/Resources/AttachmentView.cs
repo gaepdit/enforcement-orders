@@ -21,6 +21,4 @@ public class AttachmentView
 
     [UIHint("FileSize")]
     public long Size { get; }
-
-    public string FullFileName => string.Concat(FileName, FileExtension);
 }
