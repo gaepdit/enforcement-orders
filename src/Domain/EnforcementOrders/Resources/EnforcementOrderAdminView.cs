@@ -5,7 +5,7 @@ namespace Enfo.Domain.EnforcementOrders.Resources;
 
 public class EnforcementOrderAdminView : EnforcementOrderAdminSummaryView
 {
-    public EnforcementOrderAdminView([NotNull] Entities.EnforcementOrder item) : base(item)
+    public EnforcementOrderAdminView([NotNull] EnforcementOrder item) : base(item)
     {
         Guard.NotNull(item, nameof(item));
 
@@ -26,13 +26,13 @@ public class EnforcementOrderAdminView : EnforcementOrderAdminSummaryView
     }
 
     private static PublicationProgress GetResourcePublicationState(
-        Entities.EnforcementOrder.PublicationState status) =>
+        EnforcementOrder.PublicationState status) =>
         status switch
         {
-            Entities.EnforcementOrder.PublicationState.Draft => PublicationProgress.Draft,
-            Entities.EnforcementOrder.PublicationState.Published => PublicationProgress.Published,
+            EnforcementOrder.PublicationState.Draft => PublicationProgress.Draft,
+            EnforcementOrder.PublicationState.Published => PublicationProgress.Published,
             _ => throw new InvalidEnumArgumentException(nameof(status), (int)status,
-                typeof(Entities.EnforcementOrder.PublicationState))
+                typeof(EnforcementOrder.PublicationState))
         };
 
     [DisplayName("Progress")]
