@@ -1,4 +1,4 @@
-﻿using Enfo.Domain.Pagination;
+using Enfo.Domain.Pagination;
 
 namespace Enfo.Domain.EnforcementOrders.Specs;
 
@@ -15,16 +15,17 @@ public static class EnforcementOrderEvaluators
             .FilterByOrderNumber(spec.OrderNumber);
 
     public static IQueryable<Entities.EnforcementOrder> ApplyAdminSpecFilter(
-        [NotNull] this IQueryable<Entities.EnforcementOrder> query, [NotNull] EnforcementOrderAdminSpec adminSpec) =>
-        query.FilterByFacility(adminSpec.Facility)
-            .FilterByCounty(adminSpec.County)
-            .FilterByLegalAuth(adminSpec.LegalAuth)
-            .FilterByDateRange(adminSpec.FromDate, adminSpec.TillDate, adminSpec.Status)
-            .FilterByActivityStatus(adminSpec.Status)
-            .FilterByPublicationStatus(adminSpec.Progress)
-            .FilterByOrderNumber(adminSpec.OrderNumber)
-            .FilterByText(adminSpec.Text)
-            .FilterByIsDeleted(adminSpec.ShowDeleted ?? false);
+        [NotNull] this IQueryable<Entities.EnforcementOrder> query, [NotNull] EnforcementOrderAdminSpec spec) =>
+        query.FilterByFacility(spec.Facility)
+            .FilterByCounty(spec.County)
+            .FilterByLegalAuth(spec.LegalAuth)
+            .FilterByDateRange(spec.FromDate, spec.TillDate, spec.Status)
+            .FilterByActivityStatus(spec.Status)
+            .FilterForAttachments(spec.WithAttachments)
+            .FilterByPublicationStatus(spec.Progress)
+            .FilterByOrderNumber(spec.OrderNumber)
+            .FilterByText(spec.Text)
+            .FilterByIsDeleted(spec.ShowDeleted ?? false);
 
     public static IOrderedQueryable<Entities.EnforcementOrder> ApplySorting(
         [NotNull] this IQueryable<Entities.EnforcementOrder> query, OrderSorting sorting) =>

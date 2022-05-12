@@ -17,7 +17,8 @@ internal static class EnforcementOrderData
         if (item is null) return null;
         return new EnforcementOrderAdminView(item)
         {
-            Attachments = AttachmentData.Attachments.Where(e => e.EnforcementOrder.Id == id)
+            Attachments = AttachmentData.Attachments
+                .Where(a => a.EnforcementOrder.Id == id && !a.Deleted)
                 .Select(e => new AttachmentView(e)).ToList(),
         };
     }
@@ -28,9 +29,18 @@ internal static class EnforcementOrderData
         if (item is null) return null;
         return new EnforcementOrderDetailedView(item)
         {
-            Attachments = AttachmentData.Attachments.Where(e => e.EnforcementOrder.Id == id)
+            Attachments = AttachmentData.Attachments
+                .Where(a => a.EnforcementOrder.Id == id && !a.Deleted)
                 .Select(e => new AttachmentView(e)).ToList(),
         };
+    }
+
+    public static List<EnforcementOrder> GetEnforcementOrders()
+    {
+        EnforcementOrders.ForEach(e =>
+            e.Attachments = AttachmentData.Attachments
+                .Where(a => a.EnforcementOrder.Id == e.Id && !a.Deleted).ToList());
+        return EnforcementOrders;
     }
 
     public static readonly List<EnforcementOrder> EnforcementOrders = new()

@@ -121,6 +121,12 @@
             </fieldset>
         </div>
 
+        <fieldset>
+            <legend>Attachments</legend>
+            <input asp-for="Spec.WithAttachments" />
+            <label asp-for="Spec.WithAttachments" class="form-check-label"></label>
+        </fieldset>
+
         <div class="gaepd-buttonrow">
             <input type="hidden" name="handler" value="search" />
             <button id="SearchButton" type="submit">Search</button>

@@ -16,28 +16,18 @@ public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
                 .FilterForOnlyPublic().Any(e => e.Id == id))
             return Task.FromResult(null as EnforcementOrderDetailedView);
 
-        var order = new EnforcementOrderDetailedView(
-            EnforcementOrderData.EnforcementOrders.SingleOrDefault(e => e.Id == id)!);
-
-        order.Attachments = GetAttachmentsForOrder(order.Id);
-
+        var order = EnforcementOrderData.GetEnforcementOrderDetailedView(id);
+        
         return Task.FromResult(order);
     }
-
-    private static List<AttachmentView> GetAttachmentsForOrder(int id) =>
-        AttachmentData.Attachments.Where(e => e.EnforcementOrder.Id == id)
-            .Select(e => new AttachmentView(e)).ToList();
 
     public Task<EnforcementOrderAdminView> GetAdminViewAsync(int id)
     {
         if (!EnforcementOrderData.EnforcementOrders.AsQueryable().Any(e => e.Id == id))
             return Task.FromResult(null as EnforcementOrderAdminView);
 
-        var order = new EnforcementOrderAdminView(
-            EnforcementOrderData.EnforcementOrders.SingleOrDefault(e => e.Id == id)!);
-
-        order.Attachments = GetAttachmentsForOrder(order.Id);
-
+        var order = EnforcementOrderData.GetEnforcementOrderAdminView(id);
+        
         return Task.FromResult(order);
     }
 
@@ -53,7 +43,7 @@ public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
         Guard.NotNull(spec, nameof(spec));
         Guard.NotNull(paging, nameof(paging));
 
-        var filteredItems = EnforcementOrderData.EnforcementOrders.AsQueryable()
+        var filteredItems = EnforcementOrderData.GetEnforcementOrders().AsQueryable()
             .ApplySpecFilter(spec);
 
         var items = filteredItems
@@ -73,7 +63,7 @@ public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
         Guard.NotNull(spec, nameof(spec));
         Guard.NotNull(paging, nameof(paging));
 
-        var filteredItems = EnforcementOrderData.EnforcementOrders.AsQueryable()
+        var filteredItems = EnforcementOrderData.GetEnforcementOrders().AsQueryable()
             .ApplySpecFilter(spec);
 
         var items = filteredItems
@@ -93,7 +83,7 @@ public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
         Guard.NotNull(spec, nameof(spec));
         Guard.NotNull(paging, nameof(paging));
 
-        var filteredItems = EnforcementOrderData.EnforcementOrders.AsQueryable()
+        var filteredItems = EnforcementOrderData.GetEnforcementOrders().AsQueryable()
             .ApplyAdminSpecFilter(spec);
 
         var items = filteredItems
@@ -120,7 +110,7 @@ public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
     public Task<IReadOnlyList<EnforcementOrderDetailedView>> ListCurrentProposedEnforcementOrdersAsync() =>
         Task.FromResult(
             (IReadOnlyList<EnforcementOrderDetailedView>)
-            EnforcementOrderData.EnforcementOrders.AsQueryable()
+            EnforcementOrderData.GetEnforcementOrders().AsQueryable()
                 .FilterForCurrentProposed()
                 .ApplySorting(OrderSorting.DateAsc)
                 .Select(e => new EnforcementOrderDetailedView(e))
@@ -129,7 +119,7 @@ public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
     public Task<IReadOnlyList<EnforcementOrderDetailedView>> ListRecentlyExecutedEnforcementOrdersAsync() =>
         Task.FromResult(
             (IReadOnlyList<EnforcementOrderDetailedView>)
-            EnforcementOrderData.EnforcementOrders.AsQueryable()
+            EnforcementOrderData.GetEnforcementOrders().AsQueryable()
                 .FilterForRecentlyExecuted()
                 .ApplySorting(OrderSorting.DateAsc)
                 .Select(e => new EnforcementOrderDetailedView(e))
@@ -138,7 +128,7 @@ public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
     public Task<IReadOnlyList<EnforcementOrderAdminSummaryView>> ListDraftEnforcementOrdersAsync() =>
         Task.FromResult(
             (IReadOnlyList<EnforcementOrderAdminSummaryView>)
-            EnforcementOrderData.EnforcementOrders.AsQueryable()
+            EnforcementOrderData.GetEnforcementOrders().AsQueryable()
                 .FilterForDrafts()
                 .ApplySorting(OrderSorting.DateAsc)
                 .Select(e => new EnforcementOrderAdminSummaryView(e))
@@ -147,7 +137,7 @@ public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
     public Task<IReadOnlyList<EnforcementOrderAdminSummaryView>> ListPendingEnforcementOrdersAsync() =>
         Task.FromResult(
             (IReadOnlyList<EnforcementOrderAdminSummaryView>)
-            EnforcementOrderData.EnforcementOrders.AsQueryable()
+            EnforcementOrderData.GetEnforcementOrders().AsQueryable()
                 .FilterForPending()
                 .ApplySorting(OrderSorting.DateAsc)
                 .Select(e => new EnforcementOrderAdminSummaryView(e))

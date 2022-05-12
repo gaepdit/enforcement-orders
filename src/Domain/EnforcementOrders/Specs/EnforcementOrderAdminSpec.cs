@@ -26,6 +26,9 @@ public class EnforcementOrderAdminSpec
     [DisplayName("Enforcement Order Status")]
     public ActivityState Status { get; set; } = ActivityState.All;
 
+    [DisplayName("Show orders with attachments")]
+    public bool WithAttachments { get; set; }
+
     [DisplayName("Progress")]
     public PublicationState Progress { get; set; } = PublicationState.All;
 
@@ -50,16 +53,17 @@ public class EnforcementOrderAdminSpec
     }
 
     public IDictionary<string, string> AsRouteValues() => new Dictionary<string, string>()
-        {
-            {nameof(Facility), Facility},
-            {nameof(County), County},
-            {nameof(LegalAuth), LegalAuth?.ToString()},
-            {nameof(FromDate), FromDate?.ToString()},
-            {nameof(TillDate), TillDate?.ToString()},
-            {nameof(Status), Status.ToString()},
-            {nameof(Progress), Progress.ToString()},
-            {nameof(OrderNumber), OrderNumber},
-            {nameof(Text), Text},
-            {nameof(ShowDeleted), ShowDeleted.ToString()},
-        };
+    {
+        { nameof(Facility), Facility },
+        { nameof(County), County },
+        { nameof(LegalAuth), LegalAuth?.ToString() },
+        { nameof(FromDate), FromDate?.ToString() },
+        { nameof(TillDate), TillDate?.ToString() },
+        { nameof(Status), Status.ToString() },
+        { nameof(Progress), Progress.ToString() },
+        { nameof(OrderNumber), OrderNumber },
+        { nameof(Text), Text },
+        { nameof(ShowDeleted), ShowDeleted.ToString() },
+        { nameof(WithAttachments), WithAttachments.ToString() },
+    };
 }

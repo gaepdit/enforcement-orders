@@ -5,7 +5,6 @@ using Enfo.Domain.LegalAuthorities.Repositories;
 using Enfo.Domain.LegalAuthorities.Resources;
 using Enfo.Domain.Pagination;
 using Enfo.WebApp.Platform.Constants;
-using JetBrains.Annotations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -29,14 +28,12 @@ public class Search : PageModel
     public Search(IEnforcementOrderRepository repository, ILegalAuthorityRepository legalAuthority) =>
         (_repository, _legalAuthority) = (repository, legalAuthority);
 
-    [UsedImplicitly]
     public async Task OnGetAsync()
     {
         Spec = new EnforcementOrderAdminSpec();
         LegalAuthoritiesSelectList = await GetLegalAuthoritiesSelectList();
     }
 
-    [UsedImplicitly]
     public async Task OnGetSearchAsync(EnforcementOrderAdminSpec spec, [FromQuery] int p = 1)
     {
         spec.TrimAll();
