@@ -1,4 +1,5 @@
-﻿using Enfo.Domain.EpdContacts.Resources;
+﻿using Enfo.Domain.EnforcementOrders.Entities;
+using Enfo.Domain.EpdContacts.Resources;
 using Enfo.Domain.Utils;
 
 namespace Enfo.Domain.EnforcementOrders.Resources;
@@ -68,6 +69,10 @@ public class EnforcementOrderAdminView : EnforcementOrderAdminSummaryView
     [DisplayName("Publication Date For Executed Order")]
     [DisplayFormat(DataFormatString = DisplayFormats.ShortDateComposite)]
     public DateTime? ExecutedOrderPostedDate { get; }
+
+    // Attachments
+
+    public ICollection<AttachmentView> Attachments { get; set; } = new List<AttachmentView>();
 
     // Hearing info
 

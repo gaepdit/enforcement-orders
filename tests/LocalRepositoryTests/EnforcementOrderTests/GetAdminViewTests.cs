@@ -1,5 +1,4 @@
-﻿
-using Enfo.Domain.EnforcementOrders.Resources;
+﻿using Enfo.Domain.EnforcementOrders.Resources;
 using Enfo.LocalRepository.EnforcementOrders;
 using FluentAssertions;
 using NUnit.Framework;
@@ -15,11 +14,11 @@ public class GetAdminViewTests
     public async Task WhenItemExistsAndIsPublic_ReturnsItem()
     {
         using var repository = new EnforcementOrderRepository();
-        var item = EnforcementOrderData.EnforcementOrders.First(e => e.GetIsPublic);
+        var itemId = EnforcementOrderData.EnforcementOrders.First(e => e.GetIsPublic).Id;
 
-        var result = await repository.GetAdminViewAsync(item.Id);
+        var result = await repository.GetAdminViewAsync(itemId);
 
-        var expected = new EnforcementOrderAdminView(item);
+        var expected = EnforcementOrderData.GetEnforcementOrderAdminView(itemId);
         result.Should().BeEquivalentTo(expected);
     }
 
@@ -35,11 +34,11 @@ public class GetAdminViewTests
     public async Task WhenItemExistsButIsNotPublic_ReturnsItem()
     {
         using var repository = new EnforcementOrderRepository();
-        var item = EnforcementOrderData.EnforcementOrders.First(e => !e.GetIsPublic);
+        var itemId = EnforcementOrderData.EnforcementOrders.First(e => !e.GetIsPublic).Id;
 
-        var result = await repository.GetAdminViewAsync(item.Id);
+        var result = await repository.GetAdminViewAsync(itemId);
 
-        var expected = new EnforcementOrderAdminView(item);
+        var expected = EnforcementOrderData.GetEnforcementOrderAdminView(itemId);
         result.Should().BeEquivalentTo(expected);
     }
 }

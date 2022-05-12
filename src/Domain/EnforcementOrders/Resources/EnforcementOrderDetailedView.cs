@@ -1,11 +1,12 @@
-﻿using Enfo.Domain.EpdContacts.Resources;
+﻿using Enfo.Domain.EnforcementOrders.Entities;
+using Enfo.Domain.EpdContacts.Resources;
 using Enfo.Domain.Utils;
 
 namespace Enfo.Domain.EnforcementOrders.Resources;
 
 public class EnforcementOrderDetailedView : EnforcementOrderSummaryView
 {
-    public EnforcementOrderDetailedView([NotNull] Entities.EnforcementOrder item) : base(item)
+    public EnforcementOrderDetailedView([NotNull] EnforcementOrder item) : base(item)
     {
         Guard.NotNull(item, nameof(item));
 
@@ -47,6 +48,11 @@ public class EnforcementOrderDetailedView : EnforcementOrderSummaryView
     public EpdContactView CommentContact { get; }
 
     // Executed orders
+
+    // Attachments
+
+    [DisplayName("File Attachments")]
+    public ICollection<AttachmentView> Attachments { get; set; } = new List<AttachmentView>();
 
     // Hearing info
 

@@ -14,11 +14,11 @@ public class GetTests
     public async Task WhenItemExistsAndIsPublic_ReturnsItem()
     {
         using var repository = new EnforcementOrderRepository();
-        var item = EnforcementOrderData.EnforcementOrders.First(e => e.GetIsPublic);
+        var itemId = EnforcementOrderData.EnforcementOrders.First(e => e.GetIsPublic).Id;
 
-        var result = await repository.GetAsync(item.Id);
+        var result = await repository.GetAsync(itemId);
 
-        var expected = new EnforcementOrderDetailedView(item);
+        var expected = EnforcementOrderData.GetEnforcementOrderDetailedView(itemId);
         result.Should().BeEquivalentTo(expected);
     }
 

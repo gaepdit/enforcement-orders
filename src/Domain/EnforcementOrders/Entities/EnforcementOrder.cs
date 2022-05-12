@@ -134,6 +134,8 @@ public class EnforcementOrder : IdentifiedEntity, IAuditable
         && ExecutedOrderPostedDate.Value <= DateTime.Today
     );
 
+    public ICollection<Attachment> Attachments { get; set; }
+
     // Hearing info
 
     public bool IsHearingScheduled { get; set; }

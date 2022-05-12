@@ -9,18 +9,36 @@ namespace Enfo.LocalRepository.EnforcementOrders;
 
 public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
 {
-    public Task<EnforcementOrderDetailedView> GetAsync(int id) =>
-        EnforcementOrderData.EnforcementOrders
-            .AsQueryable().FilterForOnlyPublic().Any(e => e.Id == id)
-            ? Task.FromResult(new EnforcementOrderDetailedView(
-                EnforcementOrderData.EnforcementOrders.SingleOrDefault(e => e.Id == id)!))
-            : Task.FromResult(null as EnforcementOrderDetailedView);
+    public Task<EnforcementOrderDetailedView> GetAsync(int id)
+    {
+        if (!EnforcementOrderData.EnforcementOrders.AsQueryable()
+                .FilterForOnlyPublic().Any(e => e.Id == id))
+            return Task.FromResult(null as EnforcementOrderDetailedView);
 
-    public Task<EnforcementOrderAdminView> GetAdminViewAsync(int id) =>
-        EnforcementOrderData.EnforcementOrders.Any(e => e.Id == id)
-            ? Task.FromResult(new EnforcementOrderAdminView(
-                EnforcementOrderData.EnforcementOrders.SingleOrDefault(e => e.Id == id)!))
-            : Task.FromResult(null as EnforcementOrderAdminView);
+        var order = new EnforcementOrderDetailedView(
+            EnforcementOrderData.EnforcementOrders.SingleOrDefault(e => e.Id == id)!);
+
+        order.Attachments = GetAttachmentsForOrder(order.Id);
+
+        return Task.FromResult(order);
+    }
+
+    private static List<AttachmentView> GetAttachmentsForOrder(int id) =>
+        AttachmentData.Attachments.Where(e => e.EnforcementOrder.Id == id)
+            .Select(e => new AttachmentView(e)).ToList();
+
+    public Task<EnforcementOrderAdminView> GetAdminViewAsync(int id)
+    {
+        if (!EnforcementOrderData.EnforcementOrders.AsQueryable().Any(e => e.Id == id))
+            return Task.FromResult(null as EnforcementOrderAdminView);
+
+        var order = new EnforcementOrderAdminView(
+            EnforcementOrderData.EnforcementOrders.SingleOrDefault(e => e.Id == id)!);
+
+        order.Attachments = GetAttachmentsForOrder(order.Id);
+
+        return Task.FromResult(order);
+    }
 
     public Task<PaginatedResult<EnforcementOrderSummaryView>> ListAsync(
         EnforcementOrderSpec spec, PaginationSpec paging)

@@ -58,6 +58,10 @@ else
         <th scope="row">@Html.DisplayNameFor(m => m.Item.LegalAuthority)</th>
         <td>@Html.DisplayFor(m => m.Item.LegalAuthority.AuthorityName)</td>
     </tr>
+    <tr>
+        <th scope="row">@Html.DisplayNameFor(m => m.Item.Attachments)</th>
+        <td>@await Html.PartialAsync("_AttachmentsList", Model.Item.Attachments)</td>
+    </tr>
 
     @if (Model.Item.IsProposedOrder)
     {

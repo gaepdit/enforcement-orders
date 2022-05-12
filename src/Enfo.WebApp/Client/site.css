@@ -681,8 +681,35 @@ svg:not(:root) {
     font-size: inherit;
     overflow: visible;
     vertical-align: middle;
-    width: 1.5em;
-    height: 1.5em;
+    width: 1em;
+    height: 1em;
+}
+
+/* File attachments */
+
+ul.gaepd-file-links {
+    list-style: none;
+    padding-left: 0;
+}
+
+.gaepd-file-link {
+    color: #112e51;
+}
+
+.gaepd-file-link svg {
+    margin-right: 0.3rem;
+}
+
+a.gaepd-file-link {
+    text-decoration: none;
+    padding: .5rem 0.3rem;
+    margin-left: -0.3rem;
+    border-radius: 1px;
+    color: #112e51;
+}
+
+a.gaepd-file-link:hover, a.gaepd-file-link:focus {
+    box-shadow: inset 0 0 0 2px #205493;
 }
 
 /*

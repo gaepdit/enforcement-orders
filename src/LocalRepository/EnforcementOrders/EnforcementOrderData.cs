@@ -1,4 +1,5 @@
 ﻿using Enfo.Domain.EnforcementOrders.Entities;
+using Enfo.Domain.EnforcementOrders.Resources;
 using Enfo.Domain.Utils;
 using Enfo.LocalRepository.EpdContacts;
 using Enfo.LocalRepository.LegalAuthorities;
@@ -9,6 +10,28 @@ namespace Enfo.LocalRepository.EnforcementOrders;
 
 internal static class EnforcementOrderData
 {
+    public static EnforcementOrderAdminView GetEnforcementOrderAdminView(int id)
+    {
+        var item = EnforcementOrders.Find(e => e.Id == id);
+        if (item is null) return null;
+        return new EnforcementOrderAdminView(item)
+        {
+            Attachments = AttachmentData.Attachments.Where(e => e.EnforcementOrder.Id == id)
+                .Select(e => new AttachmentView(e)).ToList(),
+        };
+    }
+
+    public static EnforcementOrderDetailedView GetEnforcementOrderDetailedView(int id)
+    {
+        var item = EnforcementOrders.Find(e => e.Id == id);
+        if (item is null) return null;
+        return new EnforcementOrderDetailedView(item)
+        {
+            Attachments = AttachmentData.Attachments.Where(e => e.EnforcementOrder.Id == id)
+                .Select(e => new AttachmentView(e)).ToList(),
+        };
+    }
+
     public static readonly List<EnforcementOrder> EnforcementOrders = new()
     {
         new EnforcementOrder
