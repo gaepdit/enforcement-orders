@@ -5,22 +5,43 @@ namespace Enfo.LocalRepository.Attachments;
 
 public class FileService : IFileService
 {
-    public async Task<byte[]> GetFileAsync(string fileName)
+    internal List<AttachmentData.AttachmentFile> Files { get; }
+
+    public FileService() => Files = new List<AttachmentData.AttachmentFile>(AttachmentData.AttachmentFiles);
+
+    public Task<byte[]> GetFileAsync(string fileName)
     {
         try
         {
-            if (AttachmentData.AttachmentFiles.All(e => e.FileName != fileName)) return Array.Empty<byte>();
-            var base64EncodedFile = AttachmentData.AttachmentFiles
+            if (Files.All(e => e.FileName != fileName)) return Task.FromResult(Array.Empty<byte>());
+            var base64EncodedFile = Files
                 .Single(e => e.FileName == fileName).Base64EncodedFile;
-            return base64EncodedFile is null ? Array.Empty<byte>() : Convert.FromBase64String(base64EncodedFile);
+            return Task.FromResult(base64EncodedFile is null
+                ? Array.Empty<byte>()
+                : Convert.FromBase64String(base64EncodedFile));
         }
         catch (Exception e) when (e is FileNotFoundException or DirectoryNotFoundException)
         {
-            return Array.Empty<byte>();
+            return Task.FromResult(Array.Empty<byte>());
         }
     }
 
-    public async Task TryDeleteFileAsync(string path) => throw new NotImplementedException();
+    public void TryDeleteFile(string fileName) =>
+        Files.Remove(Files.SingleOrDefault(a => a.FileName == fileName));
 
-    public async Task SaveFileAsync(IFormFile file) => throw new NotImplementedException();
+    public async Task SaveFileAsync(IFormFile file, Guid id)
+    {
+        if (file.Length == 0 || string.IsNullOrWhiteSpace(file.FileName)) return;
+
+        var stream = new MemoryStream(Convert.ToInt32(file.Length));
+        await file.CopyToAsync(stream);
+
+        var attachmentFile = new AttachmentData.AttachmentFile
+        {
+            FileName = string.Concat(id.ToString(), Path.GetExtension(file.FileName)),
+            Base64EncodedFile = Convert.ToBase64String(stream.ToArray()),
+        };
+
+        Files.Add(attachmentFile);
+    }
 }

@@ -130,10 +130,20 @@ if (builder.Environment.IsLocalEnv())
 
     // Uses static data when running locally
     builder.Services.AddScoped<IUserService, UserService>();
-    builder.Services.AddScoped<IFileService, FileService>();
     builder.Services.AddScoped<IEnforcementOrderRepository, EnforcementOrderRepository>();
     builder.Services.AddScoped<IEpdContactRepository, EpdContactRepository>();
     builder.Services.AddScoped<ILegalAuthorityRepository, LegalAuthorityRepository>();
+
+    if (builder.Configuration.GetValue<bool>("UseLocalFileSystem"))
+    {
+        builder.Services.AddTransient<IFileService,
+            Enfo.Infrastructure.Services.FileService>(s => new Enfo.Infrastructure.Services.FileService(
+            Path.Combine(builder.Configuration["PersistedFilesBasePath"], "Attachments")));
+    }
+    else
+    {
+        builder.Services.AddTransient<IFileService, FileService>();
+    }
 }
 else
 {
@@ -144,7 +154,7 @@ else
 
     builder.Services.AddScoped<IUserService,
         Enfo.Infrastructure.Services.UserService>();
-    builder.Services.AddScoped<IFileService,
+    builder.Services.AddTransient<IFileService,
         Enfo.Infrastructure.Services.FileService>(s => new Enfo.Infrastructure.Services.FileService(
         Path.Combine(builder.Configuration["PersistedFilesBasePath"], "Attachments")));
     builder.Services.AddScoped<IEnforcementOrderRepository,
