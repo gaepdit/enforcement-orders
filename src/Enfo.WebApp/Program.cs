@@ -32,8 +32,8 @@ using Mindscape.Raygun4Net.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Set Application Settings
-builder.Configuration.GetSection(ApplicationSettings.RaygunSettingsSection).Bind(ApplicationSettings.Raygun);
+// Bind Application Settings
+builder.Configuration.GetSection(ApplicationSettings.RaygunSettingsSection).Bind(ApplicationSettings.RaygunClientSettings);
 
 // Configure Identity
 builder.Services
@@ -106,6 +106,7 @@ builder.Services
 builder.Services.AddHsts(opts => opts.MaxAge = TimeSpan.FromDays(730));
 
 // Configure application monitoring
+builder.Services.AddTransient<IErrorLogger, ErrorLogger>();
 builder.Services.AddRaygun(builder.Configuration,
     new RaygunMiddlewareSettings { ClientProvider = new RaygunClientProvider() });
 builder.Services.AddHttpContextAccessor(); // needed by RaygunScriptPartial

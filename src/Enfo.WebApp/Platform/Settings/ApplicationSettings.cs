@@ -5,10 +5,10 @@ namespace Enfo.WebApp.Platform.Settings;
 public static class ApplicationSettings
 {
     public const string RaygunSettingsSection = "RaygunSettings";
-    public static RaygunSettings Raygun { get; } = new();
+    public static RaygunClientSettings RaygunClientSettings { get; } = new();
 }
 
-public class RaygunSettings
+public class RaygunClientSettings
 {
     public string ApiKey { get; [UsedImplicitly] init; }
 }
