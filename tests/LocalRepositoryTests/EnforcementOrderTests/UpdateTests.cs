@@ -1,7 +1,9 @@
 ﻿using Enfo.Domain.EnforcementOrders.Entities;
 using Enfo.Domain.EnforcementOrders.Resources;
+using Enfo.Domain.Services;
 using Enfo.LocalRepository.EnforcementOrders;
 using FluentAssertions;
+using Moq;
 using NUnit.Framework;
 using System;
 using System.Linq;
@@ -46,7 +48,7 @@ public class UpdateTests
         var resource = getUpdateResource(original);
         resource.Cause = "new text";
 
-        using var repository = new EnforcementOrderRepository();
+        using var repository = new EnforcementOrderRepository(new Mock<IFileService>().Object);
 
         await repository.UpdateAsync(resource);
 
@@ -61,7 +63,7 @@ public class UpdateTests
         var original = EnforcementOrderData.EnforcementOrders.First();
         var resource = getUpdateResource(original);
 
-        using var repository = new EnforcementOrderRepository();
+        using var repository = new EnforcementOrderRepository(new Mock<IFileService>().Object);
 
         await repository.UpdateAsync(resource);
 
@@ -79,7 +81,7 @@ public class UpdateTests
 
         var action = async () =>
         {
-            using var repository = new EnforcementOrderRepository();
+            using var repository = new EnforcementOrderRepository(new Mock<IFileService>().Object);
             await repository.UpdateAsync(resource);
         };
 
@@ -95,13 +97,13 @@ public class UpdateTests
 
         var action = async () =>
         {
-            using var repository = new EnforcementOrderRepository();
+            using var repository = new EnforcementOrderRepository(new Mock<IFileService>().Object);
             await repository.UpdateAsync(resource);
         };
 
         (await action.Should().ThrowAsync<ArgumentException>())
             .WithMessage($"ID ({resource.Id}) not found. (Parameter 'resource')")
-            .And.ParamName.Should().Be("resource");
+            .And.ParamName.Should().Be(nameof(resource));
     }
 
     [Test]
@@ -112,12 +114,12 @@ public class UpdateTests
 
         var action = async () =>
         {
-            using var repository = new EnforcementOrderRepository();
+            using var repository = new EnforcementOrderRepository(new Mock<IFileService>().Object);
             await repository.UpdateAsync(resource);
         };
 
         (await action.Should().ThrowAsync<ArgumentException>())
             .WithMessage("A deleted Enforcement Order cannot be modified. (Parameter 'resource')")
-            .And.ParamName.Should().Be("resource");
+            .And.ParamName.Should().Be(nameof(resource));
     }
 }

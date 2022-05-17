@@ -15,14 +15,14 @@ public class DeleteFileTests
     [Test]
     public void WhenItemExists_RemovesItem()
     {
-        var fileCount = _fileService!.Files.Count;
+        var initialFileCount = _fileService!.Files.Count;
         var fileName = _fileService.Files.First().FileName;
 
         _fileService.TryDeleteFile(fileName);
 
         Assert.Multiple(() =>
         {
-            _fileService.Files.Count.Should().Be(fileCount - 1);
+            _fileService.Files.Count.Should().Be(initialFileCount - 1);
             _fileService.Files.Any(a => a.FileName == fileName).Should().BeFalse();
         });
     }

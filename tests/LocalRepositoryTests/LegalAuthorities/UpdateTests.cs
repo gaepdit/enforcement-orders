@@ -67,6 +67,6 @@ public class UpdateTests
 
         (await action.Should().ThrowAsync<ArgumentException>())
             .WithMessage($"ID ({itemId}) not found. (Parameter 'resource')")
-            .And.ParamName.Should().Be("resource");
+            .And.ParamName.Should().Be(nameof(resource));
     }
 }

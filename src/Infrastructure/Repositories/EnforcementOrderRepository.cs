@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Enfo.Domain.EnforcementOrders.Entities;
 using Enfo.Domain.EnforcementOrders.Repositories;
 using Enfo.Domain.EnforcementOrders.Resources;
@@ -9,6 +5,7 @@ using Enfo.Domain.EnforcementOrders.Specs;
 using Enfo.Domain.Pagination;
 using Enfo.Domain.Utils;
 using Enfo.Infrastructure.Contexts;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
 namespace Enfo.Infrastructure.Repositories;
@@ -108,19 +105,19 @@ public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
 
         var count = await filteredItems.CountAsync().ConfigureAwait(false);
 
-            return new PaginatedResult<EnforcementOrderAdminSummaryView>(items, count, paging);
-        }
+        return new PaginatedResult<EnforcementOrderAdminSummaryView>(items, count, paging);
+    }
 
-        public async Task<bool> ExistsAsync(int id, bool onlyPublic = true)
-        {
-            var item = await _context.EnforcementOrders.AsNoTracking()
-                .SingleOrDefaultAsync(e => e.Id == id).ConfigureAwait(false);
+    public async Task<bool> ExistsAsync(int id, bool onlyPublic = true)
+    {
+        var item = await _context.EnforcementOrders.AsNoTracking()
+            .SingleOrDefaultAsync(e => e.Id == id).ConfigureAwait(false);
 
-            return item != null && (!onlyPublic || item.GetIsPublic);
-        }
+        return item != null && (!onlyPublic || item.GetIsPublic);
+    }
 
-        public Task<bool> OrderNumberExistsAsync(string orderNumber, int? ignoreId = null) =>
-            _context.EnforcementOrders.AsNoTracking()
+    public Task<bool> OrderNumberExistsAsync(string orderNumber, int? ignoreId = null) =>
+        _context.EnforcementOrders.AsNoTracking()
             .AnyAsync(e => e.OrderNumber == orderNumber && !e.Deleted && e.Id != ignoreId);
 
     // Current Proposed are public proposed orders (publication date in the past)
@@ -187,6 +184,16 @@ public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
 
         item.ApplyUpdate(resource);
         await _context.SaveChangesAsync().ConfigureAwait(false);
+    }
+
+    public Task AddAttachmentsAsync(int orderId, List<IFormFile> files)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task DeleteAttachmentAsync(int orderId, Guid attachmentId)
+    {
+        throw new NotImplementedException();
     }
 
     public async Task DeleteAsync(int id)

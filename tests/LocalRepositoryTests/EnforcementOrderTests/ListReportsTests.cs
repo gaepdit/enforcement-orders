@@ -1,7 +1,9 @@
 ﻿using Enfo.Domain.EnforcementOrders.Entities;
 using Enfo.Domain.EnforcementOrders.Resources;
+using Enfo.Domain.Services;
 using Enfo.LocalRepository.EnforcementOrders;
 using FluentAssertions;
+using Moq;
 using NUnit.Framework;
 using System;
 using System.Linq;
@@ -16,7 +18,7 @@ public class ListReportsTests
     [Test]
     public async Task ListCurrentProposedEnforcementOrders_ReturnsCorrectList()
     {
-        using var repository = new EnforcementOrderRepository();
+        using var repository = new EnforcementOrderRepository(new Mock<IFileService>().Object);
 
         var result = await repository.ListCurrentProposedEnforcementOrdersAsync();
 
@@ -33,7 +35,7 @@ public class ListReportsTests
     [Test]
     public async Task ListRecentlyExecutedEnforcementOrders_ReturnsCorrectList()
     {
-        using var repository = new EnforcementOrderRepository();
+        using var repository = new EnforcementOrderRepository(new Mock<IFileService>().Object);
 
         var result = await repository.ListRecentlyExecutedEnforcementOrdersAsync();
 
@@ -50,7 +52,7 @@ public class ListReportsTests
     [Test]
     public async Task ListDraftEnforcementOrders_ReturnsCorrectList()
     {
-        using var repository = new EnforcementOrderRepository();
+        using var repository = new EnforcementOrderRepository(new Mock<IFileService>().Object);
 
         var result = await repository.ListDraftEnforcementOrdersAsync();
 
@@ -66,7 +68,7 @@ public class ListReportsTests
     [Test]
     public async Task ListPendingEnforcementOrders_ReturnsCorrectList()
     {
-        using var repository = new EnforcementOrderRepository();
+        using var repository = new EnforcementOrderRepository(new Mock<IFileService>().Object);
 
         var result = await repository.ListPendingEnforcementOrdersAsync();
 

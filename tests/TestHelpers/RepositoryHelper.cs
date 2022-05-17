@@ -1,11 +1,13 @@
 ﻿using Enfo.Domain.EnforcementOrders.Repositories;
 using Enfo.Domain.EpdContacts.Repositories;
 using Enfo.Domain.LegalAuthorities.Repositories;
+using Enfo.Domain.Services;
 using System;
 using System.Linq;
 using Enfo.Infrastructure.Contexts;
 using Enfo.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Moq;
 using TestSupport.EfHelpers;
 
 namespace EnfoTests.Helpers

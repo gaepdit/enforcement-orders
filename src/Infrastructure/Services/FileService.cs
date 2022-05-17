@@ -26,7 +26,7 @@ public class FileService : IFileService
         if (!string.IsNullOrWhiteSpace(fileName)) File.Delete(Path.Combine(_attachmentsBasePath, fileName));
     }
 
-    public async Task SaveFileAsync(IFormFile file, Guid id)
+    public async Task SaveFileAsync(IFormFile file, Guid fileId)
     {
         if (file.Length == 0 || string.IsNullOrWhiteSpace(file.FileName)) return;
 
@@ -34,7 +34,7 @@ public class FileService : IFileService
 
         var fileName = file.FileName.Trim();
         var fileExtension = Path.GetExtension(fileName);
-        var savePath = Path.Combine(_attachmentsBasePath, string.Concat(id.ToString(), fileExtension));
+        var savePath = Path.Combine(_attachmentsBasePath, string.Concat(fileId.ToString(), fileExtension));
 
         await using var stream = new FileStream(savePath, FileMode.Create);
         await file.CopyToAsync(stream);

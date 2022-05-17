@@ -3,13 +3,20 @@ using Enfo.Domain.EnforcementOrders.Repositories;
 using Enfo.Domain.EnforcementOrders.Resources;
 using Enfo.Domain.EnforcementOrders.Specs;
 using Enfo.Domain.Pagination;
+using Enfo.Domain.Services;
 using Enfo.Domain.Utils;
 using Enfo.LocalRepository.Attachments;
+using Microsoft.AspNetCore.Http;
 
 namespace Enfo.LocalRepository.EnforcementOrders;
 
 public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
 {
+    private readonly IFileService _fileService;
+
+    public EnforcementOrderRepository(IFileService fileService) =>
+        _fileService = fileService;
+
     public Task<EnforcementOrderDetailedView> GetAsync(int id)
     {
         if (!EnforcementOrderData.EnforcementOrders.AsQueryable()
@@ -17,7 +24,7 @@ public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
             return Task.FromResult(null as EnforcementOrderDetailedView);
 
         var order = EnforcementOrderData.GetEnforcementOrderDetailedView(id);
-        
+
         return Task.FromResult(order);
     }
 
@@ -27,12 +34,12 @@ public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
             return Task.FromResult(null as EnforcementOrderAdminView);
 
         var order = EnforcementOrderData.GetEnforcementOrderAdminView(id);
-        
+
         return Task.FromResult(order);
     }
 
     public Task<AttachmentView> GetAttachmentAsync(Guid id) =>
-        AttachmentData.Attachments.Any(e => e.Id == id && !e.Deleted)
+       AttachmentData.Attachments.Any(e => e.Id == id && !e.Deleted)
             ? Task.FromResult(new AttachmentView(
                 AttachmentData.Attachments.Single(e => e.Id == id)!))
             : Task.FromResult(null as AttachmentView);
@@ -164,6 +171,65 @@ public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
             throw new ArgumentException("A deleted Enforcement Order cannot be modified.", nameof(resource));
 
         item.ApplyUpdate(resource);
+        return Task.CompletedTask;
+    }
+
+    public Task AddAttachmentsAsync(int orderId, List<IFormFile> files)
+    {
+        if (files.Count == 0) throw new ArgumentException("Files list must not be empty.", nameof(files));
+
+        if (!EnforcementOrderData.EnforcementOrders.AsQueryable().Any(e => e.Id == orderId))
+            throw new ArgumentException($"Order ID {orderId} does not exist.", nameof(orderId));
+
+        var order = EnforcementOrderData.EnforcementOrders.Single(e => e.Id == orderId);
+
+        if (order.Deleted)
+            throw new ArgumentException($"Order ID {orderId} has been deleted and cannot be edited.", nameof(orderId));
+
+        return AddAttachmentsInternalAsync(files, order);
+    }
+
+    private async Task AddAttachmentsInternalAsync(List<IFormFile> files, EnforcementOrder order)
+    {
+        foreach (var file in files)
+        {
+            var extension = Path.GetExtension(file.FileName);
+            if (file.Length == 0 || !FileTypes.FileUploadAllowed(extension)) continue;
+
+            var attachmentId = Guid.NewGuid();
+            await _fileService.SaveFileAsync(file, attachmentId);
+
+            var attachment = new Attachment
+            {
+                Id = attachmentId,
+                Size = file.Length,
+                FileExtension = extension,
+                FileName = file.FileName,
+                DateUploaded = DateTime.Now,
+                EnforcementOrder = order,
+            };
+
+            AttachmentData.Attachments.Add(attachment);
+        }
+    }
+
+    public Task DeleteAttachmentAsync(int orderId, Guid attachmentId)
+    {
+        if (!EnforcementOrderData.EnforcementOrders.AsQueryable().Any(e => e.Id == orderId))
+            throw new ArgumentException($"Order ID {orderId} does not exist.", nameof(orderId));
+
+        var order = EnforcementOrderData.EnforcementOrders.Single(e => e.Id == orderId);
+
+        if (order.Deleted)
+            throw new ArgumentException($"Order ID {orderId} has been deleted and cannot be edited.", nameof(orderId));
+
+        if (!AttachmentData.Attachments.AsQueryable().Any(e => e.Id == attachmentId))
+            throw new ArgumentException($"Attachment ID {attachmentId} does not exist.", nameof(attachmentId));
+
+        var attachment = AttachmentData.Attachments.Single(a => a.Id == attachmentId);
+        AttachmentData.Attachments.Remove(attachment);
+        _fileService.TryDeleteFile(string.Concat(attachment.Id.ToString(), attachment.FileExtension));
+
         return Task.CompletedTask;
     }
 

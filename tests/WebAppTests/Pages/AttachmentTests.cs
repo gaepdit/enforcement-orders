@@ -1,9 +1,9 @@
 ﻿using Enfo.Domain.EnforcementOrders.Repositories;
 using Enfo.Domain.EnforcementOrders.Resources;
 using Enfo.Domain.Services;
+using Enfo.Domain.Utils;
 using Enfo.LocalRepository.Attachments;
 using Enfo.WebApp.Pages;
-using Enfo.WebApp.Platform.Attachments;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;

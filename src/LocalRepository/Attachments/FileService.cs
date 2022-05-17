@@ -29,7 +29,7 @@ public class FileService : IFileService
     public void TryDeleteFile(string fileName) =>
         Files.Remove(Files.SingleOrDefault(a => a.FileName == fileName));
 
-    public async Task SaveFileAsync(IFormFile file, Guid id)
+    public async Task SaveFileAsync(IFormFile file, Guid fileId)
     {
         if (file.Length == 0 || string.IsNullOrWhiteSpace(file.FileName)) return;
 
@@ -38,7 +38,7 @@ public class FileService : IFileService
 
         var attachmentFile = new AttachmentData.AttachmentFile
         {
-            FileName = string.Concat(id.ToString(), Path.GetExtension(file.FileName)),
+            FileName = string.Concat(fileId.ToString(), Path.GetExtension(file.FileName)),
             Base64EncodedFile = Convert.ToBase64String(stream.ToArray()),
         };
 

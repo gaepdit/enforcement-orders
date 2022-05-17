@@ -35,7 +35,7 @@ internal static class EnforcementOrderData
         };
     }
 
-    public static List<EnforcementOrder> GetEnforcementOrders()
+    public static IEnumerable<EnforcementOrder> GetEnforcementOrders()
     {
         EnforcementOrders.ForEach(e =>
             e.Attachments = AttachmentData.Attachments
