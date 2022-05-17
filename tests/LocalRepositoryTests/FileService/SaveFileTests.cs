@@ -11,10 +11,10 @@ namespace LocalRepositoryTests.FileService;
 [TestFixture]
 public class SaveFileTests
 {
-    private Enfo.LocalRepository.Attachments.FileService? _fileService;
+    private Enfo.LocalRepository.FileService? _fileService;
 
     [SetUp]
-    public void SetUp() => _fileService = new Enfo.LocalRepository.Attachments.FileService();
+    public void SetUp() => _fileService = new Enfo.LocalRepository.FileService();
 
     [Test]
     public async Task WhenValid_AddsFileToList()

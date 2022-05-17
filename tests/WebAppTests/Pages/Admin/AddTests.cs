@@ -14,15 +14,37 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Moq;
 using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using static EnfoTests.Helpers.ResourceHelper;
 
 namespace EnfoTests.WebApp.Pages.Admin;
 
 [TestFixture]
 public class AddTests
 {
+    private static EnforcementOrderCreate GetValidEnforcementOrderCreate() => new()
+    {
+        Cause = "xyz-" + Guid.NewGuid(),
+        CommentContactId = 2000,
+        CommentPeriodClosesDate = new DateTime(2012, 11, 15),
+        County = "Liberty",
+        ExecutedDate = new DateTime(1998, 06, 29),
+        ExecutedOrderPostedDate = new DateTime(1998, 07, 06),
+        FacilityName = "xyz-" + Guid.NewGuid(),
+        HearingCommentPeriodClosesDate = new DateTime(2012, 11, 21),
+        HearingContactId = 2000,
+        HearingDate = new DateTime(2012, 11, 15),
+        HearingLocation = "xyz-" + Guid.NewGuid(),
+        IsHearingScheduled = true,
+        LegalAuthorityId = 1,
+        OrderNumber = "EPD-ACQ-7936",
+        ProposedOrderPostedDate = new DateTime(2012, 10, 16),
+        Progress = PublicationProgress.Published,
+        Requirements = "xyz-" + Guid.NewGuid(),
+        SettlementAmount = 2000,
+    };
+
     [Test]
     public async Task OnGet_ReturnsWithDefaultCreateResource()
     {

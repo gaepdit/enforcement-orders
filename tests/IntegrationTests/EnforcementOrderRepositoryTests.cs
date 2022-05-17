@@ -3,13 +3,13 @@ using Enfo.Domain.EnforcementOrders.Resources;
 using Enfo.Domain.EnforcementOrders.Specs;
 using Enfo.Domain.Pagination;
 using Enfo.Domain.Utils;
-using EnfoTests.Helpers;
+using EnfoTests.Infrastructure.Helpers;
 using FluentAssertions;
 using NUnit.Framework;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using static EnfoTests.Helpers.DataHelper;
+using TestData;
 
 namespace EnfoTests.Infrastructure;
 
@@ -21,7 +21,7 @@ public class EnforcementOrderRepositoryTests
     [Test]
     public async Task Get_WhenItemExistsAndIsPublic_ReturnsItem()
     {
-        var item = GetEnforcementOrders.First(e => e.GetIsPublic);
+        var item = EnforcementOrderData.EnforcementOrders.First(e => e.GetIsPublic);
         using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
 
         var result = await repository.GetAsync(item.Id);
@@ -40,7 +40,7 @@ public class EnforcementOrderRepositoryTests
     [Test]
     public async Task Get_WhenItemExistsButIsNotPublic_ReturnsNull()
     {
-        var itemId = GetEnforcementOrders.First(e => !e.GetIsPublic).Id;
+        var itemId = EnforcementOrderData.EnforcementOrders.First(e => !e.GetIsPublic).Id;
         using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
 
         var result = await repository.GetAsync(itemId);
@@ -53,7 +53,7 @@ public class EnforcementOrderRepositoryTests
     [Test]
     public async Task GetAdminView_WhenItemExistsAndIsPublic_ReturnsItem()
     {
-        var item = GetEnforcementOrders.First(e => e.GetIsPublic);
+        var item = EnforcementOrderData.EnforcementOrders.First(e => e.GetIsPublic);
         using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
 
         var result = await repository.GetAdminViewAsync(item.Id);
@@ -72,7 +72,7 @@ public class EnforcementOrderRepositoryTests
     [Test]
     public async Task GetAdminView_WhenItemExistsButIsNotPublic_ReturnsItem()
     {
-        var item = GetEnforcementOrders.First(e => !e.GetIsPublic);
+        var item = EnforcementOrderData.EnforcementOrders.First(e => !e.GetIsPublic);
         using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
 
         var result = await repository.GetAdminViewAsync(item.Id);
@@ -92,12 +92,12 @@ public class EnforcementOrderRepositoryTests
 
         Assert.Multiple(() =>
         {
-            result.CurrentCount.Should().Be(GetEnforcementOrders.Count(e => e.GetIsPublic));
+            result.CurrentCount.Should().Be(EnforcementOrderData.EnforcementOrders.Count(e => e.GetIsPublic));
             result.Items.Should()
-                .HaveCount(GetEnforcementOrders.Count(e => e.GetIsPublic));
+                .HaveCount(EnforcementOrderData.EnforcementOrders.Count(e => e.GetIsPublic));
             result.PageNumber.Should().Be(1);
             result.Items[0].Should().BeEquivalentTo(
-                ResourceHelper.GetEnforcementOrderSummaryView(GetEnforcementOrders
+                ResourceHelper.GetEnforcementOrderSummaryView(EnforcementOrderData.EnforcementOrders
                     .OrderByDescending(e => e.ExecutedDate ?? e.ProposedOrderPostedDate)
                     .ThenBy(e => e.FacilityName)
                     .First(e => e.GetIsPublic).Id));
@@ -109,13 +109,13 @@ public class EnforcementOrderRepositoryTests
     {
         var spec = new EnforcementOrderSpec
         {
-            Facility = GetEnforcementOrders.First(e => !e.Deleted).FacilityName,
+            Facility = EnforcementOrderData.EnforcementOrders.First(e => !e.Deleted).FacilityName,
         };
 
         using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
         var result = await repository.ListAsync(spec, new PaginationSpec(1, 20));
 
-        var expectedList = GetEnforcementOrders
+        var expectedList = EnforcementOrderData.EnforcementOrders
             .OrderByDescending(e => e.ExecutedDate ?? e.ProposedOrderPostedDate)
             .ThenBy(e => e.FacilityName)
             .Where(e =>
@@ -139,8 +139,8 @@ public class EnforcementOrderRepositoryTests
         var spec = new EnforcementOrderSpec
         {
             Facility = "Date Range Test",
-            FromDate = new DateTime(2021, 3, 1),
-            TillDate = new DateTime(2021, 4, 1),
+            FromDate = new DateTime(999, 3, 1),
+            TillDate = new DateTime(999, 4, 1),
         };
 
         using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
@@ -160,13 +160,13 @@ public class EnforcementOrderRepositoryTests
         var spec = new EnforcementOrderSpec
         {
             Facility = "Date Range Test",
-            FromDate = new DateTime(2021, 1, 1),
+            FromDate = new DateTime(999, 1, 1),
         };
 
         using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
         var result = await repository.ListAsync(spec, new PaginationSpec(1, 20));
 
-        var expectedList = GetEnforcementOrders
+        var expectedList = EnforcementOrderData.EnforcementOrders
             .Where(e => string.Equals(e.FacilityName, spec.Facility, StringComparison.Ordinal))
             .Select(e => new EnforcementOrderSummaryView(e))
             .ToList();
@@ -188,13 +188,13 @@ public class EnforcementOrderRepositoryTests
         var spec = new EnforcementOrderSpec
         {
             Facility = "Date Range Test",
-            TillDate = new DateTime(2021, 6, 1),
+            TillDate = new DateTime(999, 6, 1),
         };
 
         using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
         var result = await repository.ListAsync(spec, new PaginationSpec(1, 20));
 
-        var expectedList = GetEnforcementOrders
+        var expectedList = EnforcementOrderData.EnforcementOrders
             .Where(e => string.Equals(e.FacilityName, spec.Facility, StringComparison.Ordinal))
             .Select(e => new EnforcementOrderSummaryView(e))
             .ToList();
@@ -220,12 +220,12 @@ public class EnforcementOrderRepositoryTests
 
         Assert.Multiple(() =>
         {
-            result.CurrentCount.Should().Be(GetEnforcementOrders.Count(e => e.GetIsPublic));
+            result.CurrentCount.Should().Be(EnforcementOrderData.EnforcementOrders.Count(e => e.GetIsPublic));
             result.Items.Should()
-                .HaveCount(GetEnforcementOrders.Count(e => e.GetIsPublic));
+                .HaveCount(EnforcementOrderData.EnforcementOrders.Count(e => e.GetIsPublic));
             result.PageNumber.Should().Be(1);
             result.Items[0].Should().BeEquivalentTo(
-                ResourceHelper.GetEnforcementOrderDetailedView(GetEnforcementOrders
+                ResourceHelper.GetEnforcementOrderDetailedView(EnforcementOrderData.EnforcementOrders
                     .OrderByDescending(e => e.ExecutedDate ?? e.ProposedOrderPostedDate)
                     .ThenBy(e => e.FacilityName)
                     .First(e => e.GetIsPublic).Id));
@@ -236,12 +236,12 @@ public class EnforcementOrderRepositoryTests
     public async Task ListDetailed_WithFacilityNameSpec_ReturnsMatches()
     {
         var spec = new EnforcementOrderSpec
-            { Facility = GetEnforcementOrders.First(e => !e.Deleted).FacilityName };
+            { Facility = EnforcementOrderData.EnforcementOrders.First(e => !e.Deleted).FacilityName };
 
         using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
         var result = await repository.ListDetailedAsync(spec, new PaginationSpec(1, 20));
 
-        var expectedList = GetEnforcementOrders
+        var expectedList = EnforcementOrderData.EnforcementOrders
             .OrderByDescending(e => e.ExecutedDate ?? e.ProposedOrderPostedDate)
             .ThenBy(e => e.FacilityName)
             .Where(e =>
@@ -265,8 +265,8 @@ public class EnforcementOrderRepositoryTests
         var spec = new EnforcementOrderSpec
         {
             Facility = "Date Range Test",
-            FromDate = new DateTime(2021, 3, 1),
-            TillDate = new DateTime(2021, 4, 1),
+            FromDate = new DateTime(999, 3, 1),
+            TillDate = new DateTime(999, 4, 1),
         };
 
         using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
@@ -286,13 +286,13 @@ public class EnforcementOrderRepositoryTests
         var spec = new EnforcementOrderSpec
         {
             Facility = "Date Range Test",
-            FromDate = new DateTime(2021, 1, 1),
+            FromDate = new DateTime(999, 1, 1),
         };
 
         using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
         var result = await repository.ListDetailedAsync(spec, new PaginationSpec(1, 20));
 
-        var expectedList = GetEnforcementOrders
+        var expectedList = EnforcementOrderData.EnforcementOrders
             .Where(e => string.Equals(e.FacilityName, spec.Facility, StringComparison.Ordinal))
             .ToList();
 
@@ -312,13 +312,13 @@ public class EnforcementOrderRepositoryTests
         var spec = new EnforcementOrderSpec
         {
             Facility = "Date Range Test",
-            TillDate = new DateTime(2021, 6, 1),
+            TillDate = new DateTime(999, 6, 1),
         };
 
         using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
         var result = await repository.ListDetailedAsync(spec, new PaginationSpec(1, 20));
 
-        var expectedList = GetEnforcementOrders
+        var expectedList = EnforcementOrderData.EnforcementOrders
             .Where(e => string.Equals(e.FacilityName, spec.Facility, StringComparison.Ordinal))
             .ToList();
 
@@ -342,12 +342,12 @@ public class EnforcementOrderRepositoryTests
 
         Assert.Multiple(() =>
         {
-            result.CurrentCount.Should().Be(GetEnforcementOrders.Count(e => !e.Deleted));
+            result.CurrentCount.Should().Be(EnforcementOrderData.EnforcementOrders.Count(e => !e.Deleted));
             result.Items.Should()
-                .HaveCount(GetEnforcementOrders.Count(e => !e.Deleted));
+                .HaveCount(EnforcementOrderData.EnforcementOrders.Count(e => !e.Deleted));
             result.PageNumber.Should().Be(1);
             result.Items[0].Should().BeEquivalentTo(
-                ResourceHelper.GetEnforcementOrderAdminSummaryView(GetEnforcementOrders
+                ResourceHelper.GetEnforcementOrderAdminSummaryView(EnforcementOrderData.EnforcementOrders
                     .OrderByDescending(e => e.ExecutedDate ?? e.ProposedOrderPostedDate)
                     .ThenBy(e => e.FacilityName)
                     .First(e => !e.Deleted).Id));
@@ -364,12 +364,12 @@ public class EnforcementOrderRepositoryTests
 
         Assert.Multiple(() =>
         {
-            result.CurrentCount.Should().Be(GetEnforcementOrders.Count(e => e.Deleted));
+            result.CurrentCount.Should().Be(EnforcementOrderData.EnforcementOrders.Count(e => e.Deleted));
             result.Items.Should()
-                .HaveCount(GetEnforcementOrders.Count(e => e.Deleted));
+                .HaveCount(EnforcementOrderData.EnforcementOrders.Count(e => e.Deleted));
             result.PageNumber.Should().Be(1);
             result.Items[0].Should().BeEquivalentTo(
-                ResourceHelper.GetEnforcementOrderAdminSummaryView(GetEnforcementOrders
+                ResourceHelper.GetEnforcementOrderAdminSummaryView(EnforcementOrderData.EnforcementOrders
                     .OrderByDescending(e => e.ExecutedDate ?? e.ProposedOrderPostedDate)
                     .ThenBy(e => e.FacilityName)
                     .First(e => e.Deleted).Id));
@@ -381,13 +381,13 @@ public class EnforcementOrderRepositoryTests
     {
         var spec = new EnforcementOrderAdminSpec
         {
-            Facility = GetEnforcementOrders.First(e => !e.Deleted).FacilityName,
+            Facility = EnforcementOrderData.EnforcementOrders.First(e => !e.Deleted).FacilityName,
         };
 
         using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
         var result = await repository.ListAdminAsync(spec, new PaginationSpec(1, 20));
 
-        var expectedList = GetEnforcementOrders
+        var expectedList = EnforcementOrderData.EnforcementOrders
             .OrderByDescending(e => e.ExecutedDate ?? e.ProposedOrderPostedDate)
             .ThenBy(e => e.FacilityName)
             .Where(e => !e.Deleted
@@ -428,13 +428,13 @@ public class EnforcementOrderRepositoryTests
     {
         var spec = new EnforcementOrderAdminSpec
         {
-            Text = GetEnforcementOrders.First(e => !e.Deleted).Cause[..4].ToLowerInvariant(),
+            Text = EnforcementOrderData.EnforcementOrders.First(e => !e.Deleted).Cause[..4].ToLowerInvariant(),
         };
 
         using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
         var result = await repository.ListAdminAsync(spec, new PaginationSpec(1, 20));
 
-        var expectedList = GetEnforcementOrders
+        var expectedList = EnforcementOrderData.EnforcementOrders
             .OrderByDescending(e => e.ExecutedDate ?? e.ProposedOrderPostedDate)
             .ThenBy(e => e.FacilityName)
             .Where(e => !e.Deleted)
@@ -457,7 +457,7 @@ public class EnforcementOrderRepositoryTests
     [Test]
     public async Task Exists_GivenExists_ReturnsTrue()
     {
-        var itemId = GetEnforcementOrders.First(e => e.GetIsPublic).Id;
+        var itemId = EnforcementOrderData.EnforcementOrders.First(e => e.GetIsPublic).Id;
         using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
         (await repository.ExistsAsync(itemId)).Should().BeTrue();
     }
@@ -472,7 +472,7 @@ public class EnforcementOrderRepositoryTests
     [Test]
     public async Task Exists_GivenNonpublic_ReturnsFalse()
     {
-        var itemId = GetEnforcementOrders.First(e => !e.GetIsPublic).Id;
+        var itemId = EnforcementOrderData.EnforcementOrders.First(e => !e.GetIsPublic).Id;
         using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
         (await repository.ExistsAsync(itemId)).Should().BeFalse();
     }
@@ -480,7 +480,7 @@ public class EnforcementOrderRepositoryTests
     [Test]
     public async Task Exists_GivenNonpublicButAllowed_ReturnsTrue()
     {
-        var itemId = GetEnforcementOrders.First(e => !e.GetIsPublic).Id;
+        var itemId = EnforcementOrderData.EnforcementOrders.First(e => !e.GetIsPublic).Id;
         using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
         (await repository.ExistsAsync(itemId, false)).Should().BeTrue();
     }
@@ -491,7 +491,7 @@ public class EnforcementOrderRepositoryTests
     public async Task OrderNumberExists_GivenExists_ReturnsTrue()
     {
         using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
-        (await repository.OrderNumberExistsAsync(GetEnforcementOrders.First().OrderNumber))
+        (await repository.OrderNumberExistsAsync(EnforcementOrderData.EnforcementOrders.First().OrderNumber))
             .Should().BeTrue();
     }
 
@@ -507,8 +507,8 @@ public class EnforcementOrderRepositoryTests
     public async Task OrderNumberExists_GivenExistsAndIgnore_ReturnsFalse()
     {
         using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
-        (await repository.OrderNumberExistsAsync(GetEnforcementOrders.First().OrderNumber,
-                GetEnforcementOrders.First().Id))
+        (await repository.OrderNumberExistsAsync(EnforcementOrderData.EnforcementOrders.First().OrderNumber,
+                EnforcementOrderData.EnforcementOrders.First().Id))
             .Should().BeFalse();
     }
 
@@ -517,7 +517,7 @@ public class EnforcementOrderRepositoryTests
     [Test]
     public async Task ListCurrentProposedEnforcementOrders_ReturnsCorrectly()
     {
-        var order = GetEnforcementOrders.First(e => e.GetIsPublic && e.IsProposedOrder);
+        var order = EnforcementOrderData.EnforcementOrders.First(e => e.GetIsPublic && e.IsProposedOrder);
         order.CommentPeriodClosesDate = DateTime.Today.AddDays(1);
 
         using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
@@ -525,7 +525,7 @@ public class EnforcementOrderRepositoryTests
 
         Assert.Multiple(() =>
         {
-            result.Count.Should().Be(GetEnforcementOrders.Count(e =>
+            result.Count.Should().Be(EnforcementOrderData.EnforcementOrders.Count(e =>
                 e.GetIsPublic && e.IsProposedOrder && e.CommentPeriodClosesDate >= DateTime.Today));
             result[0].Should().BeEquivalentTo(ResourceHelper.GetEnforcementOrderSummaryView(order.Id));
         });
@@ -536,7 +536,10 @@ public class EnforcementOrderRepositoryTests
     [Test]
     public async Task ListRecentlyExecutedEnforcementOrders_ReturnsCorrectly()
     {
-        var order = GetEnforcementOrders.First(e => e.GetIsPublicExecutedOrder);
+        var order = EnforcementOrderData.EnforcementOrders
+            .OrderBy(e => e.ExecutedDate ?? e.ProposedOrderPostedDate)
+            .ThenBy(e => e.FacilityName)
+            .First(e => e.GetIsPublicExecutedOrder);
         order.ExecutedOrderPostedDate = DateUtils.MostRecentMonday();
 
         using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
@@ -544,9 +547,8 @@ public class EnforcementOrderRepositoryTests
 
         Assert.Multiple(() =>
         {
-            result.Count.Should().Be(
-                GetEnforcementOrders.Count(e =>
-                    e.GetIsPublicExecutedOrder
+            result.Count.Should().Be(EnforcementOrderData.EnforcementOrders
+                .Count(e => e.GetIsPublicExecutedOrder
                     && e.ExecutedOrderPostedDate >= DateUtils.MostRecentMonday()
                     && e.ExecutedOrderPostedDate <= DateTime.Today));
             result[0].Should().BeEquivalentTo(ResourceHelper.GetEnforcementOrderSummaryView(order.Id));
@@ -563,11 +565,13 @@ public class EnforcementOrderRepositoryTests
 
         Assert.Multiple(() =>
         {
-            result.Count.Should().Be(GetEnforcementOrders.Count(e =>
-                !e.Deleted && e.PublicationStatus == EnforcementOrder.PublicationState.Draft));
+            result.Count.Should().Be(EnforcementOrderData.EnforcementOrders
+                .Count(e => !e.Deleted && e.PublicationStatus == EnforcementOrder.PublicationState.Draft));
             result[0].Should().BeEquivalentTo(
-                ResourceHelper.GetEnforcementOrderAdminSummaryView(GetEnforcementOrders.First(e =>
-                    !e.Deleted && e.PublicationStatus == EnforcementOrder.PublicationState.Draft).Id));
+                ResourceHelper.GetEnforcementOrderAdminSummaryView(EnforcementOrderData.EnforcementOrders
+                    .OrderBy(e => e.ExecutedDate ?? e.ProposedOrderPostedDate)
+                    .ThenBy(e => e.FacilityName)
+                    .First(e => !e.Deleted && e.PublicationStatus == EnforcementOrder.PublicationState.Draft).Id));
         });
     }
 
@@ -576,17 +580,15 @@ public class EnforcementOrderRepositoryTests
     [Test]
     public async Task ListPendingEnforcementOrders_ReturnsCorrectly()
     {
-        var order = GetEnforcementOrders.First(e => e.GetIsPublicProposedOrder || e.GetIsPublicExecutedOrder);
-        order.ExecutedDate = DateTime.Today.AddDays(8);
+        var order = EnforcementOrderData.EnforcementOrders
+            .AsQueryable().FilterForPending().ApplySorting(OrderSorting.DateAsc).First();
 
         using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
         var result = await repository.ListPendingEnforcementOrdersAsync();
 
         Assert.Multiple(() =>
         {
-            result.Count.Should().Be(GetEnforcementOrders.Count(e =>
-                e.PublicationStatus == EnforcementOrder.PublicationState.Published
-                && e.GetLastPostedDate > DateUtils.MostRecentMonday()));
+            result.Count.Should().Be(EnforcementOrderData.EnforcementOrders.AsQueryable().FilterForPending().Count());
             result[0].Should().BeEquivalentTo(ResourceHelper.GetEnforcementOrderAdminSummaryView(order.Id));
         });
     }
@@ -609,12 +611,12 @@ public class EnforcementOrderRepositoryTests
             Requirements = "Requirements of order",
             FacilityName = "Facility 4",
             County = "Fulton",
-            LegalAuthorityId = GetLegalAuthorities.First().Id,
+            LegalAuthorityId = LegalAuthorityData.LegalAuthorities.First().Id,
             Progress = PublicationProgress.Draft,
             OrderNumber = "NEW-4",
             CreateAs = NewEnforcementOrderType.Proposed,
             CommentPeriodClosesDate = DateTime.Today.AddDays(1),
-            CommentContactId = GetEpdContacts.First().Id,
+            CommentContactId = EpdContactData.EpdContacts.First().Id,
             ProposedOrderPostedDate = DateTime.Today,
         };
         var newId = await repository.CreateAsync(sampleCreate);
@@ -659,7 +661,7 @@ public class EnforcementOrderRepositoryTests
     [Test]
     public async Task Update_Succeeds()
     {
-        var existingOrder = GetEnforcementOrders.First(e => !e.Deleted);
+        var existingOrder = EnforcementOrderData.EnforcementOrders.First(e => !e.Deleted);
         var itemId = existingOrder.Id;
 
         var itemUpdate = NewSampleUpdate(existingOrder);
@@ -677,7 +679,7 @@ public class EnforcementOrderRepositoryTests
     [Test]
     public async Task Update_DeletedOrder_ThrowsException()
     {
-        var existingOrder = GetEnforcementOrders.First(e => e.Deleted);
+        var existingOrder = EnforcementOrderData.EnforcementOrders.First(e => e.Deleted);
         var itemUpdate = NewSampleUpdate(existingOrder);
 
         var action = async () =>
@@ -694,10 +696,10 @@ public class EnforcementOrderRepositoryTests
     [Test]
     public async Task Update_WithDuplicateOrderNumber_Fails()
     {
-        var existingOrder = GetEnforcementOrders.First(e => !e.Deleted);
+        var existingOrder = EnforcementOrderData.EnforcementOrders.First(e => !e.Deleted);
 
         var itemUpdate = NewSampleUpdate(existingOrder);
-        itemUpdate.OrderNumber = GetEnforcementOrders.Last(e => !e.Deleted).OrderNumber;
+        itemUpdate.OrderNumber = EnforcementOrderData.EnforcementOrders.Last(e => !e.Deleted).OrderNumber;
 
         var action = async () =>
         {
@@ -714,7 +716,7 @@ public class EnforcementOrderRepositoryTests
     [Test]
     public async Task Delete_Succeeds()
     {
-        var itemId = GetEnforcementOrders.First(e => !e.Deleted).Id;
+        var itemId = EnforcementOrderData.EnforcementOrders.First(e => !e.Deleted).Id;
 
         using var repositoryHelper = RepositoryHelper.CreateRepositoryHelper();
         using var repository = repositoryHelper.GetEnforcementOrderRepository();
@@ -729,7 +731,7 @@ public class EnforcementOrderRepositoryTests
     [Test]
     public async Task Delete_AlreadyDeletedItem_DoesNotChange()
     {
-        var itemId = GetEnforcementOrders.First(e => e.Deleted).Id;
+        var itemId = EnforcementOrderData.EnforcementOrders.First(e => e.Deleted).Id;
 
         using var repositoryHelper = RepositoryHelper.CreateRepositoryHelper();
         using var repository = repositoryHelper.GetEnforcementOrderRepository();
@@ -746,7 +748,7 @@ public class EnforcementOrderRepositoryTests
     [Test]
     public async Task Restore_Succeeds()
     {
-        var itemId = GetEnforcementOrders.First(e => e.Deleted).Id;
+        var itemId = EnforcementOrderData.EnforcementOrders.First(e => e.Deleted).Id;
 
         using var repositoryHelper = RepositoryHelper.CreateRepositoryHelper();
         using var repository = repositoryHelper.GetEnforcementOrderRepository();
@@ -761,7 +763,7 @@ public class EnforcementOrderRepositoryTests
     [Test]
     public async Task Restore_AlreadyDeletedItem_DoesNotChange()
     {
-        var itemId = GetEnforcementOrders.First(e => !e.Deleted).Id;
+        var itemId = EnforcementOrderData.EnforcementOrders.First(e => !e.Deleted).Id;
 
         using var repositoryHelper = RepositoryHelper.CreateRepositoryHelper();
         using var repository = repositoryHelper.GetEnforcementOrderRepository();

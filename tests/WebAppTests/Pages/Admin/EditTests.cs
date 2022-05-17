@@ -17,7 +17,7 @@ using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using static EnfoTests.Helpers.ResourceHelper;
+using TestData;
 
 namespace EnfoTests.WebApp.Pages.Admin;
 
@@ -27,7 +27,7 @@ public class EditTests
     [Test]
     public async Task OnGet_ReturnsWithItem()
     {
-        var item = GetEnforcementOrderAdminView(1);
+        var item = ResourceHelper.GetEnforcementOrderAdminView(1);
         var orderRepo = new Mock<IEnforcementOrderRepository>();
         orderRepo.Setup(l => l.GetAdminViewAsync(It.IsAny<int>())).ReturnsAsync(item);
         var legalRepo = new Mock<ILegalAuthorityRepository>();
@@ -83,7 +83,7 @@ public class EditTests
     [Test]
     public async Task OnGet_GivenDeletedItem_RedirectsWithDisplayMessage()
     {
-        var item = GetEnforcementOrderAdminViewList().Single(e => e.Deleted);
+        var item = ResourceHelper.GetEnforcementOrderAdminViewList().First(e => e.Deleted);
         var orderRepo = new Mock<IEnforcementOrderRepository>();
         orderRepo.Setup(l => l.GetAdminViewAsync(It.IsAny<int>()))
             .ReturnsAsync(item);
@@ -129,7 +129,7 @@ public class EditTests
     [Test]
     public async Task OnPost_GivenDeletedItem_RedirectsWithDisplayMessage()
     {
-        var item = GetEnforcementOrderAdminViewList().Single(e => e.Deleted);
+        var item = ResourceHelper.GetEnforcementOrderAdminViewList().First(e => e.Deleted);
         var orderRepo = new Mock<IEnforcementOrderRepository>();
         orderRepo.Setup(l => l.GetAdminViewAsync(It.IsAny<int>()))
             .ReturnsAsync(item);
@@ -161,7 +161,7 @@ public class EditTests
     [Test]
     public async Task OnPost_GivenSuccess_ReturnsRedirectWithDisplayMessage()
     {
-        var originalItem = GetEnforcementOrderAdminViewList().First(e => !e.Deleted);
+        var originalItem = ResourceHelper.GetEnforcementOrderAdminViewList().First(e => !e.Deleted);
         var item = new EnforcementOrderUpdate(originalItem);
         var orderRepo = new Mock<IEnforcementOrderRepository> { DefaultValue = DefaultValue.Mock };
         orderRepo.Setup(l => l.GetAdminViewAsync(It.IsAny<int>()))
@@ -193,7 +193,7 @@ public class EditTests
     [Test]
     public async Task OnPost_GivenModelError_ReturnsPageWithModelError()
     {
-        var item = GetEnforcementOrderAdminView(1);
+        var item = ResourceHelper.GetEnforcementOrderAdminView(1);
         var orderRepo = new Mock<IEnforcementOrderRepository>();
         orderRepo.Setup(l => l.GetAdminViewAsync(It.IsAny<int>())).ReturnsAsync(item);
         orderRepo.Setup(l => l.OrderNumberExistsAsync(It.IsAny<string>(), It.IsAny<int?>()))

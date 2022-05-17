@@ -5,8 +5,8 @@ using NUnit.Framework;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using static EnfoTests.Helpers.DataHelper;
-using static EnfoTests.Helpers.RepositoryHelper;
+using TestData;
+using static EnfoTests.Infrastructure.Helpers.RepositoryHelper;
 
 namespace EnfoTests.Infrastructure;
 
@@ -23,7 +23,7 @@ public class EpdContactRepositoryTests
         using var repository = CreateRepositoryHelper().GetEpdContactRepository();
         var item = await repository.GetAsync(id);
 
-        var epdContact = GetEpdContacts.Single(e => e.Id == id);
+        var epdContact = EpdContactData.EpdContacts.Single(e => e.Id == id);
         var expected = new EpdContactView(epdContact);
 
         item.Should().BeEquivalentTo(expected);
@@ -44,9 +44,9 @@ public class EpdContactRepositoryTests
     {
         using var repository = CreateRepositoryHelper().GetEpdContactRepository();
         var items = await repository.ListAsync();
-        items.Should().HaveCount(GetEpdContacts.Count(e => e.Active));
+        items.Should().HaveCount(EpdContactData.EpdContacts.Count(e => e.Active));
 
-        var epdContact = GetEpdContacts.First(e => e.Active);
+        var epdContact = EpdContactData.EpdContacts.First(e => e.Active);
         var expected = new EpdContactView(epdContact);
 
         items[0].Should().BeEquivalentTo(expected);
@@ -57,9 +57,9 @@ public class EpdContactRepositoryTests
     {
         using var repository = CreateRepositoryHelper().GetEpdContactRepository();
         var items = await repository.ListAsync(true);
-        items.Should().HaveCount(GetEpdContacts.Count());
+        items.Should().HaveCount(EpdContactData.EpdContacts.Count);
 
-        var epdContact = GetEpdContacts.First();
+        var epdContact = EpdContactData.EpdContacts.First();
         var expected = new EpdContactView(epdContact);
 
         items[0].Should().BeEquivalentTo(expected);
@@ -234,7 +234,7 @@ public class EpdContactRepositoryTests
     [Test]
     public async Task Update_FromValidItem_Updates()
     {
-        var itemId = GetEpdContacts.First(e => e.Active).Id;
+        var itemId = EpdContactData.EpdContacts.First(e => e.Active).Id;
         var resource = new EpdContactCommand
         {
             Id = itemId,
@@ -263,7 +263,7 @@ public class EpdContactRepositoryTests
     [Test]
     public async Task Update_WithNoChanges_Succeeds()
     {
-        var original = GetEpdContacts.First(e => e.Active);
+        var original = EpdContactData.EpdContacts.First(e => e.Active);
         var resource = new EpdContactCommand
         {
             Id = original.Id,
@@ -292,7 +292,7 @@ public class EpdContactRepositoryTests
     [Test]
     public async Task Update_GivenNullName_ThrowsException()
     {
-        var itemId = GetEpdContacts.First(e => e.Active).Id;
+        var itemId = EpdContactData.EpdContacts.First(e => e.Active).Id;
         var resource = new EpdContactCommand
         {
             Id = itemId,
@@ -320,7 +320,7 @@ public class EpdContactRepositoryTests
     [Test]
     public async Task Update_GivenInvalidEmail_ThrowsException()
     {
-        var itemId = GetEpdContacts.First(e => e.Active).Id;
+        var itemId = EpdContactData.EpdContacts.First(e => e.Active).Id;
         var resource = new EpdContactCommand
         {
             Id = itemId,
@@ -349,7 +349,7 @@ public class EpdContactRepositoryTests
     [Test]
     public async Task Update_GivenInvalidTelephone_ThrowsException()
     {
-        var itemId = GetEpdContacts.First(e => e.Active).Id;
+        var itemId = EpdContactData.EpdContacts.First(e => e.Active).Id;
         var resource = new EpdContactCommand
         {
             Id = itemId,
@@ -379,7 +379,7 @@ public class EpdContactRepositoryTests
     [Test]
     public async Task Update_GivenNullStreet_ThrowsException()
     {
-        var itemId = GetEpdContacts.First(e => e.Active).Id;
+        var itemId = EpdContactData.EpdContacts.First(e => e.Active).Id;
         var resource = new EpdContactCommand
         {
             Id = itemId,
@@ -408,7 +408,7 @@ public class EpdContactRepositoryTests
     [Test]
     public async Task Update_GivenInvalidZIP_ThrowsException()
     {
-        var itemId = GetEpdContacts.First(e => e.Active).Id;
+        var itemId = EpdContactData.EpdContacts.First(e => e.Active).Id;
         var resource = new EpdContactCommand
         {
             Id = itemId,
@@ -471,7 +471,7 @@ public class EpdContactRepositoryTests
     [TestCase(false)]
     public async Task UpdateStatus_IfChangeStatus_Succeeds(bool newActiveStatus)
     {
-        var itemId = GetEpdContacts.First(e => e.Active != newActiveStatus).Id;
+        var itemId = EpdContactData.EpdContacts.First(e => e.Active != newActiveStatus).Id;
 
         using var repositoryHelper = CreateRepositoryHelper();
         using var repository = repositoryHelper.GetEpdContactRepository();
@@ -488,7 +488,7 @@ public class EpdContactRepositoryTests
     [TestCase(false)]
     public async Task UpdateStatus_IfStatusUnchanged_Succeeds(bool newActiveStatus)
     {
-        var itemId = GetEpdContacts.First(e => e.Active == newActiveStatus).Id;
+        var itemId = EpdContactData.EpdContacts.First(e => e.Active == newActiveStatus).Id;
 
         using var repositoryHelper = CreateRepositoryHelper();
         using var repository = repositoryHelper.GetEpdContactRepository();
@@ -522,7 +522,7 @@ public class EpdContactRepositoryTests
     public async Task Exists_GivenExists_ReturnsTrue()
     {
         using var repository = CreateRepositoryHelper().GetEpdContactRepository();
-        var result = await repository.ExistsAsync(GetEpdContacts.First().Id);
+        var result = await repository.ExistsAsync(EpdContactData.EpdContacts.First().Id);
         result.Should().BeTrue();
     }
 

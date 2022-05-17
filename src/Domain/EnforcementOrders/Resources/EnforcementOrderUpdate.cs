@@ -99,22 +99,22 @@ public class EnforcementOrderUpdate
     [DisplayName("Date Executed")]
     [DataType(DataType.Date)]
     [DisplayFormat(DataFormatString = DisplayFormats.EditDate, ApplyFormatInEditMode = true)]
-    public DateTime? ExecutedDate { get; set; }
+    public DateTime? ExecutedDate { get; init; }
 
     [DisplayName("Publication Date For Executed Order")]
     [DataType(DataType.Date)]
     [DisplayFormat(DataFormatString = DisplayFormats.EditDate, ApplyFormatInEditMode = true)]
-    public DateTime? ExecutedOrderPostedDate { get; set; }
+    public DateTime? ExecutedOrderPostedDate { get; init; }
 
     // Hearing info
 
     [DisplayName("Public Hearing Scheduled")]
-    public bool IsHearingScheduled { get; set; }
+    public bool IsHearingScheduled { get; init; }
 
     [DisplayName("Hearing Date/Time")]
     [DataType(DataType.DateTime)]
     [DisplayFormat(DataFormatString = DisplayFormats.EditDateTime, ApplyFormatInEditMode = true)]
-    public DateTime? HearingDate { get; set; }
+    public DateTime? HearingDate { get; init; }
 
     [DisplayName("Hearing Location")]
     [DataType(DataType.MultilineText)]
@@ -123,10 +123,10 @@ public class EnforcementOrderUpdate
     [DisplayName("Date Hearing Comment Period Closes")]
     [DataType(DataType.Date)]
     [DisplayFormat(DataFormatString = DisplayFormats.EditDate, ApplyFormatInEditMode = true)]
-    public DateTime? HearingCommentPeriodClosesDate { get; set; }
+    public DateTime? HearingCommentPeriodClosesDate { get; init; }
 
     [DisplayName("Hearing Information Contact")]
-    public int? HearingContactId { get; set; }
+    public int? HearingContactId { get; init; }
 
     public bool IsInactiveHearingContact { get; }
 

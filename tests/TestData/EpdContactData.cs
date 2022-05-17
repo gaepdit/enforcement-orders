@@ -2,7 +2,7 @@
 
 // ReSharper disable StringLiteralTypo
 
-namespace Enfo.LocalRepository.EpdContacts;
+namespace TestData;
 
 internal static class EpdContactData
 {
@@ -18,7 +18,7 @@ internal static class EpdContactData
             ContactName = "A. Jones",
             Email = "example@example.com",
             Organization = "Environmental Protection Division",
-            Telephone = "555-1212",
+            Telephone = "404-555-1212",
             Title = "Chief, Air Protection Branch",
             City = "Atlanta",
             PostalCode = "30354",

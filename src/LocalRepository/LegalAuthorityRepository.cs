@@ -1,8 +1,9 @@
 ﻿using Enfo.Domain.LegalAuthorities.Entities;
 using Enfo.Domain.LegalAuthorities.Repositories;
 using Enfo.Domain.LegalAuthorities.Resources;
+using TestData;
 
-namespace Enfo.LocalRepository.LegalAuthorities;
+namespace Enfo.LocalRepository;
 
 public sealed class LegalAuthorityRepository : ILegalAuthorityRepository
 {

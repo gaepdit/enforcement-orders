@@ -1,17 +1,14 @@
 ﻿using Enfo.Domain.EnforcementOrders.Entities;
 using Enfo.Domain.EnforcementOrders.Resources;
 using Enfo.Domain.Utils;
-using Enfo.LocalRepository.Attachments;
-using Enfo.LocalRepository.EpdContacts;
-using Enfo.LocalRepository.LegalAuthorities;
 
 // ReSharper disable StringLiteralTypo
 
-namespace Enfo.LocalRepository.EnforcementOrders;
+namespace TestData;
 
 internal static class EnforcementOrderData
 {
-    public static EnforcementOrderAdminView GetEnforcementOrderAdminView(int id)
+    public static EnforcementOrderAdminView? GetEnforcementOrderAdminView(int id)
     {
         var item = EnforcementOrders.Find(e => e.Id == id);
         if (item is null) return null;
@@ -23,7 +20,7 @@ internal static class EnforcementOrderData
         };
     }
 
-    public static EnforcementOrderDetailedView GetEnforcementOrderDetailedView(int id)
+    public static EnforcementOrderDetailedView? GetEnforcementOrderDetailedView(int id)
     {
         var item = EnforcementOrders.Find(e => e.Id == id);
         if (item is null) return null;
@@ -49,8 +46,9 @@ internal static class EnforcementOrderData
         {
             Id = 1,
             Cause = "abc1-" + Guid.NewGuid(),
-            CommentContactId = null,
-            CommentPeriodClosesDate = null,
+            CommentContactId = 2000,
+            CommentContact = EpdContactData.GetEpdContact(2000),
+            CommentPeriodClosesDate = new DateTime(2019, 03, 25),
             County = "Appling",
             Deleted = false,
             ExecutedDate = DateTime.Today.AddDays(-14),
@@ -99,8 +97,7 @@ internal static class EnforcementOrderData
         {
             Id = 3,
             Cause = "ūrbǣnitas3-" + Guid.NewGuid(),
-            CommentContactId = 2000,
-            CommentContact = EpdContactData.GetEpdContact(2000),
+            CommentContactId = null,
             CommentPeriodClosesDate = null,
             County = "Bulloch",
             Deleted = false,
@@ -209,8 +206,9 @@ internal static class EnforcementOrderData
         {
             Id = 7,
             Cause = "hij7-" + Guid.NewGuid(),
-            CommentContactId = null,
-            CommentPeriodClosesDate = null,
+            CommentContactId = 2000,
+            CommentContact = EpdContactData.GetEpdContact(2000),
+            CommentPeriodClosesDate = new DateTime(2019, 03, 25),
             County = "Worth",
             Deleted = false,
             ExecutedDate = null,
@@ -234,8 +232,9 @@ internal static class EnforcementOrderData
         {
             Id = 11,
             Cause = "abc11-" + Guid.NewGuid(),
-            CommentContactId = null,
-            CommentPeriodClosesDate = null,
+            CommentContactId = 2000,
+            CommentContact = EpdContactData.GetEpdContact(2000),
+            CommentPeriodClosesDate = new DateTime(2019, 03, 25),
             County = "Appling",
             Deleted = false,
             ExecutedDate = DateTime.Today.AddDays(-14),
@@ -284,8 +283,7 @@ internal static class EnforcementOrderData
         {
             Id = 13,
             Cause = "ūrbǣnitas13-" + Guid.NewGuid(),
-            CommentContactId = 2000,
-            CommentContact = EpdContactData.GetEpdContact(2000),
+            CommentContactId = null,
             CommentPeriodClosesDate = null,
             County = "Bulloch",
             Deleted = false,
@@ -394,8 +392,9 @@ internal static class EnforcementOrderData
         {
             Id = 17,
             Cause = "hij17-" + Guid.NewGuid(),
-            CommentContactId = null,
-            CommentPeriodClosesDate = null,
+            CommentContactId = 2000,
+            CommentContact = EpdContactData.GetEpdContact(2000),
+            CommentPeriodClosesDate = new DateTime(2019, 03, 25),
             County = "Worth",
             Deleted = false,
             ExecutedDate = null,
@@ -419,8 +418,9 @@ internal static class EnforcementOrderData
         {
             Id = 21,
             Cause = "abc21-" + Guid.NewGuid(),
-            CommentContactId = null,
-            CommentPeriodClosesDate = null,
+            CommentContactId = 2000,
+            CommentContact = EpdContactData.GetEpdContact(2000),
+            CommentPeriodClosesDate = new DateTime(2019, 03, 25),
             County = "Appling",
             Deleted = false,
             ExecutedDate = DateTime.Today.AddDays(-14),
@@ -471,8 +471,7 @@ internal static class EnforcementOrderData
         {
             Id = 23,
             Cause = "ūrbǣnitas23-" + Guid.NewGuid(),
-            CommentContactId = 2000,
-            CommentContact = EpdContactData.GetEpdContact(2000),
+            CommentContactId = null,
             CommentPeriodClosesDate = null,
             County = "Bulloch",
             Deleted = false,
@@ -581,8 +580,9 @@ internal static class EnforcementOrderData
         {
             Id = 27,
             Cause = "hij27-" + Guid.NewGuid(),
-            CommentContactId = null,
-            CommentPeriodClosesDate = null,
+            CommentContactId = 2000,
+            CommentContact = EpdContactData.GetEpdContact(2000),
+            CommentPeriodClosesDate = new DateTime(2019, 03, 25),
             County = "Worth",
             Deleted = false,
             ExecutedDate = null,
@@ -605,6 +605,9 @@ internal static class EnforcementOrderData
         new EnforcementOrder
         {
             Id = 28,
+            CommentContactId = 2000,
+            CommentContact = EpdContactData.GetEpdContact(2000),
+            CommentPeriodClosesDate = new DateTime(999, 03, 25),
             Deleted = false,
             FacilityName = "Date Range Test",
             County = "",

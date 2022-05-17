@@ -1,7 +1,6 @@
 ﻿using Enfo.Domain.EnforcementOrders.Entities;
-using Enfo.LocalRepository.EnforcementOrders;
 
-namespace Enfo.LocalRepository.Attachments;
+namespace TestData;
 
 public static class AttachmentData
 {

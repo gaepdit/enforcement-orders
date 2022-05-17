@@ -1,13 +1,12 @@
+using Enfo.Domain.EnforcementOrders.Repositories;
 using Enfo.Domain.EnforcementOrders.Resources;
 using Enfo.Domain.EnforcementOrders.Resources.Validation;
 using FluentAssertions;
 using FluentValidation.TestHelper;
+using Moq;
 using NUnit.Framework;
-using System.Linq;
+using System;
 using System.Threading.Tasks;
-using static EnfoTests.Helpers.DataHelper;
-using static EnfoTests.Helpers.RepositoryHelper;
-using static EnfoTests.Helpers.ResourceHelper;
 
 namespace EnfoTests.Domain.ValidationTests;
 
@@ -17,9 +16,31 @@ public class ValidatingEnforcementOrderUpdate
     [Test]
     public async Task SucceedsGivenValidUpdates()
     {
-        var model = GetValidEnforcementOrderUpdate(1);
-        using var repository = CreateRepositoryHelper().GetEnforcementOrderRepository();
-        var validator = new EnforcementOrderUpdateValidator(repository);
+        var model = new EnforcementOrderUpdate
+        {
+            Cause = "uvw-" + Guid.NewGuid(),
+            CommentContactId = 2000,
+            CommentPeriodClosesDate = new DateTime(2012, 11, 15),
+            County = "Liberty",
+            ExecutedDate = new DateTime(1998, 06, 29),
+            ExecutedOrderPostedDate = new DateTime(1998, 07, 06),
+            FacilityName = "uvw-" + Guid.NewGuid(),
+            HearingCommentPeriodClosesDate = new DateTime(2012, 11, 21),
+            HearingContactId = 2000,
+            HearingDate = new DateTime(2012, 11, 15),
+            HearingLocation = "uvw-" + Guid.NewGuid(),
+            IsExecutedOrder = true,
+            IsHearingScheduled = true,
+            IsProposedOrder = true,
+            LegalAuthorityId = 1,
+            OrderNumber = "EPD-ACQ-7936",
+            Progress = PublicationProgress.Published,
+            ProposedOrderPostedDate = new DateTime(2012, 10, 16),
+            Requirements = "uvw-" + Guid.NewGuid(),
+            SettlementAmount = 2000,
+        };
+
+        var validator = new EnforcementOrderUpdateValidator(new Mock<IEnforcementOrderRepository>().Object);
 
         var result = await validator.TestValidateAsync(model);
 
@@ -33,15 +54,25 @@ public class ValidatingEnforcementOrderUpdate
     [Test]
     public async Task SucceedsWhenRemovingExecutedOrderGivenProposedOrder()
     {
-        var order = GetEnforcementOrderAdminView(GetEnforcementOrders.First(e => e.IsProposedOrder).Id);
-
-        var model = new EnforcementOrderUpdate(order)
+        var model = new EnforcementOrderUpdate
         {
-            ExecutedDate = null, ExecutedOrderPostedDate = null, IsExecutedOrder = false
+            Cause = "uvw-" + Guid.NewGuid(),
+            CommentContactId = 2000,
+            CommentPeriodClosesDate = new DateTime(2012, 11, 15),
+            County = "Liberty",
+            ExecutedDate = null,
+            ExecutedOrderPostedDate = null,
+            FacilityName = "uvw-" + Guid.NewGuid(),
+            IsExecutedOrder = false,
+            IsProposedOrder = true,
+            OrderNumber = "EPD-ACQ-7936",
+            Progress = PublicationProgress.Published,
+            ProposedOrderPostedDate = new DateTime(2012, 10, 16),
+            Requirements = "uvw-" + Guid.NewGuid(),
+            SettlementAmount = 2000,
         };
 
-        using var repository = CreateRepositoryHelper().GetEnforcementOrderRepository();
-        var validator = new EnforcementOrderUpdateValidator(repository);
+        var validator = new EnforcementOrderUpdateValidator(new Mock<IEnforcementOrderRepository>().Object);
 
         var result = await validator.TestValidateAsync(model);
 
@@ -51,14 +82,22 @@ public class ValidatingEnforcementOrderUpdate
     [Test]
     public async Task FailsWhenRemovingExecutedOrderIfNotProposedOrder()
     {
-        var order = GetEnforcementOrderAdminView(GetEnforcementOrders.First(e => !e.IsProposedOrder).Id);
-        var model = new EnforcementOrderUpdate(order)
+        var model = new EnforcementOrderUpdate
         {
-            ExecutedDate = null, ExecutedOrderPostedDate = null, IsExecutedOrder = false,
+            Cause = "uvw-" + Guid.NewGuid(),
+            County = "Liberty",
+            ExecutedDate = null,
+            ExecutedOrderPostedDate = null,
+            FacilityName = "uvw-" + Guid.NewGuid(),
+            IsExecutedOrder = false,
+            IsProposedOrder = false,
+            OrderNumber = "EPD-ACQ-7936",
+            Progress = PublicationProgress.Published,
+            Requirements = "uvw-" + Guid.NewGuid(),
+            SettlementAmount = 2000,
         };
 
-        using var repository = CreateRepositoryHelper().GetEnforcementOrderRepository();
-        var validator = new EnforcementOrderUpdateValidator(repository);
+        var validator = new EnforcementOrderUpdateValidator(new Mock<IEnforcementOrderRepository>().Object);
 
         var result = await validator.TestValidateAsync(model);
 
@@ -67,14 +106,23 @@ public class ValidatingEnforcementOrderUpdate
     }
 
     [Test]
-    public async Task FailsWhenRemovingExecutedOrderDetails()
+    public async Task FailsWhenRemovingExecutedOrderDetailsIfExecuted()
     {
-        var model = GetValidEnforcementOrderUpdate(1);
-        model.ExecutedDate = null;
-        model.ExecutedOrderPostedDate = null;
+        var model = new EnforcementOrderUpdate
+        {
+            Cause = "uvw-" + Guid.NewGuid(),
+            County = "Liberty",
+            ExecutedDate = null,
+            ExecutedOrderPostedDate = null,
+            FacilityName = "uvw-" + Guid.NewGuid(),
+            IsExecutedOrder = true,
+            OrderNumber = "EPD-ACQ-7936",
+            Progress = PublicationProgress.Published,
+            Requirements = "uvw-" + Guid.NewGuid(),
+            SettlementAmount = 2000,
+        };
 
-        using var repository = CreateRepositoryHelper().GetEnforcementOrderRepository();
-        var validator = new EnforcementOrderUpdateValidator(repository);
+        var validator = new EnforcementOrderUpdateValidator(new Mock<IEnforcementOrderRepository>().Object);
 
         var result = await validator.TestValidateAsync(model);
 
@@ -87,30 +135,24 @@ public class ValidatingEnforcementOrderUpdate
     }
 
     [Test]
-    public async Task SucceedsWhenRemovingHearing()
+    public async Task FailsWhenRemovingHearingDetailsIfHearing()
     {
-        var model = GetValidEnforcementOrderUpdate(1);
-        model.IsHearingScheduled = false;
+        var model = new EnforcementOrderUpdate
+        {
+            Cause = "uvw-" + Guid.NewGuid(),
+            County = "Liberty",
+            ExecutedDate = new DateTime(1998, 06, 29),
+            ExecutedOrderPostedDate = new DateTime(1998, 07, 06),
+            FacilityName = "uvw-" + Guid.NewGuid(),
+            IsExecutedOrder = true,
+            IsHearingScheduled = true,
+            OrderNumber = "EPD-ACQ-7936",
+            Progress = PublicationProgress.Published,
+            Requirements = "uvw-" + Guid.NewGuid(),
+            SettlementAmount = 2000,
+        };
 
-        using var repository = CreateRepositoryHelper().GetEnforcementOrderRepository();
-        var validator = new EnforcementOrderUpdateValidator(repository);
-
-        var result = await validator.TestValidateAsync(model);
-
-        result.IsValid.Should().BeTrue();
-    }
-
-    [Test]
-    public async Task FailsWhenRemovingHearingDetailsIfHearingStillTrue()
-    {
-        var model = GetValidEnforcementOrderUpdate(1);
-        model.HearingCommentPeriodClosesDate = null;
-        model.HearingContactId = null;
-        model.HearingDate = null;
-        model.HearingLocation = null;
-
-        using var repository = CreateRepositoryHelper().GetEnforcementOrderRepository();
-        var validator = new EnforcementOrderUpdateValidator(repository);
+        var validator = new EnforcementOrderUpdateValidator(new Mock<IEnforcementOrderRepository>().Object);
 
         var result = await validator.TestValidateAsync(model);
 

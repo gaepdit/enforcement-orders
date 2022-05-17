@@ -13,7 +13,7 @@ using Moq;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using static EnfoTests.Helpers.ResourceHelper;
+using TestData;
 
 namespace EnfoTests.WebApp.Pages.Admin;
 
@@ -23,8 +23,8 @@ public class IndexTests
     [Test]
     public async Task OnGet_ReturnsWithOrders()
     {
-        var list = GetEnforcementOrderDetailedViewList();
-        var adminList = GetEnforcementOrderAdminSummaryViewList();
+        var list = ResourceHelper.GetEnforcementOrderDetailedViewList();
+        var adminList = ResourceHelper.GetEnforcementOrderAdminSummaryViewList();
         var repo = new Mock<IEnforcementOrderRepository>();
         repo.Setup(l => l.ListCurrentProposedEnforcementOrdersAsync())
             .ReturnsAsync(list);
@@ -85,7 +85,7 @@ public class IndexTests
     [Test]
     public async Task Find_GivenExists_ReturnsRedirectToDetails()
     {
-        var list = GetEnforcementOrderAdminSummaryViewListOfOne();
+        var list = ResourceHelper.GetEnforcementOrderAdminSummaryViewListOfOne();
         var listResult = new PaginatedResult<EnforcementOrderAdminSummaryView>(
             list, 1, new PaginationSpec(1, 1));
 
@@ -108,7 +108,7 @@ public class IndexTests
     [Test]
     public async Task Find_GivenNotExists_ReturnsRedirectToSearch()
     {
-        var list = GetEnforcementOrderAdminSummaryViewListOfOne();
+        var list = ResourceHelper.GetEnforcementOrderAdminSummaryViewListOfOne();
         var listResult = new PaginatedResult<EnforcementOrderAdminSummaryView>(
             list, 2, new PaginationSpec(1, 1));
 

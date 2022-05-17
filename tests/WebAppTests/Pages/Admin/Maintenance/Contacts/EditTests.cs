@@ -12,7 +12,7 @@ using Moq;
 using NUnit.Framework;
 using System.Linq;
 using System.Threading.Tasks;
-using static EnfoTests.Helpers.ResourceHelper;
+using TestData;
 
 namespace EnfoTests.WebApp.Pages.Admin.Maintenance.Contacts;
 
@@ -22,7 +22,7 @@ public class EditTests
     [Test]
     public async Task OnGet_ReturnsWithItem()
     {
-        var item = GetEpdContactViewList()[0];
+        var item = ResourceHelper.GetEpdContactViewList()[0];
         var repo = new Mock<IEpdContactRepository>();
         repo.Setup(l => l.GetAsync(item.Id)).ReturnsAsync(item);
         var page = new Edit(repo.Object);
@@ -69,7 +69,7 @@ public class EditTests
     [Test]
     public async Task OnGet_GivenInactiveItem_RedirectsWithDisplayMessage()
     {
-        var item = GetEpdContactViewList().Single(e => !e.Active);
+        var item = ResourceHelper.GetEpdContactViewList().Single(e => !e.Active);
         var repo = new Mock<IEpdContactRepository>();
         repo.Setup(l => l.GetAsync(It.IsAny<int>()))
             .ReturnsAsync(item);
@@ -109,7 +109,7 @@ public class EditTests
     [Test]
     public async Task OnPost_GivenInactiveItem_RedirectsWithDisplayMessage()
     {
-        var item = GetEpdContactViewList().Single(e => !e.Active);
+        var item = ResourceHelper.GetEpdContactViewList().Single(e => !e.Active);
         var repo = new Mock<IEpdContactRepository>();
         repo.Setup(l => l.GetAsync(It.IsAny<int>()))
             .ReturnsAsync(item);
@@ -136,10 +136,10 @@ public class EditTests
     [Test]
     public async Task OnPost_GivenSuccess_ReturnsRedirectWithDisplayMessage()
     {
-        var item = new EpdContactCommand(GetEpdContactViewList()[0]);
+        var item = new EpdContactCommand(ResourceHelper.GetEpdContactViewList()[0]);
         var repo = new Mock<IEpdContactRepository> { DefaultValue = DefaultValue.Mock };
         repo.Setup(l => l.GetAsync(It.IsAny<int>()))
-            .ReturnsAsync(GetEpdContactViewList()[0]);
+            .ReturnsAsync(ResourceHelper.GetEpdContactViewList()[0]);
 
         // Initialize Page TempData
         var httpContext = new DefaultHttpContext();
@@ -164,7 +164,7 @@ public class EditTests
     {
         var repo = new Mock<IEpdContactRepository> { DefaultValue = DefaultValue.Mock };
         repo.Setup(l => l.GetAsync(It.IsAny<int>()))
-            .ReturnsAsync(GetEpdContactViewList()[0]);
+            .ReturnsAsync(ResourceHelper.GetEpdContactViewList()[0]);
         var page = new Edit(repo.Object) { Item = new EpdContactCommand { Id = 0 } };
         page.ModelState.AddModelError("key", "message");
 

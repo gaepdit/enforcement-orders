@@ -29,7 +29,6 @@
     <ItemGroup>
         <ProjectReference Include="..\..\src\Enfo.WebApp\Enfo.WebApp.csproj" />
         <ProjectReference Include="..\..\src\LocalRepository\LocalRepository.csproj" />
-        <ProjectReference Include="..\TestHelpers\TestHelpers.csproj" />
     </ItemGroup>
 
 </Project>

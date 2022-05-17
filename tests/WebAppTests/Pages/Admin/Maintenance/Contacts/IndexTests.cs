@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Moq;
 using NUnit.Framework;
 using System.Threading.Tasks;
-using static EnfoTests.Helpers.ResourceHelper;
+using TestData;
 
 namespace EnfoTests.WebApp.Pages.Admin.Maintenance.Contacts;
 
@@ -20,7 +20,7 @@ public class IndexTests
     [Test]
     public async Task OnGet_ReturnsWithOrder()
     {
-        var list = GetEpdContactViewList();
+        var list = ResourceHelper.GetEpdContactViewList();
         var repo = new Mock<IEpdContactRepository>();
         repo.Setup(l => l.ListAsync(true)).ReturnsAsync(list);
         var page = new Index(repo.Object);
@@ -54,7 +54,7 @@ public class IndexTests
     [Test]
     public async Task OnPost_ReturnsRedirectWithDisplayMessage()
     {
-        var item = GetEpdContactViewList()[0];
+        var item = ResourceHelper.GetEpdContactViewList()[0];
         var repo = new Mock<IEpdContactRepository> { DefaultValue = DefaultValue.Mock };
         repo.Setup(l => l.GetAsync(It.IsAny<int>()))
             .ReturnsAsync(item);

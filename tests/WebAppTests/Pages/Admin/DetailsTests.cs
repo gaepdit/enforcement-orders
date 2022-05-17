@@ -10,8 +10,7 @@ using Moq;
 using NUnit.Framework;
 using System.Linq;
 using System.Threading.Tasks;
-using static EnfoTests.Helpers.ResourceHelper;
-using static EnfoTests.Helpers.DataHelper;
+using TestData;
 
 namespace EnfoTests.WebApp.Pages.Admin;
 
@@ -21,8 +20,8 @@ public class DetailsTests
     [Test]
     public async Task OnGet_ReturnsWithOrder()
     {
-        var itemId = GetEnforcementOrders.First().Id;
-        var item = GetEnforcementOrderAdminView(itemId);
+        var itemId = EnforcementOrderData.EnforcementOrders.First().Id;
+        var item = ResourceHelper.GetEnforcementOrderAdminView(itemId);
         var repo = new Mock<IEnforcementOrderRepository>();
         repo.Setup(l => l.GetAdminViewAsync(itemId)).ReturnsAsync(item);
         var page = new Details();
@@ -36,8 +35,8 @@ public class DetailsTests
     public async Task SetDisplayMessage_ReturnsWithDisplayMessage()
     {
         // Not testing returned Item, but it must be populated to return Page
-        var itemId = GetEnforcementOrders.First().Id;
-        var item = GetEnforcementOrderAdminView(itemId);
+        var itemId = EnforcementOrderData.EnforcementOrders.First().Id;
+        var item = ResourceHelper.GetEnforcementOrderAdminView(itemId);
         var repo = new Mock<IEnforcementOrderRepository>();
         repo.Setup(l => l.GetAdminViewAsync(itemId)).ReturnsAsync(item);
 

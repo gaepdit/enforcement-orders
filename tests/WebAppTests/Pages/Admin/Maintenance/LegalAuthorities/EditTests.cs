@@ -11,7 +11,7 @@ using Moq;
 using NUnit.Framework;
 using System.Linq;
 using System.Threading.Tasks;
-using static EnfoTests.Helpers.ResourceHelper;
+using TestData;
 
 namespace EnfoTests.WebApp.Pages.Admin.Maintenance.LegalAuthorities;
 
@@ -21,7 +21,7 @@ public class EditTests
     [Test]
     public async Task OnGet_ReturnsWithItem()
     {
-        var item = GetLegalAuthorityViewList()[0];
+        var item = ResourceHelper.GetLegalAuthorityViewList()[0];
         var repo = new Mock<ILegalAuthorityRepository>();
         repo.Setup(l => l.GetAsync(item.Id)).ReturnsAsync(item);
         var page = new Edit(repo.Object);
@@ -70,7 +70,7 @@ public class EditTests
     [Test]
     public async Task OnGet_GivenInactiveItem_RedirectsWithDisplayMessage()
     {
-        var item = GetLegalAuthorityViewList().Single(e => !e.Active);
+        var item = ResourceHelper.GetLegalAuthorityViewList().Single(e => !e.Active);
         var repo = new Mock<ILegalAuthorityRepository>();
         repo.Setup(l => l.GetAsync(It.IsAny<int>()))
             .ReturnsAsync(item);
@@ -108,7 +108,7 @@ public class EditTests
     [Test]
     public async Task OnPost_GivenInactiveItem_RedirectsWithDisplayMessage()
     {
-        var item = GetLegalAuthorityViewList().Single(e => !e.Active);
+        var item = ResourceHelper.GetLegalAuthorityViewList().Single(e => !e.Active);
         var repo = new Mock<ILegalAuthorityRepository>();
         repo.Setup(l => l.GetAsync(It.IsAny<int>()))
             .ReturnsAsync(item);
@@ -138,10 +138,10 @@ public class EditTests
     [Test]
     public async Task OnPost_GivenSuccess_ReturnsRedirectWithDisplayMessage()
     {
-        var item = new LegalAuthorityCommand(GetLegalAuthorityViewList()[0]);
+        var item = new LegalAuthorityCommand(ResourceHelper.GetLegalAuthorityViewList()[0]);
         var repo = new Mock<ILegalAuthorityRepository> { DefaultValue = DefaultValue.Mock };
         repo.Setup(l => l.GetAsync(It.IsAny<int>()))
-            .ReturnsAsync(GetLegalAuthorityViewList()[0]);
+            .ReturnsAsync(ResourceHelper.GetLegalAuthorityViewList()[0]);
         repo.Setup(l => l.NameExistsAsync(It.IsAny<string>(), null))
             .ReturnsAsync(false);
 

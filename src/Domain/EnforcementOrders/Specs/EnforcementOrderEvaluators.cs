@@ -1,4 +1,4 @@
-using Enfo.Domain.Pagination;
+﻿using Enfo.Domain.Pagination;
 
 namespace Enfo.Domain.EnforcementOrders.Specs;
 

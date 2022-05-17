@@ -5,8 +5,8 @@ using NUnit.Framework;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using static EnfoTests.Helpers.DataHelper;
-using static EnfoTests.Helpers.RepositoryHelper;
+using TestData;
+using static EnfoTests.Infrastructure.Helpers.RepositoryHelper;
 
 namespace EnfoTests.Infrastructure;
 
@@ -21,7 +21,7 @@ public class LegalAuthorityRepositoryTests
     public async Task Get_WhenItemExists_ReturnsItem(int id)
     {
         using var repository = CreateRepositoryHelper().GetLegalAuthorityRepository();
-        var item = new LegalAuthorityView(GetLegalAuthorities.Single(e => e.Id == id));
+        var item = new LegalAuthorityView(LegalAuthorityData.LegalAuthorities.Single(e => e.Id == id));
 
         var result = await repository.GetAsync(id);
 
@@ -46,8 +46,9 @@ public class LegalAuthorityRepositoryTests
 
         Assert.Multiple(() =>
         {
-            items.Should().HaveCount(GetLegalAuthorities.Count(e => e.Active));
-            items[0].Should().BeEquivalentTo(new LegalAuthorityView(GetLegalAuthorities.First(e => e.Active)));
+            items.Should().HaveCount(LegalAuthorityData.LegalAuthorities.Count(e => e.Active));
+            items[0].Should()
+                .BeEquivalentTo(new LegalAuthorityView(LegalAuthorityData.LegalAuthorities.First(e => e.Active)));
         });
     }
 
@@ -59,8 +60,8 @@ public class LegalAuthorityRepositoryTests
 
         Assert.Multiple(() =>
         {
-            items.Should().HaveCount(GetLegalAuthorities.Count());
-            items.Should().BeEquivalentTo(GetLegalAuthorities.Select(e => new LegalAuthorityView(e)));
+            items.Should().HaveCount(LegalAuthorityData.LegalAuthorities.Count);
+            items.Should().BeEquivalentTo(LegalAuthorityData.LegalAuthorities.Select(e => new LegalAuthorityView(e)));
         });
     }
 
@@ -103,7 +104,7 @@ public class LegalAuthorityRepositoryTests
     [Test]
     public async Task Update_FromValidItem_Updates()
     {
-        var itemId = GetLegalAuthorities.First(e => e.Active).Id;
+        var itemId = LegalAuthorityData.LegalAuthorities.First(e => e.Active).Id;
         var resource = new LegalAuthorityCommand { Id = itemId, AuthorityName = "New Name" };
 
         using var repositoryHelper = CreateRepositoryHelper();
@@ -119,7 +120,7 @@ public class LegalAuthorityRepositoryTests
     [Test]
     public async Task Update_WithNoChanges_Succeeds()
     {
-        var original = GetLegalAuthorities.First(e => e.Active);
+        var original = LegalAuthorityData.LegalAuthorities.First(e => e.Active);
         var resource = new LegalAuthorityCommand { Id = original.Id, AuthorityName = original.AuthorityName };
 
         using var repositoryHelper = CreateRepositoryHelper();
@@ -135,7 +136,7 @@ public class LegalAuthorityRepositoryTests
     [Test]
     public async Task Update_FromInvalidItem_ThrowsException()
     {
-        var itemId = GetLegalAuthorities.First(e => e.Active).Id;
+        var itemId = LegalAuthorityData.LegalAuthorities.First(e => e.Active).Id;
         var resource = new LegalAuthorityCommand { Id = itemId, AuthorityName = null };
 
         var action = async () =>
@@ -172,7 +173,7 @@ public class LegalAuthorityRepositoryTests
     [TestCase(false)]
     public async Task UpdateStatus_IfChangeStatus_Succeeds(bool newActiveStatus)
     {
-        var itemId = GetLegalAuthorities.First(e => e.Active != newActiveStatus).Id;
+        var itemId = LegalAuthorityData.LegalAuthorities.First(e => e.Active != newActiveStatus).Id;
 
         using var repositoryHelper = CreateRepositoryHelper();
         using var repository = repositoryHelper.GetLegalAuthorityRepository();
@@ -189,7 +190,7 @@ public class LegalAuthorityRepositoryTests
     [TestCase(false)]
     public async Task UpdateStatus_IfStatusUnchanged_Succeeds(bool newActiveStatus)
     {
-        var itemId = GetLegalAuthorities.First(e => e.Active == newActiveStatus).Id;
+        var itemId = LegalAuthorityData.LegalAuthorities.First(e => e.Active == newActiveStatus).Id;
 
         using var repositoryHelper = CreateRepositoryHelper();
         using var repository = repositoryHelper.GetLegalAuthorityRepository();
@@ -223,7 +224,7 @@ public class LegalAuthorityRepositoryTests
     public async Task Exists_WhenItemExists_ReturnsTrue()
     {
         using var repository = CreateRepositoryHelper().GetLegalAuthorityRepository();
-        var result = await repository.ExistsAsync(GetLegalAuthorities.First().Id);
+        var result = await repository.ExistsAsync(LegalAuthorityData.LegalAuthorities.First().Id);
         result.Should().BeTrue();
     }
 
@@ -240,7 +241,7 @@ public class LegalAuthorityRepositoryTests
     [Test]
     public async Task NameExists_WhenNameExists_ReturnsTrue()
     {
-        var item = GetLegalAuthorities.First();
+        var item = LegalAuthorityData.LegalAuthorities.First();
         using var repository = CreateRepositoryHelper().GetLegalAuthorityRepository();
         (await repository.NameExistsAsync(item.AuthorityName)).Should().BeTrue();
     }
@@ -255,7 +256,7 @@ public class LegalAuthorityRepositoryTests
     [Test]
     public async Task NameExists_WhenNameExists_WithMatchingId_ReturnsFalse()
     {
-        var item = GetLegalAuthorities.First();
+        var item = LegalAuthorityData.LegalAuthorities.First();
         using var repository = CreateRepositoryHelper().GetLegalAuthorityRepository();
         (await repository.NameExistsAsync(item.AuthorityName, item.Id)).Should().BeFalse();
     }
@@ -263,7 +264,7 @@ public class LegalAuthorityRepositoryTests
     [Test]
     public async Task NameExists_WhenNameExists_WithNonMatchingId_ReturnsTrue()
     {
-        var item = GetLegalAuthorities.First();
+        var item = LegalAuthorityData.LegalAuthorities.First();
         using var repository = CreateRepositoryHelper().GetLegalAuthorityRepository();
         (await repository.NameExistsAsync(item.AuthorityName, -1)).Should().BeTrue();
     }

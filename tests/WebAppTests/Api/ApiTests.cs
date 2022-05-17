@@ -3,6 +3,8 @@ using Enfo.Domain.EnforcementOrders.Resources;
 using Enfo.Domain.EnforcementOrders.Specs;
 using Enfo.Domain.LegalAuthorities.Repositories;
 using Enfo.Domain.LegalAuthorities.Resources;
+using Enfo.Domain.Services;
+using Enfo.LocalRepository;
 using Enfo.WebApp.Api;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
@@ -12,9 +14,7 @@ using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using static EnfoTests.Helpers.DataHelper;
-using static EnfoTests.Helpers.RepositoryHelper;
-using static EnfoTests.Helpers.ResourceHelper;
+using TestData;
 
 namespace EnfoTests.WebApp.Api;
 
@@ -29,20 +29,20 @@ public class ApiTests
             .AddInMemoryCollection(new Dictionary<string, string> { { "BaseUrl", baseUrl } })
             .Build();
 
-        using var repository = CreateRepositoryHelper().GetEnforcementOrderRepository();
+        using var repository = new EnforcementOrderRepository(new Mock<IFileService>().Object);
 
         var controller = new ApiController();
         var result = await controller.ListOrdersAsync(repository, config, new EnforcementOrderSpec(), 1, 100);
 
         Assert.Multiple(() =>
         {
-            result.CurrentCount.Should().Be(GetEnforcementOrders.Count(e => e.GetIsPublic));
+            result.CurrentCount.Should().Be(EnforcementOrderData.EnforcementOrders.Count(e => e.GetIsPublic));
             result.Items.Should()
-                .HaveCount(GetEnforcementOrders.Count(e => e.GetIsPublic));
+                .HaveCount(EnforcementOrderData.EnforcementOrders.Count(e => e.GetIsPublic));
             result.PageNumber.Should().Be(1);
             var order = result.Items[0].EnforcementOrder;
             order.Should().BeEquivalentTo(
-                GetEnforcementOrderSummaryView(GetEnforcementOrders
+                ResourceHelper.GetEnforcementOrderSummaryView(EnforcementOrderData.EnforcementOrders
                     .OrderByDescending(e => e.ExecutedDate ?? e.ProposedOrderPostedDate)
                     .ThenBy(e => e.FacilityName)
                     .First(e => e.GetIsPublic).Id));
@@ -80,8 +80,8 @@ public class ApiTests
             .AddInMemoryCollection(new Dictionary<string, string> { { "BaseUrl", baseUrl } })
             .Build();
 
-        var itemId = GetEnforcementOrders.First().Id;
-        var item = GetEnforcementOrderDetailedView(itemId);
+        var itemId = EnforcementOrderData.EnforcementOrders.First().Id;
+        var item = ResourceHelper.GetEnforcementOrderDetailedView(itemId);
         var repo = new Mock<IEnforcementOrderRepository>();
         repo.Setup(l => l.GetAsync(itemId)).ReturnsAsync(item);
 
@@ -103,21 +103,21 @@ public class ApiTests
     [Test]
     public async Task ListAuthorities_ReturnsActiveItems()
     {
-        using var repository = CreateRepositoryHelper().GetLegalAuthorityRepository();
+        using var repository = new LegalAuthorityRepository();
 
         var controller = new ApiController();
         var response = await controller.ListLegalAuthoritiesAsync(repository);
-        response.Should().HaveCount(GetLegalAuthorities.Count(e => e.Active));
+        response.Should().HaveCount(LegalAuthorityData.LegalAuthorities.Count(e => e.Active));
     }
 
     [Test]
     public async Task ListAuthorities_WithInactive_ReturnsAllItems()
     {
-        using var repository = CreateRepositoryHelper().GetLegalAuthorityRepository();
+        using var repository = new LegalAuthorityRepository();
 
         var controller = new ApiController();
         var response = await controller.ListLegalAuthoritiesAsync(repository, true);
-        response.Should().HaveCount(GetLegalAuthorities.Count());
+        response.Should().HaveCount(LegalAuthorityData.LegalAuthorities.Count);
     }
 
     [Test]
@@ -141,7 +141,7 @@ public class ApiTests
     [Test]
     public async Task GetAuthority_ReturnsItem()
     {
-        var item = GetLegalAuthorityViewList().First();
+        var item = ResourceHelper.GetLegalAuthorityViewList().First();
         var repo = new Mock<ILegalAuthorityRepository>();
         repo.Setup(l => l.GetAsync(item.Id)).ReturnsAsync(item);
 

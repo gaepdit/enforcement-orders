@@ -28,7 +28,6 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\src\Domain\Domain.csproj" />
-        <ProjectReference Include="..\TestHelpers\TestHelpers.csproj" />
     </ItemGroup>
 
 </Project>

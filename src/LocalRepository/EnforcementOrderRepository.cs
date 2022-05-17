@@ -5,10 +5,10 @@ using Enfo.Domain.EnforcementOrders.Specs;
 using Enfo.Domain.Pagination;
 using Enfo.Domain.Services;
 using Enfo.Domain.Utils;
-using Enfo.LocalRepository.Attachments;
 using Microsoft.AspNetCore.Http;
+using TestData;
 
-namespace Enfo.LocalRepository.EnforcementOrders;
+namespace Enfo.LocalRepository;
 
 public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
 {
@@ -39,7 +39,7 @@ public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
     }
 
     public Task<AttachmentView> GetAttachmentAsync(Guid id) =>
-       AttachmentData.Attachments.Any(e => e.Id == id && !e.Deleted)
+        AttachmentData.Attachments.Any(e => e.Id == id && !e.Deleted)
             ? Task.FromResult(new AttachmentView(
                 AttachmentData.Attachments.Single(e => e.Id == id)!))
             : Task.FromResult(null as AttachmentView);

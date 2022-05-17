@@ -1,8 +1,9 @@
-﻿using Enfo.LocalRepository.LegalAuthorities;
+﻿using Enfo.LocalRepository;
 using FluentAssertions;
 using NUnit.Framework;
 using System.Linq;
 using System.Threading.Tasks;
+using TestData;
 
 namespace LocalRepositoryTests.LegalAuthorities;
 

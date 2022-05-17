@@ -1,13 +1,12 @@
+using Enfo.Domain.EnforcementOrders.Repositories;
 using Enfo.Domain.EnforcementOrders.Resources;
 using Enfo.Domain.EnforcementOrders.Resources.Validation;
 using FluentAssertions;
 using FluentValidation.TestHelper;
+using Moq;
 using NUnit.Framework;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
-using static EnfoTests.Helpers.DataHelper;
-using static EnfoTests.Helpers.RepositoryHelper;
 
 namespace EnfoTests.Domain.ValidationTests;
 
@@ -23,17 +22,16 @@ public class ValidatingEnforcementOrderCreate
             Requirements = "Requirements of order",
             FacilityName = "Facility 3",
             County = "Fulton",
-            LegalAuthorityId = GetLegalAuthorities.First().Id,
+            LegalAuthorityId = 0,
             Progress = PublicationProgress.Draft,
             OrderNumber = "NEW-3",
             CreateAs = NewEnforcementOrderType.Proposed,
             CommentPeriodClosesDate = DateTime.Today.AddDays(1),
-            CommentContactId = GetEpdContacts.First().Id,
+            CommentContactId = 0,
             ProposedOrderPostedDate = DateTime.Today,
         };
 
-        using var repository = CreateRepositoryHelper().GetEnforcementOrderRepository();
-        var validator = new EnforcementOrderCreateValidator(repository);
+        var validator = new EnforcementOrderCreateValidator(new Mock<IEnforcementOrderRepository>().Object);
 
         var result = await validator.TestValidateAsync(sampleCreate);
 
@@ -53,17 +51,16 @@ public class ValidatingEnforcementOrderCreate
             Requirements = "Requirements of order",
             FacilityName = "Facility 3",
             County = "Fulton",
-            LegalAuthorityId = GetLegalAuthorities.First().Id,
+            LegalAuthorityId = 0,
             Progress = PublicationProgress.Published,
             OrderNumber = "NEW-3",
             CreateAs = NewEnforcementOrderType.Proposed,
-            CommentPeriodClosesDate  = null,
+            CommentPeriodClosesDate = null,
             CommentContactId = null,
             ProposedOrderPostedDate = DateTime.Today,
         };
 
-        using var repository = CreateRepositoryHelper().GetEnforcementOrderRepository();
-        var validator = new EnforcementOrderCreateValidator(repository);
+        var validator = new EnforcementOrderCreateValidator(new Mock<IEnforcementOrderRepository>().Object);
 
         var result = await validator.TestValidateAsync(sampleCreate);
 
@@ -85,17 +82,19 @@ public class ValidatingEnforcementOrderCreate
             Requirements = "Requirements of order",
             FacilityName = "Facility 3",
             County = "Fulton",
-            LegalAuthorityId = GetLegalAuthorities.First().Id,
+            LegalAuthorityId = 0,
             Progress = PublicationProgress.Published,
-            OrderNumber =  GetEnforcementOrders.First(e => !e.Deleted).OrderNumber,
+            OrderNumber = "abc",
             CreateAs = NewEnforcementOrderType.Proposed,
             CommentPeriodClosesDate = DateTime.Today.AddDays(1),
-            CommentContactId = GetEpdContacts.First().Id,
+            CommentContactId = 0,
             ProposedOrderPostedDate = DateTime.Today,
         };
 
-        using var repository = CreateRepositoryHelper().GetEnforcementOrderRepository();
-        var validator = new EnforcementOrderCreateValidator(repository);
+        var repoMock = new Mock<IEnforcementOrderRepository>();
+        repoMock.Setup(l => l.OrderNumberExistsAsync(It.IsAny<string>(), It.IsAny<int?>()))
+            .ReturnsAsync(true);
+        var validator = new EnforcementOrderCreateValidator(repoMock.Object);
 
         var result = await validator.TestValidateAsync(sampleCreate);
 

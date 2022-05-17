@@ -1,6 +1,6 @@
 using Enfo.Domain.Users.Entities;
 
-namespace Enfo.LocalRepository.Users;
+namespace TestData;
 
 internal static class UsersData
 {

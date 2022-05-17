@@ -1,11 +1,12 @@
 ﻿using Enfo.Domain.Services;
-using Enfo.LocalRepository.EnforcementOrders;
+using Enfo.LocalRepository;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using TestData;
 
 namespace LocalRepositoryTests.EnforcementOrders;
 

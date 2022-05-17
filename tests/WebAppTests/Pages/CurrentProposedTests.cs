@@ -6,7 +6,7 @@ using Moq;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using static EnfoTests.Helpers.ResourceHelper;
+using TestData;
 
 namespace EnfoTests.WebApp.Pages;
 
@@ -16,7 +16,7 @@ public class CurrentProposedTests
     [Test]
     public async Task OnGet_ReturnsWithOrders()
     {
-        var list = GetEnforcementOrderDetailedViewList();
+        var list = ResourceHelper.GetEnforcementOrderDetailedViewList();
         var repo = new Mock<IEnforcementOrderRepository>();
         repo.Setup(l => l.ListCurrentProposedEnforcementOrdersAsync())
             .ReturnsAsync(list);

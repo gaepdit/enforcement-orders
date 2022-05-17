@@ -1,16 +1,15 @@
 ﻿using Enfo.Domain.EnforcementOrders.Repositories;
 using Enfo.Domain.EpdContacts.Repositories;
 using Enfo.Domain.LegalAuthorities.Repositories;
-using Enfo.Domain.Services;
-using System;
-using System.Linq;
 using Enfo.Infrastructure.Contexts;
 using Enfo.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
-using Moq;
+using System;
+using System.Linq;
+using TestData;
 using TestSupport.EfHelpers;
 
-namespace EnfoTests.Helpers
+namespace EnfoTests.Infrastructure.Helpers
 {
     public sealed class RepositoryHelper : IDisposable
     {
@@ -30,25 +29,25 @@ namespace EnfoTests.Helpers
         private void SeedLegalAuthorityData()
         {
             if (_context.LegalAuthorities.Any()) return;
-            _context.LegalAuthorities.AddRange(DataHelper.GetLegalAuthorities);
+            _context.LegalAuthorities.AddRange(LegalAuthorityData.LegalAuthorities);
             _context.SaveChanges();
         }
 
         private void SeedEpdContactData()
         {
             if (_context.EpdContacts.Any()) return;
-            _context.EpdContacts.AddRange(DataHelper.GetEpdContacts);
+            _context.EpdContacts.AddRange(EpdContactData.EpdContacts);
             _context.SaveChanges();
         }
 
         private void SeedEnforcementOrderData()
         {
             if (_context.EnforcementOrders.Any()) return;
-            if (!_context.EpdContacts.Any()) _context.EpdContacts.AddRange(DataHelper.GetEpdContacts);
+            if (!_context.EpdContacts.Any()) _context.EpdContacts.AddRange(EpdContactData.EpdContacts);
             if (!_context.LegalAuthorities.Any())
-                _context.LegalAuthorities.AddRange(DataHelper.GetLegalAuthorities);
+                _context.LegalAuthorities.AddRange(LegalAuthorityData.LegalAuthorities);
             _context.SaveChanges();
-            _context.EnforcementOrders.AddRange(DataHelper.GetEnforcementOrders);
+            _context.EnforcementOrders.AddRange(EnforcementOrderData.EnforcementOrders);
             _context.SaveChanges();
         }
 

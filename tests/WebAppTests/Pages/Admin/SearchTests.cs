@@ -11,7 +11,7 @@ using Moq;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using static EnfoTests.Helpers.ResourceHelper;
+using TestData;
 
 namespace EnfoTests.WebApp.Pages.Admin;
 
@@ -23,7 +23,7 @@ public class SearchTests
     {
         var orderRepo = new Mock<IEnforcementOrderRepository>();
         var legalRepo = new Mock<ILegalAuthorityRepository>();
-        legalRepo.Setup(l => l.ListAsync(false)).ReturnsAsync(GetLegalAuthorityViewList());
+        legalRepo.Setup(l => l.ListAsync(false)).ReturnsAsync(ResourceHelper.GetLegalAuthorityViewList());
         var page = new Search(orderRepo.Object, legalRepo.Object);
 
         await page.OnGetAsync();
@@ -31,7 +31,8 @@ public class SearchTests
         Assert.Multiple(() =>
         {
             page.Spec.Should().BeEquivalentTo(new EnforcementOrderAdminSpec());
-            var expectedLegal = new SelectList(GetLegalAuthorityViewList(), nameof(LegalAuthorityView.Id),
+            var expectedLegal = new SelectList(ResourceHelper.GetLegalAuthorityViewList(),
+                nameof(LegalAuthorityView.Id),
                 nameof(LegalAuthorityView.AuthorityName));
             page.LegalAuthoritiesSelectList.Should().BeEquivalentTo(expectedLegal);
             page.ShowResults.Should().BeFalse();
@@ -42,12 +43,12 @@ public class SearchTests
     public async Task OnGetSearch_ReturnsWithOrders()
     {
         var expectedOrders = new PaginatedResult<EnforcementOrderAdminSummaryView>(
-            GetEnforcementOrderAdminSummaryViewListOfOne(), 1, new PaginationSpec(1, 1));
+            ResourceHelper.GetEnforcementOrderAdminSummaryViewListOfOne(), 1, new PaginationSpec(1, 1));
         var orderRepo = new Mock<IEnforcementOrderRepository>();
         orderRepo.Setup(l => l.ListAdminAsync(It.IsAny<EnforcementOrderAdminSpec>(), It.IsAny<PaginationSpec>()))
             .ReturnsAsync(expectedOrders);
         var legalRepo = new Mock<ILegalAuthorityRepository>();
-        legalRepo.Setup(l => l.ListAsync(false)).ReturnsAsync(GetLegalAuthorityViewList());
+        legalRepo.Setup(l => l.ListAsync(false)).ReturnsAsync(ResourceHelper.GetLegalAuthorityViewList());
         var page = new Search(orderRepo.Object, legalRepo.Object);
 
         await page.OnGetSearchAsync(new EnforcementOrderAdminSpec());
@@ -56,7 +57,8 @@ public class SearchTests
         {
             page.Spec.Should().BeEquivalentTo(new EnforcementOrderAdminSpec());
             page.OrdersList.Should().BeEquivalentTo(expectedOrders);
-            var expectedLegal = new SelectList(GetLegalAuthorityViewList(), nameof(LegalAuthorityView.Id),
+            var expectedLegal = new SelectList(ResourceHelper.GetLegalAuthorityViewList(),
+                nameof(LegalAuthorityView.Id),
                 nameof(LegalAuthorityView.AuthorityName));
             page.LegalAuthoritiesSelectList.Should().BeEquivalentTo(expectedLegal);
             page.ShowResults.Should().BeTrue();
@@ -72,7 +74,7 @@ public class SearchTests
         orderRepo.Setup(l => l.ListAdminAsync(It.IsAny<EnforcementOrderAdminSpec>(), It.IsAny<PaginationSpec>()))
             .ReturnsAsync(expectedOrders);
         var legalRepo = new Mock<ILegalAuthorityRepository>();
-        legalRepo.Setup(l => l.ListAsync(false)).ReturnsAsync(GetLegalAuthorityViewList());
+        legalRepo.Setup(l => l.ListAsync(false)).ReturnsAsync(ResourceHelper.GetLegalAuthorityViewList());
         var page = new Search(orderRepo.Object, legalRepo.Object);
 
         await page.OnGetSearchAsync(new EnforcementOrderAdminSpec());
@@ -81,7 +83,8 @@ public class SearchTests
         {
             page.Spec.Should().BeEquivalentTo(new EnforcementOrderAdminSpec());
             page.OrdersList.Should().BeEquivalentTo(expectedOrders);
-            var expectedLegal = new SelectList(GetLegalAuthorityViewList(), nameof(LegalAuthorityView.Id),
+            var expectedLegal = new SelectList(ResourceHelper.GetLegalAuthorityViewList(),
+                nameof(LegalAuthorityView.Id),
                 nameof(LegalAuthorityView.AuthorityName));
             page.LegalAuthoritiesSelectList.Should().BeEquivalentTo(expectedLegal);
             page.ShowResults.Should().BeTrue();

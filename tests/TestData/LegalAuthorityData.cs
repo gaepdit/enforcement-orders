@@ -2,7 +2,7 @@
 
 // ReSharper disable StringLiteralTypo
 
-namespace Enfo.LocalRepository.LegalAuthorities;
+namespace TestData;
 
 internal static class LegalAuthorityData
 {

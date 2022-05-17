@@ -1,8 +1,9 @@
 ﻿using Enfo.Domain.EpdContacts.Entities;
 using Enfo.Domain.EpdContacts.Repositories;
 using Enfo.Domain.EpdContacts.Resources;
+using TestData;
 
-namespace Enfo.LocalRepository.EpdContacts;
+namespace Enfo.LocalRepository;
 
 public sealed class EpdContactRepository : IEpdContactRepository
 {
