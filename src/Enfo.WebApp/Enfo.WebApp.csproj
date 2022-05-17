@@ -9,7 +9,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="AsyncFixer" Version="1.5.1" Condition="'$(Configuration)' == 'Debug'">
+		<PackageReference Include="AsyncFixer" Version="1.6.0" Condition="'$(Configuration)' == 'Debug'">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
@@ -20,7 +20,7 @@
 		<PackageReference Include="Mindscape.Raygun4Net.AspNetCore" Version="6.6.6" />
 		<PackageReference Include="NetEscapades.AspNetCore.SecurityHeaders" Version="0.16.1" />
 		<PackageReference Include="NetEscapades.AspNetCore.SecurityHeaders.TagHelpers" Version="0.16.1" />
-		<PackageReference Include="SonarAnalyzer.CSharp" Version="8.37.0.45539" Condition="'$(Configuration)' == 'Debug'">
+		<PackageReference Include="SonarAnalyzer.CSharp" Version="8.39.0.47922" Condition="'$(Configuration)' == 'Debug'">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>

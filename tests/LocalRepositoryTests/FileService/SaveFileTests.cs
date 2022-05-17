@@ -11,7 +11,7 @@ namespace LocalRepositoryTests.FileService;
 [TestFixture]
 public class SaveFileTests
 {
-    private Enfo.LocalRepository.Attachments.FileService _fileService;
+    private Enfo.LocalRepository.Attachments.FileService? _fileService;
 
     [SetUp]
     public void SetUp() => _fileService = new Enfo.LocalRepository.Attachments.FileService();
@@ -19,7 +19,7 @@ public class SaveFileTests
     [Test]
     public async Task WhenValid_AddsFileToList()
     {
-        var fileCount = _fileService.Files.Count;
+        var fileCount = _fileService!.Files.Count;
         var formFile = new Mock<IFormFile>();
         formFile.Setup(l => l.Length).Returns(1);
         formFile.Setup(l => l.FileName).Returns("test.pdf");
@@ -38,7 +38,7 @@ public class SaveFileTests
     [Test]
     public async Task WhenFileIsEmpty_ListIsUnchanged()
     {
-        var fileCount = _fileService.Files.Count;
+        var fileCount = _fileService!.Files.Count;
 
         var formFile = new Mock<IFormFile>();
         formFile.Setup(l => l.Length).Returns(0);
@@ -59,7 +59,7 @@ public class SaveFileTests
     [Test]
     public async Task WhenFileNameIsMissing_ListIsUnchanged()
     {
-        var fileCount = _fileService.Files.Count;
+        var fileCount = _fileService!.Files.Count;
 
         var formFile = new Mock<IFormFile>();
         formFile.Setup(l => l.Length).Returns(1);
@@ -80,7 +80,7 @@ public class SaveFileTests
     [Test]
     public async Task WhenFileIsTooLarge_ThrowsException()
     {
-        var fileCount = _fileService.Files.Count;
+        var fileCount = _fileService!.Files.Count;
 
         var formFile = new Mock<IFormFile>();
         formFile.Setup(l => l.Length).Returns((long)int.MaxValue + 1);

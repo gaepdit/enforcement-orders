@@ -1,64 +1,72 @@
 ﻿using Enfo.Domain.Users.Resources;
 using Enfo.Domain.Users.Services;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Enfo.WebApp.Pages.Admin.Users;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Moq;
-using Xunit;
-using Xunit.Extensions.AssertExtensions;
+using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-namespace EnfoTests.WebApp.Pages.Admin.Users
+namespace EnfoTests.WebApp.Pages.Admin.Users;
+
+[TestFixture]
+public class UserDetailsTests
 {
-    public class UserDetailsTests
+    [Test]
+    public async Task OnGet_PopulatesThePageModel()
     {
-        [Fact]
-        public async Task OnGet_PopulatesThePageModel()
+        var userView = new UserView(UserTestData.ApplicationUsers[0]);
+        var roles = new List<string> { "abc" };
+
+        var userService = new Mock<IUserService>();
+        userService.Setup(l => l.GetUserByIdAsync(It.IsAny<Guid>()))
+            .ReturnsAsync(userView);
+        userService.Setup(l => l.GetUserRolesAsync(It.IsAny<Guid>()))
+            .ReturnsAsync(roles);
+        var pageModel = new Details();
+
+        var result = await pageModel.OnGetAsync(userService.Object, userView.Id);
+
+        Assert.Multiple(() =>
         {
-            var userView = new UserView(UserTestData.ApplicationUsers[0]);
-            var roles = new List<string> {"abc"};
-
-            var userService = new Mock<IUserService>();
-            userService.Setup(l => l.GetUserByIdAsync(It.IsAny<Guid>()))
-                .ReturnsAsync(userView);
-            userService.Setup(l => l.GetUserRolesAsync(It.IsAny<Guid>()))
-                .ReturnsAsync(roles);
-            var pageModel = new Details();
-
-            var result = await pageModel.OnGetAsync(userService.Object, userView.Id);
-
             result.Should().BeOfType<PageResult>();
             pageModel.DisplayUser.Should().Be(userView);
             pageModel.Roles.Should().BeEquivalentTo(roles);
-        }
+        });
+    }
 
-        [Fact]
-        public async Task OnGet_NonexistentIdReturnsNotFound()
+    [Test]
+    public async Task OnGet_NonexistentIdReturnsNotFound()
+    {
+        var userService = new Mock<IUserService>();
+        var pageModel = new Details();
+
+        var result = await pageModel.OnGetAsync(userService.Object, Guid.Empty);
+
+        Assert.Multiple(() =>
         {
-            var userService = new Mock<IUserService>();
-            var pageModel = new Details();
-
-            var result = await pageModel.OnGetAsync(userService.Object, Guid.Empty);
-
             result.Should().BeOfType<NotFoundResult>();
-            pageModel.DisplayUser.ShouldBeNull();
-            pageModel.Roles.ShouldBeNull();
-        }
+            pageModel.DisplayUser.Should().BeNull();
+            pageModel.Roles.Should().BeNull();
+        });
+    }
 
-        [Fact]
-        public async Task OnGet_MissingIdReturnsNotFound()
+    [Test]
+    public async Task OnGet_MissingIdReturnsNotFound()
+    {
+        var userService = new Mock<IUserService>();
+        var pageModel = new Details();
+
+        var result = await pageModel.OnGetAsync(userService.Object, null);
+
+        Assert.Multiple(() =>
         {
-            var userService = new Mock<IUserService>();
-            var pageModel = new Details();
-
-            var result = await pageModel.OnGetAsync(userService.Object, null);
-
             result.Should().BeOfType<NotFoundResult>();
-            pageModel.DisplayUser.ShouldBeNull();
-            pageModel.Roles.ShouldBeNull();
-        }
+            pageModel.DisplayUser.Should().BeNull();
+            pageModel.Roles.Should().BeNull();
+        });
     }
 }

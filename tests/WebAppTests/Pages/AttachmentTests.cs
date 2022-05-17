@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 
 namespace EnfoTests.WebApp.Pages;
 
+[TestFixture]
 public class AttachmentTests
 {
     [Test]

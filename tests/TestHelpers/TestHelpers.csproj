@@ -6,7 +6,15 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="AsyncFixer" Version="1.6.0">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
 		<PackageReference Include="EfCore.TestSupport" Version="5.2.2" />
+		<PackageReference Include="SonarAnalyzer.CSharp" Version="8.39.0.47922">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
 	</ItemGroup>
 
 	<ItemGroup>

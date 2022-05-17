@@ -1,12 +1,13 @@
 ﻿using FluentAssertions;
+using NUnit.Framework;
 using System.Threading.Tasks;
-using Xunit;
 
 namespace EnfoTests.Infrastructure.FileService;
 
+[TestFixture]
 public class GetFileTests
 {
-    [Fact]
+    [Test]
     public async Task WhenNotExists_ReturnsEmpty()
     {
         var service = new Enfo.Infrastructure.Services.FileService("./");

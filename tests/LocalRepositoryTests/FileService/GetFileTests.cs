@@ -9,7 +9,7 @@ namespace LocalRepositoryTests.FileService;
 [TestFixture]
 public class GetFileTests
 {
-    private Enfo.LocalRepository.Attachments.FileService _fileService;
+    private Enfo.LocalRepository.Attachments.FileService? _fileService;
 
     [SetUp]
     public void SetUp() => _fileService = new Enfo.LocalRepository.Attachments.FileService();
@@ -17,7 +17,7 @@ public class GetFileTests
     [Test]
     public async Task WhenItemExists_ReturnsItem()
     {
-        var attachmentFile = _fileService.Files.First();
+        var attachmentFile = _fileService!.Files.First();
         var result = await _fileService.GetFileAsync(attachmentFile.FileName);
         Convert.ToBase64String(result).Should().BeEquivalentTo(attachmentFile.Base64EncodedFile);
     }
@@ -25,7 +25,7 @@ public class GetFileTests
     [Test]
     public async Task WhenNotExists_ReturnsEmpty()
     {
-        var result = await _fileService.GetFileAsync("none");
+        var result = await _fileService!.GetFileAsync("none");
         result.Should().BeEmpty();
     }
 }

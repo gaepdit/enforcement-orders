@@ -1,38 +1,38 @@
-using System;
 using Enfo.Domain.Utils;
 using FluentAssertions;
-using Xunit;
+using NUnit.Framework;
+using System;
 
-namespace EnfoTests.Domain
+namespace EnfoTests.Domain;
+
+[TestFixture]
+public class ConcatNonEmptyStrings
 {
-    public class ConcatNonEmptyStrings
+    [Test]
+    public void ReturnsCorrectlyGivenNonEmptyStrings()
     {
-        [Fact]
-        public void ReturnsCorrectlyGivenNonEmptyStrings()
-        {
-            var stringArray = new[] {"abc", "def"};
-            stringArray.ConcatNonEmptyStrings(",").Should().Be("abc,def");
-        }
+        var stringArray = new[] { "abc", "def" };
+        stringArray.ConcatNonEmptyStrings(",").Should().Be("abc,def");
+    }
 
-        [Fact]
-        public void ReturnsNullGivenEmptyArray()
-        {
-            var emptyStringArray = Array.Empty<string>();
-            emptyStringArray.ConcatNonEmptyStrings(",").Should().BeEmpty();
-        }
+    [Test]
+    public void ReturnsNullGivenEmptyArray()
+    {
+        var emptyStringArray = Array.Empty<string>();
+        emptyStringArray.ConcatNonEmptyStrings(",").Should().BeEmpty();
+    }
 
-        [Fact]
-        public void ReturnsCorrectlyGivenNullItem()
-        {
-            var stringArray = new[] {"abc", null, "def"};
-            stringArray.ConcatNonEmptyStrings(",").Should().Be("abc,def");
-        }
+    [Test]
+    public void ReturnsCorrectlyGivenNullItem()
+    {
+        var stringArray = new[] { "abc", null, "def" };
+        stringArray.ConcatNonEmptyStrings(",").Should().Be("abc,def");
+    }
 
-        [Fact]
-        public void ReturnsCorrectlyGivenEmptyString()
-        {
-            var stringArray = new[] {"abc", "", "def"};
-            stringArray.ConcatNonEmptyStrings(",").Should().Be("abc,def");
-        }
+    [Test]
+    public void ReturnsCorrectlyGivenEmptyString()
+    {
+        var stringArray = new[] { "abc", "", "def" };
+        stringArray.ConcatNonEmptyStrings(",").Should().Be("abc,def");
     }
 }
