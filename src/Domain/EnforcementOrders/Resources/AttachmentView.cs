@@ -19,6 +19,8 @@ public class AttachmentView
     [UIHint("FileTypeIcon")]
     public string FileExtension { get; }
 
+    public string AttachmentFileName => string.Concat(Id.ToString(), FileExtension);
+
     [UIHint("FileSize")]
     public long Size { get; }
 }

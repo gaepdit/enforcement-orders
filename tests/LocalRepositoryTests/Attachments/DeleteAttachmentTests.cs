@@ -14,16 +14,20 @@ namespace LocalRepositoryTests.Attachments;
 public class DeleteAttachmentTests
 {
     [Test]
-    public async Task WhenItemExists_RemovesItem()
+    public async Task WhenAttachmentExists_MarksAsDeleted()
     {
         var initialFileCount = AttachmentData.Attachments.Count;
-        var item = AttachmentData.Attachments.First();
+        var attachment = AttachmentData.Attachments.First(a => !a.Deleted);
 
         var repository = new EnforcementOrderRepository(new Mock<IFileService>().Object);
-        await repository.DeleteAttachmentAsync(item.EnforcementOrder.Id, item.Id);
+        await repository.DeleteAttachmentAsync(attachment.EnforcementOrder.Id, attachment.Id);
 
-        AttachmentData.Attachments.Count.Should().Be(initialFileCount - 1);
-        AttachmentData.Attachments.Any(a => a.Id == item.Id).Should().BeFalse();
+        AttachmentData.Attachments.Count.Should().Be(initialFileCount);
+        AttachmentData.Attachments.Single(a => a.Id == attachment.Id).Deleted.Should().BeTrue();
+
+        // Cleanup
+        attachment.Deleted = false;
+        attachment.DateDeleted = null;
     }
 
     [Test]
@@ -74,4 +78,22 @@ public class DeleteAttachmentTests
             .WithMessage($"Attachment ID {attachmentId} does not exist. (Parameter '{nameof(attachmentId)}')")
             .And.ParamName.Should().Be(nameof(attachmentId));
     }
-}
+
+    [Test]
+    public async Task WhenOrderDoesNotIncludeAttachment_ThrowsException()
+    {
+        var attachment = AttachmentData.Attachments.First(a => !a.Deleted);
+
+        var orderId = EnforcementOrderData.EnforcementOrders
+            .First(e => !e.Deleted && e.Id != attachment.EnforcementOrder.Id).Id;
+
+        var action = async () =>
+        {
+            var repository = new EnforcementOrderRepository(new Mock<IFileService>().Object);
+            await repository.DeleteAttachmentAsync(orderId, attachment.Id);
+        };
+
+        (await action.Should().ThrowAsync<ArgumentException>())
+            .WithMessage($"Order ID {orderId} does not include Attachment ID {attachment.Id}. (Parameter 'attachmentId')")
+            .And.ParamName.Should().Be("attachmentId");
+    }}

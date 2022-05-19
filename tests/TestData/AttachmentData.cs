@@ -2,7 +2,7 @@
 
 namespace TestData;
 
-public static class AttachmentData
+internal static class AttachmentData
 {
     public static readonly List<Attachment> Attachments = new()
     {
@@ -46,31 +46,15 @@ public static class AttachmentData
         },
     };
 
-    internal class AttachmentFile
-    {
-        public string FileName { get; init; }
-        public string Base64EncodedFile { get; init; }
-    }
+    internal record AttachmentFile(string FileName, string? Base64EncodedFile);
 
     internal static readonly List<AttachmentFile> AttachmentFiles = new()
     {
-        new AttachmentFile
-        {
-            FileName = "00000000-0000-0000-0000-000000000001.pdf",
-            Base64EncodedFile = encodedPdfFile,
-        },
-        new AttachmentFile
-        {
-            FileName = "00000000-0000-0000-0000-000000000002.pdf",
-            Base64EncodedFile = null,
-        },
-        new AttachmentFile
-        {
-            FileName = "00000000-0000-0000-0000-000000000003.pdf",
-            Base64EncodedFile = "",
-        },
+        new AttachmentFile("00000000-0000-0000-0000-000000000001.pdf", EncodedPdfFile),
+        new AttachmentFile("00000000-0000-0000-0000-000000000002.pdf", null),
+        new AttachmentFile("00000000-0000-0000-0000-000000000003.pdf", ""),
     };
 
-    private const string encodedPdfFile =
+    private const string EncodedPdfFile =
         "JVBERi0xLjIKMSAwIG9iago8PD4+CnN0cmVhbQpCVC9GMSAyNCBUZiAxMCA4IFREIChIZWxsbyB3b3JsZCEpJyBFVAplbmRzdHJlYW0KZW5kb2JqCjQgMCBvYmoKPDwvVHlwZSAvUGFnZS9QYXJlbnQgMiAwIFIvQ29udGVudHMgMSAwIFI+PgplbmRvYmoKMiAwIG9iago8PC9LaWRzIFs0IDAgUl0vQ291bnQgMS9UeXBlIC9QYWdlcy9NZWRpYUJveCBbMCAwIDI1MCA1MF0+PgplbmRvYmoKMyAwIG9iago8PC9QYWdlcyAyIDAgUi9UeXBlIC9DYXRhbG9nPj4KZW5kb2JqCnRyYWlsZXIKPDwvUm9vdCAzIDAgUj4+CiUlRU9G";
 }

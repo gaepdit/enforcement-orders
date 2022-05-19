@@ -227,9 +227,15 @@ public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
             throw new ArgumentException($"Attachment ID {attachmentId} does not exist.", nameof(attachmentId));
 
         var attachment = AttachmentData.Attachments.Single(a => a.Id == attachmentId);
-        AttachmentData.Attachments.Remove(attachment);
-        _fileService.TryDeleteFile(string.Concat(attachment.Id.ToString(), attachment.FileExtension));
 
+        if (attachment.EnforcementOrder.Id != orderId)
+            throw new ArgumentException($"Order ID {orderId} does not include Attachment ID {attachmentId}.",
+                nameof(attachmentId));
+
+        attachment.Deleted = true;
+        attachment.DateDeleted = DateTime.Today;
+
+        _fileService.TryDeleteFile(attachment.AttachmentFileName);
         return Task.CompletedTask;
     }
 

@@ -26,7 +26,7 @@ public class Attachment : PageModel
         if (fileName != item.FileName)
             return RedirectToPage("Attachment", new { id, item.FileName });
 
-        var fileBytes = await _fileService.GetFileAsync(string.Concat(item.Id, item.FileExtension));
+        var fileBytes = await _fileService.GetFileAsync(item.AttachmentFileName);
 
         return fileBytes.Length == 0
             ? NotFound($"File not available: {item.FileName}")

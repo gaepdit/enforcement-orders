@@ -6,18 +6,17 @@ namespace Enfo.LocalRepository;
 
 public class FileService : IFileService
 {
-    internal List<AttachmentData.AttachmentFile> Files { get; }
-
-    public FileService() => Files = new List<AttachmentData.AttachmentFile>(AttachmentData.AttachmentFiles);
-
     public Task<byte[]> GetFileAsync(string fileName)
     {
         try
         {
-            if (Files.All(e => e.FileName != fileName)) return Task.FromResult(Array.Empty<byte>());
-            var base64EncodedFile = Files
+            if (AttachmentData.AttachmentFiles.All(e => e.FileName != fileName))
+                return Task.FromResult(Array.Empty<byte>());
+
+            var base64EncodedFile = AttachmentData.AttachmentFiles
                 .Single(e => e.FileName == fileName).Base64EncodedFile;
-            return Task.FromResult(base64EncodedFile is null
+
+            return Task.FromResult(string.IsNullOrEmpty(base64EncodedFile)
                 ? Array.Empty<byte>()
                 : Convert.FromBase64String(base64EncodedFile));
         }
@@ -27,8 +26,10 @@ public class FileService : IFileService
         }
     }
 
-    public void TryDeleteFile(string fileName) =>
-        Files.Remove(Files.SingleOrDefault(a => a.FileName == fileName));
+    public void TryDeleteFile(string fileName)
+    {
+        // Method intentionally left empty.
+    }
 
     public async Task SaveFileAsync(IFormFile file, Guid fileId)
     {
@@ -37,12 +38,11 @@ public class FileService : IFileService
         var stream = new MemoryStream(Convert.ToInt32(file.Length));
         await file.CopyToAsync(stream);
 
-        var attachmentFile = new AttachmentData.AttachmentFile
-        {
-            FileName = string.Concat(fileId.ToString(), Path.GetExtension(file.FileName)),
-            Base64EncodedFile = Convert.ToBase64String(stream.ToArray()),
-        };
+        var attachmentFile = new AttachmentData.AttachmentFile(
+            string.Concat(fileId.ToString(), Path.GetExtension(file.FileName)),
+            Convert.ToBase64String(stream.ToArray())
+        );
 
-        Files.Add(attachmentFile);
+        AttachmentData.AttachmentFiles.Add(attachmentFile);
     }
 }

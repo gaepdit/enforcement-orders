@@ -12,6 +12,8 @@ public class Attachment : IdentifiedEntity<Guid>, IAuditable
     [StringLength(10)]
     public string FileExtension { get; set; }
 
+    public string AttachmentFileName => string.Concat(Id.ToString(), FileExtension);
+    
     public long Size { get; set; }
 
     public EnforcementOrder EnforcementOrder { get; set; }

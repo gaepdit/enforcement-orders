@@ -1,65 +1,63 @@
-﻿using FluentAssertions;
+﻿using Enfo.Domain.EnforcementOrders.Entities;
+using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Moq;
 using NUnit.Framework;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using TestData;
 
 namespace LocalRepositoryTests.FileService;
 
 [TestFixture]
 public class SaveFileTests
 {
-    private Enfo.LocalRepository.FileService? _fileService;
-
-    [SetUp]
-    public void SetUp() => _fileService = new Enfo.LocalRepository.FileService();
-
     [Test]
     public async Task WhenValid_AddsFileToList()
     {
-        var fileCount = _fileService!.Files.Count;
         var formFile = new Mock<IFormFile>();
         formFile.Setup(l => l.Length).Returns(1);
         formFile.Setup(l => l.FileName).Returns("test.pdf");
 
+        var fileCount = AttachmentData.AttachmentFiles.Count;
         var id = Guid.NewGuid();
 
-        await _fileService.SaveFileAsync(formFile.Object, id);
+        var fileService = new Enfo.LocalRepository.FileService();
+        await fileService.SaveFileAsync(formFile.Object, id);
 
         Assert.Multiple(() =>
         {
-            _fileService.Files.Count.Should().Be(fileCount + 1);
-            _fileService.Files.Any(a => a.FileName == $"{id.ToString()}.pdf").Should().BeTrue();
+            AttachmentData.AttachmentFiles.Count.Should().Be(fileCount + 1);
+            AttachmentData.AttachmentFiles.Any(a => a.FileName == $"{id.ToString()}.pdf").Should().BeTrue();
         });
     }
 
     [Test]
     public async Task WhenFileIsEmpty_ListIsUnchanged()
     {
-        var fileCount = _fileService!.Files.Count;
-
         var formFile = new Mock<IFormFile>();
         formFile.Setup(l => l.Length).Returns(0);
         formFile.Setup(l => l.FileName).Returns("test.pdf");
 
+        var fileCount = AttachmentData.AttachmentFiles.Count;
         var id = Guid.NewGuid();
         var expectedFilename = $"{id.ToString()}.pdf";
 
-        await _fileService.SaveFileAsync(formFile.Object, id);
+        var fileService = new Enfo.LocalRepository.FileService();
+        await fileService.SaveFileAsync(formFile.Object, id);
 
         Assert.Multiple(() =>
         {
-            _fileService.Files.Count.Should().Be(fileCount);
-            _fileService.Files.Any(a => a.FileName == expectedFilename).Should().BeFalse();
+            AttachmentData.AttachmentFiles.Count.Should().Be(fileCount);
+            AttachmentData.AttachmentFiles.Any(a => a.FileName == expectedFilename).Should().BeFalse();
         });
     }
 
     [Test]
     public async Task WhenFileNameIsMissing_ListIsUnchanged()
     {
-        var fileCount = _fileService!.Files.Count;
+        var fileCount = AttachmentData.AttachmentFiles.Count;
 
         var formFile = new Mock<IFormFile>();
         formFile.Setup(l => l.Length).Returns(1);
@@ -68,27 +66,32 @@ public class SaveFileTests
         var id = Guid.NewGuid();
         var expectedFilename = $"{id.ToString()}.pdf";
 
-        await _fileService.SaveFileAsync(formFile.Object, id);
+        var fileService = new Enfo.LocalRepository.FileService();
+        await fileService.SaveFileAsync(formFile.Object, id);
 
         Assert.Multiple(() =>
         {
-            _fileService.Files.Count.Should().Be(fileCount);
-            _fileService.Files.Any(a => a.FileName == expectedFilename).Should().BeFalse();
+            AttachmentData.AttachmentFiles.Count.Should().Be(fileCount);
+            AttachmentData.AttachmentFiles.Any(a => a.FileName == expectedFilename).Should().BeFalse();
         });
     }
 
     [Test]
-    public async Task WhenFileIsTooLarge_ThrowsException()
+    public void WhenFileIsTooLarge_ThrowsException()
     {
-        var fileCount = _fileService!.Files.Count;
+        var fileCount = AttachmentData.AttachmentFiles.Count;
+        var fileService = new Enfo.LocalRepository.FileService();
 
         var formFile = new Mock<IFormFile>();
         formFile.Setup(l => l.Length).Returns((long)int.MaxValue + 1);
         formFile.Setup(l => l.FileName).Returns("test.pdf");
 
-        var act = () => _fileService.SaveFileAsync(formFile.Object, Guid.Empty);
+        var action = async () => await fileService.SaveFileAsync(formFile.Object, Guid.Empty);
 
-        await act.Should().ThrowAsync<OverflowException>();
-        _fileService.Files.Count.Should().Be(fileCount);
+        Assert.Multiple(async () =>
+        {
+            await action.Should().ThrowAsync<OverflowException>();
+            AttachmentData.AttachmentFiles.Count.Should().Be(fileCount);
+        });
     }
 }
