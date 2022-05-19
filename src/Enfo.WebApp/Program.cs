@@ -142,9 +142,9 @@ else
 builder.Services.AddHostedService<MigratorHostedService>();
 
 // Configure validators
-builder.Services.AddTransient<IValidator<EnforcementOrderCreate>, EnforcementOrderCreateValidator>();
-builder.Services.AddTransient<IValidator<EnforcementOrderUpdate>, EnforcementOrderUpdateValidator>();
-builder.Services.AddTransient<IValidator<LegalAuthorityCommand>, LegalAuthorityValidator>();
+builder.Services.AddScoped<IValidator<EnforcementOrderCreate>, EnforcementOrderCreateValidator>();
+builder.Services.AddScoped<IValidator<EnforcementOrderUpdate>, EnforcementOrderUpdateValidator>();
+builder.Services.AddScoped<IValidator<LegalAuthorityCommand>, LegalAuthorityValidator>();
 
 // Build the application
 var app = builder.Build();
