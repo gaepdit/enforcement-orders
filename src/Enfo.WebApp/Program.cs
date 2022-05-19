@@ -187,7 +187,7 @@ else
 }
 
 // Configure security HTTP headers
-app.UseSecurityHeaders(policies => policies.AddSecurityHeaderPolicies());
+if(!env.IsLocalEnv()) app.UseSecurityHeaders(policies => policies.AddSecurityHeaderPolicies());
 
 // Configure the application
 app.UseStatusCodePages();
