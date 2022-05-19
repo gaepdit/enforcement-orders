@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Diagnostics.CodeAnalysis;
 using System.Security.Claims;
 
 namespace Enfo.WebApp.Pages.Account;
@@ -84,6 +85,7 @@ public class ExternalLogin : PageModel
 
     // This method is called by the external login provider.
     [UsedImplicitly]
+    [SuppressMessage("Critical Code Smell", "S3776:Cognitive Complexity of methods should not be too high")]
     public async Task<IActionResult> OnGetCallbackAsync(string returnUrl = null, string remoteError = null)
     {
         if (remoteError != null)
