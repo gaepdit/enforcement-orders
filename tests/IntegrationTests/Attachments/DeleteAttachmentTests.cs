@@ -14,12 +14,18 @@ public class DeleteAttachmentTests
     [Test]
     public async Task WhenAttachmentExists_MarksAsDeleted()
     {
+        // Arrange
         var initialFileCount = AttachmentData.Attachments.Count;
         var attachment = AttachmentData.Attachments.First(a => !a.Deleted);
 
         using var repositoryHelper = RepositoryHelper.CreateRepositoryHelper();
         using var repository = repositoryHelper.GetEnforcementOrderRepository();
+        
+        // Act
         await repository.DeleteAttachmentAsync(attachment.EnforcementOrder.Id, attachment.Id).ConfigureAwait(false);
+
+        // Assert
+        repositoryHelper.ClearChangeTracker();
 
         await using var context = repositoryHelper.DbContext;
         var updatedAttachment = context.Attachments.Single(a => a.Id == attachment.Id);

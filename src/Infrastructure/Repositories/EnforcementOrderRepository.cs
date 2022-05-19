@@ -186,6 +186,8 @@ public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
         var item = new EnforcementOrder(resource);
         await _context.EnforcementOrders.AddAsync(item).ConfigureAwait(false);
         await _context.SaveChangesAsync().ConfigureAwait(false);
+        if (resource.Attachments?.Count > 0) await AddAttachmentsInternalAsync(resource.Attachments, item.Id);
+
         return item.Id;
     }
 

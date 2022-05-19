@@ -4,9 +4,11 @@ using Enfo.Domain.Services;
 using Enfo.LocalRepository;
 using EnfoTests.TestData;
 using FluentAssertions;
+using Microsoft.AspNetCore.Http;
 using Moq;
 using NUnit.Framework;
 using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -18,7 +20,6 @@ public class CreateTests
     [Test]
     public async Task FromValidItem_AddsNew()
     {
-        // Sample data for create
         EnforcementOrderCreate resource = new()
         {
             Cause = "Cause of order",
@@ -77,5 +78,48 @@ public class CreateTests
 
         (await action.Should().ThrowAsync<ArgumentException>())
             .And.ParamName.Should().Be(nameof(EnforcementOrderCreate.County));
+    }
+
+    [Test]
+    public async Task ValidItemWithAttachments_AddsAll()
+    {
+        // Arrange
+        EnforcementOrderCreate resource = new()
+        {
+            Cause = "Cause of order",
+            Requirements = "Requirements of order",
+            FacilityName = "Facility with Attachments",
+            County = "Fulton",
+            LegalAuthorityId = LegalAuthorityData.LegalAuthorities.First().Id,
+            Progress = PublicationProgress.Draft,
+            OrderNumber = "ATT-1",
+            CreateAs = NewEnforcementOrderType.Proposed,
+            CommentPeriodClosesDate = DateTime.Today.AddDays(1),
+            CommentContactId = EpdContactData.EpdContacts.First().Id,
+            ProposedOrderPostedDate = DateTime.Today,
+        };
+
+        resource.Attachments.AddRange(new[]
+        {
+            new FormFile(Stream.Null, 0, 1, "test1", "test1.pdf"),
+            new FormFile(Stream.Null, 0, 2, "test2", "test2.pdf"),
+        });
+        
+        using var repository = new EnforcementOrderRepository(new Mock<IFileService>().Object);
+
+        // Act
+        var itemId = await repository.CreateAsync(resource);
+
+        // Assert
+        var order = await repository.GetAdminViewAsync(itemId);
+
+        Assert.Multiple(() =>
+        {
+            order.Attachments.Count.Should().Be(2);
+            var attachment = order.Attachments.Last();
+            attachment.FileName.Should().Be("test2.pdf");
+            attachment.FileExtension.Should().Be(".pdf");
+            attachment.Size.Should().Be(2);
+        });
     }
 }

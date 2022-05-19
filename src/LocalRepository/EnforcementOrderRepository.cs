@@ -150,14 +150,15 @@ public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
                 .Select(e => new EnforcementOrderAdminSummaryView(e))
                 .ToList());
 
-    public Task<int> CreateAsync(EnforcementOrderCreate resource)
+    public async Task<int> CreateAsync(EnforcementOrderCreate resource)
     {
         resource.TrimAll();
         var id = EnforcementOrderData.EnforcementOrders.Max(e => e.Id) + 1;
         var item = new EnforcementOrder(resource) { Id = id };
         EnforcementOrderData.EnforcementOrders.Add(item);
+        if (resource.Attachments?.Count > 0) await AddAttachmentsInternalAsync(resource.Attachments, item);
 
-        return Task.FromResult(id);
+        return id;
     }
 
     public Task UpdateAsync(EnforcementOrderUpdate resource)

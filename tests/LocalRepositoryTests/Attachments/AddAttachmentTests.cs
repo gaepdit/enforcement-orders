@@ -33,11 +33,41 @@ public class AddAttachmentTests
 
         Assert.Multiple(() =>
         {
-            order.Attachments.Count.Should().Be(initialCount + 1);
+            order.Attachments.Count.Should().Be(initialCount + files.Count);
             var attachment = order.Attachments.Last();
             attachment.FileName.Should().Be("test.pdf");
             attachment.FileExtension.Should().Be(".pdf");
             attachment.Size.Should().Be(1);
+        });
+    }
+
+    [Test]
+    public async Task AttachingMultipleItems_Succeeds()
+    {
+        // Arrange
+        var files = new List<IFormFile>
+        {
+            new FormFile(Stream.Null, 0, 1, "test1", "test1.pdf"),
+            new FormFile(Stream.Null, 0, 2, "test2", "test2.pdf"),
+        };
+
+        var orderId = EnforcementOrderData.EnforcementOrders.Last(e => !e.Deleted).Id;
+        var initialCount = AttachmentData.Attachments.Count(a => a.EnforcementOrder.Id == orderId);
+
+        // Act
+        using var repository = new EnforcementOrderRepository(new Mock<IFileService>().Object);
+        await repository.AddAttachmentsAsync(orderId, files);
+
+        // Assert
+        var order = await repository.GetAsync(orderId);
+
+        Assert.Multiple(() =>
+        {
+            order.Attachments.Count.Should().Be(initialCount + files.Count);
+            var attachment = order.Attachments.Last();
+            attachment.FileName.Should().Be("test2.pdf");
+            attachment.FileExtension.Should().Be(".pdf");
+            attachment.Size.Should().Be(2);
         });
     }
 

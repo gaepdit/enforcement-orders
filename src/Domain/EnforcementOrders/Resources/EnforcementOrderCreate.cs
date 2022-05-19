@@ -1,4 +1,5 @@
 using Enfo.Domain.Utils;
+using Microsoft.AspNetCore.Http;
 
 namespace Enfo.Domain.EnforcementOrders.Resources;
 
@@ -68,6 +69,11 @@ public class EnforcementOrderCreate
     [DataType(DataType.Date)]
     [DisplayFormat(DataFormatString = DisplayFormats.EditDate, ApplyFormatInEditMode = true)]
     public DateTime? ExecutedOrderPostedDate { get; init; } = DateUtils.NextMonday();
+
+    // Attachments
+
+    [DisplayName("File Attachments")]
+    public List<IFormFile> Attachments { get; } = new();
 
     // Hearing info
 

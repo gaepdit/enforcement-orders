@@ -22,11 +22,15 @@ public class AddAttachmentTests
         var orderId = EnforcementOrderData.EnforcementOrders.First(e => !e.Deleted).Id;
         var initialCount = AttachmentData.Attachments.Count(a => a.EnforcementOrder.Id == orderId);
 
+        using var repositoryHelper = RepositoryHelper.CreateRepositoryHelper();
+        using var repository = repositoryHelper.GetEnforcementOrderRepository();
+
         // Act
-        using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
         await repository.AddAttachmentsAsync(orderId, files);
 
         // Assert
+        repositoryHelper.ClearChangeTracker();
+
         var order = await repository.GetAsync(orderId);
 
         Assert.Multiple(() =>
