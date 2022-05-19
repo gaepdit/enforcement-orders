@@ -18,11 +18,11 @@ public class ListTests
     {
         using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
 
-        var result = await repository.ListAsync(new EnforcementOrderSpec(), new PaginationSpec(1, 20));
+        var result = await repository.ListAsync(new EnforcementOrderSpec(), new PaginationSpec(1, 50));
 
         Assert.Multiple(() =>
         {
-            result.CurrentCount.Should().Be(EnforcementOrderData.EnforcementOrders.Count(e => e.GetIsPublic));
+            result.TotalCount.Should().Be(EnforcementOrderData.EnforcementOrders.Count(e => e.GetIsPublic));
             result.Items.Should()
                 .HaveCount(EnforcementOrderData.EnforcementOrders.Count(e => e.GetIsPublic));
             result.PageNumber.Should().Be(1);
@@ -43,7 +43,7 @@ public class ListTests
         };
 
         using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
-        var result = await repository.ListAsync(spec, new PaginationSpec(1, 20));
+        var result = await repository.ListAsync(spec, new PaginationSpec(1, 50));
 
         var expectedList = EnforcementOrderData.EnforcementOrders
             .OrderByDescending(e => e.ExecutedDate ?? e.ProposedOrderPostedDate)
@@ -55,7 +55,7 @@ public class ListTests
 
         Assert.Multiple(() =>
         {
-            result.CurrentCount.Should().Be(expectedList.Count);
+            result.TotalCount.Should().Be(expectedList.Count);
             result.Items.Should().HaveCount(expectedList.Count);
             result.PageNumber.Should().Be(1);
             result.Items[0].Should().BeEquivalentTo(
@@ -74,11 +74,11 @@ public class ListTests
         };
 
         using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
-        var result = await repository.ListAsync(spec, new PaginationSpec(1, 20));
+        var result = await repository.ListAsync(spec, new PaginationSpec(1, 50));
 
         Assert.Multiple(() =>
         {
-            result.CurrentCount.Should().Be(0);
+            result.TotalCount.Should().Be(0);
             result.Items.Count.Should().Be(0);
             result.PageNumber.Should().Be(1);
         });
@@ -94,7 +94,7 @@ public class ListTests
         };
 
         using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
-        var result = await repository.ListAsync(spec, new PaginationSpec(1, 20));
+        var result = await repository.ListAsync(spec, new PaginationSpec(1, 50));
 
         var expectedList = EnforcementOrderData.EnforcementOrders
             .Where(e => string.Equals(e.FacilityName, spec.Facility, StringComparison.Ordinal))
@@ -103,7 +103,7 @@ public class ListTests
 
         Assert.Multiple(() =>
         {
-            result.CurrentCount.Should().Be(expectedList.Count);
+            result.TotalCount.Should().Be(expectedList.Count);
             result.PageNumber.Should().Be(1);
 
             var resultList = result.Items.ToList();
@@ -122,7 +122,7 @@ public class ListTests
         };
 
         using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
-        var result = await repository.ListAsync(spec, new PaginationSpec(1, 20));
+        var result = await repository.ListAsync(spec, new PaginationSpec(1, 50));
 
         var expectedList = EnforcementOrderData.EnforcementOrders
             .Where(e => string.Equals(e.FacilityName, spec.Facility, StringComparison.Ordinal))
@@ -131,7 +131,7 @@ public class ListTests
 
         Assert.Multiple(() =>
         {
-            result.CurrentCount.Should().Be(expectedList.Count);
+            result.TotalCount.Should().Be(expectedList.Count);
             result.PageNumber.Should().Be(1);
 
             var resultList = result.Items.ToList();
@@ -144,11 +144,11 @@ public class ListTests
     public async Task ListDetailed_ByDefault_ReturnsOnlyPublic()
     {
         using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
-        var result = await repository.ListDetailedAsync(new EnforcementOrderSpec(), new PaginationSpec(1, 20));
+        var result = await repository.ListDetailedAsync(new EnforcementOrderSpec(), new PaginationSpec(1, 50));
 
         Assert.Multiple(() =>
         {
-            result.CurrentCount.Should().Be(EnforcementOrderData.EnforcementOrders.Count(e => e.GetIsPublic));
+            result.TotalCount.Should().Be(EnforcementOrderData.EnforcementOrders.Count(e => e.GetIsPublic));
             result.Items.Should()
                 .HaveCount(EnforcementOrderData.EnforcementOrders.Count(e => e.GetIsPublic));
             result.PageNumber.Should().Be(1);
@@ -167,7 +167,7 @@ public class ListTests
             { Facility = EnforcementOrderData.EnforcementOrders.First(e => !e.Deleted).FacilityName };
 
         using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
-        var result = await repository.ListDetailedAsync(spec, new PaginationSpec(1, 20));
+        var result = await repository.ListDetailedAsync(spec, new PaginationSpec(1, 50));
 
         var expectedList = EnforcementOrderData.EnforcementOrders
             .OrderByDescending(e => e.ExecutedDate ?? e.ProposedOrderPostedDate)
@@ -179,7 +179,7 @@ public class ListTests
 
         Assert.Multiple(() =>
         {
-            result.CurrentCount.Should().Be(expectedList.Count);
+            result.TotalCount.Should().Be(expectedList.Count);
             result.Items.Should().HaveCount(expectedList.Count);
             result.PageNumber.Should().Be(1);
             result.Items[0].Should().BeEquivalentTo(
@@ -198,11 +198,11 @@ public class ListTests
         };
 
         using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
-        var result = await repository.ListDetailedAsync(spec, new PaginationSpec(1, 20));
+        var result = await repository.ListDetailedAsync(spec, new PaginationSpec(1, 50));
 
         Assert.Multiple(() =>
         {
-            result.CurrentCount.Should().Be(0);
+            result.TotalCount.Should().Be(0);
             result.Items.Should().HaveCount(0);
             result.PageNumber.Should().Be(1);
         });
@@ -218,7 +218,7 @@ public class ListTests
         };
 
         using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
-        var result = await repository.ListDetailedAsync(spec, new PaginationSpec(1, 20));
+        var result = await repository.ListDetailedAsync(spec, new PaginationSpec(1, 50));
 
         var expectedList = EnforcementOrderData.EnforcementOrders
             .Where(e => string.Equals(e.FacilityName, spec.Facility, StringComparison.Ordinal))
@@ -226,7 +226,7 @@ public class ListTests
 
         Assert.Multiple(() =>
         {
-            result.CurrentCount.Should().Be(expectedList.Count);
+            result.TotalCount.Should().Be(expectedList.Count);
             result.Items.Should().HaveCount(expectedList.Count);
             result.PageNumber.Should().Be(1);
             result.Items[0].Should().BeEquivalentTo(
@@ -244,7 +244,7 @@ public class ListTests
         };
 
         using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
-        var result = await repository.ListDetailedAsync(spec, new PaginationSpec(1, 20));
+        var result = await repository.ListDetailedAsync(spec, new PaginationSpec(1, 50));
 
         var expectedList = EnforcementOrderData.EnforcementOrders
             .Where(e => string.Equals(e.FacilityName, spec.Facility, StringComparison.Ordinal))
@@ -252,8 +252,7 @@ public class ListTests
 
         Assert.Multiple(() =>
         {
-            result.CurrentCount.Should().Be(expectedList.Count);
-            result.Items.Should();
+            result.TotalCount.Should().Be(expectedList.Count);
             result.PageNumber.Should().Be(1);
             result.Items[0].Should().BeEquivalentTo(
                 ResourceHelper.GetEnforcementOrderDetailedView(expectedList[0].Id));
@@ -264,11 +263,11 @@ public class ListTests
     public async Task ListAdmin_ByDefault_ReturnsNonDeleted()
     {
         using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
-        var result = await repository.ListAdminAsync(new EnforcementOrderAdminSpec(), new PaginationSpec(1, 20));
+        var result = await repository.ListAdminAsync(new EnforcementOrderAdminSpec(), new PaginationSpec(1, 50));
 
         Assert.Multiple(() =>
         {
-            result.CurrentCount.Should().Be(EnforcementOrderData.EnforcementOrders.Count(e => !e.Deleted));
+            result.TotalCount.Should().Be(EnforcementOrderData.EnforcementOrders.Count(e => !e.Deleted));
             result.Items.Should()
                 .HaveCount(EnforcementOrderData.EnforcementOrders.Count(e => !e.Deleted));
             result.PageNumber.Should().Be(1);
@@ -286,11 +285,11 @@ public class ListTests
         var spec = new EnforcementOrderAdminSpec { ShowDeleted = true };
 
         using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
-        var result = await repository.ListAdminAsync(spec, new PaginationSpec(1, 20));
+        var result = await repository.ListAdminAsync(spec, new PaginationSpec(1, 50));
 
         Assert.Multiple(() =>
         {
-            result.CurrentCount.Should().Be(EnforcementOrderData.EnforcementOrders.Count(e => e.Deleted));
+            result.TotalCount.Should().Be(EnforcementOrderData.EnforcementOrders.Count(e => e.Deleted));
             result.Items.Should()
                 .HaveCount(EnforcementOrderData.EnforcementOrders.Count(e => e.Deleted));
             result.PageNumber.Should().Be(1);
@@ -311,7 +310,7 @@ public class ListTests
         };
 
         using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
-        var result = await repository.ListAdminAsync(spec, new PaginationSpec(1, 20));
+        var result = await repository.ListAdminAsync(spec, new PaginationSpec(1, 50));
 
         var expectedList = EnforcementOrderData.EnforcementOrders
             .OrderByDescending(e => e.ExecutedDate ?? e.ProposedOrderPostedDate)
@@ -322,7 +321,7 @@ public class ListTests
 
         Assert.Multiple(() =>
         {
-            result.CurrentCount.Should().Be(expectedList.Count);
+            result.TotalCount.Should().Be(expectedList.Count);
             result.Items.Should().HaveCount(expectedList.Count);
             result.PageNumber.Should().Be(1);
             result.Items[0].Should().BeEquivalentTo(
@@ -339,11 +338,11 @@ public class ListTests
         };
 
         using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
-        var result = await repository.ListAdminAsync(spec, new PaginationSpec(1, 20));
+        var result = await repository.ListAdminAsync(spec, new PaginationSpec(1, 50));
 
         Assert.Multiple(() =>
         {
-            result.CurrentCount.Should().Be(0);
+            result.TotalCount.Should().Be(0);
             result.Items.Count.Should().Be(0);
             result.PageNumber.Should().Be(1);
         });
@@ -358,7 +357,7 @@ public class ListTests
         };
 
         using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
-        var result = await repository.ListAdminAsync(spec, new PaginationSpec(1, 20));
+        var result = await repository.ListAdminAsync(spec, new PaginationSpec(1, 50));
 
         var expectedList = EnforcementOrderData.EnforcementOrders
             .OrderByDescending(e => e.ExecutedDate ?? e.ProposedOrderPostedDate)
@@ -370,7 +369,7 @@ public class ListTests
 
         Assert.Multiple(() =>
         {
-            result.CurrentCount.Should().Be(expectedList.Count);
+            result.TotalCount.Should().Be(expectedList.Count);
             result.Items.Should().HaveCount(expectedList.Count);
             result.PageNumber.Should().Be(1);
             result.Items[0].Should().BeEquivalentTo(

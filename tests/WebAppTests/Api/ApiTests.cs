@@ -36,7 +36,7 @@ public class ApiTests
 
         Assert.Multiple(() =>
         {
-            result.CurrentCount.Should().Be(EnforcementOrderData.EnforcementOrders.Count(e => e.GetIsPublic));
+            result.TotalCount.Should().Be(EnforcementOrderData.EnforcementOrders.Count(e => e.GetIsPublic));
             result.Items.Should()
                 .HaveCount(EnforcementOrderData.EnforcementOrders.Count(e => e.GetIsPublic));
             result.PageNumber.Should().Be(1);

@@ -21,7 +21,7 @@ public class ListAdminTests
     {
         using var repository = new EnforcementOrderRepository(new Mock<IFileService>().Object);
 
-        var result = await repository.ListAdminAsync(new EnforcementOrderAdminSpec(), new PaginationSpec(1, 20));
+        var result = await repository.ListAdminAsync(new EnforcementOrderAdminSpec(), new PaginationSpec(1, 50));
 
         var expectedList = EnforcementOrderData.EnforcementOrders
             .Where(e => !e.Deleted)
@@ -31,7 +31,7 @@ public class ListAdminTests
         Assert.Multiple(() =>
         {
             result.PageNumber.Should().Be(1);
-            result.CurrentCount.Should().Be(expectedList.Count);
+            result.TotalCount.Should().Be(expectedList.Count);
             result.Items.Should().BeEquivalentTo(expectedList);
         });
     }
@@ -42,7 +42,7 @@ public class ListAdminTests
         var spec = new EnforcementOrderAdminSpec { ShowDeleted = true };
         using var repository = new EnforcementOrderRepository(new Mock<IFileService>().Object);
 
-        var result = await repository.ListAdminAsync(spec, new PaginationSpec(1, 20));
+        var result = await repository.ListAdminAsync(spec, new PaginationSpec(1, 50));
 
         var expectedList = EnforcementOrderData.EnforcementOrders
             .Where(e => e.Deleted)
@@ -52,7 +52,7 @@ public class ListAdminTests
         Assert.Multiple(() =>
         {
             result.PageNumber.Should().Be(1);
-            result.CurrentCount.Should().Be(expectedList.Count);
+            result.TotalCount.Should().Be(expectedList.Count);
             result.Items.Should().BeEquivalentTo(expectedList);
         });
     }
@@ -66,7 +66,7 @@ public class ListAdminTests
         };
         using var repository = new EnforcementOrderRepository(new Mock<IFileService>().Object);
 
-        var result = await repository.ListAdminAsync(spec, new PaginationSpec(1, 20));
+        var result = await repository.ListAdminAsync(spec, new PaginationSpec(1, 50));
 
         var expectedList = EnforcementOrderData.EnforcementOrders
             .Where(e => !e.Deleted)
@@ -77,7 +77,7 @@ public class ListAdminTests
         Assert.Multiple(() =>
         {
             result.PageNumber.Should().Be(1);
-            result.CurrentCount.Should().Be(expectedList.Count);
+            result.TotalCount.Should().Be(expectedList.Count);
             result.Items.Should().BeEquivalentTo(expectedList);
         });
     }
@@ -91,12 +91,12 @@ public class ListAdminTests
         };
         using var repository = new EnforcementOrderRepository(new Mock<IFileService>().Object);
 
-        var result = await repository.ListAdminAsync(spec, new PaginationSpec(1, 20));
+        var result = await repository.ListAdminAsync(spec, new PaginationSpec(1, 50));
         
         Assert.Multiple(() =>
         {
             result.PageNumber.Should().Be(1);
-            result.CurrentCount.Should().Be(0);
+            result.TotalCount.Should().Be(0);
             result.Items.Count.Should().Be(0);
         });
     }
@@ -109,7 +109,7 @@ public class ListAdminTests
         };
         using var repository = new EnforcementOrderRepository(new Mock<IFileService>().Object);
 
-        var result = await repository.ListAdminAsync(spec, new PaginationSpec(1, 20));
+        var result = await repository.ListAdminAsync(spec, new PaginationSpec(1, 50));
 
         var expectedList = EnforcementOrderData.EnforcementOrders
             .Where(e => !e.Deleted)
@@ -121,7 +121,7 @@ public class ListAdminTests
         Assert.Multiple(() =>
         {
             result.PageNumber.Should().Be(1);
-            result.CurrentCount.Should().Be(expectedList.Count);
+            result.TotalCount.Should().Be(expectedList.Count);
             result.Items.Should().BeEquivalentTo(expectedList);
         });
     }
