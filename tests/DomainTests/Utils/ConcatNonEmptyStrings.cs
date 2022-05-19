@@ -3,7 +3,7 @@ using FluentAssertions;
 using NUnit.Framework;
 using System;
 
-namespace EnfoTests.Domain;
+namespace EnfoTests.Domain.Utils;
 
 [TestFixture]
 public class ConcatNonEmptyStrings

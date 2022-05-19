@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using static Enfo.Domain.Utils.DateUtils;
 
-namespace EnfoTests.Domain;
+namespace EnfoTests.Domain.Utils;
 
 [TestFixture]
 public class DateUtilsGetNextWeekday
