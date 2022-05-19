@@ -1,7 +1,7 @@
 ﻿using Enfo.Domain.LegalAuthorities.Entities;
 using Enfo.Domain.LegalAuthorities.Repositories;
 using Enfo.Domain.LegalAuthorities.Resources;
-using TestData;
+using EnfoTests.TestData;
 
 namespace Enfo.LocalRepository;
 

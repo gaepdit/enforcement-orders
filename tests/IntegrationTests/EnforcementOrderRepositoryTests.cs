@@ -4,12 +4,12 @@ using Enfo.Domain.EnforcementOrders.Specs;
 using Enfo.Domain.Pagination;
 using Enfo.Domain.Utils;
 using EnfoTests.Infrastructure.Helpers;
+using EnfoTests.TestData;
 using FluentAssertions;
 using NUnit.Framework;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using TestData;
 
 namespace EnfoTests.Infrastructure;
 
@@ -596,8 +596,6 @@ public class EnforcementOrderRepositoryTests
     // Write Methods
 
     // CreateAsync
-
-    // Sample data for create
 
     [Test]
     public async Task CreateOrder_AddsNewItem()

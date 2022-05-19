@@ -1,5 +1,6 @@
 ﻿using Enfo.Domain.Services;
 using Enfo.LocalRepository;
+using EnfoTests.TestData;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Moq;
@@ -9,9 +10,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using TestData;
 
-namespace LocalRepositoryTests.Attachments;
+namespace EnfoTests.LocalRepositoryTests.Attachments;
 
 [TestFixture]
 public class AddAttachmentTests

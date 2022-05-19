@@ -1,6 +1,6 @@
-﻿using Enfo.Domain.EnforcementOrders.Entities;
+using Enfo.Domain.EnforcementOrders.Entities;
 
-namespace TestData;
+namespace EnfoTests.TestData;
 
 internal static class AttachmentData
 {

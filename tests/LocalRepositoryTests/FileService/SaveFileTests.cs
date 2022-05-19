@@ -1,4 +1,4 @@
-﻿using Enfo.Domain.EnforcementOrders.Entities;
+﻿using EnfoTests.TestData;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Moq;
@@ -6,9 +6,8 @@ using NUnit.Framework;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using TestData;
 
-namespace LocalRepositoryTests.FileService;
+namespace EnfoTests.LocalRepositoryTests.FileService;
 
 [TestFixture]
 public class SaveFileTests

@@ -1,7 +1,7 @@
 ﻿using Enfo.Domain.EpdContacts.Entities;
 using Enfo.Domain.EpdContacts.Repositories;
 using Enfo.Domain.EpdContacts.Resources;
-using TestData;
+using EnfoTests.TestData;
 
 namespace Enfo.LocalRepository;
 

@@ -1,8 +1,8 @@
-﻿using Enfo.Domain.EpdContacts.Entities;
+using Enfo.Domain.EpdContacts.Entities;
 
 // ReSharper disable StringLiteralTypo
 
-namespace TestData;
+namespace EnfoTests.TestData;
 
 internal static class EpdContactData
 {

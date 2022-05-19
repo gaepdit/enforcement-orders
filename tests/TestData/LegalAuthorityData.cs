@@ -1,8 +1,8 @@
-﻿using Enfo.Domain.LegalAuthorities.Entities;
+using Enfo.Domain.LegalAuthorities.Entities;
 
 // ReSharper disable StringLiteralTypo
 
-namespace TestData;
+namespace EnfoTests.TestData;
 
 internal static class LegalAuthorityData
 {

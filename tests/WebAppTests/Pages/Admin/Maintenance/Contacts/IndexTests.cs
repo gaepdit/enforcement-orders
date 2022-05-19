@@ -3,6 +3,7 @@ using Enfo.Domain.EpdContacts.Resources;
 using Enfo.WebApp.Models;
 using Enfo.WebApp.Pages.Admin.Maintenance.Contacts;
 using Enfo.WebApp.Platform.RazorHelpers;
+using EnfoTests.TestData;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,7 +11,6 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Moq;
 using NUnit.Framework;
 using System.Threading.Tasks;
-using TestData;
 
 namespace EnfoTests.WebApp.Pages.Admin.Maintenance.Contacts;
 

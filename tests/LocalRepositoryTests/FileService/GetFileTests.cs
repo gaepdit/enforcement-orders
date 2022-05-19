@@ -1,11 +1,11 @@
-﻿using FluentAssertions;
+﻿using EnfoTests.TestData;
+using FluentAssertions;
 using NUnit.Framework;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using TestData;
 
-namespace LocalRepositoryTests.FileService;
+namespace EnfoTests.LocalRepositoryTests.FileService;
 
 [TestFixture]
 public class GetFileTests

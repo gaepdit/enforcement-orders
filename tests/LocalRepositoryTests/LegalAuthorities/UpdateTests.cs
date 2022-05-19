@@ -1,13 +1,13 @@
 ﻿using Enfo.Domain.LegalAuthorities.Resources;
 using Enfo.LocalRepository;
+using EnfoTests.TestData;
 using FluentAssertions;
 using NUnit.Framework;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using TestData;
 
-namespace LocalRepositoryTests.LegalAuthorities;
+namespace EnfoTests.LocalRepositoryTests.LegalAuthorities;
 
 [TestFixture]
 public class UpdateTests

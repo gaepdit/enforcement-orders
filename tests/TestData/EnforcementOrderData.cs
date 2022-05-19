@@ -1,10 +1,10 @@
-﻿using Enfo.Domain.EnforcementOrders.Entities;
+using Enfo.Domain.EnforcementOrders.Entities;
 using Enfo.Domain.EnforcementOrders.Resources;
 using Enfo.Domain.Utils;
 
 // ReSharper disable StringLiteralTypo
 
-namespace TestData;
+namespace EnfoTests.TestData;
 
 internal static class EnforcementOrderData
 {
