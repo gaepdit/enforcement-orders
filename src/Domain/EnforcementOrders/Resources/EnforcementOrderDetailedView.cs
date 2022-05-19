@@ -28,6 +28,8 @@ public class EnforcementOrderDetailedView : EnforcementOrderSummaryView
             item.HearingCommentPeriodClosesDate >= DateTime.Today
                 ? new EpdContactView(item.HearingContact)
                 : null;
+        Attachments = item.Attachments?.Select(a => new AttachmentView(a)).ToList() 
+            ?? new List<AttachmentView>();
     }
 
     // Common data elements
@@ -52,7 +54,7 @@ public class EnforcementOrderDetailedView : EnforcementOrderSummaryView
     // Attachments
 
     [DisplayName("File Attachments")]
-    public ICollection<AttachmentView> Attachments { get; set; } = new List<AttachmentView>();
+    public List<AttachmentView> Attachments { get; }
 
     // Hearing info
 

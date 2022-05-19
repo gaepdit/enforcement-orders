@@ -3,6 +3,7 @@ using Enfo.Domain.EnforcementOrders.Repositories;
 using Enfo.Domain.EnforcementOrders.Resources;
 using Enfo.Domain.EnforcementOrders.Specs;
 using Enfo.Domain.Pagination;
+using Enfo.Domain.Services;
 using Enfo.Domain.Utils;
 using Enfo.Infrastructure.Contexts;
 using Microsoft.AspNetCore.Http;
@@ -13,7 +14,15 @@ namespace Enfo.Infrastructure.Repositories;
 public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
 {
     private readonly EnfoDbContext _context;
-    public EnforcementOrderRepository(EnfoDbContext context) => _context = context;
+    private readonly IFileService _fileService;
+    private readonly IErrorLogger _errorLogger;
+
+    public EnforcementOrderRepository(EnfoDbContext context, IFileService fileService, IErrorLogger errorLogger)
+    {
+        _context = context;
+        _fileService = fileService;
+        _errorLogger = errorLogger;
+    }
 
     public async Task<EnforcementOrderDetailedView> GetAsync(int id)
     {
@@ -22,6 +31,7 @@ public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
             .Include(e => e.CommentContact)
             .Include(e => e.HearingContact)
             .Include(e => e.LegalAuthority)
+            .Include(e => e.Attachments)
             .SingleOrDefaultAsync(e => e.Id == id).ConfigureAwait(false);
 
         return item == null ? null : new EnforcementOrderDetailedView(item);
@@ -33,6 +43,7 @@ public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
             .Include(e => e.CommentContact)
             .Include(e => e.HearingContact)
             .Include(e => e.LegalAuthority)
+            .Include(e => e.Attachments)
             .SingleOrDefaultAsync(e => e.Id == id).ConfigureAwait(false));
 
         return item == null ? null : new EnforcementOrderAdminView(item);
@@ -40,7 +51,10 @@ public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
 
     public async Task<AttachmentView> GetAttachmentAsync(Guid id)
     {
-        throw new NotImplementedException();
+        var item = await _context.Attachments.AsNoTracking()
+            .SingleOrDefaultAsync(a => a.Id == id).ConfigureAwait(false);
+
+        return item is null ? null : new AttachmentView(item);
     }
 
     public async Task<PaginatedResult<EnforcementOrderSummaryView>> ListAsync(
@@ -78,6 +92,7 @@ public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
             .Include(e => e.CommentContact)
             .Include(e => e.HearingContact)
             .Include(e => e.LegalAuthority)
+            .Include(e => e.Attachments)
             .ApplyPagination(paging)
             .Select(e => new EnforcementOrderDetailedView(e))
             .ToListAsync().ConfigureAwait(false);
@@ -129,6 +144,7 @@ public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
             .Include(e => e.CommentContact)
             .Include(e => e.HearingContact)
             .Include(e => e.LegalAuthority)
+            .Include(e => e.Attachments)
             .Select(e => new EnforcementOrderDetailedView(e))
             .ToListAsync().ConfigureAwait(false);
 
@@ -141,6 +157,7 @@ public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
             .Include(e => e.CommentContact)
             .Include(e => e.HearingContact)
             .Include(e => e.LegalAuthority)
+            .Include(e => e.Attachments)
             .Select(e => new EnforcementOrderDetailedView(e))
             .ToListAsync().ConfigureAwait(false);
 
@@ -188,12 +205,90 @@ public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
 
     public Task AddAttachmentsAsync(int orderId, List<IFormFile> files)
     {
-        throw new NotImplementedException();
+        if (files.Count == 0) throw new ArgumentException("Files list must not be empty.", nameof(files));
+
+        return AddAttachmentsInternalAsync(files, orderId);
     }
 
-    public Task DeleteAttachmentAsync(int orderId, Guid attachmentId)
+    private async Task AddAttachmentsInternalAsync(List<IFormFile> files, int orderId)
     {
-        throw new NotImplementedException();
+        var order = await _context.EnforcementOrders
+            .Include(e => e.Attachments)
+            .SingleOrDefaultAsync(e => e.Id == orderId).ConfigureAwait(false);
+
+        if (order is null) throw new ArgumentException($"Order ID {orderId} does not exist.", nameof(orderId));
+
+        if (order.Deleted)
+            throw new ArgumentException($"Order ID {orderId} has been deleted and cannot be edited.", nameof(orderId));
+
+        await SaveAttachmentsAsync(files, order);
+    }
+
+    private async Task SaveAttachmentsAsync(List<IFormFile> files, EnforcementOrder order)
+    {
+        foreach (var file in files)
+        {
+            var extension = Path.GetExtension(file.FileName);
+            if (file.Length == 0 || !FileTypes.FileUploadAllowed(extension)) continue;
+
+            var attachmentId = Guid.NewGuid();
+            var attachment = new Attachment
+            {
+                Id = attachmentId,
+                Size = file.Length,
+                FileExtension = extension,
+                FileName = file.FileName,
+                DateUploaded = DateTime.Now,
+                EnforcementOrder = order,
+            };
+
+            await _fileService.SaveFileAsync(file, attachmentId);
+            await _context.Attachments.AddAsync(attachment).ConfigureAwait(false);
+        }
+
+        await _context.SaveChangesAsync().ConfigureAwait(false);
+    }
+
+    public async Task DeleteAttachmentAsync(int orderId, Guid attachmentId)
+    {
+        var order = await _context.EnforcementOrders.AsNoTracking()
+            .SingleOrDefaultAsync(e => e.Id == orderId).ConfigureAwait(false);
+
+        if (order is null) throw new ArgumentException($"Order ID {orderId} does not exist.", nameof(orderId));
+
+        if (order.Deleted)
+            throw new ArgumentException($"Order ID {orderId} has been deleted and cannot be edited.", nameof(orderId));
+
+        var attachment = await _context.Attachments
+            .Include(a => a.EnforcementOrder)
+            .SingleOrDefaultAsync(a => a.Id == attachmentId).ConfigureAwait(false);
+
+        if (attachment is null)
+            throw new ArgumentException($"Attachment ID {attachmentId} does not exist.", nameof(attachmentId));
+
+        if (attachment.EnforcementOrder.Id != orderId)
+            throw new ArgumentException($"Order ID {orderId} does not include Attachment ID {attachmentId}.",
+                nameof(attachmentId));
+
+        attachment.Deleted = true;
+        attachment.DateDeleted = DateTime.Today;
+        await _context.SaveChangesAsync().ConfigureAwait(false);
+
+        try
+        {
+            _fileService.TryDeleteFile(attachment.AttachmentFileName);
+        }
+        catch (Exception e)
+        {
+            // Log error but take no other action here
+            var customData = new Dictionary<string, object>
+            {
+                { "Action", "Deleting File" },
+                { "File Name", attachment.FileName },
+                { "Attachment ID", attachment.Id },
+            };
+            await _errorLogger.LogErrorAsync(e, customData);
+        }
     }
 
     public async Task DeleteAsync(int id)

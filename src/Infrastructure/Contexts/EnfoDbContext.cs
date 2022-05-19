@@ -1,12 +1,9 @@
-﻿using System;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Enfo.Domain.BaseEntities;
+﻿using Enfo.Domain.BaseEntities;
 using Enfo.Domain.EnforcementOrders.Entities;
 using Enfo.Domain.EpdContacts.Entities;
 using Enfo.Domain.LegalAuthorities.Entities;
 using Enfo.Domain.Users.Entities;
+using JetBrains.Annotations;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -22,10 +19,10 @@ public class EnfoDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Gui
         IHttpContextAccessor httpContextAccessor) : base(options) =>
         _httpContextAccessor = httpContextAccessor;
 
-    public DbSet<EnforcementOrder> EnforcementOrders { get; set; }
-    public DbSet<Attachment> Attachments { get; set; }
-    public DbSet<EpdContact> EpdContacts { get; set; }
-    public DbSet<LegalAuthority> LegalAuthorities { get; set; }
+    public DbSet<EnforcementOrder> EnforcementOrders { get; [UsedImplicitly] set; }
+    public DbSet<Attachment> Attachments { get; [UsedImplicitly] set; }
+    public DbSet<EpdContact> EpdContacts { get; [UsedImplicitly] set; }
+    public DbSet<LegalAuthority> LegalAuthorities { get; [UsedImplicitly] set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

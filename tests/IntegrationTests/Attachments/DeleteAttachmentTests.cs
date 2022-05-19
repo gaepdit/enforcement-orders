@@ -1,14 +1,12 @@
-﻿using Enfo.Domain.Services;
-using Enfo.LocalRepository;
+﻿using EnfoTests.Infrastructure.Helpers;
 using EnfoTests.TestData;
 using FluentAssertions;
-using Moq;
 using NUnit.Framework;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace EnfoTests.LocalRepositoryTests.Attachments;
+namespace EnfoTests.Infrastructure.Attachments;
 
 [TestFixture]
 public class DeleteAttachmentTests
@@ -19,20 +17,24 @@ public class DeleteAttachmentTests
         var initialFileCount = AttachmentData.Attachments.Count;
         var attachment = AttachmentData.Attachments.First(a => !a.Deleted);
 
-        var repository = new EnforcementOrderRepository(new Mock<IFileService>().Object);
-        await repository.DeleteAttachmentAsync(attachment.EnforcementOrder.Id, attachment.Id);
+        using var repositoryHelper = RepositoryHelper.CreateRepositoryHelper();
+        using var repository = repositoryHelper.GetEnforcementOrderRepository();
+        await repository.DeleteAttachmentAsync(attachment.EnforcementOrder.Id, attachment.Id).ConfigureAwait(false);
 
-        AttachmentData.Attachments.Count.Should().Be(initialFileCount);
+        await using var context = repositoryHelper.DbContext;
+        var updatedAttachment = context.Attachments.Single(a => a.Id == attachment.Id);
 
         Assert.Multiple(() =>
         {
-            attachment.Deleted.Should().BeTrue();
-            attachment.DateDeleted.Should().NotBeNull();
+            context.Attachments.Count().Should().Be(initialFileCount);
+            updatedAttachment.Deleted.Should().BeTrue();
+            updatedAttachment.DateDeleted.Should().NotBeNull();
         });
 
         // Cleanup
-        attachment.Deleted = false;
-        attachment.DateDeleted = null;
+        updatedAttachment.Deleted = false;
+        updatedAttachment.DateDeleted = null;
+        await context.SaveChangesAsync().ConfigureAwait(false);
     }
 
     [Test]
@@ -42,7 +44,7 @@ public class DeleteAttachmentTests
 
         var action = async () =>
         {
-            var repository = new EnforcementOrderRepository(new Mock<IFileService>().Object);
+            using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
             await repository.DeleteAttachmentAsync(orderId, Guid.Empty);
         };
 
@@ -58,7 +60,7 @@ public class DeleteAttachmentTests
 
         var action = async () =>
         {
-            var repository = new EnforcementOrderRepository(new Mock<IFileService>().Object);
+            using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
             await repository.DeleteAttachmentAsync(orderId, Guid.Empty);
         };
 
@@ -75,7 +77,7 @@ public class DeleteAttachmentTests
 
         var action = async () =>
         {
-            var repository = new EnforcementOrderRepository(new Mock<IFileService>().Object);
+            using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
             await repository.DeleteAttachmentAsync(orderId, attachmentId);
         };
 
@@ -94,7 +96,7 @@ public class DeleteAttachmentTests
 
         var action = async () =>
         {
-            var repository = new EnforcementOrderRepository(new Mock<IFileService>().Object);
+            using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
             await repository.DeleteAttachmentAsync(orderId, attachment.Id);
         };
 

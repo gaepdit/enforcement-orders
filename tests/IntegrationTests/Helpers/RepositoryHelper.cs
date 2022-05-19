@@ -1,10 +1,12 @@
-using Enfo.Domain.EnforcementOrders.Repositories;
+﻿using Enfo.Domain.EnforcementOrders.Repositories;
 using Enfo.Domain.EpdContacts.Repositories;
 using Enfo.Domain.LegalAuthorities.Repositories;
+using Enfo.Domain.Services;
 using Enfo.Infrastructure.Contexts;
 using Enfo.Infrastructure.Repositories;
 using EnfoTests.TestData;
 using Microsoft.EntityFrameworkCore;
+using Moq;
 using System;
 using System.Linq;
 using TestSupport.EfHelpers;
@@ -15,6 +17,7 @@ namespace EnfoTests.Infrastructure.Helpers
     {
         private readonly DbContextOptions<EnfoDbContext> _options = SqliteInMemory.CreateOptions<EnfoDbContext>();
         private readonly EnfoDbContext _context;
+        public EnfoDbContext DbContext { get; set; }
 
         private RepositoryHelper()
         {
@@ -47,6 +50,7 @@ namespace EnfoTests.Infrastructure.Helpers
             if (!_context.LegalAuthorities.Any())
                 _context.LegalAuthorities.AddRange(LegalAuthorityData.LegalAuthorities);
             _context.SaveChanges();
+            _context.Attachments.AddRange(AttachmentData.Attachments);
             _context.EnforcementOrders.AddRange(EnforcementOrderData.EnforcementOrders);
             _context.SaveChanges();
         }
@@ -54,19 +58,26 @@ namespace EnfoTests.Infrastructure.Helpers
         public ILegalAuthorityRepository GetLegalAuthorityRepository()
         {
             SeedLegalAuthorityData();
-            return new LegalAuthorityRepository(new EnfoDbContext(_options, null));
+            DbContext = new EnfoDbContext(_options, null);
+            return new LegalAuthorityRepository(DbContext);
         }
 
         public IEpdContactRepository GetEpdContactRepository()
         {
             SeedEpdContactData();
-            return new EpdContactRepository(new EnfoDbContext(_options, null));
+            DbContext = new EnfoDbContext(_options, null);
+            return new EpdContactRepository(DbContext);
         }
 
         public IEnforcementOrderRepository GetEnforcementOrderRepository()
         {
             SeedEnforcementOrderData();
-            return new EnforcementOrderRepository(new EnfoDbContext(_options, null));
+            DbContext = new EnfoDbContext(_options, null);
+            return new EnforcementOrderRepository(
+                DbContext,
+                new Mock<IFileService>().Object,
+                new Mock<IErrorLogger>().Object
+            );
         }
 
         public void Dispose() => _context.Dispose();

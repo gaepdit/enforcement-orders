@@ -1,4 +1,4 @@
-using Enfo.Domain.EnforcementOrders.Entities;
+﻿using Enfo.Domain.EnforcementOrders.Entities;
 using Enfo.Domain.EnforcementOrders.Resources;
 using Enfo.Domain.Utils;
 
@@ -12,24 +12,26 @@ internal static class EnforcementOrderData
     {
         var item = EnforcementOrders.Find(e => e.Id == id);
         if (item is null) return null;
-        return new EnforcementOrderAdminView(item)
-        {
-            Attachments = AttachmentData.Attachments
-                .Where(a => a.EnforcementOrder.Id == id && !a.Deleted)
-                .Select(e => new AttachmentView(e)).ToList(),
-        };
+        
+        var order = new EnforcementOrderAdminView(item);
+        order.Attachments.AddRange(AttachmentData.Attachments
+            .Where(a => a.EnforcementOrder.Id == id && !a.Deleted)
+            .Select(e => new AttachmentView(e)).ToList());
+
+        return order;
     }
 
     public static EnforcementOrderDetailedView? GetEnforcementOrderDetailedView(int id)
     {
         var item = EnforcementOrders.Find(e => e.Id == id);
         if (item is null) return null;
-        return new EnforcementOrderDetailedView(item)
-        {
-            Attachments = AttachmentData.Attachments
-                .Where(a => a.EnforcementOrder.Id == id && !a.Deleted)
-                .Select(e => new AttachmentView(e)).ToList(),
-        };
+
+        var order = new EnforcementOrderDetailedView(item);
+        order.Attachments.AddRange(AttachmentData.Attachments
+            .Where(a => a.EnforcementOrder.Id == id && !a.Deleted)
+            .Select(e => new AttachmentView(e)).ToList());
+
+        return order;
     }
 
     public static IEnumerable<EnforcementOrder> GetEnforcementOrders()

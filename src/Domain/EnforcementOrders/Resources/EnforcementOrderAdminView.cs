@@ -24,6 +24,8 @@ public class EnforcementOrderAdminView : EnforcementOrderAdminSummaryView
         CommentPeriodClosesDate = item.CommentPeriodClosesDate;
         IsPublicExecutedOrder = item.GetIsPublicExecutedOrder;
         ExecutedOrderPostedDate = item.ExecutedOrderPostedDate;
+        Attachments = item.Attachments?.Select(a => new AttachmentView(a)).ToList() 
+            ?? new List<AttachmentView>();
     }
 
     private static PublicationProgress GetResourcePublicationState(
@@ -72,7 +74,8 @@ public class EnforcementOrderAdminView : EnforcementOrderAdminSummaryView
 
     // Attachments
 
-    public ICollection<AttachmentView> Attachments { get; set; } = new List<AttachmentView>();
+    [DisplayName("File Attachments")]
+    public List<AttachmentView> Attachments { get; }
 
     // Hearing info
 
