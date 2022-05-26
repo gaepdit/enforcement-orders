@@ -73,7 +73,7 @@ public class EnforcementOrderCreate
     // Attachments
 
     [DisplayName("File Attachments")]
-    public List<IFormFile> Attachments { get; } = new();
+    public IFormFile Attachment { get; init; } 
 
     // Hearing info
 

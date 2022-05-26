@@ -186,7 +186,7 @@ public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
         var item = new EnforcementOrder(resource);
         await _context.EnforcementOrders.AddAsync(item).ConfigureAwait(false);
         await _context.SaveChangesAsync().ConfigureAwait(false);
-        if (resource.Attachments?.Count > 0) await AddAttachmentsInternalAsync(resource.Attachments, item.Id);
+        if (resource.Attachment is not null) await AddAttachmentAsync(item.Id, resource.Attachment);
 
         return item.Id;
     }
@@ -205,14 +205,7 @@ public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
         await _context.SaveChangesAsync().ConfigureAwait(false);
     }
 
-    public Task AddAttachmentsAsync(int orderId, List<IFormFile> files)
-    {
-        if (files.Count == 0) throw new ArgumentException("Files list must not be empty.", nameof(files));
-
-        return AddAttachmentsInternalAsync(files, orderId);
-    }
-
-    private async Task AddAttachmentsInternalAsync(List<IFormFile> files, int orderId)
+    public async Task AddAttachmentAsync(int orderId, IFormFile file)
     {
         var order = await _context.EnforcementOrders
             .Include(e => e.Attachments)
@@ -223,31 +216,27 @@ public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
         if (order.Deleted)
             throw new ArgumentException($"Order ID {orderId} has been deleted and cannot be edited.", nameof(orderId));
 
-        await SaveAttachmentsAsync(files, order);
+        await SaveAttachmentAsync(file, order);
     }
 
-    private async Task SaveAttachmentsAsync(List<IFormFile> files, EnforcementOrder order)
+    private async Task SaveAttachmentAsync(IFormFile file, EnforcementOrder order)
     {
-        foreach (var file in files)
+        var extension = Path.GetExtension(file.FileName);
+        if (file.Length == 0 || !FileTypes.FileUploadAllowed(extension)) return;
+
+        var attachmentId = Guid.NewGuid();
+        var attachment = new Attachment
         {
-            var extension = Path.GetExtension(file.FileName);
-            if (file.Length == 0 || !FileTypes.FileUploadAllowed(extension)) continue;
+            Id = attachmentId,
+            Size = file.Length,
+            FileExtension = extension,
+            FileName = file.FileName,
+            DateUploaded = DateTime.Now,
+            EnforcementOrder = order,
+        };
 
-            var attachmentId = Guid.NewGuid();
-            var attachment = new Attachment
-            {
-                Id = attachmentId,
-                Size = file.Length,
-                FileExtension = extension,
-                FileName = file.FileName,
-                DateUploaded = DateTime.Now,
-                EnforcementOrder = order,
-            };
-
-            await _fileService.SaveFileAsync(file, attachmentId);
-            await _context.Attachments.AddAsync(attachment).ConfigureAwait(false);
-        }
-
+        await _fileService.SaveFileAsync(file, attachmentId);
+        await _context.Attachments.AddAsync(attachment).ConfigureAwait(false);
         await _context.SaveChangesAsync().ConfigureAwait(false);
     }
 

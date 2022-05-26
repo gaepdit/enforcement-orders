@@ -18,7 +18,7 @@ public class AddAttachmentTests
     public async Task AttachingValidItem_Succeeds()
     {
         // Arrange
-        var files = new List<IFormFile> { new FormFile(Stream.Null, 0, 1, "test", "test.pdf") };
+        var file = new FormFile(Stream.Null, 0, 1, "test", "test.pdf");
         var orderId = EnforcementOrderData.EnforcementOrders.First(e => !e.Deleted).Id;
         var initialCount = AttachmentData.Attachments.Count(a => a.EnforcementOrder.Id == orderId);
 
@@ -26,7 +26,7 @@ public class AddAttachmentTests
         using var repository = repositoryHelper.GetEnforcementOrderRepository();
 
         // Act
-        await repository.AddAttachmentsAsync(orderId, files);
+        await repository.AddAttachmentAsync(orderId, file);
 
         // Assert
         repositoryHelper.ClearChangeTracker();
@@ -44,31 +44,15 @@ public class AddAttachmentTests
     }
 
     [Test]
-    public async Task WhenFilesListIsEmpty_ThrowsException()
-    {
-        var files = new List<IFormFile>();
-
-        var action = async () =>
-        {
-            using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
-            await repository.AddAttachmentsAsync(default, files);
-        };
-
-        (await action.Should().ThrowAsync<ArgumentException>())
-            .WithMessage($"Files list must not be empty. (Parameter '{nameof(files)}')")
-            .And.ParamName.Should().Be(nameof(files));
-    }
-
-    [Test]
     public async Task WhenOrderIdDoesNotExist_ThrowsException()
     {
-        var files = new List<IFormFile> { new FormFile(Stream.Null, 0, 0, string.Empty, string.Empty) };
+        var file = new FormFile(Stream.Null, 0, 0, string.Empty, string.Empty);
         const int orderId = -1;
 
         var action = async () =>
         {
             using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
-            await repository.AddAttachmentsAsync(orderId, files);
+            await repository.AddAttachmentAsync(orderId, file);
         };
 
         (await action.Should().ThrowAsync<ArgumentException>())
@@ -79,13 +63,13 @@ public class AddAttachmentTests
     [Test]
     public async Task WhenOrderIsDeleted_ThrowsException()
     {
-        var files = new List<IFormFile> { new FormFile(Stream.Null, 0, 0, string.Empty, string.Empty) };
+        var file = new FormFile(Stream.Null, 0, 0, string.Empty, string.Empty);
         var orderId = EnforcementOrderData.EnforcementOrders.First(e => e.Deleted).Id;
 
         var action = async () =>
         {
             using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
-            await repository.AddAttachmentsAsync(orderId, files);
+            await repository.AddAttachmentAsync(orderId, file);
         };
 
         (await action.Should().ThrowAsync<ArgumentException>())

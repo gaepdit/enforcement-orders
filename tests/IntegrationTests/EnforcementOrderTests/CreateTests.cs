@@ -94,13 +94,8 @@ public class CreateTests
             CommentPeriodClosesDate = DateTime.Today.AddDays(1),
             CommentContactId = EpdContactData.EpdContacts.First().Id,
             ProposedOrderPostedDate = DateTime.Today,
+            Attachment = new FormFile(Stream.Null, 0, 1, "test1", "test1.pdf")
         };
-
-        resource.Attachments.AddRange(new[]
-        {
-            new FormFile(Stream.Null, 0, 1, "test1", "test1.pdf"),
-            new FormFile(Stream.Null, 0, 2, "test2", "test2.pdf"),
-        });
 
         using var repositoryHelper = RepositoryHelper.CreateRepositoryHelper();
         using var repository = repositoryHelper.GetEnforcementOrderRepository();
@@ -116,11 +111,11 @@ public class CreateTests
 
         Assert.Multiple(() =>
         {
-            order.Attachments.Count.Should().Be(2);
-            var attachment = order.Attachments.OrderBy(a => a.FileName).Last();
-            attachment.FileName.Should().Be("test2.pdf");
+            order.Attachments.Count.Should().Be(1);
+            var attachment = order.Attachments.Single();
+            attachment.FileName.Should().Be("test1.pdf");
             attachment.FileExtension.Should().Be(".pdf");
-            attachment.Size.Should().Be(2);
+            attachment.Size.Should().Be(1);
         });
     }
 }

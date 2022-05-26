@@ -21,7 +21,7 @@ public interface IEnforcementOrderRepository : IDisposable
     Task<IReadOnlyList<EnforcementOrderAdminSummaryView>> ListPendingEnforcementOrdersAsync();
     Task<int> CreateAsync(EnforcementOrderCreate resource);
     Task UpdateAsync(EnforcementOrderUpdate resource);
-    Task AddAttachmentsAsync(int orderId, List<IFormFile> files);
+    Task AddAttachmentAsync(int orderId, IFormFile file);
     Task DeleteAttachmentAsync(int orderId, Guid attachmentId);
     Task DeleteAsync(int id);
     Task RestoreAsync(int id);

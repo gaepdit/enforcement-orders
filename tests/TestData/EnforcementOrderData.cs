@@ -8,38 +8,24 @@ namespace EnfoTests.TestData;
 
 internal static class EnforcementOrderData
 {
-    public static EnforcementOrderAdminView? GetEnforcementOrderAdminView(int id)
-    {
-        var item = EnforcementOrders.Find(e => e.Id == id);
-        if (item is null) return null;
-        
-        var order = new EnforcementOrderAdminView(item);
-        order.Attachments.AddRange(AttachmentData.Attachments
-            .Where(a => a.EnforcementOrder.Id == id && !a.Deleted)
-            .Select(e => new AttachmentView(e)).ToList());
-
-        return order;
-    }
-
-    public static EnforcementOrderDetailedView? GetEnforcementOrderDetailedView(int id)
-    {
-        var item = EnforcementOrders.Find(e => e.Id == id);
-        if (item is null) return null;
-
-        var order = new EnforcementOrderDetailedView(item);
-        order.Attachments.AddRange(AttachmentData.Attachments
-            .Where(a => a.EnforcementOrder.Id == id && !a.Deleted)
-            .Select(e => new AttachmentView(e)).ToList());
-
-        return order;
-    }
-
-    public static IEnumerable<EnforcementOrder> GetEnforcementOrders()
+    public static List<EnforcementOrder> GetEnforcementOrdersIncludeAttachments()
     {
         EnforcementOrders.ForEach(e =>
             e.Attachments = AttachmentData.Attachments
                 .Where(a => a.EnforcementOrder.Id == e.Id && !a.Deleted).ToList());
         return EnforcementOrders;
+    }
+
+    public static EnforcementOrderAdminView? GetEnforcementOrderAdminView(int id)
+    {
+        var item = GetEnforcementOrdersIncludeAttachments().Find(e => e.Id == id);
+        return item is null ? null : new EnforcementOrderAdminView(item);
+    }
+
+    public static EnforcementOrderDetailedView? GetEnforcementOrderDetailedView(int id)
+    {
+        var item = GetEnforcementOrdersIncludeAttachments().Find(e => e.Id == id);
+        return item is null ? null : new EnforcementOrderDetailedView(item);
     }
 
     public static readonly List<EnforcementOrder> EnforcementOrders = new()

@@ -16,6 +16,7 @@ using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace EnfoTests.WebApp.Pages.Admin;
@@ -62,6 +63,59 @@ public class AddTests
     public async Task OnPost_GivenSuccess_ReturnsRedirectWithDisplayMessage()
     {
         var item = GetValidEnforcementOrderCreate();
+        // Initialize Page TempData
+        var httpContext = new DefaultHttpContext();
+        var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
+        // Mock repos
+        var orderRepo = new Mock<IEnforcementOrderRepository>();
+        orderRepo.Setup(l => l.OrderNumberExistsAsync(It.IsAny<string>(), It.IsAny<int?>()))
+            .ReturnsAsync(false);
+        orderRepo.Setup(l => l.CreateAsync(item)).ReturnsAsync(9);
+        // Construct Page
+        var page = new Add(orderRepo.Object, Mock.Of<ILegalAuthorityRepository>(), Mock.Of<IEpdContactRepository>())
+            { TempData = tempData, Item = item };
+
+        var result = await page.OnPostAsync();
+
+        var expected = new DisplayMessage(Context.Success,
+            "The new Enforcement Order has been successfully added.");
+
+        Assert.Multiple(() =>
+        {
+            page.TempData.GetDisplayMessage().Should().BeEquivalentTo(expected);
+            result.Should().BeOfType<RedirectToPageResult>();
+            ((RedirectToPageResult)result).PageName.Should().Be("Details");
+            ((RedirectToPageResult)result).RouteValues!["id"].Should().Be(9);
+        });
+    }
+
+
+    [Test]
+    public async Task OnPost_WithAttachment_ReturnsRedirectWithDisplayMessage()
+    {
+        var item = new EnforcementOrderCreate
+        {
+            Cause = "xyz-" + Guid.NewGuid(),
+            CommentContactId = 2000,
+            CommentPeriodClosesDate = new DateTime(2012, 11, 15),
+            County = "Liberty",
+            ExecutedDate = new DateTime(1998, 06, 29),
+            ExecutedOrderPostedDate = new DateTime(1998, 07, 06),
+            FacilityName = "xyz-" + Guid.NewGuid(),
+            HearingCommentPeriodClosesDate = new DateTime(2012, 11, 21),
+            HearingContactId = 2000,
+            HearingDate = new DateTime(2012, 11, 15),
+            HearingLocation = "xyz-" + Guid.NewGuid(),
+            IsHearingScheduled = true,
+            LegalAuthorityId = 1,
+            OrderNumber = "EPD-ACQ-7936",
+            ProposedOrderPostedDate = new DateTime(2012, 10, 16),
+            Progress = PublicationProgress.Published,
+            Requirements = "xyz-" + Guid.NewGuid(),
+            SettlementAmount = 2000,
+            Attachment = new FormFile(Stream.Null, 0, 3, "test3", "test3.pdf"),
+        };
+
         // Initialize Page TempData
         var httpContext = new DefaultHttpContext();
         var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());

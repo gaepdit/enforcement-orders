@@ -1,4 +1,5 @@
 ﻿using Enfo.Domain.EnforcementOrders.Entities;
+using Enfo.Domain.Utils;
 
 namespace Enfo.Domain.EnforcementOrders.Resources;
 
@@ -10,6 +11,7 @@ public class AttachmentView
         FileName = a.FileName;
         FileExtension = a.FileExtension;
         Size = a.Size;
+        DateUploaded = a.DateUploaded;
     }
 
     public Guid Id { get; }
@@ -23,4 +25,7 @@ public class AttachmentView
 
     [UIHint("FileSize")]
     public long Size { get; }
+
+    [DisplayFormat(DataFormatString = DisplayFormats.ShortDateComposite)]
+    public DateTime DateUploaded { get; }
 }

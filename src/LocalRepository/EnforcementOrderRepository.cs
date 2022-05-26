@@ -50,7 +50,7 @@ public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
         Guard.NotNull(spec, nameof(spec));
         Guard.NotNull(paging, nameof(paging));
 
-        var filteredItems = EnforcementOrderData.GetEnforcementOrders().AsQueryable()
+        var filteredItems = EnforcementOrderData.GetEnforcementOrdersIncludeAttachments().AsQueryable()
             .ApplySpecFilter(spec);
 
         var items = filteredItems
@@ -70,7 +70,7 @@ public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
         Guard.NotNull(spec, nameof(spec));
         Guard.NotNull(paging, nameof(paging));
 
-        var filteredItems = EnforcementOrderData.GetEnforcementOrders().AsQueryable()
+        var filteredItems = EnforcementOrderData.GetEnforcementOrdersIncludeAttachments().AsQueryable()
             .ApplySpecFilter(spec);
 
         var items = filteredItems
@@ -90,7 +90,7 @@ public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
         Guard.NotNull(spec, nameof(spec));
         Guard.NotNull(paging, nameof(paging));
 
-        var filteredItems = EnforcementOrderData.GetEnforcementOrders().AsQueryable()
+        var filteredItems = EnforcementOrderData.GetEnforcementOrdersIncludeAttachments().AsQueryable()
             .ApplyAdminSpecFilter(spec);
 
         var items = filteredItems
@@ -117,7 +117,7 @@ public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
     public Task<IReadOnlyList<EnforcementOrderDetailedView>> ListCurrentProposedEnforcementOrdersAsync() =>
         Task.FromResult(
             (IReadOnlyList<EnforcementOrderDetailedView>)
-            EnforcementOrderData.GetEnforcementOrders().AsQueryable()
+            EnforcementOrderData.GetEnforcementOrdersIncludeAttachments().AsQueryable()
                 .FilterForCurrentProposed()
                 .ApplySorting(OrderSorting.DateAsc)
                 .Select(e => new EnforcementOrderDetailedView(e))
@@ -126,7 +126,7 @@ public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
     public Task<IReadOnlyList<EnforcementOrderDetailedView>> ListRecentlyExecutedEnforcementOrdersAsync() =>
         Task.FromResult(
             (IReadOnlyList<EnforcementOrderDetailedView>)
-            EnforcementOrderData.GetEnforcementOrders().AsQueryable()
+            EnforcementOrderData.GetEnforcementOrdersIncludeAttachments().AsQueryable()
                 .FilterForRecentlyExecuted()
                 .ApplySorting(OrderSorting.DateAsc)
                 .Select(e => new EnforcementOrderDetailedView(e))
@@ -135,7 +135,7 @@ public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
     public Task<IReadOnlyList<EnforcementOrderAdminSummaryView>> ListDraftEnforcementOrdersAsync() =>
         Task.FromResult(
             (IReadOnlyList<EnforcementOrderAdminSummaryView>)
-            EnforcementOrderData.GetEnforcementOrders().AsQueryable()
+            EnforcementOrderData.GetEnforcementOrdersIncludeAttachments().AsQueryable()
                 .FilterForDrafts()
                 .ApplySorting(OrderSorting.DateAsc)
                 .Select(e => new EnforcementOrderAdminSummaryView(e))
@@ -144,7 +144,7 @@ public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
     public Task<IReadOnlyList<EnforcementOrderAdminSummaryView>> ListPendingEnforcementOrdersAsync() =>
         Task.FromResult(
             (IReadOnlyList<EnforcementOrderAdminSummaryView>)
-            EnforcementOrderData.GetEnforcementOrders().AsQueryable()
+            EnforcementOrderData.GetEnforcementOrdersIncludeAttachments().AsQueryable()
                 .FilterForPending()
                 .ApplySorting(OrderSorting.DateAsc)
                 .Select(e => new EnforcementOrderAdminSummaryView(e))
@@ -156,8 +156,7 @@ public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
         var id = EnforcementOrderData.EnforcementOrders.Max(e => e.Id) + 1;
         var item = new EnforcementOrder(resource) { Id = id };
         EnforcementOrderData.EnforcementOrders.Add(item);
-        if (resource.Attachments?.Count > 0) await AddAttachmentsInternalAsync(resource.Attachments, item);
-
+        if (resource.Attachment is not null) await AddAttachmentInternalAsync(resource.Attachment, item);
         return id;
     }
 
@@ -175,10 +174,8 @@ public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
         return Task.CompletedTask;
     }
 
-    public Task AddAttachmentsAsync(int orderId, List<IFormFile> files)
+    public Task AddAttachmentAsync(int orderId, IFormFile file)
     {
-        if (files.Count == 0) throw new ArgumentException("Files list must not be empty.", nameof(files));
-
         if (!EnforcementOrderData.EnforcementOrders.AsQueryable().Any(e => e.Id == orderId))
             throw new ArgumentException($"Order ID {orderId} does not exist.", nameof(orderId));
 
@@ -187,31 +184,28 @@ public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
         if (order.Deleted)
             throw new ArgumentException($"Order ID {orderId} has been deleted and cannot be edited.", nameof(orderId));
 
-        return AddAttachmentsInternalAsync(files, order);
+        return AddAttachmentInternalAsync(file, order);
     }
 
-    private async Task AddAttachmentsInternalAsync(List<IFormFile> files, EnforcementOrder order)
+    private async Task AddAttachmentInternalAsync(IFormFile file, EnforcementOrder order)
     {
-        foreach (var file in files)
+        var extension = Path.GetExtension(file.FileName);
+        if (file.Length == 0 || !FileTypes.FileUploadAllowed(extension)) return;
+
+        var attachmentId = Guid.NewGuid();
+        await _fileService.SaveFileAsync(file, attachmentId);
+
+        var attachment = new Attachment
         {
-            var extension = Path.GetExtension(file.FileName);
-            if (file.Length == 0 || !FileTypes.FileUploadAllowed(extension)) continue;
+            Id = attachmentId,
+            Size = file.Length,
+            FileExtension = extension,
+            FileName = file.FileName,
+            DateUploaded = DateTime.Now,
+            EnforcementOrder = order,
+        };
 
-            var attachmentId = Guid.NewGuid();
-            await _fileService.SaveFileAsync(file, attachmentId);
-
-            var attachment = new Attachment
-            {
-                Id = attachmentId,
-                Size = file.Length,
-                FileExtension = extension,
-                FileName = file.FileName,
-                DateUploaded = DateTime.Now,
-                EnforcementOrder = order,
-            };
-
-            AttachmentData.Attachments.Add(attachment);
-        }
+        AttachmentData.Attachments.Add(attachment);
     }
 
     public Task DeleteAttachmentAsync(int orderId, Guid attachmentId)

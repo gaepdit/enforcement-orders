@@ -24,9 +24,9 @@ public class DetailsTests
         var item = ResourceHelper.GetEnforcementOrderAdminView(itemId);
         var repo = new Mock<IEnforcementOrderRepository>();
         repo.Setup(l => l.GetAdminViewAsync(itemId)).ReturnsAsync(item);
-        var page = new Details();
+        var page = new Details(repo.Object);
 
-        await page.OnGetAsync(repo.Object, itemId);
+        await page.OnGetAsync(itemId);
 
         page.Item.Should().Be(item);
     }
@@ -43,10 +43,10 @@ public class DetailsTests
         // Initialize Page TempData
         var httpContext = new DefaultHttpContext();
         var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
-        var page = new Details { TempData = tempData };
+        var page = new Details(repo.Object) { TempData = tempData };
 
         page.TempData.SetDisplayMessage(Context.Info, "Info message");
-        await page.OnGetAsync(repo.Object, itemId);
+        await page.OnGetAsync(itemId);
 
         var expected = new DisplayMessage(Context.Info, "Info message");
         page.Message.Should().BeEquivalentTo(expected);
@@ -56,9 +56,9 @@ public class DetailsTests
     public async Task OnGet_MissingIdReturnsNotFound()
     {
         var repo = new Mock<IEnforcementOrderRepository>();
-        var page = new Details();
+        var page = new Details(repo.Object);
 
-        var result = await page.OnGetAsync(repo.Object, null);
+        var result = await page.OnGetAsync(null);
 
         Assert.Multiple(() =>
         {
@@ -72,9 +72,9 @@ public class DetailsTests
     public async Task OnGet_NonexistentIdReturnsNotFound()
     {
         var repo = new Mock<IEnforcementOrderRepository>();
-        var page = new Details();
+        var page = new Details(repo.Object);
 
-        var result = await page.OnGetAsync(repo.Object, -1);
+        var result = await page.OnGetAsync(-1);
 
         Assert.Multiple(() =>
         {
