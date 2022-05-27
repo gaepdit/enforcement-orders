@@ -8,6 +8,7 @@ public class AttachmentView
     public AttachmentView(Attachment a)
     {
         Id = a.Id;
+        EnforcementOrderId = a.EnforcementOrder.Id;
         FileName = a.FileName;
         FileExtension = a.FileExtension;
         Size = a.Size;
@@ -15,6 +16,9 @@ public class AttachmentView
     }
 
     public Guid Id { get; }
+    
+    [JsonIgnore]
+    public int EnforcementOrderId { get; }
 
     public string FileName { get; }
 

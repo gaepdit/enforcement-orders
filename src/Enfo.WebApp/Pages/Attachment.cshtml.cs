@@ -12,8 +12,11 @@ public class Attachment : PageModel
     private readonly IEnforcementOrderRepository _repository;
     private readonly IFileService _fileService;
 
-    public Attachment(IEnforcementOrderRepository repository, IFileService fileService) =>
-        (_repository, _fileService) = (repository, fileService);
+    public Attachment(IEnforcementOrderRepository repository, IFileService fileService)
+    {
+        _repository = repository;
+        _fileService = fileService;
+    }
 
     public async Task<IActionResult> OnGetAsync(Guid? id, [CanBeNull] string fileName)
     {
@@ -21,7 +24,12 @@ public class Attachment : PageModel
 
         var item = await _repository.GetAttachmentAsync(id.Value);
         if (item == null || string.IsNullOrWhiteSpace(item.FileName))
-            return NotFound($"File ID not found: {id.Value}");
+            return NotFound($"Attachment ID not found: {id.Value}");
+
+        var order = await _repository.GetAdminViewAsync(item.EnforcementOrderId);
+
+        if ((User.Identity is null || !User.Identity.IsAuthenticated) && (order.Deleted || !order.IsPublic))
+            return NotFound($"Attachment ID not found: {id.Value}");
 
         if (fileName != item.FileName)
             return RedirectToPage("Attachment", new { id, item.FileName });

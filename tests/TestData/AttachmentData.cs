@@ -18,7 +18,7 @@ internal static class AttachmentData
         new Attachment
         {
             Id = new Guid("00000000-0000-0000-0000-000000000002"),
-            FileName = "File-Two.pdf",
+            FileName = "File Two.pdf",
             FileExtension = ".pdf",
             Size = 10,
             EnforcementOrder = EnforcementOrderData.EnforcementOrders.Single(e => e.Id == 1),
@@ -27,7 +27,7 @@ internal static class AttachmentData
         new Attachment
         {
             Id = new Guid("00000000-0000-0000-0000-000000000003"),
-            FileName = "File Three.pdf",
+            FileName = "File-Three-💻.pdf",
             FileExtension = ".pdf",
             Size = 100,
             EnforcementOrder = EnforcementOrderData.EnforcementOrders.Single(e => e.Id == 2),
@@ -39,10 +39,28 @@ internal static class AttachmentData
             FileName = "FileFourDeleted.pdf",
             FileExtension = ".pdf",
             Size = 1000,
-            EnforcementOrder = EnforcementOrderData.EnforcementOrders.Single(e => e.Id == 3),
+            EnforcementOrder = EnforcementOrderData.EnforcementOrders.Single(e => e.Id == 2),
             DateUploaded = DateTime.Today.AddDays(-2),
             Deleted = true,
             DateDeleted = DateTime.Today.AddDays(-1),
+        },
+        new Attachment
+        {
+            Id = new Guid("00000000-0000-0000-0000-000000000005"),
+            FileName = "FileFive-OrderNotPublic.pdf",
+            FileExtension = ".pdf",
+            Size = 1000000,
+            EnforcementOrder = EnforcementOrderData.EnforcementOrders.Single(e => e.Id == 3),
+            DateUploaded = DateTime.Today.AddDays(-2),
+        },
+        new Attachment
+        {
+            Id = new Guid("00000000-0000-0000-0000-000000000006"),
+            FileName = "FileSix-OrderDeleted.pdf",
+            FileExtension = ".pdf",
+            Size = 1000000,
+            EnforcementOrder = EnforcementOrderData.EnforcementOrders.Single(e => e.Id == 4),
+            DateUploaded = DateTime.Today.AddDays(-2),
         },
     };
 
@@ -51,8 +69,11 @@ internal static class AttachmentData
     internal static readonly List<AttachmentFile> AttachmentFiles = new()
     {
         new AttachmentFile("00000000-0000-0000-0000-000000000001.pdf", EncodedPdfFile),
-        new AttachmentFile("00000000-0000-0000-0000-000000000002.pdf", null),
-        new AttachmentFile("00000000-0000-0000-0000-000000000003.pdf", ""),
+        new AttachmentFile("00000000-0000-0000-0000-000000000002.pdf", EncodedPdfFile),
+        new AttachmentFile("00000000-0000-0000-0000-000000000003.pdf", EncodedPdfFile),
+        new AttachmentFile("00000000-0000-0000-0000-000000000004.pdf", null),
+        new AttachmentFile("00000000-0000-0000-0000-000000000005.pdf", EncodedPdfFile),
+        new AttachmentFile("00000000-0000-0000-0000-000000000006.pdf", EncodedPdfFile),
     };
 
     private const string EncodedPdfFile =

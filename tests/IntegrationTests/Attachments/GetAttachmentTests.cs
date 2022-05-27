@@ -16,7 +16,7 @@ public class GetAttachmentTests
     public async Task WhenItemExists_ReturnsItem()
     {
         using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
-        var item = new AttachmentView(AttachmentData.Attachments.First());
+        var item = new AttachmentView(AttachmentData.Attachments.First(a => !a.Deleted));
 
         var result = await repository.GetAttachmentAsync(item.Id);
 

@@ -1,19 +1,27 @@
-﻿using Enfo.Domain.EnforcementOrders.Repositories;
+﻿using Enfo.Domain.EnforcementOrders.Entities;
+using Enfo.Domain.EnforcementOrders.Repositories;
 using Enfo.Domain.EnforcementOrders.Resources;
 using Enfo.Domain.Services;
 using Enfo.Domain.Utils;
-using Enfo.WebApp.Pages;
 using EnfoTests.TestData;
 using FluentAssertions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Routing;
 using Moq;
 using NUnit.Framework;
 using System;
 using System.Linq;
+using System.Security.Claims;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
+using Attachment = Enfo.WebApp.Pages.Attachment;
 
 namespace EnfoTests.WebApp.Pages;
+
+// TODO: Improve test coverage for Attachments page
 
 [TestFixture]
 public class AttachmentTests
@@ -21,6 +29,11 @@ public class AttachmentTests
     [Test]
     public async Task WhenItemExists_ReturnsItem()
     {
+        // Mock user & page context
+        var httpContext = new DefaultHttpContext { User = new ClaimsPrincipal(new GenericIdentity("Name")) };
+        var actionContext = new ActionContext(httpContext, new RouteData(), new PageActionDescriptor());
+        var pageContext = new PageContext(actionContext);
+
         // Arrange
         var item = new AttachmentView(AttachmentData.Attachments.First());
         var expectedContentType = FileTypes.GetContentType(item.FileExtension);
@@ -37,7 +50,7 @@ public class AttachmentTests
             .ReturnsAsync(expectedFile);
 
         // Act
-        var page = new Attachment(repo.Object, fileService.Object);
+        var page = new Attachment(repo.Object, fileService.Object) { PageContext = pageContext };
         var response = await page.OnGetAsync(item.Id, item.FileName);
 
         // Assert
@@ -62,57 +75,74 @@ public class AttachmentTests
     [Test]
     public async Task NullAttachment_ReturnsNotFound()
     {
+        // Mock user & page context
+        var httpContext = new DefaultHttpContext { User = new ClaimsPrincipal(new GenericIdentity("Name")) };
+        var actionContext = new ActionContext(httpContext, new RouteData(), new PageActionDescriptor());
+        var pageContext = new PageContext(actionContext);
+
         var repo = new Mock<IEnforcementOrderRepository>();
         repo.Setup(l => l.GetAttachmentAsync(It.IsAny<Guid>()))
             .ReturnsAsync(null as AttachmentView);
 
-        var page = new Attachment(repo.Object, default);
+        var page = new Attachment(repo.Object, default) { PageContext = pageContext };
         var response = await page.OnGetAsync(Guid.Empty, null);
 
         Assert.Multiple(() =>
         {
             response.Should().BeOfType<NotFoundObjectResult>();
-            ((NotFoundObjectResult)response).Value.Should().Be($"File ID not found: {Guid.Empty}");
+            ((NotFoundObjectResult)response).Value.Should().Be($"Attachment ID not found: {Guid.Empty}");
         });
     }
 
     [Test]
     public async Task EmptyFileName_ReturnsNotFound()
     {
+        // Mock user & page context
+        var httpContext = new DefaultHttpContext { User = new ClaimsPrincipal(new GenericIdentity("Name")) };
+        var actionContext = new ActionContext(httpContext, new RouteData(), new PageActionDescriptor());
+        var pageContext = new PageContext(actionContext);
+
         var view = new AttachmentView(new Enfo.Domain.EnforcementOrders.Entities.Attachment
         {
             Id = Guid.Empty,
             FileName = null,
+            EnforcementOrder = new EnforcementOrder { Id = 1 },
         });
 
         var repo = new Mock<IEnforcementOrderRepository>();
         repo.Setup(l => l.GetAttachmentAsync(It.IsAny<Guid>()))
             .ReturnsAsync(view);
 
-        var page = new Attachment(repo.Object, default);
+        var page = new Attachment(repo.Object, default) { PageContext = pageContext };
         var response = await page.OnGetAsync(Guid.Empty, null);
 
         Assert.Multiple(() =>
         {
             response.Should().BeOfType<NotFoundObjectResult>();
-            ((NotFoundObjectResult)response).Value.Should().Be($"File ID not found: {Guid.Empty}");
+            ((NotFoundObjectResult)response).Value.Should().Be($"Attachment ID not found: {Guid.Empty}");
         });
     }
 
     [Test]
     public async Task IncorrectFileName_ReturnsRedirectToCorrectFileName()
     {
+        // Mock user & page context
+        var httpContext = new DefaultHttpContext { User = new ClaimsPrincipal(new GenericIdentity("Name")) };
+        var actionContext = new ActionContext(httpContext, new RouteData(), new PageActionDescriptor());
+        var pageContext = new PageContext(actionContext);
+
         var view = new AttachmentView(new Enfo.Domain.EnforcementOrders.Entities.Attachment
         {
             Id = Guid.Empty,
             FileName = "right",
+            EnforcementOrder = new EnforcementOrder { Id = 1 },
         });
 
         var repo = new Mock<IEnforcementOrderRepository>();
         repo.Setup(l => l.GetAttachmentAsync(It.IsAny<Guid>()))
             .ReturnsAsync(view);
 
-        var page = new Attachment(repo.Object, default);
+        var page = new Attachment(repo.Object, default) { PageContext = pageContext };
         var response = await page.OnGetAsync(Guid.Empty, "wrong");
 
         Assert.Multiple(() =>
@@ -128,10 +158,16 @@ public class AttachmentTests
     [Test]
     public async Task EmptyFile_ReturnsNotFound()
     {
+        // Mock user & page context
+        var httpContext = new DefaultHttpContext { User = new ClaimsPrincipal(new GenericIdentity("Name")) };
+        var actionContext = new ActionContext(httpContext, new RouteData(), new PageActionDescriptor());
+        var pageContext = new PageContext(actionContext);
+
         var view = new AttachmentView(new Enfo.Domain.EnforcementOrders.Entities.Attachment
         {
             Id = Guid.Empty,
             FileName = "abc",
+            EnforcementOrder = new EnforcementOrder { Id = 1 },
         });
 
         var repo = new Mock<IEnforcementOrderRepository>();
@@ -142,7 +178,7 @@ public class AttachmentTests
         fileService.Setup(l => l.GetFileAsync(It.IsAny<string>()))
             .ReturnsAsync(Array.Empty<byte>());
 
-        var page = new Attachment(repo.Object, fileService.Object);
+        var page = new Attachment(repo.Object, fileService.Object) { PageContext = pageContext };
         var response = await page.OnGetAsync(Guid.Empty, view.FileName);
 
         Assert.Multiple(() =>

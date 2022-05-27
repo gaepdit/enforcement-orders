@@ -52,7 +52,8 @@ public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
     public async Task<AttachmentView> GetAttachmentAsync(Guid id)
     {
         var item = await _context.Attachments.AsNoTracking()
-            .SingleOrDefaultAsync(a => a.Id == id).ConfigureAwait(false);
+            .Include(a => a.EnforcementOrder)
+            .SingleOrDefaultAsync(a => a.Id == id && !a.Deleted).ConfigureAwait(false);
 
         return item is null ? null : new AttachmentView(item);
     }

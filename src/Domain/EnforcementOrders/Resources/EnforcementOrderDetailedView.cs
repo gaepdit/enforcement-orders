@@ -28,7 +28,9 @@ public class EnforcementOrderDetailedView : EnforcementOrderSummaryView
             item.HearingCommentPeriodClosesDate >= DateTime.Today
                 ? new EpdContactView(item.HearingContact)
                 : null;
-        Attachments = item.Attachments?.Select(a => new AttachmentView(a)).ToList() 
+        Attachments = item.Attachments?
+                .Where(a => !a.Deleted)
+                .Select(a => new AttachmentView(a)).ToList() 
             ?? new List<AttachmentView>();
     }
 

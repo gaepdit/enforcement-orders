@@ -32,8 +32,11 @@ public class Details : PageModel
         if (id == null) return NotFound();
         Item = await _repository.GetAdminViewAsync(id.Value);
         if (Item == null) return NotFound("ID not found.");
-        // TempData might be null when called from unit test 
+
+        // TempData might be null when called from unit test
+        // ReSharper disable once ConstantConditionalAccessQualifier
         Message = TempData?.GetDisplayMessage();
+        
         Id = id.Value;
         return Page();
     }
@@ -42,11 +45,18 @@ public class Details : PageModel
     {
         if (!User.IsInRole(UserRole.OrderAdministrator)) return Forbid();
 
+        Item = await _repository.GetAdminViewAsync(Id);
+        if (Item == null) return NotFound("ID not found.");
+
+        if (Item.Deleted)
+        {
+            TempData.SetDisplayMessage(Context.Warning, "This Enforcement Order is deleted and cannot be edited.");
+            return Page();
+        }
+
         if (!ModelState.IsValid || Attachment is null)
         {
             Message = new DisplayMessage(Context.Warning, "Please select a valid file.");
-            Item = await _repository.GetAdminViewAsync(Id);
-            if (Item == null) return NotFound("ID not found.");
             return Page();
         }
 
@@ -71,6 +81,15 @@ public class Details : PageModel
     public async Task<IActionResult> OnPostDeleteAttachmentAsync(Guid attachmentId)
     {
         if (!User.IsInRole(UserRole.OrderAdministrator)) return Forbid();
+
+        Item = await _repository.GetAdminViewAsync(Id);
+        if (Item == null) return NotFound("ID not found.");
+
+        if (Item.Deleted)
+        {
+            TempData.SetDisplayMessage(Context.Warning, "This Enforcement Order is deleted and cannot be edited.");
+            return Page();
+        }
 
         await _repository.DeleteAttachmentAsync(Id, attachmentId);
         return RedirectToPage("Details", null, new { Id }, "attachments");

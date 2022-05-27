@@ -39,9 +39,9 @@ public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
     }
 
     public Task<AttachmentView> GetAttachmentAsync(Guid id) =>
-        AttachmentData.Attachments.Any(e => e.Id == id && !e.Deleted)
+        AttachmentData.Attachments.Any(a => a.Id == id && !a.Deleted)
             ? Task.FromResult(new AttachmentView(
-                AttachmentData.Attachments.Single(e => e.Id == id)!))
+                AttachmentData.Attachments.Single(a => a.Id == id)!))
             : Task.FromResult(null as AttachmentView);
 
     public Task<PaginatedResult<EnforcementOrderSummaryView>> ListAsync(
@@ -218,7 +218,7 @@ public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
         if (order.Deleted)
             throw new ArgumentException($"Order ID {orderId} has been deleted and cannot be edited.", nameof(orderId));
 
-        if (!AttachmentData.Attachments.AsQueryable().Any(e => e.Id == attachmentId))
+        if (!AttachmentData.Attachments.AsQueryable().Any(a => a.Id == attachmentId))
             throw new ArgumentException($"Attachment ID {attachmentId} does not exist.", nameof(attachmentId));
 
         var attachment = AttachmentData.Attachments.Single(a => a.Id == attachmentId);

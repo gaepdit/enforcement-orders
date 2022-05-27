@@ -1,4 +1,5 @@
 ﻿using Enfo.Domain.EnforcementOrders.Repositories;
+using Enfo.Domain.Users.Entities;
 using Enfo.WebApp.Models;
 using Enfo.WebApp.Pages.Admin;
 using Enfo.WebApp.Platform.RazorHelpers;
@@ -6,13 +7,19 @@ using EnfoTests.TestData;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.AspNetCore.Routing;
 using Moq;
 using NUnit.Framework;
+using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace EnfoTests.WebApp.Pages.Admin;
+
+// TODO: Improve test coverage for Details page
 
 [TestFixture]
 public class DetailsTests
@@ -81,6 +88,43 @@ public class DetailsTests
             result.Should().BeOfType<NotFoundObjectResult>();
             page.Item.Should().BeNull();
             page.Message.Should().BeNull();
+        });
+    }
+
+    [Test]
+    public async Task AddAttachments_ReturnsRedirect()
+    {
+        // Stub user & page context
+        var claims = new List<Claim> { new(ClaimTypes.Role, UserRole.OrderAdministrator) };
+        var httpContext = new DefaultHttpContext { User = new ClaimsPrincipal(new ClaimsIdentity(claims)) };
+        var actionContext = new ActionContext(httpContext, new RouteData(), new PageActionDescriptor());
+        var pageContext = new PageContext(actionContext);
+
+        // Mock repo
+        var itemId = EnforcementOrderData.EnforcementOrders.First().Id;
+        var item = ResourceHelper.GetEnforcementOrderAdminView(itemId);
+        var repoMock = new Mock<IEnforcementOrderRepository>();
+        repoMock.Setup(l => l.GetAdminViewAsync(itemId)).ReturnsAsync(item);
+
+        // Mock attachment
+        var formFileMock = new Mock<IFormFile>();
+        formFileMock.Setup(l => l.Length).Returns(1);
+        formFileMock.Setup(l => l.FileName).Returns("test.pdf");
+        
+        var page = new Details(repoMock.Object)
+        {
+            Id = itemId, 
+            Attachment = formFileMock.Object,
+            PageContext = pageContext,
+        };
+
+        var result = await page.OnPostAddAttachmentAsync();
+
+        Assert.Multiple(() =>
+        {
+            result.Should().BeOfType<RedirectToPageResult>();
+            ((RedirectToPageResult)result).PageName.Should().Be("Details");
+            ((RedirectToPageResult)result).RouteValues!["Id"].Should().Be(itemId);
         });
     }
 }
