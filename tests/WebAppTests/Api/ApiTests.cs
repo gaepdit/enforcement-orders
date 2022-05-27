@@ -40,12 +40,13 @@ public class ApiTests
             result.Items.Should()
                 .HaveCount(EnforcementOrderData.EnforcementOrders.Count(e => e.GetIsPublic));
             result.PageNumber.Should().Be(1);
-            var order = result.Items[0].EnforcementOrder;
+            var order = result.Items[0];
             order.Should().BeEquivalentTo(
-                ResourceHelper.GetEnforcementOrderSummaryView(EnforcementOrderData.EnforcementOrders
-                    .OrderByDescending(e => e.ExecutedDate ?? e.ProposedOrderPostedDate)
-                    .ThenBy(e => e.FacilityName)
-                    .First(e => e.GetIsPublic).Id));
+                new EnforcementOrderApiView(
+                    ResourceHelper.GetEnforcementOrderDetailedView(EnforcementOrderData.EnforcementOrders
+                        .OrderByDescending(e => e.ExecutedDate ?? e.ProposedOrderPostedDate)
+                        .ThenBy(e => e.FacilityName)
+                        .First(e => e.GetIsPublic).Id), baseUrl));
             result.Items[0].Link.Should().Be($"{baseUrl}/Details/{order.Id}");
         });
     }
@@ -95,8 +96,8 @@ public class ApiTests
 
             result.Should().NotBeNull();
             var resultValue = (EnforcementOrderApiView)result?.Value;
-            resultValue!.EnforcementOrder.Should().Be(item);
-            resultValue.Link.Should().Be($"{baseUrl}/Details/{itemId}");
+            resultValue.Should().BeEquivalentTo(new EnforcementOrderApiView(item, baseUrl));
+            resultValue!.Link.Should().Be($"{baseUrl}/Details/{itemId}");
         });
     }
 

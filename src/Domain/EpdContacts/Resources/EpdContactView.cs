@@ -45,6 +45,7 @@ public class EpdContactView
     [DisplayName("Postal Code")]
     public string PostalCode { get; }
 
+    [JsonIgnore]
     public string AsLinearString
     {
         get

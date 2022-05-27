@@ -86,9 +86,9 @@ builder.Services
     {
         c.EnableAnnotations();
         c.IgnoreObsoleteActions();
-        c.SwaggerDoc("v2", new OpenApiInfo
+        c.SwaggerDoc("v3", new OpenApiInfo
         {
-            Version = "v2",
+            Version = "v3",
             Title = "Georgia EPD Enforcement Orders API",
             Contact = new OpenApiContact
             {
@@ -202,7 +202,7 @@ app.UseAuthorization();
 app.UseSwagger(c => { c.RouteTemplate = "api-docs/{documentName}/openapi.json"; });
 app.UseSwaggerUI(c =>
 {
-    c.SwaggerEndpoint("/api-docs/v2/openapi.json", "ENFO API v2");
+    c.SwaggerEndpoint("/api-docs/v3/openapi.json", "ENFO API v3");
     c.RoutePrefix = "api-docs";
     c.DocumentTitle = "Georgia EPD Enforcement Orders API";
 });

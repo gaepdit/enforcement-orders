@@ -28,16 +28,14 @@ internal static class SecurityHeaders
         builder.AddScriptSrc()
             .Self()
             .From("https://cdn.raygun.io/raygun4js/raygun.min.js")
-            .WithHash256("k8lqom5XjWiHpIL9TqKQ7DpRVbQNTtRtBFIKZ0iQaBk=")
-            .WithHash256("lyolOjFEpwMenK+1PNbcwjIW7ZjHzw+EN8xe4louCcE=")
-            .WithHash256("Tui7QoFlnLXkJCSl1/JvEZdIXTmBttnWNxzJpXomQjg=")
-            .WithHash256("HmCUK6tSuR+K9jivpONI9hAkeIeDysc9CTJlS6tLklo=")
+            .WithHash256("lyolOjFEpwMenK+1PNbcwjIW7ZjHzw+EN8xe4louCcE=") // Raygun script loader
+            .WithHash256("Tui7QoFlnLXkJCSl1/JvEZdIXTmBttnWNxzJpXomQjg=") // Swagger UI inline script
+            .WithHash256("ZfBxknfwMkoMSoaip4gXIEEtJwKW2s2WlmmCB03P704=") // Swagger UI inline script
             .WithHashTagHelper()
             .ReportSample();
         builder.AddStyleSrc()
             .Self()
-            .WithHash256("wkAU1AW/h8YFx0XlzvpTllAKnFEO2tw8aKErs5a26LY=")
-            .WithHash256("lyolOjFEpwMenK+1PNbcwjIW7ZjHzw+EN8xe4louCcE=")
+            .WithHash256("wkAU1AW/h8YFx0XlzvpTllAKnFEO2tw8aKErs5a26LY=") // Swagger UI inline style
             .ReportSample();
         builder.AddImgSrc().Self().Data();
         builder.AddConnectSrc().Self().From("https://api.raygun.io");
