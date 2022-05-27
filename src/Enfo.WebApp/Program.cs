@@ -29,7 +29,8 @@ using Mindscape.Raygun4Net.AspNetCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // Bind Application Settings
-builder.Configuration.GetSection(ApplicationSettings.RaygunSettingsSection).Bind(ApplicationSettings.RaygunClientSettings);
+builder.Configuration.GetSection(ApplicationSettings.RaygunSettingsSection)
+    .Bind(ApplicationSettings.RaygunClientSettings);
 
 // Configure Identity
 builder.Services
@@ -187,7 +188,8 @@ else
 }
 
 // Configure security HTTP headers
-if(!env.IsLocalEnv()) app.UseSecurityHeaders(policies => policies.AddSecurityHeaderPolicies());
+if (!env.IsLocalEnv() || Convert.ToBoolean(builder.Configuration["UseSecurityHeadersLocally"]))
+    app.UseSecurityHeaders(policies => policies.AddSecurityHeaderPolicies());
 
 // Configure the application
 app.UseStatusCodePages();
