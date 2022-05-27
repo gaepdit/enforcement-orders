@@ -38,12 +38,12 @@ public static class EnforcementOrderEvaluators
                 query.OrderByDescending(e => e.ExecutedDate ?? e.ProposedOrderPostedDate)
                     .ThenBy(e => e.FacilityName),
             OrderSorting.FacilityAsc =>
-                query.OrderBy(e => e.FacilityName)
+                query.OrderBy(e => e.FacilityName.TrimStart())
                     .ThenBy(e => e.ExecutedDate ?? e.ProposedOrderPostedDate),
             OrderSorting.FacilityDesc =>
-                query.OrderByDescending(e => e.FacilityName)
+                query.OrderByDescending(e => e.FacilityName.TrimStart())
                     .ThenBy(e => e.ExecutedDate ?? e.ProposedOrderPostedDate),
-            _ => query.OrderBy(e => 1)
+            _ => query.OrderBy(e => 1),
         };
 
     public static IQueryable<Entities.EnforcementOrder> ApplyPagination(

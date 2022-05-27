@@ -66,7 +66,7 @@ internal static class EnforcementOrderData
             Deleted = false,
             ExecutedDate = DateTime.Today.AddDays(-14),
             ExecutedOrderPostedDate = DateUtils.MostRecentMonday(),
-            FacilityName = "bcd2-" + Guid.NewGuid(),
+            FacilityName = " bcd2-" + Guid.NewGuid(),
             HearingCommentPeriodClosesDate = null,
             HearingDate = null,
             HearingLocation = "",
