@@ -31,6 +31,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Bind Application Settings
 builder.Configuration.GetSection(ApplicationSettings.RaygunSettingsSection)
     .Bind(ApplicationSettings.RaygunClientSettings);
+builder.Configuration.GetSection(ApplicationSettings.LocalDevSettingsSection)
+    .Bind(ApplicationSettings.LocalDevSettings);
 
 // Configure Identity
 builder.Services
@@ -114,7 +116,7 @@ if (builder.Environment.IsLocalEnv())
     // When running locally, you have the option to build the database using LocalDB or InMemory.
     // Either way, only the Identity tables are used by the application. The data tables are created,
     // but the data comes from the LocalRepository data files.
-    if (builder.Configuration.GetValue<bool>("BuildLocalDb"))
+    if(ApplicationSettings.LocalDevSettings.BuildLocalDb)
     {
         builder.Services.AddDbContext<EnfoDbContext>(opts =>
             opts.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -131,10 +133,10 @@ if (builder.Environment.IsLocalEnv())
     builder.Services.AddScoped<IEpdContactRepository, EpdContactRepository>();
     builder.Services.AddScoped<ILegalAuthorityRepository, LegalAuthorityRepository>();
 
-    if (builder.Configuration.GetValue<bool>("UseLocalFileSystem"))
+    if(ApplicationSettings.LocalDevSettings.UseLocalFileSystem)
     {
         builder.Services.AddTransient<IFileService,
-            Enfo.Infrastructure.Services.FileService>(s => new Enfo.Infrastructure.Services.FileService(
+            Enfo.Infrastructure.Services.FileService>(_ => new Enfo.Infrastructure.Services.FileService(
             Path.Combine(builder.Configuration["PersistedFilesBasePath"], "Attachments")));
     }
     else
@@ -152,7 +154,7 @@ else
     builder.Services.AddScoped<IUserService,
         Enfo.Infrastructure.Services.UserService>();
     builder.Services.AddTransient<IFileService,
-        Enfo.Infrastructure.Services.FileService>(s => new Enfo.Infrastructure.Services.FileService(
+        Enfo.Infrastructure.Services.FileService>(_ => new Enfo.Infrastructure.Services.FileService(
         Path.Combine(builder.Configuration["PersistedFilesBasePath"], "Attachments")));
     builder.Services.AddScoped<IEnforcementOrderRepository,
         Enfo.Infrastructure.Repositories.EnforcementOrderRepository>();
@@ -188,7 +190,7 @@ else
 }
 
 // Configure security HTTP headers
-if (!env.IsLocalEnv() || Convert.ToBoolean(builder.Configuration["UseSecurityHeadersLocally"]))
+if(!env.IsLocalEnv() || ApplicationSettings.LocalDevSettings.UseSecurityHeadersLocally)
     app.UseSecurityHeaders(policies => policies.AddSecurityHeaderPolicies());
 
 // Configure the application

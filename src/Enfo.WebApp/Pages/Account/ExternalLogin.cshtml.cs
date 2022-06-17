@@ -4,6 +4,7 @@ using Enfo.WebApp.Models;
 using Enfo.WebApp.Platform.Constants;
 using Enfo.WebApp.Platform.Local;
 using Enfo.WebApp.Platform.RazorHelpers;
+using Enfo.WebApp.Platform.Settings;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.AzureAD.UI;
@@ -59,8 +60,7 @@ public class ExternalLogin : PageModel
 
         async Task<IActionResult> SignInAsLocalUser()
         {
-            if (!_configuration.GetValue<bool>("AuthenticatedUser"))
-                return Forbid();
+            if(!ApplicationSettings.LocalDevSettings.AuthenticatedUser) return Forbid();
 
             var userView = (await _userService.GetUsersAsync(null, null, null)).First();
             var user = new ApplicationUser

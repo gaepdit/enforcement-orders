@@ -46,7 +46,7 @@ There are two launch profiles:
 
 * **WebApp Local** — This profile uses the LocalRepository project for repository implementation and the TestData project for initial seed data. A local test user account is used for authentication. No external dependencies are required. 
 
-    Use these settings in the "appsettings.Local.json" file to test various scenarios:
+    You can modify these settings in an "appsettings.Local.json" file to test various scenarios:
 
     - *AuthenticatedUser* — Set to `true` to successfully authenticate with a test account. Set to `false` to simulate a failed login. (Either way, only the Identity tables are used by the application. The application data tables are created, but application data comes from the TestData project.)
     - *BuildLocalDb* — Uses LocalDB when `true` or an in memory DB when `false`.
@@ -54,4 +54,3 @@ There are two launch profiles:
     - *UseSecurityHeadersLocally* — Sets whether to include HTTP security headers (when running locally).
 
 * **WebApp Dev Server** — This profile uses the Infrastructure project for repository implementation and accesses the remote Dev database server for data. In order to use this profile, copy the "appsettings.Development.json" file from the app config repository. VPN or internal network access is required to connect to the database. An SOG account is required for authentication.
-
