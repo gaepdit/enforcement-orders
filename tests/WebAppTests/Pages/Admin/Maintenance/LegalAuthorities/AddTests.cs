@@ -22,7 +22,7 @@ public class AddTests
     {
         var item = new LegalAuthorityCommand { AuthorityName = "test" };
         var repo = new Mock<ILegalAuthorityRepository> { DefaultValue = DefaultValue.Mock };
-        repo.Setup(l => l.NameExistsAsync(It.IsAny<string>(), null))
+        repo.Setup(l => l.NameExistsAsync(It.IsAny<string>()))
             .ReturnsAsync(false);
         repo.Setup(l => l.CreateAsync(It.IsAny<LegalAuthorityCommand>()))
             .ReturnsAsync(1);

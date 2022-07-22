@@ -52,7 +52,7 @@ public class ValidatingLegalAuthority
         var command = new LegalAuthorityCommand { Id = 1, AuthorityName = "auth" };
 
         var repoMock = new Mock<ILegalAuthorityRepository>();
-        repoMock.Setup(l => l.NameExistsAsync(It.IsAny<string>(), It.IsAny<int?>()))
+        repoMock.Setup(l => l.NameExistsAsync(It.IsAny<string>()))
             .ReturnsAsync(true);
 
         var validator = new LegalAuthorityValidator(repoMock.Object);

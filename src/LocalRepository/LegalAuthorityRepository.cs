@@ -60,9 +60,9 @@ public sealed class LegalAuthorityRepository : ILegalAuthorityRepository
         Task.FromResult(
             LegalAuthorityData.LegalAuthorities.Any(e => e.Id == id));
 
-    public Task<bool> NameExistsAsync(string name, int? ignoreId = null) =>
+    public Task<bool> NameExistsAsync(string name) =>
         Task.FromResult(
-            LegalAuthorityData.LegalAuthorities.Any(e => e.AuthorityName == name && e.Id != ignoreId));
+            LegalAuthorityData.LegalAuthorities.Any(e => e.AuthorityName == name));
 
     public void Dispose()
     {

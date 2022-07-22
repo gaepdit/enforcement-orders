@@ -25,20 +25,4 @@ public class NameExistsTests
         using var repository = CreateRepositoryHelper().GetLegalAuthorityRepository();
         (await repository.NameExistsAsync(Guid.NewGuid().ToString())).Should().BeFalse();
     }
-
-    [Test]
-    public async Task NameExists_WhenNameExists_WithMatchingId_ReturnsFalse()
-    {
-        var item = LegalAuthorityData.LegalAuthorities.First();
-        using var repository = CreateRepositoryHelper().GetLegalAuthorityRepository();
-        (await repository.NameExistsAsync(item.AuthorityName, item.Id)).Should().BeFalse();
-    }
-
-    [Test]
-    public async Task NameExists_WhenNameExists_WithNonMatchingId_ReturnsTrue()
-    {
-        var item = LegalAuthorityData.LegalAuthorities.First();
-        using var repository = CreateRepositoryHelper().GetLegalAuthorityRepository();
-        (await repository.NameExistsAsync(item.AuthorityName, -1)).Should().BeTrue();
-    }
 }

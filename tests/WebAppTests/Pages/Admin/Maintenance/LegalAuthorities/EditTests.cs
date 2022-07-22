@@ -142,7 +142,7 @@ public class EditTests
         var repo = new Mock<ILegalAuthorityRepository> { DefaultValue = DefaultValue.Mock };
         repo.Setup(l => l.GetAsync(It.IsAny<int>()))
             .ReturnsAsync(ResourceHelper.GetLegalAuthorityViewList()[0]);
-        repo.Setup(l => l.NameExistsAsync(It.IsAny<string>(), null))
+        repo.Setup(l => l.NameExistsAsync(It.IsAny<string>()))
             .ReturnsAsync(false);
 
         // Initialize Page TempData
