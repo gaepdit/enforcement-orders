@@ -517,5 +517,5 @@ FodyWeavers.xsd
 appsettings.*.json
 
 # SonarLint Rider plugin
-.idea/sonarlint/issuestore/
+.idea/**/sonarlint/
 .idea/.idea.enforcement-orders/.idea/sonarlint-state.xml
