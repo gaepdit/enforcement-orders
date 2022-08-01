@@ -17,12 +17,24 @@
 * Is executed *(bool):*
     * Date executed *(required)*
     * Date executed order posted *(required)*
+* Attachments *(collection)*
 * Is hearing scheduled *(bool):*
     * Date of hearing *(required)*
     * Hearing location *(required)*
     * Date hearing-related comment period closes *(required)*
     * **Contact** for hearing-related comments *(required)*
 * Deleted *(bool)*
+
+## Attachment
+
+* File name *(required)*
+* File extension *(required)*
+* File size *(required)*
+* Uploaded by
+* Date uploaded *(required)*
+* Deleted *(bool)*:
+    * Deleted by
+    * Date deleted
 
 ## EPD Contact
 

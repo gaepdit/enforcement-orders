@@ -10,5 +10,5 @@ public interface ILegalAuthorityRepository : IDisposable
     Task UpdateAsync(LegalAuthorityCommand resource);
     Task UpdateStatusAsync(int id, bool newActiveStatus);
     Task<bool> ExistsAsync(int id);
-    Task<bool> NameExistsAsync(string name, int? ignoreId = null);
+    Task<bool> NameExistsAsync(string name);
 }

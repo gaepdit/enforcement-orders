@@ -6,5 +6,5 @@ namespace Enfo.Domain.EnforcementOrders.Resources;
 public enum PublicationProgress
 {
     Draft,
-    Published
+    Published,
 }

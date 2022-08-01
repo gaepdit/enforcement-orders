@@ -1,12 +1,13 @@
-﻿
-using Enfo.Domain.EnforcementOrders.Resources;
-using Enfo.LocalRepository.EnforcementOrders;
+﻿using Enfo.Domain.Services;
+using Enfo.LocalRepository;
+using EnfoTests.TestData;
 using FluentAssertions;
+using Moq;
 using NUnit.Framework;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace LocalRepositoryTests.EnforcementOrders;
+namespace EnfoTests.LocalRepositoryTests.EnforcementOrderTests;
 
 [TestFixture]
 public class GetAdminViewTests
@@ -14,19 +15,19 @@ public class GetAdminViewTests
     [Test]
     public async Task WhenItemExistsAndIsPublic_ReturnsItem()
     {
-        using var repository = new EnforcementOrderRepository();
-        var item = EnforcementOrderData.EnforcementOrders.First(e => e.GetIsPublic);
+        using var repository = new EnforcementOrderRepository(new Mock<IFileService>().Object);
+        var itemId = EnforcementOrderData.EnforcementOrders.First(e => e.GetIsPublic).Id;
 
-        var result = await repository.GetAdminViewAsync(item.Id);
+        var result = await repository.GetAdminViewAsync(itemId);
 
-        var expected = new EnforcementOrderAdminView(item);
+        var expected = EnforcementOrderData.GetEnforcementOrderAdminView(itemId);
         result.Should().BeEquivalentTo(expected);
     }
 
     [Test]
     public async Task WhenNotExists_ReturnsNull()
     {
-        using var repository = new EnforcementOrderRepository();
+        using var repository = new EnforcementOrderRepository(new Mock<IFileService>().Object);
         var result = await repository.GetAsync(-1);
         result.Should().BeNull();
     }
@@ -34,12 +35,12 @@ public class GetAdminViewTests
     [Test]
     public async Task WhenItemExistsButIsNotPublic_ReturnsItem()
     {
-        using var repository = new EnforcementOrderRepository();
-        var item = EnforcementOrderData.EnforcementOrders.First(e => !e.GetIsPublic);
+        using var repository = new EnforcementOrderRepository(new Mock<IFileService>().Object);
+        var itemId = EnforcementOrderData.EnforcementOrders.First(e => !e.GetIsPublic).Id;
 
-        var result = await repository.GetAdminViewAsync(item.Id);
+        var result = await repository.GetAdminViewAsync(itemId);
 
-        var expected = new EnforcementOrderAdminView(item);
+        var expected = EnforcementOrderData.GetEnforcementOrderAdminView(itemId);
         result.Should().BeEquivalentTo(expected);
     }
 }

@@ -1,4 +1,5 @@
 using Enfo.Domain.Utils;
+using Microsoft.AspNetCore.Http;
 
 namespace Enfo.Domain.EnforcementOrders.Resources;
 
@@ -31,7 +32,7 @@ public class EnforcementOrderCreate
     [DataType(DataType.Currency)]
     public decimal? SettlementAmount { get; init; }
 
-    public PublicationProgress Progress { get; set; } = PublicationProgress.Published;
+    public PublicationProgress Progress { get; init; } = PublicationProgress.Published;
 
     [DisplayName("Order Number")]
     [Required(ErrorMessage = "Order Number is required.")]
@@ -47,10 +48,10 @@ public class EnforcementOrderCreate
     [DisplayName("Date Comment Period Closes")]
     [DataType(DataType.Date)]
     [DisplayFormat(DataFormatString = DisplayFormats.EditDate, ApplyFormatInEditMode = true)]
-    public DateTime? CommentPeriodClosesDate { get; set; }
+    public DateTime? CommentPeriodClosesDate { get; init; }
 
     [DisplayName("Send Comments To")]
-    public int? CommentContactId { get; set; }
+    public int? CommentContactId { get; init; }
 
     [DisplayName("Publication Date For Proposed Order")]
     [DataType(DataType.Date)]
@@ -68,6 +69,11 @@ public class EnforcementOrderCreate
     [DataType(DataType.Date)]
     [DisplayFormat(DataFormatString = DisplayFormats.EditDate, ApplyFormatInEditMode = true)]
     public DateTime? ExecutedOrderPostedDate { get; init; } = DateUtils.NextMonday();
+
+    // Attachments
+
+    [DisplayName("File Attachments")]
+    public IFormFile Attachment { get; init; } 
 
     // Hearing info
 

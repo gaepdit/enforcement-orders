@@ -3,12 +3,14 @@
 * Public dashboard `/`
 * Enforcement orders search `/Search`
 * View `/Details/{id}`
+    * Attachment view/download `/Attachment/{attachmentId}`
 * Current proposed orders `/CurrentProposed`
 * Recently executed orders `/RecentExecuted`
 * Admin dashboard `/Admin`
     * Admin quick search `/Admin {find}`
     * Admin search `/Admin/Search`
     * Admin view `/Admin/Details/{id}`
+        * Attachments editor (embedded)
     * Add `/Admin/Add`
     * Edit `/Admin/Edit/{id}`
     * Delete `/Admin/Delete/{id}`

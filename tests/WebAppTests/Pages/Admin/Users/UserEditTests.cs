@@ -11,14 +11,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Moq;
+using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Xunit;
-using Xunit.Extensions.AssertExtensions;
 
 namespace EnfoTests.WebApp.Pages.Admin.Users;
 
+[TestFixture]
 public class UserEditTests
 {
     private readonly List<Edit.UserRoleSetting> _roleSettings = new()
@@ -28,25 +28,25 @@ public class UserEditTests
             Name = UserRole.OrderAdministrator,
             Description = UserRole.OrderAdministratorRole.Description,
             DisplayName = UserRole.OrderAdministratorRole.DisplayName,
-            IsSelected = true
+            IsSelected = true,
         },
         new Edit.UserRoleSetting
         {
             Name = UserRole.SiteMaintenance,
             Description = UserRole.SiteMaintenanceRole.Description,
             DisplayName = UserRole.SiteMaintenanceRole.DisplayName,
-            IsSelected = false
+            IsSelected = false,
         },
         new Edit.UserRoleSetting
         {
             Name = UserRole.UserMaintenance,
             Description = UserRole.UserMaintenanceRole.Description,
             DisplayName = UserRole.UserMaintenanceRole.DisplayName,
-            IsSelected = false
+            IsSelected = false,
         },
     };
 
-    [Fact]
+    [Test]
     public async Task OnGet_WithoutRoles_PopulatesThePageModel()
     {
         var userView = new UserView(UserTestData.ApplicationUsers[0]);
@@ -60,14 +60,17 @@ public class UserEditTests
 
         var result = await pageModel.OnGetAsync(Guid.Empty);
 
-        result.Should().BeOfType<PageResult>();
-        pageModel.UserId.ShouldEqual(Guid.Empty);
-        pageModel.DisplayUser.ShouldEqual(userView);
-        pageModel.UserRoleSettings.ShouldNotBeEmpty();
-        pageModel.UserRoleSettings.Count.ShouldEqual(3);
+        Assert.Multiple(() =>
+        {
+            result.Should().BeOfType<PageResult>();
+            pageModel.UserId.Should().Be(Guid.Empty);
+            pageModel.DisplayUser.Should().Be(userView);
+            pageModel.UserRoleSettings.Should().NotBeEmpty();
+            pageModel.UserRoleSettings.Count.Should().Be(3);
+        });
     }
 
-    [Fact]
+    [Test]
     public async Task OnGet_WithRoles_PopulatesThePageModel()
     {
         var userView = new UserView(UserTestData.ApplicationUsers[0]);
@@ -82,13 +85,16 @@ public class UserEditTests
 
         var result = await pageModel.OnGetAsync(Guid.Empty);
 
-        result.Should().BeOfType<PageResult>();
-        pageModel.UserId.ShouldEqual(Guid.Empty);
-        pageModel.DisplayUser.ShouldEqual(userView);
-        pageModel.UserRoleSettings.Should().BeEquivalentTo(_roleSettings);
+        Assert.Multiple(() =>
+        {
+            result.Should().BeOfType<PageResult>();
+            pageModel.UserId.Should().Be(Guid.Empty);
+            pageModel.DisplayUser.Should().Be(userView);
+            pageModel.UserRoleSettings.Should().BeEquivalentTo(_roleSettings);
+        });
     }
 
-    [Fact]
+    [Test]
     public async Task OnGet_MissingId_ReturnsNotFound()
     {
         var userService = new Mock<IUserService>();
@@ -96,13 +102,16 @@ public class UserEditTests
 
         var result = await pageModel.OnGetAsync(null);
 
-        result.Should().BeOfType<NotFoundResult>();
-        pageModel.UserId.ShouldEqual(Guid.Empty);
-        pageModel.DisplayUser.ShouldBeNull();
-        pageModel.UserRoleSettings.ShouldBeNull();
+        Assert.Multiple(() =>
+        {
+            result.Should().BeOfType<NotFoundResult>();
+            pageModel.UserId.Should().Be(Guid.Empty);
+            pageModel.DisplayUser.Should().BeNull();
+            pageModel.UserRoleSettings.Should().BeNull();
+        });
     }
 
-    [Fact]
+    [Test]
     public async Task OnGet_NonexistentId_ReturnsNotFound()
     {
         var userService = new Mock<IUserService>();
@@ -112,13 +121,16 @@ public class UserEditTests
 
         var result = await pageModel.OnGetAsync(Guid.Empty);
 
-        result.Should().BeOfType<NotFoundResult>();
-        pageModel.UserId.Should().Be(Guid.Empty);
-        pageModel.DisplayUser.ShouldBeNull();
-        pageModel.UserRoleSettings.ShouldBeNull();
+        Assert.Multiple(() =>
+        {
+            result.Should().BeOfType<NotFoundResult>();
+            pageModel.UserId.Should().Be(Guid.Empty);
+            pageModel.DisplayUser.Should().BeNull();
+            pageModel.UserRoleSettings.Should().BeNull();
+        });
     }
 
-    [Fact]
+    [Test]
     public async Task OnPost_GivenSuccess_ReturnsRedirectWithDisplayMessage()
     {
         var userService = new Mock<IUserService>();
@@ -131,20 +143,23 @@ public class UserEditTests
         {
             TempData = tempData,
             UserId = Guid.Empty,
-            UserRoleSettings = _roleSettings
+            UserRoleSettings = _roleSettings,
         };
 
         var result = await pageModel.OnPostAsync();
 
-        pageModel.ModelState.IsValid.ShouldBeTrue();
-        result.Should().BeOfType<RedirectToPageResult>();
-        ((RedirectToPageResult)result).PageName.ShouldEqual("Details");
-        ((RedirectToPageResult)result).RouteValues!["id"].ShouldEqual(Guid.Empty);
-        var expectedMessage = new DisplayMessage(Context.Success, "User roles successfully updated.");
-        pageModel.TempData?.GetDisplayMessage().Should().BeEquivalentTo(expectedMessage);
+        Assert.Multiple(() =>
+        {
+            pageModel.ModelState.IsValid.Should().BeTrue();
+            result.Should().BeOfType<RedirectToPageResult>();
+            ((RedirectToPageResult)result).PageName.Should().Be("Details");
+            ((RedirectToPageResult)result).RouteValues!["id"].Should().Be(Guid.Empty);
+            var expectedMessage = new DisplayMessage(Context.Success, "User roles successfully updated.");
+            pageModel.TempData?.GetDisplayMessage().Should().BeEquivalentTo(expectedMessage);
+        });
     }
 
-    [Fact]
+    [Test]
     public async Task OnPost_InvalidModel_ReturnsPageWithInvalidModelState()
     {
         var userService = new Mock<IUserService>();
@@ -158,12 +173,15 @@ public class UserEditTests
 
         var result = await pageModel.OnPostAsync();
 
-        result.Should().BeOfType<PageResult>();
-        pageModel.ModelState.IsValid.ShouldBeFalse();
-        pageModel.ModelState["Error"]!.Errors[0].ErrorMessage.Should().Be("Sample error description");
+        Assert.Multiple(() =>
+        {
+            result.Should().BeOfType<PageResult>();
+            pageModel.ModelState.IsValid.Should().BeFalse();
+            pageModel.ModelState["Error"]!.Errors[0].ErrorMessage.Should().Be("Sample error description");
+        });
     }
 
-    [Fact]
+    [Test]
     public async Task OnPost_UpdateRolesFails_ReturnsPageWithInvalidModelState()
     {
         var userView = new UserView(UserTestData.ApplicationUsers[0]);
@@ -178,8 +196,11 @@ public class UserEditTests
 
         var result = await pageModel.OnPostAsync();
 
-        result.Should().BeOfType<PageResult>();
-        pageModel.ModelState.IsValid.ShouldBeFalse();
-        pageModel.ModelState[string.Empty]!.Errors[0].ErrorMessage.Should().Be("CODE: DESCRIPTION");
+        Assert.Multiple(() =>
+        {
+            result.Should().BeOfType<PageResult>();
+            pageModel.ModelState.IsValid.Should().BeFalse();
+            pageModel.ModelState[string.Empty]!.Errors[0].ErrorMessage.Should().Be("CODE: DESCRIPTION");
+        });
     }
 }

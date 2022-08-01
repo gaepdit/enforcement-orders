@@ -1,12 +1,13 @@
 ﻿using Enfo.Domain.LegalAuthorities.Resources;
-using Enfo.LocalRepository.LegalAuthorities;
+using Enfo.LocalRepository;
+using EnfoTests.TestData;
 using FluentAssertions;
 using NUnit.Framework;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace LocalRepositoryTests.LegalAuthorities;
+namespace EnfoTests.LocalRepositoryTests.LegalAuthorities;
 
 [TestFixture]
 public class UpdateTests
@@ -67,6 +68,6 @@ public class UpdateTests
 
         (await action.Should().ThrowAsync<ArgumentException>())
             .WithMessage($"ID ({itemId}) not found. (Parameter 'resource')")
-            .And.ParamName.Should().Be("resource");
+            .And.ParamName.Should().Be(nameof(resource));
     }
 }

@@ -7,196 +7,216 @@ using Enfo.Domain.LegalAuthorities.Resources;
 using Enfo.WebApp.Models;
 using Enfo.WebApp.Pages.Admin;
 using Enfo.WebApp.Platform.RazorHelpers;
+using EnfoTests.TestData;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Moq;
+using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Xunit;
-using Xunit.Extensions.AssertExtensions;
-using static EnfoTests.Helpers.ResourceHelper;
 
-namespace EnfoTests.WebApp.Pages.Admin
+namespace EnfoTests.WebApp.Pages.Admin;
+
+[TestFixture]
+public class EditTests
 {
-    public class EditTests
+    [Test]
+    public async Task OnGet_ReturnsWithItem()
     {
-        [Fact]
-        public async Task OnGet_ReturnsWithItem()
+        var item = ResourceHelper.GetEnforcementOrderAdminView(1);
+        var orderRepo = new Mock<IEnforcementOrderRepository>();
+        orderRepo.Setup(l => l.GetAdminViewAsync(It.IsAny<int>())).ReturnsAsync(item);
+        var legalRepo = new Mock<ILegalAuthorityRepository>();
+        legalRepo.Setup(l => l.ListAsync(false)).ReturnsAsync(new List<LegalAuthorityView>());
+        var contactRepo = new Mock<IEpdContactRepository>();
+        contactRepo.Setup(l => l.ListAsync(false)).ReturnsAsync(new List<EpdContactView>());
+        var page = new Edit(orderRepo.Object, legalRepo.Object, contactRepo.Object);
+
+        await page.OnGetAsync(1);
+
+        Assert.Multiple(() =>
         {
-            var item = GetEnforcementOrderAdminView(1);
-            var orderRepo = new Mock<IEnforcementOrderRepository>();
-            orderRepo.Setup(l => l.GetAdminViewAsync(It.IsAny<int>())).ReturnsAsync(item);
-            var legalRepo = new Mock<ILegalAuthorityRepository>();
-            legalRepo.Setup(l => l.ListAsync(false)).ReturnsAsync(new List<LegalAuthorityView>());
-            var contactRepo = new Mock<IEpdContactRepository>();
-            contactRepo.Setup(l => l.ListAsync(false)).ReturnsAsync(new List<EpdContactView>());
-            var page = new Edit(orderRepo.Object, legalRepo.Object, contactRepo.Object);
-
-            await page.OnGetAsync(1);
-
             page.Item.Should().BeEquivalentTo(new EnforcementOrderUpdate(item));
-            page.Item.Id.ShouldEqual(item.Id);
-            page.OriginalOrderNumber.ShouldEqual(item.OrderNumber);
-        }
+            page.Item.Id.Should().Be(item.Id);
+            page.OriginalOrderNumber.Should().Be(item.OrderNumber);
+        });
+    }
 
 
-        [Fact]
-        public async Task OnGet_GivenNullId_ReturnsNotFound()
+    [Test]
+    public async Task OnGet_GivenNullId_ReturnsNotFound()
+    {
+        var page = new Edit(Mock.Of<IEnforcementOrderRepository>(),
+            Mock.Of<ILegalAuthorityRepository>(), Mock.Of<IEpdContactRepository>());
+
+        var result = await page.OnGetAsync(null);
+
+        Assert.Multiple(() =>
         {
-            var page = new Edit(Mock.Of<IEnforcementOrderRepository>(),
-                Mock.Of<ILegalAuthorityRepository>(), Mock.Of<IEpdContactRepository>());
-
-            var result = await page.OnGetAsync(null);
-
             result.Should().BeOfType<NotFoundResult>();
-            page.Item.ShouldBeNull();
-        }
+            page.Item.Should().BeNull();
+        });
+    }
 
-        [Fact]
-        public async Task OnGet_GivenInvalidId_ReturnsNotFound()
+    [Test]
+    public async Task OnGet_GivenInvalidId_ReturnsNotFound()
+    {
+        var orderRepo = new Mock<IEnforcementOrderRepository>();
+        orderRepo.Setup(l => l.GetAdminViewAsync(It.IsAny<int>()))
+            .ReturnsAsync(null as EnforcementOrderAdminView);
+        var page = new Edit(orderRepo.Object, Mock.Of<ILegalAuthorityRepository>(),
+            Mock.Of<IEpdContactRepository>());
+
+        var result = await page.OnGetAsync(-1);
+
+        Assert.Multiple(() =>
         {
-            var orderRepo = new Mock<IEnforcementOrderRepository>();
-            orderRepo.Setup(l => l.GetAdminViewAsync(It.IsAny<int>()))
-                .ReturnsAsync(null as EnforcementOrderAdminView);
-            var page = new Edit(orderRepo.Object, Mock.Of<ILegalAuthorityRepository>(),
-                Mock.Of<IEpdContactRepository>());
-
-            var result = await page.OnGetAsync(-1);
-
             result.Should().BeOfType<NotFoundObjectResult>();
-            page.Item.ShouldBeNull();
-        }
+            page.Item.Should().BeNull();
+        });
+    }
 
-        [Fact]
-        public async Task OnGet_GivenDeletedItem_RedirectsWithDisplayMessage()
-        {
-            var item = GetEnforcementOrderAdminViewList().Single(e => e.Deleted);
-            var orderRepo = new Mock<IEnforcementOrderRepository>();
-            orderRepo.Setup(l => l.GetAdminViewAsync(It.IsAny<int>()))
-                .ReturnsAsync(item);
+    [Test]
+    public async Task OnGet_GivenDeletedItem_RedirectsWithDisplayMessage()
+    {
+        var item = ResourceHelper.GetEnforcementOrderAdminViewList().First(e => e.Deleted);
+        var orderRepo = new Mock<IEnforcementOrderRepository>();
+        orderRepo.Setup(l => l.GetAdminViewAsync(It.IsAny<int>()))
+            .ReturnsAsync(item);
 
-            // Initialize Page TempData
-            var httpContext = new DefaultHttpContext();
-            var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
-            var page = new Edit(orderRepo.Object, Mock.Of<ILegalAuthorityRepository>(),
-                    Mock.Of<IEpdContactRepository>())
-                { TempData = tempData };
-
-            var result = await page.OnGetAsync(item.Id);
-
-            var expected = new DisplayMessage(Context.Warning,
-                "This Enforcement Order is deleted and cannot be edited.");
-            page.TempData.GetDisplayMessage().Should().BeEquivalentTo(expected);
-
-            result.Should().BeOfType<RedirectToPageResult>();
-            ((RedirectToPageResult)result).PageName.ShouldEqual("Details");
-            ((RedirectToPageResult)result).RouteValues!["id"].ShouldEqual(item.Id);
-        }
-
-
-        [Fact]
-        public async Task OnPost_GivenInvalidId_ReturnsNotFound()
-        {
-            var orderRepo = new Mock<IEnforcementOrderRepository>();
-            orderRepo.Setup(l => l.GetAdminViewAsync(It.IsAny<int>()))
-                .ReturnsAsync(null as EnforcementOrderAdminView);
-            var page = new Edit(orderRepo.Object, Mock.Of<ILegalAuthorityRepository>(),
+        // Initialize Page TempData
+        var httpContext = new DefaultHttpContext();
+        var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
+        var page = new Edit(orderRepo.Object, Mock.Of<ILegalAuthorityRepository>(),
                 Mock.Of<IEpdContactRepository>())
-            {
-                Item = new EnforcementOrderUpdate(),
-            };
+            { TempData = tempData };
 
-            var result = await page.OnPostAsync();
+        var result = await page.OnGetAsync(item.Id);
 
-            result.Should().BeOfType<NotFoundResult>();
-        }
+        var expected = new DisplayMessage(Context.Warning,
+            "This Enforcement Order is deleted and cannot be edited.");
 
-        [Fact]
-        public async Task OnPost_GivenDeletedItem_RedirectsWithDisplayMessage()
+        Assert.Multiple(() =>
         {
-            var item = GetEnforcementOrderAdminViewList().Single(e => e.Deleted);
-            var orderRepo = new Mock<IEnforcementOrderRepository>();
-            orderRepo.Setup(l => l.GetAdminViewAsync(It.IsAny<int>()))
-                .ReturnsAsync(item);
+            page.TempData.GetDisplayMessage().Should().BeEquivalentTo(expected);
+            result.Should().BeOfType<RedirectToPageResult>();
+            ((RedirectToPageResult)result).PageName.Should().Be("Details");
+            ((RedirectToPageResult)result).RouteValues!["id"].Should().Be(item.Id);
+        });
+    }
 
-            // Initialize Page TempData
-            var httpContext = new DefaultHttpContext();
-            var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
-            var page = new Edit(orderRepo.Object, Mock.Of<ILegalAuthorityRepository>(),
+    [Test]
+    public async Task OnPost_GivenInvalidId_ReturnsNotFound()
+    {
+        var orderRepo = new Mock<IEnforcementOrderRepository>();
+        orderRepo.Setup(l => l.GetAdminViewAsync(It.IsAny<int>()))
+            .ReturnsAsync(null as EnforcementOrderAdminView);
+        var page = new Edit(orderRepo.Object, Mock.Of<ILegalAuthorityRepository>(),
+            Mock.Of<IEpdContactRepository>())
+        {
+            Item = new EnforcementOrderUpdate(),
+        };
+
+        var result = await page.OnPostAsync();
+
+        result.Should().BeOfType<NotFoundResult>();
+    }
+
+    [Test]
+    public async Task OnPost_GivenDeletedItem_RedirectsWithDisplayMessage()
+    {
+        var item = ResourceHelper.GetEnforcementOrderAdminViewList().First(e => e.Deleted);
+        var orderRepo = new Mock<IEnforcementOrderRepository>();
+        orderRepo.Setup(l => l.GetAdminViewAsync(It.IsAny<int>()))
+            .ReturnsAsync(item);
+
+        // Initialize Page TempData
+        var httpContext = new DefaultHttpContext();
+        var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
+        var page = new Edit(orderRepo.Object, Mock.Of<ILegalAuthorityRepository>(),
+            Mock.Of<IEpdContactRepository>())
+        {
+            TempData = tempData,
+            Item = new EnforcementOrderUpdate { Id = item.Id },
+        };
+
+        var result = await page.OnPostAsync();
+
+        var expected = new DisplayMessage(Context.Warning,
+            "This Enforcement Order is deleted and cannot be edited.");
+
+        Assert.Multiple(() =>
+        {
+            page.TempData.GetDisplayMessage().Should().BeEquivalentTo(expected);
+            result.Should().BeOfType<RedirectToPageResult>();
+            ((RedirectToPageResult)result).PageName.Should().Be("Details");
+            ((RedirectToPageResult)result).RouteValues!["id"].Should().Be(item.Id);
+        });
+    }
+
+    [Test]
+    public async Task OnPost_GivenSuccess_ReturnsRedirectWithDisplayMessage()
+    {
+        var originalItem = ResourceHelper.GetEnforcementOrderAdminViewList().First(e => !e.Deleted);
+        var item = new EnforcementOrderUpdate(originalItem);
+        var orderRepo = new Mock<IEnforcementOrderRepository> { DefaultValue = DefaultValue.Mock };
+        orderRepo.Setup(l => l.GetAdminViewAsync(It.IsAny<int>()))
+            .ReturnsAsync(originalItem);
+        orderRepo.Setup(l => l.OrderNumberExistsAsync(It.IsAny<string>(), It.IsAny<int?>()))
+            .ReturnsAsync(false);
+
+        // Initialize Page TempData
+        var httpContext = new DefaultHttpContext();
+        var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
+        var page = new Edit(orderRepo.Object, Mock.Of<ILegalAuthorityRepository>(),
                 Mock.Of<IEpdContactRepository>())
-            {
-                TempData = tempData,
-                Item = new EnforcementOrderUpdate { Id = item.Id },
-            };
+            { TempData = tempData, Item = item };
 
-            var result = await page.OnPostAsync();
+        var result = await page.OnPostAsync();
 
-            var expected = new DisplayMessage(Context.Warning,
-                "This Enforcement Order is deleted and cannot be edited.");
-            page.TempData.GetDisplayMessage().Should().BeEquivalentTo(expected);
+        var expected = new DisplayMessage(Context.Success,
+            "The Enforcement Order has been successfully updated.");
 
-            result.Should().BeOfType<RedirectToPageResult>();
-            ((RedirectToPageResult)result).PageName.ShouldEqual("Details");
-            ((RedirectToPageResult)result).RouteValues!["id"].ShouldEqual(item.Id);
-        }
-
-        [Fact]
-        public async Task OnPost_GivenSuccess_ReturnsRedirectWithDisplayMessage()
+        Assert.Multiple(() =>
         {
-            var originalItem = GetEnforcementOrderAdminViewList().First(e => !e.Deleted);
-            var item = new EnforcementOrderUpdate(originalItem);
-            var orderRepo = new Mock<IEnforcementOrderRepository> { DefaultValue = DefaultValue.Mock };
-            orderRepo.Setup(l => l.GetAdminViewAsync(It.IsAny<int>()))
-                .ReturnsAsync(originalItem);
-            orderRepo.Setup(l => l.OrderNumberExistsAsync(It.IsAny<string>(), It.IsAny<int?>()))
-                .ReturnsAsync(false);
-
-            // Initialize Page TempData
-            var httpContext = new DefaultHttpContext();
-            var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
-            var page = new Edit(orderRepo.Object, Mock.Of<ILegalAuthorityRepository>(),
-                    Mock.Of<IEpdContactRepository>())
-                { TempData = tempData, Item = item };
-
-            var result = await page.OnPostAsync();
-
-            var expected = new DisplayMessage(Context.Success,
-                "The Enforcement Order has been successfully updated.");
             page.TempData.GetDisplayMessage().Should().BeEquivalentTo(expected);
             result.Should().BeOfType<RedirectToPageResult>();
-            ((RedirectToPageResult)result).PageName.ShouldEqual("Details");
-            ((RedirectToPageResult)result).RouteValues!["Id"].ShouldEqual(originalItem.Id);
-        }
+            ((RedirectToPageResult)result).PageName.Should().Be("Details");
+            ((RedirectToPageResult)result).RouteValues!["Id"].Should().Be(originalItem.Id);
+        });
+    }
 
-        [Fact]
-        public async Task OnPost_GivenModelError_ReturnsPageWithModelError()
+    [Test]
+    public async Task OnPost_GivenModelError_ReturnsPageWithModelError()
+    {
+        var item = ResourceHelper.GetEnforcementOrderAdminView(1);
+        var orderRepo = new Mock<IEnforcementOrderRepository>();
+        orderRepo.Setup(l => l.GetAdminViewAsync(It.IsAny<int>())).ReturnsAsync(item);
+        orderRepo.Setup(l => l.OrderNumberExistsAsync(It.IsAny<string>(), It.IsAny<int?>()))
+            .ReturnsAsync(false);
+        var legalRepo = new Mock<ILegalAuthorityRepository>();
+        legalRepo.Setup(l => l.ListAsync(false)).ReturnsAsync(new List<LegalAuthorityView>());
+        var contactRepo = new Mock<IEpdContactRepository>();
+        contactRepo.Setup(l => l.ListAsync(false)).ReturnsAsync(new List<EpdContactView>());
+        var page = new Edit(orderRepo.Object, legalRepo.Object, contactRepo.Object)
         {
-            var item = GetEnforcementOrderAdminView(1);
-            var orderRepo = new Mock<IEnforcementOrderRepository>();
-            orderRepo.Setup(l => l.GetAdminViewAsync(It.IsAny<int>())).ReturnsAsync(item);
-            orderRepo.Setup(l => l.OrderNumberExistsAsync(It.IsAny<string>(), It.IsAny<int?>()))
-                .ReturnsAsync(false);
-            var legalRepo = new Mock<ILegalAuthorityRepository>();
-            legalRepo.Setup(l => l.ListAsync(false)).ReturnsAsync(new List<LegalAuthorityView>());
-            var contactRepo = new Mock<IEpdContactRepository>();
-            contactRepo.Setup(l => l.ListAsync(false)).ReturnsAsync(new List<EpdContactView>());
-            var page = new Edit(orderRepo.Object, legalRepo.Object, contactRepo.Object)
-            {
-                Item = new EnforcementOrderUpdate(item),
-                OriginalOrderNumber = "original order number",
-            };
-            page.ModelState.AddModelError("key", "message");
+            Item = new EnforcementOrderUpdate(item),
+            OriginalOrderNumber = "original order number",
+        };
+        page.ModelState.AddModelError("key", "message");
 
-            var result = await page.OnPostAsync();
+        var result = await page.OnPostAsync();
 
+        Assert.Multiple(() =>
+        {
             result.Should().BeOfType<PageResult>();
-            page.ModelState.IsValid.ShouldBeFalse();
-            page.ModelState.ErrorCount.ShouldEqual(1);
-            page.OriginalOrderNumber.ShouldEqual("original order number");
-        }
+            page.ModelState.IsValid.Should().BeFalse();
+            page.ModelState.ErrorCount.Should().Be(1);
+            page.OriginalOrderNumber.Should().Be("original order number");
+        });
     }
 }

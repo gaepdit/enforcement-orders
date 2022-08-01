@@ -2,10 +2,9 @@
 @using Enfo.Domain.EnforcementOrders.Resources
 @using Enfo.Domain.EnforcementOrders.Specs
 @using Enfo.Domain.Users.Entities
-@using Enfo.WebApp.Platform
+@using Enfo.WebApp.Models
 @using Enfo.WebApp.Platform.RazorHelpers
-@using PublicationState = Enfo.Domain.EnforcementOrders.Specs.PublicationState
-@model Enfo.WebApp.Pages.Admin.Search
+@model Search
 @{
     ViewData["Title"] = "Search Enforcement Orders";
 }
@@ -122,6 +121,12 @@
             </fieldset>
         </div>
 
+        <fieldset>
+            <legend>Attachments</legend>
+            <input asp-for="Spec.WithAttachments" />
+            <label asp-for="Spec.WithAttachments" class="form-check-label"></label>
+        </fieldset>
+
         <div class="gaepd-buttonrow">
             <input type="hidden" name="handler" value="search" />
             <button id="SearchButton" type="submit">Search</button>
@@ -145,14 +150,15 @@
         else
         {
             <partial name="_PaginationCount" model="Model.OrdersList" />
-            <partial name="_PaginationNav" model="(Model.OrdersList, Model.Spec.AsRouteValues())" />
+            @await Html.PartialAsync("_PaginationNav", new PaginationNavModel(Model.OrdersList, Model.Spec.AsRouteValues()))
+
             <table class="usa-table-borderless gaepd-table-responsive" aria-label="Enforcement order search results">
                 <thead>
                 <tr>
                     <th scope="col" class="gaepd-sortable"
                         @if (Model.Spec.Sort == OrderSorting.FacilityAsc)
                         {
-                            @:aria-sort="ascending"
+                            @:aria-sort="ascending" 
                         }
                         else if (Model.Spec.Sort == OrderSorting.FacilityDesc)
                         {
@@ -169,7 +175,7 @@
                     <th scope="col" colspan="2" class="gaepd-sortable"
                         @if (Model.Spec.Sort == OrderSorting.DateAsc)
                         {
-                            @:aria-sort="ascending"
+                            @:aria-sort="ascending" 
                         }
                         else if (Model.Spec.Sort == OrderSorting.DateDesc)
                         {
@@ -222,7 +228,7 @@
                 </tbody>
             </table>
 
-            <partial name="_PaginationNav" model="(Model.OrdersList, Model.Spec.AsRouteValues())" />
+            @await Html.PartialAsync("_PaginationNav", new PaginationNavModel(Model.OrdersList, Model.Spec.AsRouteValues()))
         }
     </div>
 }

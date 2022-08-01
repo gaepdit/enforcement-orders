@@ -1,11 +1,14 @@
-﻿using Enfo.LocalRepository.EnforcementOrders;
+﻿using Enfo.Domain.Services;
+using Enfo.LocalRepository;
+using EnfoTests.TestData;
 using FluentAssertions;
+using Moq;
 using NUnit.Framework;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace LocalRepositoryTests.EnforcementOrders;
+namespace EnfoTests.LocalRepositoryTests.EnforcementOrderTests;
 
 [TestFixture]
 public class DeleteRestoreTests
@@ -14,7 +17,7 @@ public class DeleteRestoreTests
     public async Task Delete_Succeeds([Values] bool alreadyDeleted)
     {
         var itemId = EnforcementOrderData.EnforcementOrders.First(e => e.Deleted == alreadyDeleted).Id;
-        using var repository = new EnforcementOrderRepository();
+        using var repository = new EnforcementOrderRepository(new Mock<IFileService>().Object);
 
         await repository.DeleteAsync(itemId);
 
@@ -26,7 +29,7 @@ public class DeleteRestoreTests
     public async Task Restore_Succeeds([Values] bool alreadyDeleted)
     {
         var itemId = EnforcementOrderData.EnforcementOrders.First(e => e.Deleted == alreadyDeleted).Id;
-        using var repository = new EnforcementOrderRepository();
+        using var repository = new EnforcementOrderRepository(new Mock<IFileService>().Object);
 
         await repository.RestoreAsync(itemId);
 
@@ -37,30 +40,30 @@ public class DeleteRestoreTests
     [Test]
     public async Task Delete_FromMissingId_ThrowsException()
     {
-        const int itemId = -1;
+        const int id = -1;
 
         var action = async () =>
         {
-            using var repository = new EnforcementOrderRepository();
-            await repository.DeleteAsync(itemId);
+            using var repository = new EnforcementOrderRepository(new Mock<IFileService>().Object);
+            await repository.DeleteAsync(id);
         };
 
         (await action.Should().ThrowAsync<ArgumentException>())
-            .And.ParamName.Should().Be("id");
+            .And.ParamName.Should().Be(nameof(id));
     }
 
     [Test]
     public async Task Restore_FromMissingId_ThrowsException()
     {
-        const int itemId = -1;
+        const int id = -1;
 
         var action = async () =>
         {
-            using var repository = new EnforcementOrderRepository();
-            await repository.RestoreAsync(itemId);
+            using var repository = new EnforcementOrderRepository(new Mock<IFileService>().Object);
+            await repository.RestoreAsync(id);
         };
 
         (await action.Should().ThrowAsync<ArgumentException>())
-            .And.ParamName.Should().Be("id");
+            .And.ParamName.Should().Be(nameof(id));
     }
 }

@@ -3,123 +3,159 @@ using Enfo.Domain.EnforcementOrders.Resources;
 using Enfo.Domain.EnforcementOrders.Specs;
 using Enfo.Domain.LegalAuthorities.Repositories;
 using Enfo.Domain.LegalAuthorities.Resources;
-using System.Linq;
-using System.Threading.Tasks;
+using Enfo.Domain.Services;
+using Enfo.LocalRepository;
 using Enfo.WebApp.Api;
+using EnfoTests.TestData;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Moq;
-using Xunit;
-using Xunit.Extensions.AssertExtensions;
-using static EnfoTests.Helpers.DataHelper;
-using static EnfoTests.Helpers.RepositoryHelper;
-using static EnfoTests.Helpers.ResourceHelper;
+using NUnit.Framework;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace EnfoTests.WebApp.Api
+namespace EnfoTests.WebApp.Api;
+
+[TestFixture]
+public class ApiTests
 {
-    public class ApiTests
+    [Test]
+    public async Task ListOrders_ReturnsPublicItems()
     {
-        [Fact]
-        public async Task ListOrders_ReturnsPublicItems()
+        const string baseUrl = "https://localhost";
+        var config = new ConfigurationBuilder()
+            .AddInMemoryCollection(new Dictionary<string, string> { { "BaseUrl", baseUrl } })
+            .Build();
+
+        using var repository = new EnforcementOrderRepository(new Mock<IFileService>().Object);
+
+        var controller = new ApiController();
+        var result = await controller.ListOrdersAsync(repository, config, new EnforcementOrderSpec(), 1, 100);
+
+        Assert.Multiple(() =>
         {
-            using var repository = CreateRepositoryHelper().GetEnforcementOrderRepository();
-
-            var controller = new ApiController();
-            var result = await controller.ListOrdersAsync(repository, new EnforcementOrderSpec(), 1, 100);
-
-            result.CurrentCount.Should().Be(GetEnforcementOrders.Count(e => e.GetIsPublic));
-            result.Items.Cast<EnforcementOrderDetailedView>().Should().HaveCount(GetEnforcementOrders.Count(e => e.GetIsPublic));
+            result.TotalCount.Should().Be(EnforcementOrderData.EnforcementOrders.Count(e => e.GetIsPublic));
+            result.Items.Should()
+                .HaveCount(EnforcementOrderData.EnforcementOrders.Count(e => e.GetIsPublic));
             result.PageNumber.Should().Be(1);
-            result.Items[0].Should().BeEquivalentTo(
-                GetEnforcementOrderSummaryView(GetEnforcementOrders
-                    .OrderByDescending(e => e.ExecutedDate ?? e.ProposedOrderPostedDate)
-                    .ThenBy(e => e.FacilityName)
-                    .First(e => e.GetIsPublic).Id));
-        }
+            var order = result.Items[0];
+            order.Should().BeEquivalentTo(
+                new EnforcementOrderApiView(
+                    ResourceHelper.GetEnforcementOrderDetailedView(EnforcementOrderData.EnforcementOrders
+                        .OrderByDescending(e => e.ExecutedDate ?? e.ProposedOrderPostedDate)
+                        .ThenBy(e => e.FacilityName)
+                        .First(e => e.GetIsPublic).Id), baseUrl));
+            result.Items[0].Link.Should().Be($"{baseUrl}/Details/{order.Id}");
+        });
+    }
 
-        [Fact]
-        public async Task GetOrder_UnknownId_Returns404Object()
+    [Test]
+    public async Task GetOrder_UnknownId_Returns404Object()
+    {
+        var config = new ConfigurationBuilder()
+            .AddInMemoryCollection(new Dictionary<string, string> { { "BaseUrl", string.Empty } })
+            .Build();
+
+        var repo = new Mock<IEnforcementOrderRepository>();
+        repo.Setup(l => l.GetAsync(It.IsAny<int>()))
+            .ReturnsAsync(null as EnforcementOrderDetailedView);
+
+        var controller = new ApiController();
+        var response = await controller.GetOrderAsync(repo.Object, config, 1);
+
+        Assert.Multiple(() =>
         {
-            var repo = new Mock<IEnforcementOrderRepository>();
-            repo.Setup(l => l.GetAsync(It.IsAny<int>()))
-                .ReturnsAsync(null as EnforcementOrderDetailedView);
-
-            var controller = new ApiController();
-            var response = await controller.GetOrderAsync(repo.Object, 1);
-
-            response.Result.ShouldBeType<ObjectResult>();
+            response.Result.Should().BeOfType<ObjectResult>();
             var result = response.Result as ObjectResult;
-            result?.StatusCode.ShouldEqual(404);
-        }
+            result?.StatusCode.Should().Be(404);
+        });
+    }
 
-        [Fact]
-        public async Task GetOrder_ReturnsItem()
+    [Test]
+    public async Task GetOrder_ReturnsItem()
+    {
+        const string baseUrl = "https://localhost";
+        var config = new ConfigurationBuilder()
+            .AddInMemoryCollection(new Dictionary<string, string> { { "BaseUrl", baseUrl } })
+            .Build();
+
+        var itemId = EnforcementOrderData.EnforcementOrders.First().Id;
+        var item = ResourceHelper.GetEnforcementOrderDetailedView(itemId);
+        var repo = new Mock<IEnforcementOrderRepository>();
+        repo.Setup(l => l.GetAsync(itemId)).ReturnsAsync(item);
+
+        var controller = new ApiController();
+        var response = await controller.GetOrderAsync(repo.Object, config, itemId);
+
+        Assert.Multiple(() =>
         {
-            var itemId = GetEnforcementOrders.First().Id;
-            var item = GetEnforcementOrderDetailedView(itemId);
-            var repo = new Mock<IEnforcementOrderRepository>();
-            repo.Setup(l => l.GetAsync(itemId)).ReturnsAsync(item);
-
-            var controller = new ApiController();
-            var response = await controller.GetOrderAsync(repo.Object, itemId);
-
-            response.Result.ShouldBeType<OkObjectResult>();
+            response.Result.Should().BeOfType<OkObjectResult>();
             var result = response.Result as OkObjectResult;
 
-            result.ShouldNotBeNull();
-            result?.Value.ShouldEqual(item);
-        }
+            result.Should().NotBeNull();
+            var resultValue = (EnforcementOrderApiView)result?.Value;
+            resultValue.Should().BeEquivalentTo(new EnforcementOrderApiView(item, baseUrl));
+            resultValue!.Link.Should().Be($"{baseUrl}/Details/{itemId}");
+        });
+    }
 
-        [Fact]
-        public async Task ListAuthorities_ReturnsActiveItems()
+    [Test]
+    public async Task ListAuthorities_ReturnsActiveItems()
+    {
+        using var repository = new LegalAuthorityRepository();
+
+        var controller = new ApiController();
+        var response = await controller.ListLegalAuthoritiesAsync(repository);
+        response.Should().HaveCount(LegalAuthorityData.LegalAuthorities.Count(e => e.Active));
+    }
+
+    [Test]
+    public async Task ListAuthorities_WithInactive_ReturnsAllItems()
+    {
+        using var repository = new LegalAuthorityRepository();
+
+        var controller = new ApiController();
+        var response = await controller.ListLegalAuthoritiesAsync(repository, true);
+        response.Should().HaveCount(LegalAuthorityData.LegalAuthorities.Count);
+    }
+
+    [Test]
+    public async Task GetAuthority_UnknownId_Returns404Object()
+    {
+        var repo = new Mock<ILegalAuthorityRepository>();
+        repo.Setup(l => l.GetAsync(It.IsAny<int>()))
+            .ReturnsAsync(null as LegalAuthorityView);
+
+        var controller = new ApiController();
+        var response = await controller.GetLegalAuthorityAsync(repo.Object, 1);
+
+        Assert.Multiple(() =>
         {
-            using var repository = CreateRepositoryHelper().GetLegalAuthorityRepository();
-
-            var controller = new ApiController();
-            var response = await controller.ListLegalAuthoritiesAsync(repository);
-            response.Should().HaveCount(GetLegalAuthorities.Count(e => e.Active));
-        }
-
-        [Fact]
-        public async Task ListAuthorities_WithInactive_ReturnsAllItems()
-        {
-            using var repository = CreateRepositoryHelper().GetLegalAuthorityRepository();
-
-            var controller = new ApiController();
-            var response = await controller.ListLegalAuthoritiesAsync(repository, true);
-            response.Should().HaveCount(GetLegalAuthorities.Count());
-        }
-
-        [Fact]
-        public async Task GetAuthority_UnknownId_Returns404Object()
-        {
-            var repo = new Mock<ILegalAuthorityRepository>();
-            repo.Setup(l => l.GetAsync(It.IsAny<int>()))
-                .ReturnsAsync(null as LegalAuthorityView);
-
-            var controller = new ApiController();
-            var response = await controller.GetLegalAuthorityAsync(repo.Object, 1);
-
-            response.Result.ShouldBeType<ObjectResult>();
+            response.Result.Should().BeOfType<ObjectResult>();
             var result = response.Result as ObjectResult;
-            result?.StatusCode.ShouldEqual(404);
-        }
+            result?.StatusCode.Should().Be(404);
+        });
+    }
 
-        [Fact]
-        public async Task GetAuthority_ReturnsItem()
+    [Test]
+    public async Task GetAuthority_ReturnsItem()
+    {
+        var item = ResourceHelper.GetLegalAuthorityViewList().First();
+        var repo = new Mock<ILegalAuthorityRepository>();
+        repo.Setup(l => l.GetAsync(item.Id)).ReturnsAsync(item);
+
+        var controller = new ApiController();
+        var response = await controller.GetLegalAuthorityAsync(repo.Object, item.Id);
+
+        Assert.Multiple(() =>
         {
-            var item = GetLegalAuthorityViewList().First();
-            var repo = new Mock<ILegalAuthorityRepository>();
-            repo.Setup(l => l.GetAsync(item.Id)).ReturnsAsync(item);
-
-            var controller = new ApiController();
-            var response = await controller.GetLegalAuthorityAsync(repo.Object, item.Id);
-
-            response.Result.ShouldBeType<OkObjectResult>();
+            response.Result.Should().BeOfType<OkObjectResult>();
             var result = response.Result as OkObjectResult;
 
-            result.ShouldNotBeNull();
-            result?.Value.ShouldEqual(item);
-        }
+            result.Should().NotBeNull();
+            result?.Value.Should().Be(item);
+        });
     }
 }

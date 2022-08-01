@@ -1,6 +1,7 @@
 ﻿using Enfo.Domain.EnforcementOrders.Resources;
 using Enfo.Domain.EnforcementOrders.Specs;
 using Enfo.Domain.Pagination;
+using Microsoft.AspNetCore.Http;
 
 namespace Enfo.Domain.EnforcementOrders.Repositories;
 
@@ -8,6 +9,7 @@ public interface IEnforcementOrderRepository : IDisposable
 {
     Task<EnforcementOrderDetailedView> GetAsync(int id);
     Task<EnforcementOrderAdminView> GetAdminViewAsync(int id);
+    Task<AttachmentView> GetAttachmentAsync(Guid id);
     Task<PaginatedResult<EnforcementOrderSummaryView>> ListAsync(EnforcementOrderSpec spec, PaginationSpec paging);
     Task<PaginatedResult<EnforcementOrderDetailedView>> ListDetailedAsync(EnforcementOrderSpec spec, PaginationSpec paging);
     Task<PaginatedResult<EnforcementOrderAdminSummaryView>> ListAdminAsync(EnforcementOrderAdminSpec spec, PaginationSpec paging);
@@ -19,6 +21,8 @@ public interface IEnforcementOrderRepository : IDisposable
     Task<IReadOnlyList<EnforcementOrderAdminSummaryView>> ListPendingEnforcementOrdersAsync();
     Task<int> CreateAsync(EnforcementOrderCreate resource);
     Task UpdateAsync(EnforcementOrderUpdate resource);
+    Task AddAttachmentAsync(int orderId, IFormFile file);
+    Task DeleteAttachmentAsync(int orderId, Guid attachmentId);
     Task DeleteAsync(int id);
     Task RestoreAsync(int id);
 }

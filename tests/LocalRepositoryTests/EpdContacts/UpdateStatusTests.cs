@@ -1,11 +1,12 @@
-﻿using Enfo.LocalRepository.EpdContacts;
+﻿using Enfo.LocalRepository;
+using EnfoTests.TestData;
 using FluentAssertions;
 using NUnit.Framework;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace LocalRepositoryTests.EpdContacts;
+namespace EnfoTests.LocalRepositoryTests.EpdContacts;
 
 [TestFixture]
 public class UpdateStatusTests
@@ -37,16 +38,16 @@ public class UpdateStatusTests
     [Test]
     public async Task FromMissingId_ThrowsException()
     {
-        const int itemId = -1;
+        const int id = -1;
 
         var action = async () =>
         {
             using var repository = new EpdContactRepository();
-            await repository.UpdateStatusAsync(itemId, true);
+            await repository.UpdateStatusAsync(id, true);
         };
 
         (await action.Should().ThrowAsync<ArgumentException>())
-            .WithMessage($"ID ({itemId}) not found. (Parameter 'id')")
-            .And.ParamName.Should().Be("id");
+            .WithMessage($"ID ({id}) not found. (Parameter 'id')")
+            .And.ParamName.Should().Be(nameof(id));
     }
 }

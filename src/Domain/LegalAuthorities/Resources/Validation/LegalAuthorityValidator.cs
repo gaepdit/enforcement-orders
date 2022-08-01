@@ -18,6 +18,6 @@ public class LegalAuthorityValidator : AbstractValidator<LegalAuthorityCommand>
             .WithMessage(e => $"The authority name entered ({e.AuthorityName}) already exists.");
     }
 
-    private async Task<bool> NotDuplicateName(string authorityName, int? ignoreId = null) =>
-        !await _repository.NameExistsAsync(authorityName, ignoreId);
+    private async Task<bool> NotDuplicateName(string authorityName) =>
+        !await _repository.NameExistsAsync(authorityName);
 }

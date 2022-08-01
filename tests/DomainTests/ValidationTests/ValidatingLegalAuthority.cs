@@ -1,62 +1,68 @@
+using Enfo.Domain.EnforcementOrders.Repositories;
+using Enfo.Domain.LegalAuthorities.Repositories;
 using Enfo.Domain.LegalAuthorities.Resources;
 using Enfo.Domain.LegalAuthorities.Resources.Validation;
 using FluentAssertions;
 using FluentValidation.TestHelper;
-using System.Linq;
+using Moq;
+using NUnit.Framework;
 using System.Threading.Tasks;
-using Xunit;
-using static EnfoTests.Helpers.DataHelper;
-using static EnfoTests.Helpers.RepositoryHelper;
 
 namespace EnfoTests.Domain.ValidationTests;
 
+[TestFixture]
 public class ValidatingLegalAuthority
 {
-    // Sample data for create
-    private readonly LegalAuthorityCommand _command = new()
-    {
-        Id = 1,
-        AuthorityName = "auth",
-    };
-
-    [Fact]
+    [Test]
     public async Task SucceedsGivenValidUpdates()
     {
-        using var repository = CreateRepositoryHelper().GetLegalAuthorityRepository();
-        var validator = new LegalAuthorityValidator(repository);
+        var command = new LegalAuthorityCommand { Id = 1, AuthorityName = "auth" };
 
-        var result = await validator.TestValidateAsync(_command);
+        var validator = new LegalAuthorityValidator(new Mock<ILegalAuthorityRepository>().Object);
 
-        result.IsValid.Should().BeTrue();
-        result.Errors.Should().BeEmpty();
+        var result = await validator.TestValidateAsync(command);
+
+        Assert.Multiple(() =>
+        {
+            result.IsValid.Should().BeTrue();
+            result.Errors.Should().BeEmpty();
+        });
     }
 
-    [Fact]
+    [Test]
     public async Task FailsIfMissingRequiredProperties()
     {
-        _command.AuthorityName = null;
+        var command = new LegalAuthorityCommand { Id = 1, AuthorityName = null };
 
-        using var repository = CreateRepositoryHelper().GetLegalAuthorityRepository();
-        var validator = new LegalAuthorityValidator(repository);
+        var validator = new LegalAuthorityValidator(new Mock<ILegalAuthorityRepository>().Object);
 
-        var result = await validator.TestValidateAsync(_command);
+        var result = await validator.TestValidateAsync(command);
 
-        result.IsValid.Should().BeFalse();
-        result.Errors.Should().NotBeEmpty().And.HaveCount(1);
-        result.ShouldHaveValidationErrorFor(e => e.AuthorityName);
+        Assert.Multiple(() =>
+        {
+            result.IsValid.Should().BeFalse();
+            result.Errors.Should().NotBeEmpty().And.HaveCount(1);
+            result.ShouldHaveValidationErrorFor(e => e.AuthorityName);
+        });
     }
 
-    [Fact]
+    [Test]
     public async Task FailsWithDuplicateName()
     {
-        _command.AuthorityName = GetLegalAuthorities.Last().AuthorityName;
+        var command = new LegalAuthorityCommand { Id = 1, AuthorityName = "auth" };
 
-        using var repository = CreateRepositoryHelper().GetLegalAuthorityRepository();
-        var validator = new LegalAuthorityValidator(repository);
+        var repoMock = new Mock<ILegalAuthorityRepository>();
+        repoMock.Setup(l => l.NameExistsAsync(It.IsAny<string>()))
+            .ReturnsAsync(true);
 
-        var result = await validator.TestValidateAsync(_command);
+        var validator = new LegalAuthorityValidator(repoMock.Object);
 
-        result.IsValid.Should().BeFalse();
-        result.ShouldHaveValidationErrorFor(e => e.AuthorityName);
+        var result = await validator.TestValidateAsync(command);
+
+        Assert.Multiple(() =>
+        {
+            result.IsValid.Should().BeFalse();
+            result.ShouldHaveValidationErrorFor(e => e.AuthorityName);
+        });
     }
 }

@@ -15,16 +15,17 @@ public static class EnforcementOrderEvaluators
             .FilterByOrderNumber(spec.OrderNumber);
 
     public static IQueryable<Entities.EnforcementOrder> ApplyAdminSpecFilter(
-        [NotNull] this IQueryable<Entities.EnforcementOrder> query, [NotNull] EnforcementOrderAdminSpec adminSpec) =>
-        query.FilterByFacility(adminSpec.Facility)
-            .FilterByCounty(adminSpec.County)
-            .FilterByLegalAuth(adminSpec.LegalAuth)
-            .FilterByDateRange(adminSpec.FromDate, adminSpec.TillDate, adminSpec.Status)
-            .FilterByActivityStatus(adminSpec.Status)
-            .FilterByPublicationStatus(adminSpec.Progress)
-            .FilterByOrderNumber(adminSpec.OrderNumber)
-            .FilterByText(adminSpec.Text)
-            .FilterByIsDeleted(adminSpec.ShowDeleted ?? false);
+        [NotNull] this IQueryable<Entities.EnforcementOrder> query, [NotNull] EnforcementOrderAdminSpec spec) =>
+        query.FilterByFacility(spec.Facility)
+            .FilterByCounty(spec.County)
+            .FilterByLegalAuth(spec.LegalAuth)
+            .FilterByDateRange(spec.FromDate, spec.TillDate, spec.Status)
+            .FilterByActivityStatus(spec.Status)
+            .FilterForAttachments(spec.WithAttachments)
+            .FilterByPublicationStatus(spec.Progress)
+            .FilterByOrderNumber(spec.OrderNumber)
+            .FilterByText(spec.Text)
+            .FilterByIsDeleted(spec.ShowDeleted ?? false);
 
     public static IOrderedQueryable<Entities.EnforcementOrder> ApplySorting(
         [NotNull] this IQueryable<Entities.EnforcementOrder> query, OrderSorting sorting) =>
@@ -37,12 +38,12 @@ public static class EnforcementOrderEvaluators
                 query.OrderByDescending(e => e.ExecutedDate ?? e.ProposedOrderPostedDate)
                     .ThenBy(e => e.FacilityName),
             OrderSorting.FacilityAsc =>
-                query.OrderBy(e => e.FacilityName)
+                query.OrderBy(e => e.FacilityName.TrimStart())
                     .ThenBy(e => e.ExecutedDate ?? e.ProposedOrderPostedDate),
             OrderSorting.FacilityDesc =>
-                query.OrderByDescending(e => e.FacilityName)
+                query.OrderByDescending(e => e.FacilityName.TrimStart())
                     .ThenBy(e => e.ExecutedDate ?? e.ProposedOrderPostedDate),
-            _ => query.OrderBy(e => 1)
+            _ => query.OrderBy(e => 1),
         };
 
     public static IQueryable<Entities.EnforcementOrder> ApplyPagination(

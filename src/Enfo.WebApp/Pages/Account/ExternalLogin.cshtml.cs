@@ -4,6 +4,7 @@ using Enfo.WebApp.Models;
 using Enfo.WebApp.Platform.Constants;
 using Enfo.WebApp.Platform.Local;
 using Enfo.WebApp.Platform.RazorHelpers;
+using Enfo.WebApp.Platform.Settings;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.AzureAD.UI;
@@ -11,6 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Diagnostics.CodeAnalysis;
 using System.Security.Claims;
 
 namespace Enfo.WebApp.Pages.Account;
@@ -58,8 +60,7 @@ public class ExternalLogin : PageModel
 
         async Task<IActionResult> SignInAsLocalUser()
         {
-            if (!_configuration.GetValue<bool>("AuthenticatedUser"))
-                return Forbid();
+            if(!ApplicationSettings.LocalDevSettings.AuthenticatedUser) return Forbid();
 
             var userView = (await _userService.GetUsersAsync(null, null, null)).First();
             var user = new ApplicationUser
@@ -84,6 +85,7 @@ public class ExternalLogin : PageModel
 
     // This method is called by the external login provider.
     [UsedImplicitly]
+    [SuppressMessage("Critical Code Smell", "S3776:Cognitive Complexity of methods should not be too high")]
     public async Task<IActionResult> OnGetCallbackAsync(string returnUrl = null, string remoteError = null)
     {
         if (remoteError != null)

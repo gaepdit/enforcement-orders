@@ -63,9 +63,9 @@ namespace Enfo.Infrastructure.Repositories
 
         public Task<bool> ExistsAsync(int id) => _context.LegalAuthorities.AnyAsync(e => e.Id == id);
 
-        public Task<bool> NameExistsAsync(string name, int? ignoreId = null) =>
+        public Task<bool> NameExistsAsync(string name) =>
             _context.LegalAuthorities.AsNoTracking()
-                .AnyAsync(e => e.AuthorityName == name && e.Id != ignoreId);
+                .AnyAsync(e => e.AuthorityName == name);
 
         public void Dispose() => _context.Dispose();
     }

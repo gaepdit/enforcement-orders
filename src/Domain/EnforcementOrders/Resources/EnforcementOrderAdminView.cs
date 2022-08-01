@@ -1,11 +1,12 @@
-﻿using Enfo.Domain.EpdContacts.Resources;
+﻿using Enfo.Domain.EnforcementOrders.Entities;
+using Enfo.Domain.EpdContacts.Resources;
 using Enfo.Domain.Utils;
 
 namespace Enfo.Domain.EnforcementOrders.Resources;
 
 public class EnforcementOrderAdminView : EnforcementOrderAdminSummaryView
 {
-    public EnforcementOrderAdminView([NotNull] Entities.EnforcementOrder item) : base(item)
+    public EnforcementOrderAdminView([NotNull] EnforcementOrder item) : base(item)
     {
         Guard.NotNull(item, nameof(item));
 
@@ -23,16 +24,20 @@ public class EnforcementOrderAdminView : EnforcementOrderAdminSummaryView
         CommentPeriodClosesDate = item.CommentPeriodClosesDate;
         IsPublicExecutedOrder = item.GetIsPublicExecutedOrder;
         ExecutedOrderPostedDate = item.ExecutedOrderPostedDate;
+        Attachments = item.Attachments?
+                .Where(a => !a.Deleted)
+                .Select(a => new AttachmentView(a)).ToList() 
+            ?? new List<AttachmentView>();
     }
 
     private static PublicationProgress GetResourcePublicationState(
-        Entities.EnforcementOrder.PublicationState status) =>
+        EnforcementOrder.PublicationState status) =>
         status switch
         {
-            Entities.EnforcementOrder.PublicationState.Draft => PublicationProgress.Draft,
-            Entities.EnforcementOrder.PublicationState.Published => PublicationProgress.Published,
+            EnforcementOrder.PublicationState.Draft => PublicationProgress.Draft,
+            EnforcementOrder.PublicationState.Published => PublicationProgress.Published,
             _ => throw new InvalidEnumArgumentException(nameof(status), (int)status,
-                typeof(Entities.EnforcementOrder.PublicationState))
+                typeof(EnforcementOrder.PublicationState))
         };
 
     [DisplayName("Progress")]
@@ -68,6 +73,11 @@ public class EnforcementOrderAdminView : EnforcementOrderAdminSummaryView
     [DisplayName("Publication Date For Executed Order")]
     [DisplayFormat(DataFormatString = DisplayFormats.ShortDateComposite)]
     public DateTime? ExecutedOrderPostedDate { get; }
+
+    // Attachments
+
+    [DisplayName("File Attachments")]
+    public List<AttachmentView> Attachments { get; }
 
     // Hearing info
 

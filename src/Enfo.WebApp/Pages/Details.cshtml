@@ -1,5 +1,6 @@
 @page "{id}"
-@model Enfo.WebApp.Pages.Details
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model Details
 @{
     ViewData["Title"] = $"Enforcement Order {Model.Item.OrderNumber}";
 }
@@ -102,5 +103,30 @@
             }
         </tr>
     }
+
+    <tr>
+        <th scope="row">@Html.DisplayNameFor(m => m.Item.Attachments)</th>
+        <td>
+            @if (Model.Item.Attachments.Count == 0)
+            {
+                <em>None</em>
+            }
+            else
+            {
+                <ul class="gaepd-file-links">
+                    @foreach (var item in Model.Item.Attachments)
+                    {
+                        <li>
+                            <a asp-page="/Attachment" asp-route-id="@item.Id" asp-route-fileName="@item.FileName" class="gaepd-file-link" target="_blank">
+                                @Html.DisplayFor(m => item.FileExtension)
+                                @item.FileName
+                            </a>
+                            (@Html.DisplayFor(m => item.Size), uploaded @Html.DisplayFor(m => item.DateUploaded))
+                        </li>
+                    }
+                </ul>
+            }
+        </td>
+    </tr>
     </tbody>
 </table>

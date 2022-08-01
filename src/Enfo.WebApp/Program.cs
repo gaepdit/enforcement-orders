@@ -5,18 +5,16 @@ using Enfo.Domain.EpdContacts.Repositories;
 using Enfo.Domain.LegalAuthorities.Repositories;
 using Enfo.Domain.LegalAuthorities.Resources;
 using Enfo.Domain.LegalAuthorities.Resources.Validation;
+using Enfo.Domain.Services;
 using Enfo.Domain.Users.Entities;
 using Enfo.Domain.Users.Services;
 using Enfo.Infrastructure.Contexts;
-using Enfo.LocalRepository.EnforcementOrders;
-using Enfo.LocalRepository.EpdContacts;
-using Enfo.LocalRepository.LegalAuthorities;
-using Enfo.LocalRepository.Users;
+using Enfo.LocalRepository;
 using Enfo.WebApp.Platform.Local;
+using Enfo.WebApp.Platform.Migrator;
 using Enfo.WebApp.Platform.Raygun;
 using Enfo.WebApp.Platform.SecurityHeaders;
 using Enfo.WebApp.Platform.Settings;
-using Enfo.WebApp.Services;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication;
@@ -30,8 +28,11 @@ using Mindscape.Raygun4Net.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Set Application Settings
-builder.Configuration.GetSection(ApplicationSettings.RaygunSettingsSection).Bind(ApplicationSettings.Raygun);
+// Bind Application Settings
+builder.Configuration.GetSection(ApplicationSettings.RaygunSettingsSection)
+    .Bind(ApplicationSettings.RaygunClientSettings);
+builder.Configuration.GetSection(ApplicationSettings.LocalDevSettingsSection)
+    .Bind(ApplicationSettings.LocalDevSettings);
 
 // Configure Identity
 builder.Services
@@ -88,9 +89,9 @@ builder.Services
     {
         c.EnableAnnotations();
         c.IgnoreObsoleteActions();
-        c.SwaggerDoc("v2", new OpenApiInfo
+        c.SwaggerDoc("v3", new OpenApiInfo
         {
-            Version = "v2",
+            Version = "v3",
             Title = "Georgia EPD Enforcement Orders API",
             Contact = new OpenApiContact
             {
@@ -104,22 +105,44 @@ builder.Services
 builder.Services.AddHsts(opts => opts.MaxAge = TimeSpan.FromDays(730));
 
 // Configure application monitoring
+builder.Services.AddTransient<IErrorLogger, ErrorLogger>();
 builder.Services.AddRaygun(builder.Configuration,
     new RaygunMiddlewareSettings { ClientProvider = new RaygunClientProvider() });
 builder.Services.AddHttpContextAccessor(); // needed by RaygunScriptPartial
 
-// Configure the data repositories
+// Configure the database contexts, data repositories, and services
 if (builder.Environment.IsLocalEnv())
 {
-    // When running locally, use an in-memory database (only used for Identity)
-    builder.Services.AddDbContext<EnfoDbContext>(opts =>
-        opts.UseInMemoryDatabase("Local_DB"));
+    // When running locally, you have the option to build the database using LocalDB or InMemory.
+    // Either way, only the Identity tables are used by the application. The data tables are created,
+    // but the data comes from the LocalRepository data files.
+    if(ApplicationSettings.LocalDevSettings.BuildLocalDb)
+    {
+        builder.Services.AddDbContext<EnfoDbContext>(opts =>
+            opts.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    }
+    else
+    {
+        builder.Services.AddDbContext<EnfoDbContext>(opts =>
+            opts.UseInMemoryDatabase("Enfo_DB"));
+    }
 
     // Uses static data when running locally
     builder.Services.AddScoped<IUserService, UserService>();
     builder.Services.AddScoped<IEnforcementOrderRepository, EnforcementOrderRepository>();
     builder.Services.AddScoped<IEpdContactRepository, EpdContactRepository>();
     builder.Services.AddScoped<ILegalAuthorityRepository, LegalAuthorityRepository>();
+
+    if(ApplicationSettings.LocalDevSettings.UseLocalFileSystem)
+    {
+        builder.Services.AddTransient<IFileService,
+            Enfo.Infrastructure.Services.FileService>(_ => new Enfo.Infrastructure.Services.FileService(
+            Path.Combine(builder.Configuration["PersistedFilesBasePath"], "Attachments")));
+    }
+    else
+    {
+        builder.Services.AddTransient<IFileService, FileService>();
+    }
 }
 else
 {
@@ -130,6 +153,9 @@ else
 
     builder.Services.AddScoped<IUserService,
         Enfo.Infrastructure.Services.UserService>();
+    builder.Services.AddTransient<IFileService,
+        Enfo.Infrastructure.Services.FileService>(_ => new Enfo.Infrastructure.Services.FileService(
+        Path.Combine(builder.Configuration["PersistedFilesBasePath"], "Attachments")));
     builder.Services.AddScoped<IEnforcementOrderRepository,
         Enfo.Infrastructure.Repositories.EnforcementOrderRepository>();
     builder.Services.AddScoped<IEpdContactRepository,
@@ -164,7 +190,8 @@ else
 }
 
 // Configure security HTTP headers
-app.UseSecurityHeaders(policies => policies.AddSecurityHeaderPolicies());
+if(!env.IsLocalEnv() || ApplicationSettings.LocalDevSettings.UseSecurityHeadersLocally)
+    app.UseSecurityHeaders(policies => policies.AddSecurityHeaderPolicies());
 
 // Configure the application
 app.UseStatusCodePages();
@@ -179,7 +206,7 @@ app.UseAuthorization();
 app.UseSwagger(c => { c.RouteTemplate = "api-docs/{documentName}/openapi.json"; });
 app.UseSwaggerUI(c =>
 {
-    c.SwaggerEndpoint("/api-docs/v2/openapi.json", "ENFO API v2");
+    c.SwaggerEndpoint("/api-docs/v3/openapi.json", "ENFO API v3");
     c.RoutePrefix = "api-docs";
     c.DocumentTitle = "Georgia EPD Enforcement Orders API";
 });

@@ -7,17 +7,18 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="AsyncFixer" Version="1.5.1" Condition="'$(Configuration)' == 'Debug'">
+        <PackageReference Include="AsyncFixer" Version="1.6.0" Condition="'$(Configuration)' == 'Debug'">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="SonarAnalyzer.CSharp" Version="8.37.0.45539" Condition="'$(Configuration)' == 'Debug'">
+        <PackageReference Include="SonarAnalyzer.CSharp" Version="8.39.0.47922" Condition="'$(Configuration)' == 'Debug'">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\..\tests\TestData\TestData.csproj" />
         <ProjectReference Include="..\Domain\Domain.csproj" />
     </ItemGroup>
 

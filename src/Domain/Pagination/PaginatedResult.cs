@@ -33,7 +33,7 @@ public class PaginatedResult<T> : IPaginatedResult
     [JsonIgnore]
     public bool HasNextPage => PageNumber < TotalPages;
 
-    public IList Items { get; }
+    public IList<T> Items { get; }
 }
 
 public interface IPaginatedResult
@@ -46,5 +46,4 @@ public interface IPaginatedResult
     int LastItemIndex { get; }
     bool HasPreviousPage { get; }
     bool HasNextPage { get; }
-    IList Items { get; }
 }

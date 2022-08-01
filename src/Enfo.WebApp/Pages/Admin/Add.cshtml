@@ -1,7 +1,6 @@
 ﻿@page
 @using Enfo.Domain.EnforcementOrders.Entities
 @using Enfo.Domain.EnforcementOrders.Resources
-@using Enfo.WebApp.Platform
 @using Enfo.WebApp.Platform.RazorHelpers
 @model Enfo.WebApp.Pages.Admin.Add
 @{
@@ -11,7 +10,7 @@
 <h1>@ViewData["Title"]</h1>
 
 <div class="gaepd-container-light">
-    <form method="post" class="usa-form-large">
+    <form method="post" class="usa-form-large" enctype="multipart/form-data">
         <div asp-validation-summary="ModelOnly" class="usa-alert usa-alert-error" role="alert"></div>
 
         <p>Required fields are marked with an asterisk (<abbr class="required-field-label" title="Required">*</abbr>).</p>
@@ -119,7 +118,7 @@
                 <span asp-validation-for="Item.HearingDate" class="usa-input-error-message"></span>
 
                 <label asp-for="Item.HearingLocation"></label>
-                @Html.EditorFor(m => m.Item.HearingLocation, new {htmlAttributes = new {@class = "hearing-item"}})
+                @Html.EditorFor(m => m.Item.HearingLocation, new { htmlAttributes = new { @class = "hearing-item" } })
                 <span asp-validation-for="Item.HearingLocation" class="usa-input-error-message"></span>
 
                 <label asp-for="Item.HearingContactId"></label>
@@ -132,6 +131,16 @@
                 <input type="datetime" asp-for="Item.HearingCommentPeriodClosesDate" class="date-picker usa-input-medium hearing-item" />
                 <span asp-validation-for="Item.HearingCommentPeriodClosesDate" class="usa-input-error-message"></span>
             </div>
+        </fieldset>
+
+        <fieldset>
+            <legend>Attachment</legend>
+
+            <p>
+                Selected file will be uploaded when Enforcement Order is saved.
+                <em>Only PDF documents are allowed.</em>
+            </p>
+            <input asp-for="Item.Attachment" class="filesUploadInput" accept=".pdf" />
         </fieldset>
 
         <fieldset>

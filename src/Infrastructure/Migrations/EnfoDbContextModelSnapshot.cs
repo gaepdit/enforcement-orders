@@ -6,6 +6,8 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
+#nullable disable
+
 namespace Enfo.Infrastructure.Migrations
 {
     [DbContext(typeof(EnfoDbContext))]
@@ -15,16 +17,68 @@ namespace Enfo.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.5")
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("ProductVersion", "6.0.4")
+                .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
-            modelBuilder.Entity("Enfo.Domain.Entities.EnforcementOrder", b =>
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+
+            modelBuilder.Entity("Enfo.Domain.EnforcementOrders.Entities.Attachment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset?>("CreatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DateDeleted")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateUploaded")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("Deleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("EnforcementOrderId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("FileExtension")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasMaxLength(245)
+                        .HasColumnType("nvarchar(245)");
+
+                    b.Property<long>("Size")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTimeOffset?>("UpdatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EnforcementOrderId");
+
+                    b.ToTable("Attachments");
+                });
+
+            modelBuilder.Entity("Enfo.Domain.EnforcementOrders.Entities.EnforcementOrder", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Cause")
                         .IsRequired()
@@ -118,12 +172,13 @@ namespace Enfo.Infrastructure.Migrations
                     b.ToTable("EnforcementOrders");
                 });
 
-            modelBuilder.Entity("Enfo.Domain.Entities.EpdContact", b =>
+            modelBuilder.Entity("Enfo.Domain.EpdContacts.Entities.EpdContact", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<bool>("Active")
                         .HasColumnType("bit");
@@ -191,12 +246,13 @@ namespace Enfo.Infrastructure.Migrations
                     b.ToTable("EpdContacts");
                 });
 
-            modelBuilder.Entity("Enfo.Domain.Entities.LegalAuthority", b =>
+            modelBuilder.Entity("Enfo.Domain.LegalAuthorities.Entities.LegalAuthority", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<bool>("Active")
                         .HasColumnType("bit");
@@ -223,7 +279,7 @@ namespace Enfo.Infrastructure.Migrations
                     b.ToTable("LegalAuthorities");
                 });
 
-            modelBuilder.Entity("Enfo.Domain.Entities.Users.ApplicationUser", b =>
+            modelBuilder.Entity("Enfo.Domain.Users.Entities.ApplicationUser", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -300,7 +356,7 @@ namespace Enfo.Infrastructure.Migrations
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.ToTable("AppUsers");
+                    b.ToTable("AppUsers", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", b =>
@@ -328,15 +384,16 @@ namespace Enfo.Infrastructure.Migrations
                         .HasDatabaseName("RoleNameIndex")
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
-                    b.ToTable("AppRoles");
+                    b.ToTable("AppRoles", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("ClaimType")
                         .HasColumnType("nvarchar(max)");
@@ -351,15 +408,16 @@ namespace Enfo.Infrastructure.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("AppRoleClaims");
+                    b.ToTable("AppRoleClaims", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("ClaimType")
                         .HasColumnType("nvarchar(max)");
@@ -374,7 +432,7 @@ namespace Enfo.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AppUserClaims");
+                    b.ToTable("AppUserClaims", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
@@ -395,7 +453,7 @@ namespace Enfo.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AppUserLogins");
+                    b.ToTable("AppUserLogins", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
@@ -410,7 +468,7 @@ namespace Enfo.Infrastructure.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("AppUserRoles");
+                    b.ToTable("AppUserRoles", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
@@ -429,20 +487,29 @@ namespace Enfo.Infrastructure.Migrations
 
                     b.HasKey("UserId", "LoginProvider", "Name");
 
-                    b.ToTable("AppUserTokens");
+                    b.ToTable("AppUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Enfo.Domain.Entities.EnforcementOrder", b =>
+            modelBuilder.Entity("Enfo.Domain.EnforcementOrders.Entities.Attachment", b =>
                 {
-                    b.HasOne("Enfo.Domain.Entities.EpdContact", "CommentContact")
+                    b.HasOne("Enfo.Domain.EnforcementOrders.Entities.EnforcementOrder", "EnforcementOrder")
+                        .WithMany("Attachments")
+                        .HasForeignKey("EnforcementOrderId");
+
+                    b.Navigation("EnforcementOrder");
+                });
+
+            modelBuilder.Entity("Enfo.Domain.EnforcementOrders.Entities.EnforcementOrder", b =>
+                {
+                    b.HasOne("Enfo.Domain.EpdContacts.Entities.EpdContact", "CommentContact")
                         .WithMany()
                         .HasForeignKey("CommentContactId");
 
-                    b.HasOne("Enfo.Domain.Entities.EpdContact", "HearingContact")
+                    b.HasOne("Enfo.Domain.EpdContacts.Entities.EpdContact", "HearingContact")
                         .WithMany()
                         .HasForeignKey("HearingContactId");
 
-                    b.HasOne("Enfo.Domain.Entities.LegalAuthority", "LegalAuthority")
+                    b.HasOne("Enfo.Domain.LegalAuthorities.Entities.LegalAuthority", "LegalAuthority")
                         .WithMany()
                         .HasForeignKey("LegalAuthorityId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -466,7 +533,7 @@ namespace Enfo.Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
                 {
-                    b.HasOne("Enfo.Domain.Entities.Users.ApplicationUser", null)
+                    b.HasOne("Enfo.Domain.Users.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -475,7 +542,7 @@ namespace Enfo.Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
                 {
-                    b.HasOne("Enfo.Domain.Entities.Users.ApplicationUser", null)
+                    b.HasOne("Enfo.Domain.Users.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -490,7 +557,7 @@ namespace Enfo.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Enfo.Domain.Entities.Users.ApplicationUser", null)
+                    b.HasOne("Enfo.Domain.Users.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -499,11 +566,16 @@ namespace Enfo.Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
                 {
-                    b.HasOne("Enfo.Domain.Entities.Users.ApplicationUser", null)
+                    b.HasOne("Enfo.Domain.Users.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Enfo.Domain.EnforcementOrders.Entities.EnforcementOrder", b =>
+                {
+                    b.Navigation("Attachments");
                 });
 #pragma warning restore 612, 618
         }
