@@ -79,9 +79,9 @@ public class EnfoDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Gui
 
     private static class AuditProperties
     {
-        internal const string CreatedAt = "CreatedAt";
-        internal const string UpdatedAt = "UpdatedAt";
-        internal const string CreatedBy = "CreatedBy";
-        internal const string UpdatedBy = "UpdatedBy";
+        internal const string CreatedAt = nameof(CreatedAt);
+        internal const string UpdatedAt = nameof(UpdatedAt);
+        internal const string CreatedBy = nameof(CreatedBy);
+        internal const string UpdatedBy = nameof(UpdatedBy);
     }
 }

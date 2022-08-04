@@ -20,9 +20,9 @@ public class UserRole
 
     // Roles
     // These are the strings that are stored in the database. Avoid modifying!
-    public const string OrderAdministrator = "OrderAdministrator";
-    public const string UserMaintenance = "UserMaintenance";
-    public const string SiteMaintenance = "SiteMaintenance";
+    public const string OrderAdministrator = nameof(OrderAdministrator);
+    public const string UserMaintenance = nameof(UserMaintenance);
+    public const string SiteMaintenance = nameof(SiteMaintenance);
 
     // These static UserRole objects are used for displaying role information in the UI.
     [UsedImplicitly]
