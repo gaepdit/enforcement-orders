@@ -518,4 +518,4 @@ appsettings.*.json
 
 # SonarLint Rider plugin
 .idea/**/sonarlint/
-.idea/.idea.enforcement-orders/.idea/sonarlint-state.xml
+.idea/**/sonarlint-state.xml
