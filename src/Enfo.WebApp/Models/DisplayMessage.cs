@@ -8,8 +8,12 @@
         public string Message { get; }
         public bool ShowCloseButton { get; }
 
-        public DisplayMessage(Context context, string message, bool showCloseButton = true) =>
-            (Context, Message, ShowCloseButton) = (context, message, showCloseButton);
+        public DisplayMessage(Context context, string message, bool showCloseButton = true)
+        {
+            Context = context;
+            Message = message;
+            ShowCloseButton = showCloseButton;
+        }
 
         public string AlertClass => Context switch
         {

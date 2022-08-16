@@ -6,8 +6,11 @@ public class LegalAuthorityCommand
 {
     public LegalAuthorityCommand() { }
 
-    public LegalAuthorityCommand(LegalAuthorityView item) =>
-        (Id, AuthorityName) = (item.Id, item.AuthorityName);
+    public LegalAuthorityCommand(LegalAuthorityView item)
+    {
+        Id = item.Id;
+        AuthorityName = item.AuthorityName;
+    }
 
     [HiddenInput]
     public int? Id { get; init; }

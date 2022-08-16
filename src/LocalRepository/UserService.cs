@@ -1,4 +1,4 @@
-﻿using Enfo.Domain.Users.Entities;
+using Enfo.Domain.Users.Entities;
 using Enfo.Domain.Users.Resources;
 using Enfo.Domain.Users.Services;
 using EnfoTests.TestData;
@@ -12,8 +12,11 @@ public class UserService : IUserService
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public UserService(UserManager<ApplicationUser> userManager, IHttpContextAccessor httpContextAccessor) =>
-        (_userManager, _httpContextAccessor) = (userManager, httpContextAccessor);
+    public UserService(UserManager<ApplicationUser> userManager, IHttpContextAccessor httpContextAccessor)
+    {
+        _userManager = userManager;
+        _httpContextAccessor = httpContextAccessor;
+    }
 
     private async Task<ApplicationUser> GetCurrentApplicationUserAsync()
     {

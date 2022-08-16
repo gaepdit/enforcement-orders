@@ -32,8 +32,12 @@ namespace Enfo.WebApp.Pages.Admin
 
         public Add(IEnforcementOrderRepository order,
             ILegalAuthorityRepository legalAuthority,
-            IEpdContactRepository contact) =>
-            (_order, _legalAuthority, _contact) = (order, legalAuthority, contact);
+            IEpdContactRepository contact)
+        {
+            _order = order;
+            _legalAuthority = legalAuthority;
+            _contact = contact;
+        }
 
         [UsedImplicitly]
         public async Task OnGetAsync()

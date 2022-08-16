@@ -11,7 +11,8 @@ public class UserRole
     [UsedImplicitly]
     private UserRole(string name, string displayName, string description)
     {
-        (DisplayName, Description) = (displayName, description);
+        DisplayName = displayName;
+        Description = description;
         AllRoles.Add(name, this);
     }
 

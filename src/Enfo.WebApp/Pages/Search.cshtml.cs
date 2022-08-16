@@ -24,8 +24,11 @@ public class Search : PageModel
     private readonly IEnforcementOrderRepository _order;
     private readonly ILegalAuthorityRepository _legalAuthority;
 
-    public Search(IEnforcementOrderRepository order, ILegalAuthorityRepository legalAuthority) =>
-        (_order, _legalAuthority) = (order, legalAuthority);
+    public Search(IEnforcementOrderRepository order, ILegalAuthorityRepository legalAuthority)
+    {
+        _order = order;
+        _legalAuthority = legalAuthority;
+    }
 
     [UsedImplicitly]
     public async Task OnGetAsync()
