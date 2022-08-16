@@ -123,8 +123,8 @@
 
         <fieldset>
             <legend>Attachments</legend>
-            <input asp-for="Spec.WithAttachments" />
-            <label asp-for="Spec.WithAttachments" class="form-check-label"></label>
+            <input type="checkbox" id="Spec_WithAttachments" name="WithAttachments" value="true" checked="@Model.Spec.WithAttachments">
+            <label asp-for="Spec.WithAttachments"></label>
         </fieldset>
 
         <div class="gaepd-buttonrow">
