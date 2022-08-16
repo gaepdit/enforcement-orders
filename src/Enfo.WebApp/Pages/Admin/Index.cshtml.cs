@@ -45,7 +45,7 @@ namespace Enfo.WebApp.Pages.Admin
 
             if (orders.TotalCount == 1 && orders.Items[0] != null)
             {
-                return RedirectToPage("Details", new {((EnforcementOrderAdminSummaryView) orders.Items[0]).Id});
+                return RedirectToPage("Details", new {orders.Items[0].Id});
             }
 
             return RedirectToPage("/Admin/Search", "search", new {OrderNumber = find}, "search-results");
