@@ -1,4 +1,4 @@
-using Enfo.Domain.Users.Entities;
+﻿using Enfo.Domain.Users.Entities;
 using Enfo.Domain.Users.Resources;
 using Enfo.Domain.Users.Services;
 using EnfoTests.TestData;
@@ -33,20 +33,19 @@ public class UserService : IUserService
     public async Task<IList<string>> GetCurrentUserRolesAsync() =>
         await _userManager.GetRolesAsync(await GetCurrentApplicationUserAsync());
 
-    private static Task<List<UserView>> GetUsersAsync(string nameFilter, string emailFilter) =>
-        Task.FromResult(
-            UsersData.Users
-                .Where(m => string.IsNullOrEmpty(nameFilter)
-                    || m.GivenName.Contains(nameFilter)
-                    || m.FamilyName.Contains(nameFilter))
-                .Where(m => string.IsNullOrEmpty(emailFilter) || m.Email == emailFilter)
-                .OrderBy(m => m.FamilyName).ThenBy(m => m.GivenName)
-                .Select(e => new UserView(e))
-                .ToList());
+    private static List<UserView> GetUsers(string nameFilter, string emailFilter) =>
+        UsersData.Users
+            .Where(m => string.IsNullOrEmpty(nameFilter)
+                || m.GivenName.Contains(nameFilter)
+                || m.FamilyName.Contains(nameFilter))
+            .Where(m => string.IsNullOrEmpty(emailFilter) || m.Email == emailFilter)
+            .OrderBy(m => m.FamilyName).ThenBy(m => m.GivenName)
+            .Select(e => new UserView(e))
+            .ToList();
 
     public async Task<List<UserView>> GetUsersAsync(string nameFilter, string emailFilter, string role)
     {
-        if (string.IsNullOrEmpty(role)) return await GetUsersAsync(nameFilter, emailFilter);
+        if (string.IsNullOrEmpty(role)) return GetUsers(nameFilter, emailFilter);
 
         return (await _userManager.GetUsersInRoleAsync(role))
             .Where(m => string.IsNullOrEmpty(nameFilter)
