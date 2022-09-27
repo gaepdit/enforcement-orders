@@ -55,4 +55,5 @@ jobs:
           dotnet build
           dotnet test --collect:"XPlat Code Coverage"
           reportgenerator "-reports:tests/DomainTests/TestResults/*/coverage.cobertura.xml;tests/IntegrationTests/TestResults/*/coverage.cobertura.xml;tests/LocalRepositoryTests/TestResults/*/coverage.cobertura.xml;tests/WebAppTests/TestResults/*/coverage.cobertura.xml" "-targetdir:coveragereport" -reporttypes:SonarQube
+          Get-Content -Path .\coveragereport\SonarQube.xml | Select-Object -Skip 1 > .\coveragereport\coverage.xml
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
