@@ -45,7 +45,7 @@ jobs:
         run: |
           dotnet tool install --global coverlet.console
       - name: Build and analyze
-        env
+        env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
