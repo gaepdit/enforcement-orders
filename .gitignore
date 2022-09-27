@@ -519,3 +519,7 @@ appsettings.*.json
 # SonarLint Rider plugin
 .idea/**/sonarlint/
 .idea/**/sonarlint-state.xml
+
+# Code Coverage
+coveragereport/
+coverage/
