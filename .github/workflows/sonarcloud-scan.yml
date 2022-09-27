@@ -45,12 +45,6 @@ jobs:
         run: |
           dotnet tool install --global coverlet.console
           dotnet tool install --global dotnet-reportgenerator-globaltool --version 5.1.10
-        name: Run Coverage Calculation
-        shell: powershell
-        run: |
-          dotnet build
-          dotnet test --collect:"XPlat Code Coverage"
-          reportgenerator "-reports:tests/DomainTests/TestResults/*/coverage.cobertura.xml;tests/IntegrationTests/TestResults/*/coverage.cobertura.xml;tests/LocalRepositoryTests/TestResults/*/coverage.cobertura.xml;tests/WebAppTests/TestResults/*/coverage.cobertura.xml" "-targetdir:coveragereport" -reporttypes:SonarQube
       - name: Build and analyze
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
@@ -59,4 +53,6 @@ jobs:
         run: |
           .\.sonar\scanner\dotnet-sonarscanner begin /k:"gaepdit_enforcement-orders" /o:"gaepdit" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
           dotnet build
+          dotnet test --collect:"XPlat Code Coverage"
+          reportgenerator "-reports:tests/DomainTests/TestResults/*/coverage.cobertura.xml;tests/IntegrationTests/TestResults/*/coverage.cobertura.xml;tests/LocalRepositoryTests/TestResults/*/coverage.cobertura.xml;tests/WebAppTests/TestResults/*/coverage.cobertura.xml" "-targetdir:coveragereport" -reporttypes:SonarQube
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
