@@ -44,16 +44,15 @@ jobs:
         shell: powershell
         run: |
           dotnet tool install --global coverlet.console
+          dotnet tool install dotnet-reportgenerator-globaltool --tool-path tools --version 5.1.10
       - name: Build and analyze
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
         run: |
-          .\.sonar\scanner\dotnet-sonarscanner begin /k:"gaepdit_enforcement-orders" /o:"gaepdit" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportsPaths=coverage/*.xml,coverage/IntegrationTests.xml,coverage/LocalRepositoryTests.xml,coverage/WebAppTests.xml
+          .\.sonar\scanner\dotnet-sonarscanner begin /k:"gaepdit_enforcement-orders" /o:"gaepdit" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.coverageReportsPaths=coveragereport/SonarQube.xml
           dotnet build
-          coverlet .\artifacts\DomainTests\bin\Debug\net6.0\DomainTests.dll --target "dotnet" --targetargs "test --no-build" -f=opencover -o="coverage/DomainTests.xml"
-          coverlet .\artifacts\DomainTests\bin\Debug\net6.0\IntegrationTests.dll --target "dotnet" --targetargs "test --no-build" -f=opencover -o="coverage/IntegrationTests.xml"
-          coverlet .\artifacts\DomainTests\bin\Debug\net6.0\LocalRepositoryTests.dll --target "dotnet" --targetargs "test --no-build" -f=opencover -o="coverage/LocalRepositoryTests.xml"
-          coverlet .\artifacts\DomainTests\bin\Debug\net6.0\WebAppTests.dll --target "dotnet" --targetargs "test --no-build" -f=opencover -o="coverage/WebAppTests.xml"
+          dotnet test --collect:"XPlat Code Coverage"
+          reportgenerator "-reports:tests/DomainTests/TestResults/*/coverage.cobertura.xml;tests/IntegrationTests/TestResults/*/coverage.cobertura.xml;tests/LocalRepositoryTests/TestResults/*/coverage.cobertura.xml;tests/WebAppTests/TestResults/*/coverage.cobertura.xml" "-targetdir:coveragereport" -reporttypes:SonarQube
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
