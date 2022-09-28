@@ -46,6 +46,11 @@ jobs:
           dotnet tool install --global coverlet.console
           dotnet tool install --global dotnet-coverage
           dotnet tool install --global dotnet-reportgenerator-globaltool
+        name: Printing current directory
+        shell: powershell
+        run: |
+          ls
+          pwd
       - name: Build and analyze
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
@@ -55,6 +60,6 @@ jobs:
           .\.sonar\scanner\dotnet-sonarscanner begin /k:"gaepdit_enforcement-orders" /o:"gaepdit" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.vscoveragexml.reportsPaths="coveragereport/output.xml"
           dotnet build
           dotnet test --collect:"Code Coverage"
-          reportgenerator "-reports:../tests/DomainTests/TestResults/*/coverage.cobertura.xml;../tests/IntegrationTests/TestResults/*/coverage.cobertura.xml;../tests/LocalRepositoryTests/TestResults/*/coverage.cobertura.xml;../tests/WebAppTests/TestResults/*/coverage.cobertura.xml" "-targetdir:coveragereport" -reporttypes:Cobertura 
+          reportgenerator "-reports:enforcement-orders/tests/DomainTests/TestResults/*/coverage.cobertura.xml;enforcement-orders/tests/IntegrationTests/TestResults/*/coverage.cobertura.xml;enforcement-orders/tests/LocalRepositoryTests/TestResults/*/coverage.cobertura.xml;enforcement-orders/tests/WebAppTests/TestResults/*/coverage.cobertura.xml" "-targetdir:coveragereport" -reporttypes:Cobertura 
           dotnet-coverage merge -o coveragereport\output.xml -f xml coveragereport\Cobertura.xml
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
