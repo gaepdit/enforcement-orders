@@ -523,3 +523,4 @@ appsettings.*.json
 # Code Coverage
 coveragereport/
 coverage/
+coverage1/
