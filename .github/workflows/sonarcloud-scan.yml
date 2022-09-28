@@ -46,7 +46,7 @@ jobs:
           dotnet tool install --global coverlet.console
           dotnet tool install --global dotnet-coverage
           dotnet tool install --global dotnet-reportgenerator-globaltool
-        name: Printing current directory
+      - name: Printing current directory
         shell: powershell
         run: |
           ls
