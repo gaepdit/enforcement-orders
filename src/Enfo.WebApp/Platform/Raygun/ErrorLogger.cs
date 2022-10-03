@@ -4,6 +4,7 @@ using Mindscape.Raygun4Net.AspNetCore;
 
 namespace Enfo.WebApp.Platform.Raygun;
 
+/// <inheritdoc />
 public class ErrorLogger : IErrorLogger
 {
     private readonly IRaygunAspNetCoreClientProvider _clientProvider;
@@ -19,7 +20,6 @@ public class ErrorLogger : IErrorLogger
         _settings = settings;
         _httpContextAccessor = httpContextAccessor;
     }
-
     public Task LogErrorAsync(Exception exception, Dictionary<string, object> customData = null) => 
         _clientProvider.GetClient(_settings.Value, _httpContextAccessor.HttpContext)
             .SendInBackground(exception, null, customData);

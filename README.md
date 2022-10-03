@@ -14,6 +14,7 @@ The Georgia Environmental Protection Division is mandated by Rule 391-1-3-.01 to
 ## General project requirements
 
 Enforcement order notices are time-critical and high-profile public information. EPD staff must have complete control over the posting of the orders, and not require IT support to publish, modify, or remove them.
+
 * EPD staff can input new orders, review and update existing orders, and remove orders.
 * The public can view and search for proposed and executed orders.
 
@@ -23,34 +24,44 @@ ENFO is written using .NET 6.
 
 ## Prerequisites
 
-* [Visual Studio](https://www.visualstudio.com/vs/), [VS Code](https://code.visualstudio.com/), or equivalent IDE.
-
-* Either the [pnpm](https://pnpm.io/) (recommended) or [npm](https://www.npmjs.com/) package manager.
++ [Visual Studio](https://www.visualstudio.com/vs/) or similar
++ [.NET 6.0 SDK](https://dotnet.microsoft.com/download)
++ [NPM](https://www.npmjs.com/) or [PNPM](https://pnpm.io/)
 
 ## Project organization
 
-The solution contains three projects:
+The solution contains the following projects:
 
-* **Domain** — A class library containing the data models and business logic
-* **LocalRepository** — A class library implementing the Domain & Repository with test data
-* **Infrastructure** — A class library implementing the Domain & Repository using Entity Framework
+* **Domain** — A class library containing the data models and business logic.
+* **LocalRepository** — A class library implementing the Domain & Repository with test data.
+* **Infrastructure** — A class library implementing the Domain & Repository using Entity Framework.
 * **Enfo.WebApp** — The front end web application written in ASP.NET Razor Pages.
 
-There are also corresponding unit test projects.
+There are also corresponding unit test projects for each, plus a **TestData** project containing test data for development/testing purposes.
 
 ## Setup
 
 In the web app folder, run `pnpm install` (or `npm install`) to install the dependencies.
 
+```
+cd src/WebApp
+npm install
+dotnet run
+```
+
+### Launch profiles
+
 There are two launch profiles:
 
-* **WebApp Local** — This profile uses the LocalRepository project for repository implementation and the TestData project for initial seed data. A local test user account is used for authentication. No external dependencies are required. 
+* **WebApp Local** — This profile does not connect to any external server. A local user account is used for authentication.
 
-    You can modify these settings in an "appsettings.Local.json" file to test various scenarios:
+    You can modify some development settings by creating an "appsettings.Local.json" file to test various scenarios:
 
-    - *AuthenticatedUser* — Set to `true` to successfully authenticate with a test account. Set to `false` to simulate a failed login. (Either way, only the Identity tables are used by the application. The application data tables are created, but application data comes from the TestData project.)
-    - *BuildLocalDb* — Uses LocalDB when `true` or an in memory DB when `false`.
+    - *AuthenticatedUser* — Set to `true` to simulate a successful login with the test account. Set to `false` to simulate a failed login.
+    - *BuildLocalDb* — Uses LocalDB when `true` or in-memory data when `false`.
     - *UseLocalFileSystem* — If `true`, attachment files are saved/loaded from the file system. If `false`, files are seeded from the TestData project and stored in memory.
     - *UseSecurityHeadersLocally* — Sets whether to include HTTP security headers (when running locally).
 
-* **WebApp Dev Server** — This profile uses the Infrastructure project for repository implementation and accesses the remote Dev database server for data. In order to use this profile, copy the "appsettings.Development.json" file from the app config repository. VPN or internal network access is required to connect to the database. An SOG account is required for authentication.
+* **WebApp Dev Server** — This profile connects to the remote Dev database server for data and requires an SOG account to log in. *To use this profile, you must add the "appsettings.Development.json" file from the "app-config" repo.*
+
+Most development should be done using the Local profile. The Dev Server profile is only needed when specifically troubleshooting issues with the database server or SOG account.

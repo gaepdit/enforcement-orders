@@ -55,8 +55,7 @@ public class ExternalLogin : PageModel
 #pragma warning restore 618
         var redirectUrl = Url.Page("./ExternalLogin", pageHandler: "Callback", values: new { returnUrl });
         var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
-        var c = new ChallengeResult(provider, properties);
-        return c;
+        return new ChallengeResult(provider, properties);
 
         async Task<IActionResult> SignInAsLocalUser()
         {
