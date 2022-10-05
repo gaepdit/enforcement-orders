@@ -50,7 +50,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
         run: |
-          .\.sonar\scanner\dotnet-sonarscanner begin /k:"gaepdit_enforcement-orders" /o:"gaepdit" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportsPaths=coverage.xml
+          .\.sonar\scanner\dotnet-sonarscanner begin /k:"gaepdit_enforcement-orders" /o:"gaepdit" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportsPaths=coverage.xml /d:sonar.exclusions=src/Infrastructure/Migrations/**,tests/TestData/**
           dotnet build
           coverlet .\artifacts\DomainTests\bin\Debug\net6.0\DomainTests.dll --target "dotnet" --targetargs "test tests/DomainTests --no-build"
           coverlet .\artifacts\IntegrationTests\bin\Debug\net6.0\IntegrationTests.dll --target "dotnet" --targetargs "test tests/IntegrationTests --no-build" --exclude "[TestData]*" --exclude "[Infrastructure]Enfo.Infrastructure.Migrations.*" --merge-with "coverage.json"
