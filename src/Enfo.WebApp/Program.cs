@@ -172,6 +172,9 @@ builder.Services.AddScoped<IValidator<EnforcementOrderCreate>, EnforcementOrderC
 builder.Services.AddScoped<IValidator<EnforcementOrderUpdate>, EnforcementOrderUpdateValidator>();
 builder.Services.AddScoped<IValidator<LegalAuthorityCommand>, LegalAuthorityValidator>();
 
+// Configure bundling and minification
+builder.Services.AddWebOptimizer();
+
 // Build the application
 var app = builder.Build();
 var env = app.Environment;
@@ -196,6 +199,7 @@ if(!env.IsLocalEnv() || ApplicationSettings.LocalDevSettings.UseSecurityHeadersL
 // Configure the application
 app.UseStatusCodePages();
 app.UseHttpsRedirection();
+app.UseWebOptimizer();
 app.UseStaticFiles();
 app.UseRouting();
 

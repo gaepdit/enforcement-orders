@@ -233,9 +233,14 @@
     </div>
 }
 
-@section ScriptFiles
+@section Styles
 {
-    <link rel="stylesheet" href="~/dist/datepicker.css" asp-append-version="true" />
-    <script src="~/dist/datepicker.bundle.js" asp-append-version="true" defer></script>
-    <script src="~/dist/formSearch.bundle.js" asp-append-version="true" defer></script>
+    <link rel="stylesheet" href="~/lib/jqueryui/themes/base/jquery-ui.min.css" />
+    <link rel="stylesheet" href="~/lib/jqueryui/themes/base/theme.min.css" />
+}
+@section Scripts
+{
+    <script src="~/lib/jqueryui/jquery-ui.min.js"></script>
+    <script src="~/js/datepicker.js"></script>
+    <script src="~/js/formSearch.js"></script>
 }

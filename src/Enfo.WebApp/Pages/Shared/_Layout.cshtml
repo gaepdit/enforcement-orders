@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"]@(string.IsNullOrWhiteSpace(ViewData["Title"]?.ToString()) ? "" : " | ") Georgia EPD Enforcement Orders</title>
     <partial name="_FaviconPartial" />
-    <link rel="stylesheet" href="~/dist/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/lib/uswds/css/uswds.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    @await RenderSectionAsync("Styles", required: false)
     <partial name="_RaygunScriptsPartial" />
-    <script src="~/dist/site.bundle.js" asp-append-version="true" defer></script>
-    @await RenderSectionAsync("ScriptFiles", required: false)
 </head>
 <body>
 <environment exclude="Production">
@@ -30,5 +30,10 @@
         <a href="#">Return to top</a>
     </div>
 </div>
+
+<script src="~/lib/jquery/jquery.min.js"></script>
+<script src="~/lib/uswds/js/uswds.min.js"></script>
+<script src="~/js/closeAlert.js"></script>
+@await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

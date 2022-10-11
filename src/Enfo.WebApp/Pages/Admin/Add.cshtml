@@ -174,11 +174,17 @@
     </form>
 </div>
 
-@section ScriptFiles
+@section Styles
 {
-    <link rel="stylesheet" href="~/dist/datepicker.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/dist/formAddOrder.css" asp-append-version="true" />
-    <script src="~/dist/datepicker.bundle.js" asp-append-version="true" defer></script>
-    <script src="~/dist/formAddOrder.bundle.js" asp-append-version="true" defer></script>
-    <script src="~/dist/formValidation.bundle.js" asp-append-version="true" defer></script>
+    <link rel="stylesheet" href="~/lib/jqueryui/themes/base/jquery-ui.min.css" />
+    <link rel="stylesheet" href="~/lib/jqueryui/themes/base/theme.min.css" />
+    <link rel="stylesheet" href="~/lib/jquery-ui-timepicker-addon/jquery-ui-timepicker-addon.min.css" />
+}
+@section Scripts
+{
+    <script src="~/lib/jqueryui/jquery-ui.min.js"></script>
+    <script src="~/js/datepicker.js"></script>
+    <script src="~/lib/jquery-ui-timepicker-addon/jquery-ui-timepicker-addon.min.js"></script>
+    <script src="~/js/formAddOrder.js"></script>
+    <partial name="_ValidationScriptsPartial" />
 }

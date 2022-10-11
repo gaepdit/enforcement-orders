@@ -1,11 +1,4 @@
-﻿// JS dependencies
-import $ from 'jquery';
-import 'jquery-ui-timepicker-addon';
-
-// CSS dependencies
-import 'jquery-ui-timepicker-addon/dist/jquery-ui-timepicker-addon.min.css'
-
-// Set up new order page functionality
+﻿// Set up new order page functionality
 $(document).ready(function () {
 
     // Initially hidden items
