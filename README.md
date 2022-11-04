@@ -41,11 +41,9 @@ There are also corresponding unit test projects for each, plus a **TestData** pr
 
 ## Setup
 
-In the web app folder, run `pnpm install` (or `npm install`) to install the dependencies.
-
 ```
-cd src/WebApp
-npm install
+dotnet build
+cd src/Enfo.WebApp
 dotnet run
 ```
 
