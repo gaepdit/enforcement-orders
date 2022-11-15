@@ -25,5 +25,13 @@ jobs:
       - name: Build
         run: dotnet build --no-restore
 
+      - name: Run the web server
+        run: |
+          cd src/Enfo.WebApp
+          dotnet run &
+
+      - name: Test if the web server is running
+        run: curl https://localhost:44331
+
       - name: Test
         run: dotnet test --no-build --verbosity normal
