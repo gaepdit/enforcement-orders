@@ -13,7 +13,7 @@ public class HomePage : PageTest
     public async Task TestTextHomePage()
     {
         /**
-        await Page.GotoAsync("https://localhost:44331/");
+        await Page.GotoAsync("http://localhost:21784");
 
         //await Page.PauseAsync();
 
