@@ -37,4 +37,4 @@ jobs:
           dotnet run &
 
       - name: Test
-        run: dotnet test -- no-build verbosity normal PlayWright.BrowserNewContextOptions.ignoreHTTPSErrors=true
+        run: dotnet test -- no-build verbosity normal

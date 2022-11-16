@@ -12,7 +12,7 @@ public class RecentExecuted : PageTest
     [Test]
     public async Task TestRecentExecuted()
     {
-        await Page.GotoAsync("https://localhost:44331/");
+        await Page.GotoAsync("http://localhost:21784/");
 
         // click the button
         await Page.Locator("div:has-text(\"Georgia EPD issues a notice of fully executed administrative orders and fully ex\")").GetByRole(AriaRole.Link, new() { NameString = "View Full Report" }).ClickAsync();
