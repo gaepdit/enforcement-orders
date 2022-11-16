@@ -19,11 +19,17 @@ jobs:
         with:
           dotnet-version: 6.0.x
 
+      - name: Install PowerShell
+        run: dotnet tool install --global PowerShell
+
       - name: Restore dependencies
         run: dotnet restore
 
       - name: Build
         run: dotnet build --no-restore
+
+      - name: Install supported browsers
+        run: pwsh tests/PlaywrightTests/bin/Debug/net6.0/playwright.ps1 install
 
       - name: Run the web server
         run: |
