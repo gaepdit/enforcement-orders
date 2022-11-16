@@ -12,7 +12,7 @@ public class HomePage : PageTest
     [Test]
     public async Task TestTextHomePage()
     {
-
+        /**
         await Page.GotoAsync("https://localhost:44331/");
 
         //await Page.PauseAsync();
@@ -27,8 +27,8 @@ public class HomePage : PageTest
         await Expect(Page.GetByRole(AriaRole.Heading, new() { NameString = "Mail Subscriptions" })).ToBeVisibleAsync();
         await Expect(Page.GetByText("Mail subscriptions to these notices are available at a cost of $50 per year. Tha")).ToBeVisibleAsync();
         await Expect(Page.GetByRole(AriaRole.Heading, new() { NameString = "API Access" })).ToBeVisibleAsync();
-        
-        //await Page.PauseAsync();
 
+        //await Page.PauseAsync();
+        */
     }
 }

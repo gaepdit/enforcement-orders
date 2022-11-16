@@ -12,6 +12,7 @@ public class CurrentProposed : PageTest
     [Test]
     public async Task TestCurrentProposed()
     {
+        /**
         await Page.GotoAsync("https://localhost:44331/");
 
         // click on the link
@@ -36,5 +37,6 @@ public class CurrentProposed : PageTest
         await Expect(Page.Locator("tbody:has-text(\"Facility fgh15-554cc092-5ebe-4784-9fb5-b5ea7c3cf0c6 County Stephens County Cause\")").GetByRole(AriaRole.Rowheader, new() { NameString = "Date Comment Period Closes" })).ToBeVisibleAsync();
         await Expect(Page.GetByRole(AriaRole.Row, new() { NameString = "Send Comments To A. Jones Chief, Air Protection Branch Environmental Protection Division 4244 International Parkway Suite 120 Atlanta, GA 30354 example@example.com 404-555-1212" }).GetByRole(AriaRole.Rowheader, new() { NameString = "Send Comments To" })).ToBeVisibleAsync();
         await Expect(Page.GetByRole(AriaRole.Row, new() { NameString = "Public Hearing Scheduled Hearing Date/Time 18‑Nov‑2022, 12:00 AM Hearing Location fgh15-f65b4afa-d534-4f86-b97d-13871e82fc0f Date Hearing Comment Period Closes 18‑Nov‑2022 Hearing Information Contact A. Jones Chief, Air Protection Branch Environmental Protection Division 4244 International Parkway Suite 120 Atlanta, GA 30354 example@example.com 404-555-1212" }).GetByRole(AriaRole.Rowheader, new() { NameString = "Public Hearing Scheduled" })).ToBeVisibleAsync();
+        */
     }
 }
