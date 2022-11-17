@@ -9,6 +9,8 @@ using Enfo.WebApp.Pages.Admin;
 using Enfo.WebApp.Platform.RazorHelpers;
 using FluentAssertions;
 using FluentAssertions.Execution;
+using FluentValidation;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -18,6 +20,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace EnfoTests.WebApp.Pages.Admin;
@@ -72,11 +75,14 @@ public class AddTests
         orderRepo.Setup(l => l.OrderNumberExistsAsync(It.IsAny<string>(), It.IsAny<int?>()))
             .ReturnsAsync(false);
         orderRepo.Setup(l => l.CreateAsync(item)).ReturnsAsync(9);
+        var validator = new Mock<IValidator<EnforcementOrderCreate>>();
+        validator.Setup(l => l.ValidateAsync(It.IsAny<EnforcementOrderCreate>(), CancellationToken.None))
+            .ReturnsAsync(new ValidationResult());
         // Construct Page
         var page = new Add(orderRepo.Object, Mock.Of<ILegalAuthorityRepository>(), Mock.Of<IEpdContactRepository>())
             { TempData = tempData, Item = item };
 
-        var result = await page.OnPostAsync();
+        var result = await page.OnPostAsync(validator.Object);
 
         var expected = new DisplayMessage(Context.Success,
             "The new Enforcement Order has been successfully added.");
@@ -125,11 +131,14 @@ public class AddTests
         orderRepo.Setup(l => l.OrderNumberExistsAsync(It.IsAny<string>(), It.IsAny<int?>()))
             .ReturnsAsync(false);
         orderRepo.Setup(l => l.CreateAsync(item)).ReturnsAsync(9);
+        var validator = new Mock<IValidator<EnforcementOrderCreate>>();
+        validator.Setup(l => l.ValidateAsync(It.IsAny<EnforcementOrderCreate>(), CancellationToken.None))
+            .ReturnsAsync(new ValidationResult());
         // Construct Page
         var page = new Add(orderRepo.Object, Mock.Of<ILegalAuthorityRepository>(), Mock.Of<IEpdContactRepository>())
             { TempData = tempData, Item = item };
 
-        var result = await page.OnPostAsync();
+        var result = await page.OnPostAsync(validator.Object);
 
         var expected = new DisplayMessage(Context.Success,
             "The new Enforcement Order has been successfully added.");
@@ -155,12 +164,15 @@ public class AddTests
         var orderRepo = new Mock<IEnforcementOrderRepository>();
         orderRepo.Setup(l => l.OrderNumberExistsAsync(It.IsAny<string>(), It.IsAny<int?>()))
             .ReturnsAsync(false);
+        var validator = new Mock<IValidator<EnforcementOrderCreate>>();
+        validator.Setup(l => l.ValidateAsync(It.IsAny<EnforcementOrderCreate>(), CancellationToken.None))
+            .ReturnsAsync(new ValidationResult());
         // Construct Page
         var page = new Add(orderRepo.Object, legalRepo.Object, contactRepo.Object)
             { Item = item };
         page.ModelState.AddModelError("key", "message");
 
-        var result = await page.OnPostAsync();
+        var result = await page.OnPostAsync(validator.Object);
 
         using (new AssertionScope())
         {
