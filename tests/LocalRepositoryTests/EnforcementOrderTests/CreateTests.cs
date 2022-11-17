@@ -1,4 +1,4 @@
-﻿using Enfo.Domain.EnforcementOrders.Entities;
+using Enfo.Domain.EnforcementOrders.Entities;
 using Enfo.Domain.EnforcementOrders.Resources;
 using Enfo.Domain.Services;
 using Enfo.LocalRepository;
@@ -48,7 +48,8 @@ public class CreateTests
         Assert.Multiple(() =>
         {
             itemId.Should().Be(expectedId);
-            newItem.Should().BeEquivalentTo(expectedItem);
+            newItem.Should().BeEquivalentTo(expectedItem, opts =>
+                opts.Excluding(i => i.LegalAuthority).Excluding(i => i.CommentContact));
         });
     }
 
@@ -115,6 +116,6 @@ public class CreateTests
             attachment.FileName.Should().Be("test2.pdf");
             attachment.FileExtension.Should().Be(".pdf");
             attachment.Size.Should().Be(2);
-        });
+        }
     }
 }
