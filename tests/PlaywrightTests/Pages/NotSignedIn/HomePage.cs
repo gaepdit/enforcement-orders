@@ -14,7 +14,7 @@ public class HomePage
         using var playwright = await Playwright.CreateAsync();
         var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
         {
-            Headless = false
+            Headless = true
         });
         // Create a new incognito browser context that ignores HTTPS errors
         var context = await browser.NewContextAsync(new BrowserNewContextOptions
