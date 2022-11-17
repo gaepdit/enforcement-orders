@@ -14,7 +14,7 @@ public class RecentExecuted
     {
         using var playwright = await Playwright.CreateAsync();
         var browser = await playwright.Firefox.LaunchAsync(new BrowserTypeLaunchOptions {
-            Headless = false
+            Headless = true
         });
         // Create a new incognito browser context
         var context = await browser.NewContextAsync(new BrowserNewContextOptions
