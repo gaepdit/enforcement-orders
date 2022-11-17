@@ -1,6 +1,7 @@
 ﻿using EnfoTests.Infrastructure.Helpers;
 using EnfoTests.TestData;
 using FluentAssertions;
+using FluentAssertions.Execution;
 using NUnit.Framework;
 using System;
 using System.Linq;
@@ -30,12 +31,12 @@ public class DeleteAttachmentTests
         await using var context = repositoryHelper.DbContext;
         var updatedAttachment = context.Attachments.Single(a => a.Id == attachment.Id);
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             context.Attachments.Count().Should().Be(initialFileCount);
             updatedAttachment.Deleted.Should().BeTrue();
             updatedAttachment.DateDeleted.Should().NotBeNull();
-        });
+        }
 
         // Cleanup
         updatedAttachment.Deleted = false;

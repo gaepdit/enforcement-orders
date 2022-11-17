@@ -3,6 +3,7 @@ using Enfo.Domain.EpdContacts.Resources;
 using Enfo.LocalRepository;
 using EnfoTests.TestData;
 using FluentAssertions;
+using FluentAssertions.Execution;
 using NUnit.Framework;
 using System;
 using System.Linq;
@@ -38,11 +39,12 @@ public class CreateTests
         var expected = new EpdContactView(epdContact);
 
         var newItem = await repository.GetAsync(itemId);
-        Assert.Multiple(() =>
+        
+        using (new AssertionScope())
         {
             itemId.Should().Be(expectedId);
             newItem.Should().BeEquivalentTo(expected);
-        });
+        }
     }
 
     [Test]

@@ -3,6 +3,7 @@ using Enfo.Domain.Users.Services;
 using Enfo.WebApp.Pages.Account;
 using EnfoTests.WebApp.Pages.Admin.Users;
 using FluentAssertions;
+using FluentAssertions.Execution;
 using Moq;
 using NUnit.Framework;
 using System.Collections.Generic;
@@ -28,10 +29,10 @@ public class AccountIndexTests
 
         await pageModel.OnGetAsync(userService.Object);
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             pageModel.DisplayUser.Should().Be(userView);
             pageModel.Roles.Should().BeEquivalentTo(roles);
-        });
+        }
     }
 }

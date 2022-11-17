@@ -4,6 +4,7 @@ using Enfo.Domain.Utils;
 using EnfoTests.Infrastructure.Helpers;
 using EnfoTests.TestData;
 using FluentAssertions;
+using FluentAssertions.Execution;
 using NUnit.Framework;
 using System;
 using System.Linq;
@@ -22,12 +23,12 @@ public class ListReportsTests
         using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
         var result = await repository.ListCurrentProposedEnforcementOrdersAsync();
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             result.Count.Should().Be(EnforcementOrderData.EnforcementOrders.Count(e =>
                 e.GetIsPublic && e.IsProposedOrder && e.CommentPeriodClosesDate >= DateTime.Today));
             result[0].Should().BeEquivalentTo(ResourceHelper.GetEnforcementOrderSummaryView(order.Id));
-        });
+        }
     }
 
     [Test]
@@ -42,14 +43,14 @@ public class ListReportsTests
         using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
         var result = await repository.ListRecentlyExecutedEnforcementOrdersAsync();
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             result.Count.Should().Be(EnforcementOrderData.EnforcementOrders
                 .Count(e => e.GetIsPublicExecutedOrder
                     && e.ExecutedOrderPostedDate >= DateUtils.MostRecentMonday()
                     && e.ExecutedOrderPostedDate <= DateTime.Today));
             result[0].Should().BeEquivalentTo(ResourceHelper.GetEnforcementOrderSummaryView(order.Id));
-        });
+        }
     }
 
     [Test]
@@ -58,7 +59,7 @@ public class ListReportsTests
         using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
         var result = await repository.ListDraftEnforcementOrdersAsync();
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             result.Count.Should().Be(EnforcementOrderData.EnforcementOrders
                 .Count(e => !e.Deleted && e.PublicationStatus == EnforcementOrder.PublicationState.Draft));
@@ -67,7 +68,7 @@ public class ListReportsTests
                     .OrderBy(e => e.ExecutedDate ?? e.ProposedOrderPostedDate)
                     .ThenBy(e => e.FacilityName)
                     .First(e => !e.Deleted && e.PublicationStatus == EnforcementOrder.PublicationState.Draft).Id));
-        });
+        }
     }
 
     [Test]
@@ -79,10 +80,10 @@ public class ListReportsTests
         using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
         var result = await repository.ListPendingEnforcementOrdersAsync();
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             result.Count.Should().Be(EnforcementOrderData.EnforcementOrders.AsQueryable().FilterForPending().Count());
             result[0].Should().BeEquivalentTo(ResourceHelper.GetEnforcementOrderAdminSummaryView(order.Id));
-        });
+        }
     }
 }

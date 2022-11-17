@@ -5,6 +5,7 @@ using Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthorities;
 using Enfo.WebApp.Platform.RazorHelpers;
 using EnfoTests.TestData;
 using FluentAssertions;
+using FluentAssertions.Execution;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -27,11 +28,11 @@ public class IndexTests
 
         await page.OnGetAsync();
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             page.Items.Should().BeEquivalentTo(list);
             page.Message.Should().BeNull();
-        });
+        }
     }
 
     [Test]
@@ -69,12 +70,12 @@ public class IndexTests
         var expected = new DisplayMessage(Context.Success,
             $"{item.AuthorityName} successfully {(item.Active ? "deactivated" : "restored")}.");
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             page.TempData?.GetDisplayMessage().Should().BeEquivalentTo(expected);
             result.Should().BeOfType<RedirectToPageResult>();
             ((RedirectToPageResult)result).PageName.Should().Be("Index");
-        });
+        }
     }
 
     [Test]

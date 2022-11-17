@@ -1,5 +1,6 @@
 using Enfo.Domain.Pagination;
 using FluentAssertions;
+using FluentAssertions.Execution;
 using NUnit.Framework;
 using System;
 using System.Diagnostics.CodeAnalysis;
@@ -18,7 +19,7 @@ public class ConstructingPaginatedResult
         var result = new PaginatedResult<string>(_items, itemCount,
             new PaginationSpec(1, _items.Length));
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             result.CurrentCount.Should().Be(_items.Length);
             result.PageNumber.Should().Be(1);
@@ -29,7 +30,7 @@ public class ConstructingPaginatedResult
             result.HasNextPage.Should().BeFalse();
             result.HasPreviousPage.Should().BeFalse();
             result.LastItemIndex.Should().Be(2);
-        });
+        }
     }
 
     [Test]
@@ -39,7 +40,7 @@ public class ConstructingPaginatedResult
         var result = new PaginatedResult<string>(_items, itemCount,
             new PaginationSpec(2, _items.Length));
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             result.CurrentCount.Should().Be(_items.Length);
             result.PageNumber.Should().Be(2);
@@ -50,7 +51,7 @@ public class ConstructingPaginatedResult
             result.HasNextPage.Should().BeTrue();
             result.HasPreviousPage.Should().BeTrue();
             result.LastItemIndex.Should().Be(4);
-        });
+        }
     }
 
     [Test]

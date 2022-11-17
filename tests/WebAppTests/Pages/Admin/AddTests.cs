@@ -8,6 +8,7 @@ using Enfo.WebApp.Models;
 using Enfo.WebApp.Pages.Admin;
 using Enfo.WebApp.Platform.RazorHelpers;
 using FluentAssertions;
+using FluentAssertions.Execution;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -80,13 +81,13 @@ public class AddTests
         var expected = new DisplayMessage(Context.Success,
             "The new Enforcement Order has been successfully added.");
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             page.TempData.GetDisplayMessage().Should().BeEquivalentTo(expected);
             result.Should().BeOfType<RedirectToPageResult>();
             ((RedirectToPageResult)result).PageName.Should().Be("Details");
             ((RedirectToPageResult)result).RouteValues!["id"].Should().Be(9);
-        });
+        }
     }
 
 
@@ -133,13 +134,13 @@ public class AddTests
         var expected = new DisplayMessage(Context.Success,
             "The new Enforcement Order has been successfully added.");
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             page.TempData.GetDisplayMessage().Should().BeEquivalentTo(expected);
             result.Should().BeOfType<RedirectToPageResult>();
             ((RedirectToPageResult)result).PageName.Should().Be("Details");
             ((RedirectToPageResult)result).RouteValues!["id"].Should().Be(9);
-        });
+        }
     }
 
     [Test]
@@ -161,11 +162,11 @@ public class AddTests
 
         var result = await page.OnPostAsync();
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             result.Should().BeOfType<PageResult>();
             page.ModelState.IsValid.Should().BeFalse();
             page.ModelState.ErrorCount.Should().Be(1);
-        });
+        }
     }
 }

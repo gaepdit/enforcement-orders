@@ -9,6 +9,7 @@ using Enfo.WebApp.Pages.Admin;
 using Enfo.WebApp.Platform.RazorHelpers;
 using EnfoTests.TestData;
 using FluentAssertions;
+using FluentAssertions.Execution;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -38,12 +39,12 @@ public class EditTests
 
         await page.OnGetAsync(1);
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             page.Item.Should().BeEquivalentTo(new EnforcementOrderUpdate(item));
             page.Item.Id.Should().Be(item.Id);
             page.OriginalOrderNumber.Should().Be(item.OrderNumber);
-        });
+        }
     }
 
 
@@ -55,11 +56,11 @@ public class EditTests
 
         var result = await page.OnGetAsync(null);
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             result.Should().BeOfType<NotFoundResult>();
             page.Item.Should().BeNull();
-        });
+        }
     }
 
     [Test]
@@ -73,11 +74,11 @@ public class EditTests
 
         var result = await page.OnGetAsync(-1);
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             result.Should().BeOfType<NotFoundObjectResult>();
             page.Item.Should().BeNull();
-        });
+        }
     }
 
     [Test]
@@ -100,13 +101,13 @@ public class EditTests
         var expected = new DisplayMessage(Context.Warning,
             "This Enforcement Order is deleted and cannot be edited.");
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             page.TempData.GetDisplayMessage().Should().BeEquivalentTo(expected);
             result.Should().BeOfType<RedirectToPageResult>();
             ((RedirectToPageResult)result).PageName.Should().Be("Details");
             ((RedirectToPageResult)result).RouteValues!["id"].Should().Be(item.Id);
-        });
+        }
     }
 
     [Test]
@@ -149,13 +150,13 @@ public class EditTests
         var expected = new DisplayMessage(Context.Warning,
             "This Enforcement Order is deleted and cannot be edited.");
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             page.TempData.GetDisplayMessage().Should().BeEquivalentTo(expected);
             result.Should().BeOfType<RedirectToPageResult>();
             ((RedirectToPageResult)result).PageName.Should().Be("Details");
             ((RedirectToPageResult)result).RouteValues!["id"].Should().Be(item.Id);
-        });
+        }
     }
 
     [Test]
@@ -181,13 +182,13 @@ public class EditTests
         var expected = new DisplayMessage(Context.Success,
             "The Enforcement Order has been successfully updated.");
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             page.TempData.GetDisplayMessage().Should().BeEquivalentTo(expected);
             result.Should().BeOfType<RedirectToPageResult>();
             ((RedirectToPageResult)result).PageName.Should().Be("Details");
             ((RedirectToPageResult)result).RouteValues!["Id"].Should().Be(originalItem.Id);
-        });
+        }
     }
 
     [Test]
@@ -211,12 +212,12 @@ public class EditTests
 
         var result = await page.OnPostAsync();
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             result.Should().BeOfType<PageResult>();
             page.ModelState.IsValid.Should().BeFalse();
             page.ModelState.ErrorCount.Should().Be(1);
             page.OriginalOrderNumber.Should().Be("original order number");
-        });
+        }
     }
 }

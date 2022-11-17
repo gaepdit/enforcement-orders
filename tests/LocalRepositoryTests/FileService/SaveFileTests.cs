@@ -1,5 +1,6 @@
 ﻿using EnfoTests.TestData;
 using FluentAssertions;
+using FluentAssertions.Execution;
 using Microsoft.AspNetCore.Http;
 using Moq;
 using NUnit.Framework;
@@ -25,11 +26,11 @@ public class SaveFileTests
         var fileService = new Enfo.LocalRepository.FileService();
         await fileService.SaveFileAsync(formFile.Object, id);
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             AttachmentData.AttachmentFiles.Count.Should().Be(fileCount + 1);
             AttachmentData.AttachmentFiles.Any(a => a.FileName == $"{id.ToString()}.pdf").Should().BeTrue();
-        });
+        }
     }
 
     [Test]
@@ -46,11 +47,11 @@ public class SaveFileTests
         var fileService = new Enfo.LocalRepository.FileService();
         await fileService.SaveFileAsync(formFile.Object, id);
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             AttachmentData.AttachmentFiles.Count.Should().Be(fileCount);
             AttachmentData.AttachmentFiles.Any(a => a.FileName == expectedFilename).Should().BeFalse();
-        });
+        }
     }
 
     [Test]
@@ -68,15 +69,15 @@ public class SaveFileTests
         var fileService = new Enfo.LocalRepository.FileService();
         await fileService.SaveFileAsync(formFile.Object, id);
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             AttachmentData.AttachmentFiles.Count.Should().Be(fileCount);
             AttachmentData.AttachmentFiles.Any(a => a.FileName == expectedFilename).Should().BeFalse();
-        });
+        }
     }
 
     [Test]
-    public void WhenFileIsTooLarge_ThrowsException()
+    public async Task WhenFileIsTooLarge_ThrowsException()
     {
         var fileCount = AttachmentData.AttachmentFiles.Count;
         var fileService = new Enfo.LocalRepository.FileService();
@@ -87,10 +88,10 @@ public class SaveFileTests
 
         var action = async () => await fileService.SaveFileAsync(formFile.Object, Guid.Empty);
 
-        Assert.Multiple(async () =>
+        using (new AssertionScope())
         {
             await action.Should().ThrowAsync<OverflowException>();
             AttachmentData.AttachmentFiles.Count.Should().Be(fileCount);
-        });
+        }
     }
 }

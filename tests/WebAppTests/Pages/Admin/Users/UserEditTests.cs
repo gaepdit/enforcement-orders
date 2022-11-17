@@ -5,6 +5,7 @@ using Enfo.WebApp.Models;
 using Enfo.WebApp.Pages.Admin.Users;
 using Enfo.WebApp.Platform.RazorHelpers;
 using FluentAssertions;
+using FluentAssertions.Execution;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -60,14 +61,14 @@ public class UserEditTests
 
         var result = await pageModel.OnGetAsync(Guid.Empty);
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             result.Should().BeOfType<PageResult>();
             pageModel.UserId.Should().Be(Guid.Empty);
             pageModel.DisplayUser.Should().Be(userView);
             pageModel.UserRoleSettings.Should().NotBeEmpty();
             pageModel.UserRoleSettings.Count.Should().Be(3);
-        });
+        }
     }
 
     [Test]
@@ -85,13 +86,13 @@ public class UserEditTests
 
         var result = await pageModel.OnGetAsync(Guid.Empty);
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             result.Should().BeOfType<PageResult>();
             pageModel.UserId.Should().Be(Guid.Empty);
             pageModel.DisplayUser.Should().Be(userView);
             pageModel.UserRoleSettings.Should().BeEquivalentTo(_roleSettings);
-        });
+        }
     }
 
     [Test]
@@ -102,13 +103,13 @@ public class UserEditTests
 
         var result = await pageModel.OnGetAsync(null);
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             result.Should().BeOfType<NotFoundResult>();
             pageModel.UserId.Should().Be(Guid.Empty);
             pageModel.DisplayUser.Should().BeNull();
             pageModel.UserRoleSettings.Should().BeNull();
-        });
+        }
     }
 
     [Test]
@@ -121,13 +122,13 @@ public class UserEditTests
 
         var result = await pageModel.OnGetAsync(Guid.Empty);
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             result.Should().BeOfType<NotFoundResult>();
             pageModel.UserId.Should().Be(Guid.Empty);
             pageModel.DisplayUser.Should().BeNull();
             pageModel.UserRoleSettings.Should().BeNull();
-        });
+        }
     }
 
     [Test]
@@ -148,7 +149,7 @@ public class UserEditTests
 
         var result = await pageModel.OnPostAsync();
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             pageModel.ModelState.IsValid.Should().BeTrue();
             result.Should().BeOfType<RedirectToPageResult>();
@@ -156,7 +157,7 @@ public class UserEditTests
             ((RedirectToPageResult)result).RouteValues!["id"].Should().Be(Guid.Empty);
             var expectedMessage = new DisplayMessage(Context.Success, "User roles successfully updated.");
             pageModel.TempData?.GetDisplayMessage().Should().BeEquivalentTo(expectedMessage);
-        });
+        }
     }
 
     [Test]
@@ -173,12 +174,12 @@ public class UserEditTests
 
         var result = await pageModel.OnPostAsync();
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             result.Should().BeOfType<PageResult>();
             pageModel.ModelState.IsValid.Should().BeFalse();
             pageModel.ModelState["Error"]!.Errors[0].ErrorMessage.Should().Be("Sample error description");
-        });
+        }
     }
 
     [Test]
@@ -196,11 +197,11 @@ public class UserEditTests
 
         var result = await pageModel.OnPostAsync();
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             result.Should().BeOfType<PageResult>();
             pageModel.ModelState.IsValid.Should().BeFalse();
             pageModel.ModelState[string.Empty]!.Errors[0].ErrorMessage.Should().Be("CODE: DESCRIPTION");
-        });
+        }
     }
 }

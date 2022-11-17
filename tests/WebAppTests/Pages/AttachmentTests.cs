@@ -5,6 +5,7 @@ using Enfo.Domain.Services;
 using Enfo.Domain.Utils;
 using EnfoTests.TestData;
 using FluentAssertions;
+using FluentAssertions.Execution;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -54,14 +55,14 @@ public class AttachmentTests
         var response = await page.OnGetAsync(item.Id, item.FileName);
 
         // Assert
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             response.Should().BeOfType<FileContentResult>();
             var result = response as FileContentResult;
             result!.ContentType.Should().Be(expectedContentType);
             result.FileDownloadName.Should().BeEmpty();
             encoder.GetString(result.FileContents).Should().Be(expectedFileContents);
-        });
+        }
     }
 
     [Test]
@@ -87,11 +88,11 @@ public class AttachmentTests
         var page = new Attachment(repo.Object, default) { PageContext = pageContext };
         var response = await page.OnGetAsync(Guid.Empty, null);
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             response.Should().BeOfType<NotFoundObjectResult>();
             ((NotFoundObjectResult)response).Value.Should().Be($"Attachment ID not found: {Guid.Empty}");
-        });
+        }
     }
 
     [Test]
@@ -116,11 +117,11 @@ public class AttachmentTests
         var page = new Attachment(repo.Object, default) { PageContext = pageContext };
         var response = await page.OnGetAsync(Guid.Empty, null);
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             response.Should().BeOfType<NotFoundObjectResult>();
             ((NotFoundObjectResult)response).Value.Should().Be($"Attachment ID not found: {Guid.Empty}");
-        });
+        }
     }
 
     [Test]
@@ -145,14 +146,14 @@ public class AttachmentTests
         var page = new Attachment(repo.Object, default) { PageContext = pageContext };
         var response = await page.OnGetAsync(Guid.Empty, "wrong");
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             response.Should().BeOfType<RedirectToPageResult>();
             var result = response as RedirectToPageResult;
             result!.PageName.Should().Be("Attachment");
             result.RouteValues!["id"].Should().Be(Guid.Empty);
             result.RouteValues["fileName"].Should().Be(view.FileName);
-        });
+        }
     }
 
     [Test]
@@ -181,10 +182,10 @@ public class AttachmentTests
         var page = new Attachment(repo.Object, fileService.Object) { PageContext = pageContext };
         var response = await page.OnGetAsync(Guid.Empty, view.FileName);
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             response.Should().BeOfType<NotFoundObjectResult>();
             ((NotFoundObjectResult)response).Value.Should().Be($"File not available: {view.FileName}");
-        });
+        }
     }
 }

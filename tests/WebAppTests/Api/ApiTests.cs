@@ -8,6 +8,7 @@ using Enfo.LocalRepository;
 using Enfo.WebApp.Api;
 using EnfoTests.TestData;
 using FluentAssertions;
+using FluentAssertions.Execution;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Moq;
@@ -34,7 +35,7 @@ public class ApiTests
         var controller = new ApiController();
         var result = await controller.ListOrdersAsync(repository, config, new EnforcementOrderSpec(), 1, 100);
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             result.TotalCount.Should().Be(EnforcementOrderData.EnforcementOrders.Count(e => e.GetIsPublic));
             result.Items.Should()
@@ -48,7 +49,7 @@ public class ApiTests
                         .ThenBy(e => e.FacilityName)
                         .First(e => e.GetIsPublic).Id), baseUrl));
             result.Items[0].Link.Should().Be($"{baseUrl}/Details/{order.Id}");
-        });
+        }
     }
 
     [Test]
@@ -65,12 +66,12 @@ public class ApiTests
         var controller = new ApiController();
         var response = await controller.GetOrderAsync(repo.Object, config, 1);
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             response.Result.Should().BeOfType<ObjectResult>();
             var result = response.Result as ObjectResult;
             result?.StatusCode.Should().Be(404);
-        });
+        }
     }
 
     [Test]
@@ -89,7 +90,7 @@ public class ApiTests
         var controller = new ApiController();
         var response = await controller.GetOrderAsync(repo.Object, config, itemId);
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             response.Result.Should().BeOfType<OkObjectResult>();
             var result = response.Result as OkObjectResult;
@@ -98,7 +99,7 @@ public class ApiTests
             var resultValue = (EnforcementOrderApiView)result?.Value;
             resultValue.Should().BeEquivalentTo(new EnforcementOrderApiView(item, baseUrl));
             resultValue!.Link.Should().Be($"{baseUrl}/Details/{itemId}");
-        });
+        }
     }
 
     [Test]
@@ -131,12 +132,12 @@ public class ApiTests
         var controller = new ApiController();
         var response = await controller.GetLegalAuthorityAsync(repo.Object, 1);
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             response.Result.Should().BeOfType<ObjectResult>();
             var result = response.Result as ObjectResult;
             result?.StatusCode.Should().Be(404);
-        });
+        }
     }
 
     [Test]
@@ -149,13 +150,13 @@ public class ApiTests
         var controller = new ApiController();
         var response = await controller.GetLegalAuthorityAsync(repo.Object, item.Id);
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             response.Result.Should().BeOfType<OkObjectResult>();
             var result = response.Result as OkObjectResult;
 
             result.Should().NotBeNull();
             result?.Value.Should().Be(item);
-        });
+        }
     }
 }

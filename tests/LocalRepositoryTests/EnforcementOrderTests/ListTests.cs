@@ -5,6 +5,7 @@ using Enfo.Domain.Services;
 using Enfo.LocalRepository;
 using EnfoTests.TestData;
 using FluentAssertions;
+using FluentAssertions.Execution;
 using Moq;
 using NUnit.Framework;
 using System;
@@ -28,12 +29,12 @@ public class ListTests
             .Select(e => new EnforcementOrderSummaryView(e))
             .ToList();
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             result.PageNumber.Should().Be(1);
             result.TotalCount.Should().Be(expectedList.Count);
             result.Items.Should().BeEquivalentTo(expectedList);
-        });
+        }
     }
 
     [Test]
@@ -52,12 +53,12 @@ public class ListTests
             .Select(e => new EnforcementOrderSummaryView(e))
             .ToList();
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             result.PageNumber.Should().Be(1);
             result.TotalCount.Should().Be(expectedList.Count);
             result.Items.Should().BeEquivalentTo(expectedList);
-        });
+        }
     }
 
     // Tests confirming date range processing
@@ -75,12 +76,12 @@ public class ListTests
 
         var result = await repository.ListAsync(spec, new PaginationSpec(1, 50));
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             result.TotalCount.Should().Be(0);
             result.Items.Count.Should().Be(0);
             result.PageNumber.Should().Be(1);
-        });
+        }
     }
 
     [Test]
@@ -100,13 +101,13 @@ public class ListTests
             .Select(e => new EnforcementOrderSummaryView(e))
             .ToList();
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             result.TotalCount.Should().Be(expectedList.Count);
             result.Items.Count.Should().Be(expectedList.Count);
             result.Items.Should().BeEquivalentTo(expectedList);
             result.PageNumber.Should().Be(1);
-        });
+        }
     }
 
     [Test]
@@ -126,12 +127,12 @@ public class ListTests
             .Select(e => new EnforcementOrderSummaryView(e))
             .ToList();
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             result.TotalCount.Should().Be(expectedList.Count);
             result.Items.Count.Should().Be(expectedList.Count);
             result.Items.Should().BeEquivalentTo(expectedList);
             result.PageNumber.Should().Be(1);
-        });
+        }
     }
 }

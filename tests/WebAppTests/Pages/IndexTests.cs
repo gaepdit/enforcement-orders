@@ -4,6 +4,7 @@ using Enfo.WebApp.Pages;
 using Enfo.WebApp.Platform.RazorHelpers;
 using EnfoTests.TestData;
 using FluentAssertions;
+using FluentAssertions.Execution;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Moq;
@@ -28,12 +29,12 @@ public class IndexTests
 
         await page.OnGetAsync(repo.Object);
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             page.CurrentProposedOrders.Should().BeEquivalentTo(list);
             page.RecentExecutedOrders.Should().BeEquivalentTo(list);
             page.Message.Should().BeNull();
-        });
+        }
     }
 
     [Test]
@@ -44,12 +45,12 @@ public class IndexTests
 
         await page.OnGetAsync(repo.Object);
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             page.CurrentProposedOrders.Should().BeEmpty();
             page.RecentExecutedOrders.Should().BeEmpty();
             page.Message.Should().BeNull();
-        });
+        }
     }
 
     [Test]

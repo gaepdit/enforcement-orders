@@ -7,6 +7,7 @@ using Enfo.Domain.Pagination;
 using Enfo.WebApp.Pages.Admin;
 using EnfoTests.TestData;
 using FluentAssertions;
+using FluentAssertions.Execution;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Moq;
 using NUnit.Framework;
@@ -28,7 +29,7 @@ public class SearchTests
 
         await page.OnGetAsync();
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             page.Spec.Should().BeEquivalentTo(new EnforcementOrderAdminSpec());
             var expectedLegal = new SelectList(ResourceHelper.GetLegalAuthorityViewList(),
@@ -36,7 +37,7 @@ public class SearchTests
                 nameof(LegalAuthorityView.AuthorityName));
             page.LegalAuthoritiesSelectList.Should().BeEquivalentTo(expectedLegal);
             page.ShowResults.Should().BeFalse();
-        });
+        }
     }
 
     [Test]
@@ -53,7 +54,7 @@ public class SearchTests
 
         await page.OnGetSearchAsync(new EnforcementOrderAdminSpec());
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             page.Spec.Should().BeEquivalentTo(new EnforcementOrderAdminSpec());
             page.OrdersList.Should().BeEquivalentTo(expectedOrders);
@@ -62,7 +63,7 @@ public class SearchTests
                 nameof(LegalAuthorityView.AuthorityName));
             page.LegalAuthoritiesSelectList.Should().BeEquivalentTo(expectedLegal);
             page.ShowResults.Should().BeTrue();
-        });
+        }
     }
 
     [Test]
@@ -79,7 +80,7 @@ public class SearchTests
 
         await page.OnGetSearchAsync(new EnforcementOrderAdminSpec());
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             page.Spec.Should().BeEquivalentTo(new EnforcementOrderAdminSpec());
             page.OrdersList.Should().BeEquivalentTo(expectedOrders);
@@ -88,6 +89,6 @@ public class SearchTests
                 nameof(LegalAuthorityView.AuthorityName));
             page.LegalAuthoritiesSelectList.Should().BeEquivalentTo(expectedLegal);
             page.ShowResults.Should().BeTrue();
-        });
+        }
     }
 }

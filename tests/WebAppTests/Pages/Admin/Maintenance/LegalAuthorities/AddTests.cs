@@ -4,6 +4,7 @@ using Enfo.WebApp.Models;
 using Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthorities;
 using Enfo.WebApp.Platform.RazorHelpers;
 using FluentAssertions;
+using FluentAssertions.Execution;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -37,13 +38,13 @@ public class AddTests
         var expected = new DisplayMessage(Context.Success,
             $"{item.AuthorityName} successfully added.");
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             page.TempData.GetDisplayMessage().Should().BeEquivalentTo(expected);
             page.HighlightId.Should().Be(1);
             result.Should().BeOfType<RedirectToPageResult>();
             ((RedirectToPageResult)result).PageName.Should().Be("Index");
-        });
+        }
     }
 
     [Test]
@@ -55,10 +56,10 @@ public class AddTests
 
         var result = await page.OnPostAsync(repo.Object);
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             result.Should().BeOfType<PageResult>();
             page.ModelState.IsValid.Should().BeFalse();
-        });
+        }
     }
 }

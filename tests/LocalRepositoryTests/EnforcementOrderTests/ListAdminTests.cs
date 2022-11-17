@@ -5,6 +5,7 @@ using Enfo.Domain.Services;
 using Enfo.LocalRepository;
 using EnfoTests.TestData;
 using FluentAssertions;
+using FluentAssertions.Execution;
 using Moq;
 using NUnit.Framework;
 using System;
@@ -28,12 +29,12 @@ public class ListAdminTests
             .Select(e => new EnforcementOrderAdminSummaryView(e))
             .ToList();
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             result.PageNumber.Should().Be(1);
             result.TotalCount.Should().Be(expectedList.Count);
             result.Items.Should().BeEquivalentTo(expectedList);
-        });
+        }
     }
 
     [Test]
@@ -49,12 +50,12 @@ public class ListAdminTests
             .Select(e => new EnforcementOrderAdminSummaryView(e))
             .ToList();
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             result.PageNumber.Should().Be(1);
             result.TotalCount.Should().Be(expectedList.Count);
             result.Items.Should().BeEquivalentTo(expectedList);
-        });
+        }
     }
 
     [Test]
@@ -74,12 +75,12 @@ public class ListAdminTests
             .Select(e => new EnforcementOrderAdminSummaryView(e))
             .ToList();
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             result.PageNumber.Should().Be(1);
             result.TotalCount.Should().Be(expectedList.Count);
             result.Items.Should().BeEquivalentTo(expectedList);
-        });
+        }
     }
 
     [Test]
@@ -93,12 +94,12 @@ public class ListAdminTests
 
         var result = await repository.ListAdminAsync(spec, new PaginationSpec(1, 50));
         
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             result.PageNumber.Should().Be(1);
             result.TotalCount.Should().Be(0);
             result.Items.Count.Should().Be(0);
-        });
+        }
     }
     [Test]
     public async Task WithTextMatchSpec_ReturnsMatches()
@@ -118,12 +119,12 @@ public class ListAdminTests
             .Select(e => new EnforcementOrderAdminSummaryView(e))
             .ToList();
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             result.PageNumber.Should().Be(1);
             result.TotalCount.Should().Be(expectedList.Count);
             result.Items.Should().BeEquivalentTo(expectedList);
-        });
+        }
     }
 
 }

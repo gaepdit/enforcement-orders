@@ -5,6 +5,7 @@ using Enfo.WebApp.Pages.Admin;
 using Enfo.WebApp.Platform.RazorHelpers;
 using EnfoTests.TestData;
 using FluentAssertions;
+using FluentAssertions.Execution;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -67,12 +68,12 @@ public class DetailsTests
 
         var result = await page.OnGetAsync(null);
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             result.Should().BeOfType<NotFoundResult>();
             page.Item.Should().BeNull();
             page.Message.Should().BeNull();
-        });
+        }
     }
 
     [Test]
@@ -83,12 +84,12 @@ public class DetailsTests
 
         var result = await page.OnGetAsync(-1);
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             result.Should().BeOfType<NotFoundObjectResult>();
             page.Item.Should().BeNull();
             page.Message.Should().BeNull();
-        });
+        }
     }
 
     [Test]
@@ -120,11 +121,11 @@ public class DetailsTests
 
         var result = await page.OnPostAddAttachmentAsync();
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             result.Should().BeOfType<RedirectToPageResult>();
             ((RedirectToPageResult)result).PageName.Should().Be("Details");
             ((RedirectToPageResult)result).RouteValues!["Id"].Should().Be(itemId);
-        });
+        }
     }
 }
