@@ -6,36 +6,51 @@ using NUnit.Framework;
 
 namespace PlaywrightTests.Pages.NotSignedIn;
 
-public class RecentExecuted : PageTest
+public class RecentExecuted
 {
 
     [Test]
     public async Task TestRecentExecuted()
     {
-        await Page.GotoAsync("http://localhost:21784/");
+        using var playwright = await Playwright.CreateAsync();
+        var browser = await playwright.Firefox.LaunchAsync(new BrowserTypeLaunchOptions {
+            Headless = false
+        });
+        // Create a new incognito browser context
+        var context = await browser.NewContextAsync(new BrowserNewContextOptions
+        {
+            IgnoreHTTPSErrors = true
+        });
+        // Create a new page inside context.
+        var page = await context.NewPageAsync();
+
+        await page.GotoAsync("https://localhost:44331/");
+
+        await page.PauseAsync();
 
         // click the button
-        await Page.Locator("div:has-text(\"Georgia EPD issues a notice of fully executed administrative orders and fully ex\")").GetByRole(AriaRole.Link, new() { NameString = "View Full Report" }).ClickAsync();
-        await Page.WaitForURLAsync("https://localhost:44331/RecentExecuted");
+        await page.Locator("div:has-text(\"Georgia EPD issues a notice of fully executed administrative orders and fully ex\")").GetByRole(AriaRole.Link, new() { NameString = "View Full Report" }).ClickAsync();
+        await page.WaitForURLAsync("https://localhost:44331/RecentExecuted");
 
+        await page.PauseAsync();
         // await Page.PauseAsync();
-
+        /**
         // Expect a title "to contain" a substring.
-        await Expect(Page).ToHaveTitleAsync(new Regex("EPD Enforcement Orders"));
+        await Expect(page).ToHaveTitleAsync(new Regex("EPD Enforcement Orders"));
 
         // Check for text in the front of the page
-        await Expect(Page.GetByRole(AriaRole.Heading, new() { NameString = "Recently Executed Enforcement Orders" })).ToBeVisibleAsync();
-        await Expect(Page.GetByText("(Notices that change weekly)")).ToBeVisibleAsync();
+        await Expect(page.GetByRole(AriaRole.Heading, new() { NameString = "Recently Executed Enforcement Orders" })).ToBeVisibleAsync();
+        await Expect(page.GetByText("(Notices that change weekly)")).ToBeVisibleAsync();
 
         // check to see if there are these text in the table
         // get number of table rows
-        string nameRow1 = await Page.Locator("//table[1]/tbody/tr[1]/th").InnerTextAsync();
-        string nameRow2 = await Page.Locator("//table[1]/tbody/tr[2]/th").InnerTextAsync();
-        string nameRow3 = await Page.Locator("//table[1]/tbody/tr[3]/th").InnerTextAsync();
-        string nameRow4 = await Page.Locator("//table[1]/tbody/tr[4]/th").InnerTextAsync();
-        string nameRow5 = await Page.Locator("//table[1]/tbody/tr[5]/th").InnerTextAsync();
-        string nameRow6 = await Page.Locator("//table[1]/tbody/tr[6]/th").InnerTextAsync();
-        string nameRow7 = await Page.Locator("//table[1]/tbody/tr[7]/th").InnerTextAsync();
+        string nameRow1 = await page.Locator("//table[1]/tbody/tr[1]/th").InnerTextAsync();
+        string nameRow2 = await page.Locator("//table[1]/tbody/tr[2]/th").InnerTextAsync();
+        string nameRow3 = await page.Locator("//table[1]/tbody/tr[3]/th").InnerTextAsync();
+        string nameRow4 = await page.Locator("//table[1]/tbody/tr[4]/th").InnerTextAsync();
+        string nameRow5 = await page.Locator("//table[1]/tbody/tr[5]/th").InnerTextAsync();
+        string nameRow6 = await page.Locator("//table[1]/tbody/tr[6]/th").InnerTextAsync();
+        string nameRow7 = await page.Locator("//table[1]/tbody/tr[7]/th").InnerTextAsync();
 
         // assertion for the value
         Assert.AreEqual("Facility", nameRow1);
@@ -45,5 +60,11 @@ public class RecentExecuted : PageTest
         Assert.AreEqual("Settlement Amount", nameRow5);
         Assert.AreEqual("Legal Authority", nameRow6);
         Assert.AreEqual("Date Executed", nameRow7);
+
+        // Dispose context and page once it is no longer needed.
+        await context.CloseAsync();
+        await page.CloseAsync();
+
+        */
     }
 }
