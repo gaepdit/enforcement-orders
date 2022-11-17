@@ -26,13 +26,11 @@ public class RecentExecuted
 
         await page.GotoAsync("https://localhost:44331/");
 
-        await page.PauseAsync();
 
         // click the button
         await page.Locator("div:has-text(\"Georgia EPD issues a notice of fully executed administrative orders and fully ex\")").GetByRole(AriaRole.Link, new() { NameString = "View Full Report" }).ClickAsync();
         await page.WaitForURLAsync("https://localhost:44331/RecentExecuted");
 
-        await page.PauseAsync();
         // await Page.PauseAsync();
         /**
         // Expect a title "to contain" a substring.
