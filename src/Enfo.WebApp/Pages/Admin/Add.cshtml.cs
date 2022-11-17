@@ -7,12 +7,13 @@ using Enfo.Domain.LegalAuthorities.Resources;
 using Enfo.Domain.Users.Entities;
 using Enfo.WebApp.Models;
 using Enfo.WebApp.Platform.RazorHelpers;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Threading.Tasks;
 
 namespace Enfo.WebApp.Pages.Admin
 {
@@ -47,8 +48,11 @@ namespace Enfo.WebApp.Pages.Admin
         }
 
         [UsedImplicitly]
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostAsync([FromServices] IValidator<EnforcementOrderCreate> validator)
         {
+            var validationResult = await validator.ValidateAsync(Item);
+            if (!validationResult.IsValid) validationResult.AddToModelState(ModelState, nameof(Item));
+
             if (!ModelState.IsValid)
             {
                 await PopulateSelectListsAsync();

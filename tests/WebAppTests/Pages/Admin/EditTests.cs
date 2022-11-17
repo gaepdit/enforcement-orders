@@ -10,6 +10,8 @@ using Enfo.WebApp.Platform.RazorHelpers;
 using EnfoTests.TestData;
 using FluentAssertions;
 using FluentAssertions.Execution;
+using FluentValidation;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -18,6 +20,7 @@ using Moq;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace EnfoTests.WebApp.Pages.Admin;
@@ -116,13 +119,16 @@ public class EditTests
         var orderRepo = new Mock<IEnforcementOrderRepository>();
         orderRepo.Setup(l => l.GetAdminViewAsync(It.IsAny<int>()))
             .ReturnsAsync(null as EnforcementOrderAdminView);
+        var validator = new Mock<IValidator<EnforcementOrderUpdate>>();
+        validator.Setup(l => l.ValidateAsync(It.IsAny<EnforcementOrderUpdate>(), CancellationToken.None))
+            .ReturnsAsync(new ValidationResult());
         var page = new Edit(orderRepo.Object, Mock.Of<ILegalAuthorityRepository>(),
             Mock.Of<IEpdContactRepository>())
         {
             Item = new EnforcementOrderUpdate(),
         };
 
-        var result = await page.OnPostAsync();
+        var result = await page.OnPostAsync(validator.Object);
 
         result.Should().BeOfType<NotFoundResult>();
     }
@@ -134,6 +140,9 @@ public class EditTests
         var orderRepo = new Mock<IEnforcementOrderRepository>();
         orderRepo.Setup(l => l.GetAdminViewAsync(It.IsAny<int>()))
             .ReturnsAsync(item);
+        var validator = new Mock<IValidator<EnforcementOrderUpdate>>();
+        validator.Setup(l => l.ValidateAsync(It.IsAny<EnforcementOrderUpdate>(), CancellationToken.None))
+            .ReturnsAsync(new ValidationResult());
 
         // Initialize Page TempData
         var httpContext = new DefaultHttpContext();
@@ -145,7 +154,7 @@ public class EditTests
             Item = new EnforcementOrderUpdate { Id = item.Id },
         };
 
-        var result = await page.OnPostAsync();
+        var result = await page.OnPostAsync(validator.Object);
 
         var expected = new DisplayMessage(Context.Warning,
             "This Enforcement Order is deleted and cannot be edited.");
@@ -169,6 +178,9 @@ public class EditTests
             .ReturnsAsync(originalItem);
         orderRepo.Setup(l => l.OrderNumberExistsAsync(It.IsAny<string>(), It.IsAny<int?>()))
             .ReturnsAsync(false);
+        var validator = new Mock<IValidator<EnforcementOrderUpdate>>();
+        validator.Setup(l => l.ValidateAsync(It.IsAny<EnforcementOrderUpdate>(), CancellationToken.None))
+            .ReturnsAsync(new ValidationResult());
 
         // Initialize Page TempData
         var httpContext = new DefaultHttpContext();
@@ -177,7 +189,7 @@ public class EditTests
                 Mock.Of<IEpdContactRepository>())
             { TempData = tempData, Item = item };
 
-        var result = await page.OnPostAsync();
+        var result = await page.OnPostAsync(validator.Object);
 
         var expected = new DisplayMessage(Context.Success,
             "The Enforcement Order has been successfully updated.");
@@ -203,6 +215,11 @@ public class EditTests
         legalRepo.Setup(l => l.ListAsync(false)).ReturnsAsync(new List<LegalAuthorityView>());
         var contactRepo = new Mock<IEpdContactRepository>();
         contactRepo.Setup(l => l.ListAsync(false)).ReturnsAsync(new List<EpdContactView>());
+
+        var validator = new Mock<IValidator<EnforcementOrderUpdate>>();
+        validator.Setup(l => l.ValidateAsync(It.IsAny<EnforcementOrderUpdate>(), CancellationToken.None))
+            .ReturnsAsync(new ValidationResult());
+
         var page = new Edit(orderRepo.Object, legalRepo.Object, contactRepo.Object)
         {
             Item = new EnforcementOrderUpdate(item),
@@ -210,7 +227,7 @@ public class EditTests
         };
         page.ModelState.AddModelError("key", "message");
 
-        var result = await page.OnPostAsync();
+        var result = await page.OnPostAsync(validator.Object);
 
         using (new AssertionScope())
         {

@@ -6,12 +6,15 @@ using Enfo.WebApp.Platform.RazorHelpers;
 using EnfoTests.TestData;
 using FluentAssertions;
 using FluentAssertions.Execution;
+using FluentValidation;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Moq;
 using NUnit.Framework;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace EnfoTests.WebApp.Pages.Admin.Maintenance.LegalAuthorities;
@@ -99,9 +102,12 @@ public class EditTests
     {
         var repo = new Mock<ILegalAuthorityRepository>();
         repo.Setup(l => l.GetAsync(It.IsAny<int>())).ReturnsAsync(null as LegalAuthorityView);
+        var validator = new Mock<IValidator<LegalAuthorityCommand>>();
+        validator.Setup(l => l.ValidateAsync(It.IsAny<LegalAuthorityCommand>(), CancellationToken.None))
+            .ReturnsAsync(new ValidationResult());
         var page = new Edit(repo.Object) { Item = new LegalAuthorityCommand { Id = 0 } };
 
-        var result = await page.OnPostAsync();
+        var result = await page.OnPostAsync(validator.Object);
 
         result.Should().BeOfType<NotFoundResult>();
     }
@@ -113,6 +119,9 @@ public class EditTests
         var repo = new Mock<ILegalAuthorityRepository>();
         repo.Setup(l => l.GetAsync(It.IsAny<int>()))
             .ReturnsAsync(item);
+        var validator = new Mock<IValidator<LegalAuthorityCommand>>();
+        validator.Setup(l => l.ValidateAsync(It.IsAny<LegalAuthorityCommand>(), CancellationToken.None))
+            .ReturnsAsync(new ValidationResult());
 
         // Initialize Page TempData
         var httpContext = new DefaultHttpContext();
@@ -123,7 +132,7 @@ public class EditTests
             Item = new LegalAuthorityCommand(item),
         };
 
-        var result = await page.OnPostAsync();
+        var result = await page.OnPostAsync(validator.Object);
 
         var expected = new DisplayMessage(Context.Warning,
             $"Inactive {Edit.ThisOption.PluralName} cannot be edited.");
@@ -145,13 +154,16 @@ public class EditTests
             .ReturnsAsync(ResourceHelper.GetLegalAuthorityViewList()[0]);
         repo.Setup(l => l.NameExistsAsync(It.IsAny<string>()))
             .ReturnsAsync(false);
+        var validator = new Mock<IValidator<LegalAuthorityCommand>>();
+        validator.Setup(l => l.ValidateAsync(It.IsAny<LegalAuthorityCommand>(), CancellationToken.None))
+            .ReturnsAsync(new ValidationResult());
 
         // Initialize Page TempData
         var httpContext = new DefaultHttpContext();
         var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
         var page = new Edit(repo.Object) { TempData = tempData, Item = item };
 
-        var result = await page.OnPostAsync();
+        var result = await page.OnPostAsync(validator.Object);
 
         var expected = new DisplayMessage(Context.Success,
             $"{item.AuthorityName} successfully updated.");
