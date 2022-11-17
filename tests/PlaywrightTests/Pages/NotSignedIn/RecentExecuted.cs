@@ -1,22 +1,20 @@
 ﻿using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.Playwright;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
 
 namespace PlaywrightTests.Pages.NotSignedIn;
 
 public class RecentExecuted
 {
-
     [Test]
     public async Task TestRecentExecuted()
     {
+        // launches Playwright
         using var playwright = await Playwright.CreateAsync();
-        var browser = await playwright.Firefox.LaunchAsync(new BrowserTypeLaunchOptions {
-            Headless = true
+        var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions {
+            Headless = false
         });
-        // Create a new incognito browser context
+        // Create a new incognito browser context that ignores HTTPS errors
         var context = await browser.NewContextAsync(new BrowserNewContextOptions
         {
             IgnoreHTTPSErrors = true
@@ -26,43 +24,30 @@ public class RecentExecuted
 
         await page.GotoAsync("https://localhost:44331/");
 
-
         // click the button
         await page.Locator("div:has-text(\"Georgia EPD issues a notice of fully executed administrative orders and fully ex\")").GetByRole(AriaRole.Link, new() { NameString = "View Full Report" }).ClickAsync();
         await page.WaitForURLAsync("https://localhost:44331/RecentExecuted");
-
-        // await Page.PauseAsync();
-        /**
+        
         // Expect a title "to contain" a substring.
-        await Expect(page).ToHaveTitleAsync(new Regex("EPD Enforcement Orders"));
+        await Assertions.Expect(page).ToHaveTitleAsync(new Regex("EPD Enforcement Orders"));
 
         // Check for text in the front of the page
-        await Expect(page.GetByRole(AriaRole.Heading, new() { NameString = "Recently Executed Enforcement Orders" })).ToBeVisibleAsync();
-        await Expect(page.GetByText("(Notices that change weekly)")).ToBeVisibleAsync();
+        await Assertions.Expect(page.GetByRole(AriaRole.Heading, new() { NameString = "Recently Executed Enforcement Orders" })).ToBeVisibleAsync();
+        await Assertions.Expect(page.GetByText("(Notices that change weekly)")).ToBeVisibleAsync();
 
         // check to see if there are these text in the table
         // get number of table rows
-        string nameRow1 = await page.Locator("//table[1]/tbody/tr[1]/th").InnerTextAsync();
-        string nameRow2 = await page.Locator("//table[1]/tbody/tr[2]/th").InnerTextAsync();
-        string nameRow3 = await page.Locator("//table[1]/tbody/tr[3]/th").InnerTextAsync();
-        string nameRow4 = await page.Locator("//table[1]/tbody/tr[4]/th").InnerTextAsync();
-        string nameRow5 = await page.Locator("//table[1]/tbody/tr[5]/th").InnerTextAsync();
-        string nameRow6 = await page.Locator("//table[1]/tbody/tr[6]/th").InnerTextAsync();
-        string nameRow7 = await page.Locator("//table[1]/tbody/tr[7]/th").InnerTextAsync();
-
-        // assertion for the value
-        Assert.AreEqual("Facility", nameRow1);
-        Assert.AreEqual("County", nameRow2);
-        Assert.AreEqual("Cause of Order", nameRow3);
-        Assert.AreEqual("Requirements of Order", nameRow4);
-        Assert.AreEqual("Settlement Amount", nameRow5);
-        Assert.AreEqual("Legal Authority", nameRow6);
-        Assert.AreEqual("Date Executed", nameRow7);
-
+        await Assertions.Expect(page.Locator("//table[1]/tbody/tr[1]/th")).ToContainTextAsync("Facility");
+        await Assertions.Expect(page.Locator("//table[1]/tbody/tr[2]/th")).ToContainTextAsync("County");
+        await Assertions.Expect(page.Locator("//table[1]/tbody/tr[3]/th")).ToContainTextAsync("Cause of Order");
+        await Assertions.Expect(page.Locator("//table[1]/tbody/tr[4]/th")).ToContainTextAsync("Requirements of Order");
+        await Assertions.Expect(page.Locator("//table[1]/tbody/tr[5]/th")).ToContainTextAsync("Settlement Amount");
+        await Assertions.Expect(page.Locator("//table[1]/tbody/tr[6]/th")).ToContainTextAsync("Legal Authority");
+        await Assertions.Expect(page.Locator("//table[1]/tbody/tr[7]/th")).ToContainTextAsync("Date Executed");
+        
         // Dispose context and page once it is no longer needed.
         await context.CloseAsync();
         await page.CloseAsync();
 
-        */
     }
 }
