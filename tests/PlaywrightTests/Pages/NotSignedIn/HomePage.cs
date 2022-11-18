@@ -37,6 +37,26 @@ public class HomePage
         await Assertions.Expect(page.GetByText("Mail subscriptions to these notices are available at a cost of $50 per year. Tha")).ToBeVisibleAsync();
         await Assertions.Expect(page.GetByRole(AriaRole.Heading, new() { NameString = "API Access" })).ToBeVisibleAsync();
 
+        // check the number of tables
+        int numTables = await page.Locator("//table").CountAsync();
+        Assert.That(numTables, Is.EqualTo(2));
+
+        // check the number of rows in the first table
+        int tableRows1 = await page.Locator("//section[1]/div/table/tbody/tr").CountAsync();
+        Assert.That(tableRows1, Is.EqualTo(3));
+        // check the column labels of the first table
+        await Assertions.Expect(page.Locator("//section[1]/div/table/thead/tr/th[1]")).ToContainTextAsync("Facility");
+        await Assertions.Expect(page.Locator("//section[1]/div/table/thead/tr/th[2]")).ToContainTextAsync("Date Comment Period Closes");
+        await Assertions.Expect(page.Locator("//section[1]/div/table/thead/tr/th[3]")).ToContainTextAsync("");
+        
+        // check the number of rows in the second table
+        int tableRows2 = await page.Locator("//section[2]/div/table/tbody/tr").CountAsync();
+        Assert.That(tableRows2, Is.EqualTo(3));
+        // check the column labels of the first table
+        await Assertions.Expect(page.Locator("//section[2]/div/table/thead/tr/th[1]")).ToContainTextAsync("Facility");
+        await Assertions.Expect(page.Locator("//section[2]/div/table/thead/tr/th[2]")).ToContainTextAsync("Date Executed");
+        await Assertions.Expect(page.Locator("//section[2]/div/table/thead/tr/th[3]")).ToContainTextAsync("");
+
         // Dispose context and page once it is no longer needed.
         await context.CloseAsync();
         await page.CloseAsync();
