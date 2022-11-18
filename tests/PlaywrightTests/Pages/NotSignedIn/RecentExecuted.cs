@@ -27,7 +27,11 @@ public class RecentExecuted
         // click the button
         await page.Locator("div:has-text(\"Georgia EPD issues a notice of fully executed administrative orders and fully ex\")").GetByRole(AriaRole.Link, new() { NameString = "View Full Report" }).ClickAsync();
         await page.WaitForURLAsync("https://localhost:44331/RecentExecuted");
-        
+
+        // check if the URL is correct
+        //string title = await page.TitleAsync();
+        //Assertions.Equals(title, "https://localhost:44331/RecentExecuted");
+
         // Expect a title "to contain" a substring.
         await Assertions.Expect(page).ToHaveTitleAsync(new Regex("EPD Enforcement Orders"));
 
@@ -35,8 +39,15 @@ public class RecentExecuted
         await Assertions.Expect(page.GetByRole(AriaRole.Heading, new() { NameString = "Recently Executed Enforcement Orders" })).ToBeVisibleAsync();
         await Assertions.Expect(page.GetByText("(Notices that change weekly)")).ToBeVisibleAsync();
 
-        // check to see if there are these text in the table
-        // get number of table rows
+        // check the number of tables
+        int numTables = await page.Locator("//table").CountAsync();
+        Assert.That(numTables, Is.EqualTo(3));
+
+        // check the number of rows in the first table
+        int tableRows = await page.Locator("//table[1]/tbody/tr").CountAsync();
+        Assert.That(tableRows, Is.EqualTo(7));
+
+        // check the first column of the first table (the label)
         await Assertions.Expect(page.Locator("//table[1]/tbody/tr[1]/th")).ToContainTextAsync("Facility");
         await Assertions.Expect(page.Locator("//table[1]/tbody/tr[2]/th")).ToContainTextAsync("County");
         await Assertions.Expect(page.Locator("//table[1]/tbody/tr[3]/th")).ToContainTextAsync("Cause of Order");
@@ -44,7 +55,7 @@ public class RecentExecuted
         await Assertions.Expect(page.Locator("//table[1]/tbody/tr[5]/th")).ToContainTextAsync("Settlement Amount");
         await Assertions.Expect(page.Locator("//table[1]/tbody/tr[6]/th")).ToContainTextAsync("Legal Authority");
         await Assertions.Expect(page.Locator("//table[1]/tbody/tr[7]/th")).ToContainTextAsync("Date Executed");
-        
+
         // Dispose context and page once it is no longer needed.
         await context.CloseAsync();
         await page.CloseAsync();

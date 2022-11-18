@@ -37,6 +37,14 @@ public class CurrentProposed
         await Assertions.Expect(page.GetByRole(AriaRole.Heading, new() { NameString = "Current Proposed Enforcement Orders" })).ToBeVisibleAsync();
         await Assertions.Expect(page.GetByText("(Notices that change weekly)")).ToBeVisibleAsync();
 
+        // check the number of tables
+        int numTables = await page.Locator("//table").CountAsync();
+        Assert.That(numTables, Is.EqualTo(3));
+
+        // check the number of rows in the first table
+        int tableRows = await page.Locator("//table[1]/tbody/tr").CountAsync();
+        Assert.That(tableRows, Is.EqualTo(10));
+
         // check to see if there are these text in the table
         await Assertions.Expect(page.Locator("//table[1]/tbody/tr[1]/th")).ToContainTextAsync("Facility");
         await Assertions.Expect(page.Locator("//table[1]/tbody/tr[2]/th")).ToContainTextAsync("County");
