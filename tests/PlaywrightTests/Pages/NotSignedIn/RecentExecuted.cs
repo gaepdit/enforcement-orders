@@ -1,112 +1,88 @@
 ﻿using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.Playwright;
+using Microsoft.Playwright.NUnit;
 
 namespace PlaywrightTests.Pages.NotSignedIn;
 
 [Parallelizable(ParallelScope.Self)]
 [TestFixture]
-public class RecentExecuted
+public class RecentExecuted : PageTest
 {
+    public override BrowserNewContextOptions ContextOptions()
+    {
+        return new BrowserNewContextOptions()
+        {
+            ColorScheme = ColorScheme.Light,
+            IgnoreHTTPSErrors = true
+        };
+    }
+
     [Test]
     public async Task TestRecentExecuted()
     {
-        // launches Playwright
-        using var playwright = await Playwright.CreateAsync();
-        var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions {
-            Headless = true
-        });
-        // Create a new incognito browser context that ignores HTTPS errors
-        var context = await browser.NewContextAsync(new BrowserNewContextOptions
-        {
-            IgnoreHTTPSErrors = true
-        });
-        // Create a new page inside context.
-        var page = await context.NewPageAsync();
-
-        await page.GotoAsync("https://localhost:44331/");
+        await Page.GotoAsync("https://localhost:44331/");
 
         // click the button
-        await page.Locator("div:has-text(\"Georgia EPD issues a notice of fully executed administrative orders and fully ex\")").GetByRole(AriaRole.Link, new() { NameString = "View Full Report" }).ClickAsync();
-        await page.WaitForURLAsync("https://localhost:44331/RecentExecuted");
+        await Page.Locator("div:has-text(\"Georgia EPD issues a notice of fully executed administrative orders and fully ex\")").GetByRole(AriaRole.Link, new() { NameString = "View Full Report" }).ClickAsync();
+        await Page.WaitForURLAsync("https://localhost:44331/RecentExecuted");
 
         // Expect a title "to contain" a substring.
-        await Assertions.Expect(page).ToHaveTitleAsync(new Regex("EPD Enforcement Orders"));
+        await Expect(Page).ToHaveTitleAsync(new Regex("EPD Enforcement Orders"));
 
-        // Check for text in the front of the page
-        await Assertions.Expect(page.GetByRole(AriaRole.Heading, new() { NameString = "Recently Executed Enforcement Orders" })).ToBeVisibleAsync();
-        await Assertions.Expect(page.GetByText("(Notices that change weekly)")).ToBeVisibleAsync();
+        // Check for text in the front of the Page
+        await Expect(Page.GetByRole(AriaRole.Heading, new() { NameString = "Recently Executed Enforcement Orders" })).ToBeVisibleAsync();
+        await Expect(Page.GetByText("(Notices that change weekly)")).ToBeVisibleAsync();
 
         // check the number of tables
-        int numTables = await page.Locator("//table").CountAsync();
+        int numTables = await Page.Locator("//table").CountAsync();
         Assert.That(numTables, Is.EqualTo(3));
 
         // check the number of rows in the first table
-        int tableRows = await page.Locator("//table[1]/tbody/tr").CountAsync();
+        int tableRows = await Page.Locator("//table[1]/tbody/tr").CountAsync();
         Assert.That(tableRows, Is.EqualTo(7));
 
         // check the first column of the first table (the label)
-        await Assertions.Expect(page.Locator("//table[1]/tbody/tr[1]/th")).ToContainTextAsync("Facility");
-        await Assertions.Expect(page.Locator("//table[1]/tbody/tr[2]/th")).ToContainTextAsync("County");
-        await Assertions.Expect(page.Locator("//table[1]/tbody/tr[3]/th")).ToContainTextAsync("Cause of Order");
-        await Assertions.Expect(page.Locator("//table[1]/tbody/tr[4]/th")).ToContainTextAsync("Requirements of Order");
-        await Assertions.Expect(page.Locator("//table[1]/tbody/tr[5]/th")).ToContainTextAsync("Settlement Amount");
-        await Assertions.Expect(page.Locator("//table[1]/tbody/tr[6]/th")).ToContainTextAsync("Legal Authority");
-        await Assertions.Expect(page.Locator("//table[1]/tbody/tr[7]/th")).ToContainTextAsync("Date Executed");
-
-        // Dispose context and page once it is no longer needed.
-        await context.CloseAsync();
-        await page.CloseAsync();
+        await Expect(Page.Locator("//table[1]/tbody/tr[1]/th")).ToContainTextAsync("Facility");
+        await Expect(Page.Locator("//table[1]/tbody/tr[2]/th")).ToContainTextAsync("County");
+        await Expect(Page.Locator("//table[1]/tbody/tr[3]/th")).ToContainTextAsync("Cause of Order");
+        await Expect(Page.Locator("//table[1]/tbody/tr[4]/th")).ToContainTextAsync("Requirements of Order");
+        await Expect(Page.Locator("//table[1]/tbody/tr[5]/th")).ToContainTextAsync("Settlement Amount");
+        await Expect(Page.Locator("//table[1]/tbody/tr[6]/th")).ToContainTextAsync("Legal Authority");
+        await Expect(Page.Locator("//table[1]/tbody/tr[7]/th")).ToContainTextAsync("Date Executed");
 
     }
 
     [Test]
     public async Task TestRecentExecutedDetails()
     {
-        // launches Playwright
-        using var playwright = await Playwright.CreateAsync();
-        var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions {
-            Headless = true
-        });
-        // Create a new incognito browser context that ignores HTTPS errors
-        var context = await browser.NewContextAsync(new BrowserNewContextOptions
-        {
-            IgnoreHTTPSErrors = true
-        });
-        // Create a new page inside context.
-        var page = await context.NewPageAsync();
-
         // I could not click on the `view` link since it involves a randomly generated id
-        await page.GotoAsync("https://localhost:44331/Details/2");
+        await Page.GotoAsync("https://localhost:44331/Details/2");
 
         // Expect a title "to contain" a substring.
-        await Assertions.Expect(page).ToHaveTitleAsync(new Regex("EPD Enforcement Orders"));
+        await Expect(Page).ToHaveTitleAsync(new Regex("EPD Enforcement Orders"));
 
-        // Check for text in the front of the page
-        await Assertions.Expect(page.GetByRole(AriaRole.Heading, new() { NameString = "Enforcement Order EPD-WP-0002" })).ToBeVisibleAsync();
+        // Check for text in the front of the Page
+        await Expect(Page.GetByRole(AriaRole.Heading, new() { NameString = "Enforcement Order EPD-WP-0002" })).ToBeVisibleAsync();
 
         // check the number of tables
-        int numTables = await page.Locator("//table").CountAsync();
+        int numTables = await Page.Locator("//table").CountAsync();
         Assert.That(numTables, Is.EqualTo(1));
 
         // check the number of rows in the first table
-        int tableRows = await page.Locator("//table[1]/tbody/tr").CountAsync();
+        int tableRows = await Page.Locator("//table[1]/tbody/tr").CountAsync();
         Assert.That(tableRows, Is.EqualTo(9));
 
         // check the first column of the first table (the label)
-        await Assertions.Expect(page.Locator("//table[1]/tbody/tr[1]/th")).ToContainTextAsync("Facility");
-        await Assertions.Expect(page.Locator("//table[1]/tbody/tr[2]/th")).ToContainTextAsync("County");
-        await Assertions.Expect(page.Locator("//table[1]/tbody/tr[3]/th")).ToContainTextAsync("Cause of Order");
-        await Assertions.Expect(page.Locator("//table[1]/tbody/tr[4]/th")).ToContainTextAsync("Requirements of Order");
-        await Assertions.Expect(page.Locator("//table[1]/tbody/tr[5]/th")).ToContainTextAsync("Settlement Amount");
-        await Assertions.Expect(page.Locator("//table[1]/tbody/tr[6]/th")).ToContainTextAsync("Legal Authority");
-        await Assertions.Expect(page.Locator("//table[1]/tbody/tr[7]/th")).ToContainTextAsync("Date Executed");
-        await Assertions.Expect(page.Locator("//table[1]/tbody/tr[8]/th")).ToContainTextAsync("Publication Date For Executed Order");
-        await Assertions.Expect(page.Locator("//table[1]/tbody/tr[9]/th")).ToContainTextAsync("File Attachments");
-
-        // Dispose context and page once it is no longer needed.
-        await context.CloseAsync();
-        await page.CloseAsync();
+        await Expect(Page.Locator("//table[1]/tbody/tr[1]/th")).ToContainTextAsync("Facility");
+        await Expect(Page.Locator("//table[1]/tbody/tr[2]/th")).ToContainTextAsync("County");
+        await Expect(Page.Locator("//table[1]/tbody/tr[3]/th")).ToContainTextAsync("Cause of Order");
+        await Expect(Page.Locator("//table[1]/tbody/tr[4]/th")).ToContainTextAsync("Requirements of Order");
+        await Expect(Page.Locator("//table[1]/tbody/tr[5]/th")).ToContainTextAsync("Settlement Amount");
+        await Expect(Page.Locator("//table[1]/tbody/tr[6]/th")).ToContainTextAsync("Legal Authority");
+        await Expect(Page.Locator("//table[1]/tbody/tr[7]/th")).ToContainTextAsync("Date Executed");
+        await Expect(Page.Locator("//table[1]/tbody/tr[8]/th")).ToContainTextAsync("Publication Date For Executed Order");
+        await Expect(Page.Locator("//table[1]/tbody/tr[9]/th")).ToContainTextAsync("File Attachments");
 
     }
 }
