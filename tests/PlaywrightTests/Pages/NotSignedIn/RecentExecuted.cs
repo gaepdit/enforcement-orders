@@ -76,11 +76,8 @@ public class RecentExecuted
         // Create a new page inside context.
         var page = await context.NewPageAsync();
 
-        await page.GotoAsync("https://localhost:44331/");
-
-        // click the button
-        await page.GetByRole(AriaRole.Row, new() { NameString = "bcd2-10974f33-325d-4675-9d80-f854456ef679 Butts County 5‑Nov‑2022 View" }).GetByRole(AriaRole.Link, new() { NameString = "View" }).ClickAsync();
-        await page.WaitForURLAsync("https://localhost:44331/Details/2");
+        // I could not click on the `view` link since it involves a randomly generated id
+        await page.GotoAsync("https://localhost:44331/Details/2");
 
         // Expect a title "to contain" a substring.
         await Assertions.Expect(page).ToHaveTitleAsync(new Regex("EPD Enforcement Orders"));
