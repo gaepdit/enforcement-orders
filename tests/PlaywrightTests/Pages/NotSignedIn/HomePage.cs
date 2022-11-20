@@ -4,6 +4,8 @@ using Microsoft.Playwright;
 
 namespace PlaywrightTests.Pages.NotSignedIn;
 
+[Parallelizable(ParallelScope.Self)]
+[TestFixture]
 public class HomePage
 {
 
