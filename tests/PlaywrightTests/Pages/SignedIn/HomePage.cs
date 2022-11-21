@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.Playwright;
 using Microsoft.Playwright.NUnit;
 
-namespace PlaywrightTests.Pages.NotSignedIn;
+namespace PlaywrightTests.Pages.SignedIn;
 
 [Parallelizable(ParallelScope.Self)]
 [TestFixture]
@@ -22,6 +22,16 @@ public class HomePage : PageTest
     public async Task TestTextHomePage()
     {
         await Page.GotoAsync("https://localhost:44331/");
+        await Page.GetByRole(AriaRole.Link, new() { NameString = "Sign in" }).ClickAsync();
+        await Page.WaitForURLAsync("https://localhost:44331/Account/Login");
+        await Page.GetByRole(AriaRole.Button, new() { NameString = "Sign in" }).ClickAsync();
+        await Page.WaitForURLAsync("https://localhost:44331/Admin/Index");
+        await Page.GetByRole(AriaRole.Button, new() { NameString = "More" }).ClickAsync();
+        await Page.GetByRole(AriaRole.Link, new() { NameString = "Public Dashboard" }).ClickAsync();
+        await Page.WaitForURLAsync("https://localhost:44331/");
+        
+        // check dashboard menus
+        await Expect(Page.Locator("nav[role=\"navigation\"]:has-text(\"+ New Order Search More Site Maintenance Users List Public Dashboard Account Vie\")")).ToBeVisibleAsync();
 
         // Expect a title "to contain" a substring.
         await Expect(Page).ToHaveTitleAsync(new Regex("EPD Enforcement Orders"));
