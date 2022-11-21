@@ -4,6 +4,7 @@ using Enfo.Domain.Pagination;
 using EnfoTests.Infrastructure.Helpers;
 using EnfoTests.TestData;
 using FluentAssertions;
+using FluentAssertions.Execution;
 using NUnit.Framework;
 using System;
 using System.Linq;
@@ -20,7 +21,7 @@ public class ListTests
 
         var result = await repository.ListAsync(new EnforcementOrderSpec(), new PaginationSpec(1, 50));
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             result.TotalCount.Should().Be(EnforcementOrderData.EnforcementOrders.Count(e => e.GetIsPublic));
             result.Items.Should()
@@ -31,7 +32,7 @@ public class ListTests
                     .OrderByDescending(e => e.ExecutedDate ?? e.ProposedOrderPostedDate)
                     .ThenBy(e => e.FacilityName)
                     .First(e => e.GetIsPublic).Id));
-        });
+        }
     }
 
     [Test]
@@ -53,14 +54,14 @@ public class ListTests
                 && string.Equals(e.FacilityName, spec.Facility, StringComparison.Ordinal))
             .ToList();
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             result.TotalCount.Should().Be(expectedList.Count);
             result.Items.Should().HaveCount(expectedList.Count);
             result.PageNumber.Should().Be(1);
             result.Items[0].Should().BeEquivalentTo(
                 ResourceHelper.GetEnforcementOrderSummaryView(expectedList[0].Id));
-        });
+        }
     }
 
     [Test]
@@ -76,12 +77,12 @@ public class ListTests
         using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
         var result = await repository.ListAsync(spec, new PaginationSpec(1, 50));
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             result.TotalCount.Should().Be(0);
             result.Items.Count.Should().Be(0);
             result.PageNumber.Should().Be(1);
-        });
+        }
     }
 
     [Test]
@@ -101,7 +102,7 @@ public class ListTests
             .Select(e => new EnforcementOrderSummaryView(e))
             .ToList();
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             result.TotalCount.Should().Be(expectedList.Count);
             result.PageNumber.Should().Be(1);
@@ -109,7 +110,7 @@ public class ListTests
             var resultList = result.Items.ToList();
             resultList.Should().HaveCount(expectedList.Count);
             resultList.Should().BeEquivalentTo(expectedList);
-        });
+        }
     }
 
     [Test]
@@ -129,7 +130,7 @@ public class ListTests
             .Select(e => new EnforcementOrderSummaryView(e))
             .ToList();
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             result.TotalCount.Should().Be(expectedList.Count);
             result.PageNumber.Should().Be(1);
@@ -137,7 +138,7 @@ public class ListTests
             var resultList = result.Items.ToList();
             resultList.Should().HaveCount(expectedList.Count);
             resultList.Should().BeEquivalentTo(expectedList);
-        });
+        }
     }
 
     [Test]
@@ -146,7 +147,7 @@ public class ListTests
         using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
         var result = await repository.ListDetailedAsync(new EnforcementOrderSpec(), new PaginationSpec(1, 50));
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             result.TotalCount.Should().Be(EnforcementOrderData.EnforcementOrders.Count(e => e.GetIsPublic));
             result.Items.Should()
@@ -157,7 +158,7 @@ public class ListTests
                     .OrderByDescending(e => e.ExecutedDate ?? e.ProposedOrderPostedDate)
                     .ThenBy(e => e.FacilityName)
                     .First(e => e.GetIsPublic).Id));
-        });
+        }
     }
 
     [Test]
@@ -177,14 +178,14 @@ public class ListTests
                 && string.Equals(e.FacilityName, spec.Facility, StringComparison.Ordinal))
             .ToList();
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             result.TotalCount.Should().Be(expectedList.Count);
             result.Items.Should().HaveCount(expectedList.Count);
             result.PageNumber.Should().Be(1);
             result.Items[0].Should().BeEquivalentTo(
                 ResourceHelper.GetEnforcementOrderDetailedView(expectedList[0].Id));
-        });
+        }
     }
 
     [Test]
@@ -200,12 +201,12 @@ public class ListTests
         using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
         var result = await repository.ListDetailedAsync(spec, new PaginationSpec(1, 50));
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             result.TotalCount.Should().Be(0);
             result.Items.Should().HaveCount(0);
             result.PageNumber.Should().Be(1);
-        });
+        }
     }
 
     [Test]
@@ -224,14 +225,14 @@ public class ListTests
             .Where(e => string.Equals(e.FacilityName, spec.Facility, StringComparison.Ordinal))
             .ToList();
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             result.TotalCount.Should().Be(expectedList.Count);
             result.Items.Should().HaveCount(expectedList.Count);
             result.PageNumber.Should().Be(1);
             result.Items[0].Should().BeEquivalentTo(
                 ResourceHelper.GetEnforcementOrderDetailedView(expectedList[0].Id));
-        });
+        }
     }
 
     [Test]
@@ -250,13 +251,13 @@ public class ListTests
             .Where(e => string.Equals(e.FacilityName, spec.Facility, StringComparison.Ordinal))
             .ToList();
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             result.TotalCount.Should().Be(expectedList.Count);
             result.PageNumber.Should().Be(1);
             result.Items[0].Should().BeEquivalentTo(
                 ResourceHelper.GetEnforcementOrderDetailedView(expectedList[0].Id));
-        });
+        }
     }
 
     [Test]
@@ -265,7 +266,7 @@ public class ListTests
         using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
         var result = await repository.ListAdminAsync(new EnforcementOrderAdminSpec(), new PaginationSpec(1, 50));
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             result.TotalCount.Should().Be(EnforcementOrderData.EnforcementOrders.Count(e => !e.Deleted));
             result.Items.Should()
@@ -276,7 +277,7 @@ public class ListTests
                     .OrderByDescending(e => e.ExecutedDate ?? e.ProposedOrderPostedDate)
                     .ThenBy(e => e.FacilityName)
                     .First(e => !e.Deleted).Id));
-        });
+        }
     }
 
     [Test]
@@ -287,7 +288,7 @@ public class ListTests
         using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
         var result = await repository.ListAdminAsync(spec, new PaginationSpec(1, 50));
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             result.TotalCount.Should().Be(EnforcementOrderData.EnforcementOrders.Count(e => e.Deleted));
             result.Items.Should()
@@ -298,7 +299,7 @@ public class ListTests
                     .OrderByDescending(e => e.ExecutedDate ?? e.ProposedOrderPostedDate)
                     .ThenBy(e => e.FacilityName)
                     .First(e => e.Deleted).Id));
-        });
+        }
     }
 
     [Test]
@@ -319,14 +320,14 @@ public class ListTests
                 && string.Equals(e.FacilityName, spec.Facility, StringComparison.Ordinal))
             .ToList();
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             result.TotalCount.Should().Be(expectedList.Count);
             result.Items.Should().HaveCount(expectedList.Count);
             result.PageNumber.Should().Be(1);
             result.Items[0].Should().BeEquivalentTo(
                 ResourceHelper.GetEnforcementOrderAdminSummaryView(expectedList[0].Id));
-        });
+        }
     }
 
     [Test]
@@ -340,12 +341,12 @@ public class ListTests
         using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
         var result = await repository.ListAdminAsync(spec, new PaginationSpec(1, 50));
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             result.TotalCount.Should().Be(0);
             result.Items.Count.Should().Be(0);
             result.PageNumber.Should().Be(1);
-        });
+        }
     }
 
     [Test]
@@ -367,13 +368,13 @@ public class ListTests
                 e.Requirements != null && e.Requirements.Contains(spec.Text))
             .ToList();
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             result.TotalCount.Should().Be(expectedList.Count);
             result.Items.Should().HaveCount(expectedList.Count);
             result.PageNumber.Should().Be(1);
             result.Items[0].Should().BeEquivalentTo(
                 ResourceHelper.GetEnforcementOrderAdminSummaryView(expectedList[0].Id));
-        });
+        }
     }
 }

@@ -7,13 +7,14 @@ using Enfo.Domain.LegalAuthorities.Resources;
 using Enfo.Domain.Users.Entities;
 using Enfo.WebApp.Models;
 using Enfo.WebApp.Platform.RazorHelpers;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
 
 namespace Enfo.WebApp.Pages.Admin
 {
@@ -36,9 +37,12 @@ namespace Enfo.WebApp.Pages.Admin
 
         public Edit(IEnforcementOrderRepository orderRepository,
             ILegalAuthorityRepository legalAuthorityRepository,
-            IEpdContactRepository contactRepository) =>
-            (_orderRepository, _legalAuthorityRepository, _contactRepository) =
-            (orderRepository, legalAuthorityRepository, contactRepository);
+            IEpdContactRepository contactRepository)
+        {
+            _orderRepository = orderRepository;
+            _legalAuthorityRepository = legalAuthorityRepository;
+            _contactRepository = contactRepository;
+        }
 
         [UsedImplicitly]
         public async Task<IActionResult> OnGetAsync(int? id)
@@ -60,7 +64,7 @@ namespace Enfo.WebApp.Pages.Admin
         }
 
         [UsedImplicitly]
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostAsync([FromServices] IValidator<EnforcementOrderUpdate> validator)
         {
             var originalItem = await _orderRepository.GetAdminViewAsync(Item.Id);
             if (originalItem == null) return NotFound();
@@ -70,6 +74,9 @@ namespace Enfo.WebApp.Pages.Admin
                 TempData.SetDisplayMessage(Context.Warning, "This Enforcement Order is deleted and cannot be edited.");
                 return RedirectToPage("Details", new { Item.Id });
             }
+
+            var validationResult = await validator.ValidateAsync(Item);
+            if (!validationResult.IsValid) validationResult.AddToModelState(ModelState, nameof(Item));
 
             if (!ModelState.IsValid)
             {

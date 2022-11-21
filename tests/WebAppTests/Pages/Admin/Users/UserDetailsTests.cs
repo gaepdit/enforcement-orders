@@ -2,6 +2,7 @@
 using Enfo.Domain.Users.Services;
 using Enfo.WebApp.Pages.Admin.Users;
 using FluentAssertions;
+using FluentAssertions.Execution;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Moq;
@@ -30,12 +31,12 @@ public class UserDetailsTests
 
         var result = await pageModel.OnGetAsync(userService.Object, userView.Id);
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             result.Should().BeOfType<PageResult>();
             pageModel.DisplayUser.Should().Be(userView);
             pageModel.Roles.Should().BeEquivalentTo(roles);
-        });
+        }
     }
 
     [Test]
@@ -46,12 +47,12 @@ public class UserDetailsTests
 
         var result = await pageModel.OnGetAsync(userService.Object, Guid.Empty);
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             result.Should().BeOfType<NotFoundResult>();
             pageModel.DisplayUser.Should().BeNull();
             pageModel.Roles.Should().BeNull();
-        });
+        }
     }
 
     [Test]
@@ -62,11 +63,11 @@ public class UserDetailsTests
 
         var result = await pageModel.OnGetAsync(userService.Object, null);
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             result.Should().BeOfType<NotFoundResult>();
             pageModel.DisplayUser.Should().BeNull();
             pageModel.Roles.Should().BeNull();
-        });
+        }
     }
 }

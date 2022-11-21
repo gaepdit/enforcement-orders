@@ -7,6 +7,7 @@ using Enfo.Domain.Pagination;
 using Enfo.WebApp.Pages;
 using EnfoTests.TestData;
 using FluentAssertions;
+using FluentAssertions.Execution;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Moq;
 using NUnit.Framework;
@@ -28,14 +29,14 @@ public class SearchTests
 
         await page.OnGetAsync();
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             page.Spec.Should().BeEquivalentTo(new EnforcementOrderSpec());
             var expectedLegal = new SelectList(ResourceHelper.GetLegalAuthorityViewList(), nameof(LegalAuthorityView.Id),
                 nameof(LegalAuthorityView.AuthorityName));
             page.LegalAuthoritiesSelectList.Should().BeEquivalentTo(expectedLegal);
             page.ShowResults.Should().BeFalse();
-        });
+        }
     }
 
     [Test]
@@ -52,7 +53,7 @@ public class SearchTests
 
         await page.OnGetSearchAsync(new EnforcementOrderSpec());
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             page.Spec.Should().BeEquivalentTo(new EnforcementOrderSpec());
             page.OrdersList.Should().BeEquivalentTo(expectedOrders);
@@ -60,7 +61,7 @@ public class SearchTests
                 nameof(LegalAuthorityView.AuthorityName));
             page.LegalAuthoritiesSelectList.Should().BeEquivalentTo(expectedLegal);
             page.ShowResults.Should().BeTrue();
-        });
+        }
     }
 
     [Test]
@@ -77,7 +78,7 @@ public class SearchTests
 
         await page.OnGetSearchAsync(new EnforcementOrderSpec());
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             page.Spec.Should().BeEquivalentTo(new EnforcementOrderSpec());
             page.OrdersList.Should().BeEquivalentTo(expectedOrders);
@@ -85,6 +86,6 @@ public class SearchTests
                 nameof(LegalAuthorityView.AuthorityName));
             page.LegalAuthoritiesSelectList.Should().BeEquivalentTo(expectedLegal);
             page.ShowResults.Should().BeTrue();
-        });
+        }
     }
 }

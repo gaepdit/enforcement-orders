@@ -2,6 +2,7 @@
 using Enfo.LocalRepository;
 using EnfoTests.TestData;
 using FluentAssertions;
+using FluentAssertions.Execution;
 using Microsoft.AspNetCore.Http;
 using Moq;
 using NUnit.Framework;
@@ -30,14 +31,14 @@ public class AddAttachmentTests
         // Assert
         var order = await repository.GetAsync(orderId);
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             order.Attachments.Count.Should().Be(initialCount + 1);
             var attachment = order.Attachments.Last();
             attachment.FileName.Should().Be("test.pdf");
             attachment.FileExtension.Should().Be(".pdf");
             attachment.Size.Should().Be(1);
-        });
+        }
     }
 
     [Test]

@@ -7,6 +7,7 @@ using Enfo.WebApp.Pages.Admin;
 using Enfo.WebApp.Platform.RazorHelpers;
 using EnfoTests.TestData;
 using FluentAssertions;
+using FluentAssertions.Execution;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -38,14 +39,14 @@ public class IndexTests
 
         await page.OnGetAsync();
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             page.CurrentProposedOrders.Should().BeEquivalentTo(list);
             page.RecentExecutedOrders.Should().BeEquivalentTo(list);
             page.PendingOrders.Should().BeEquivalentTo(adminList);
             page.DraftOrders.Should().BeEquivalentTo(adminList);
             page.Message.Should().BeNull();
-        });
+        }
     }
 
     [Test]
@@ -56,14 +57,14 @@ public class IndexTests
 
         await page.OnGetAsync();
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             page.CurrentProposedOrders.Should().BeEmpty();
             page.RecentExecutedOrders.Should().BeEmpty();
             page.PendingOrders.Should().BeEmpty();
             page.DraftOrders.Should().BeEmpty();
             page.Message.Should().BeNull();
-        });
+        }
     }
 
     [Test]
@@ -96,13 +97,13 @@ public class IndexTests
 
         var result = await page.OnGetFindAsync("abc");
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             result.Should().BeOfType<RedirectToPageResult>();
             ((RedirectToPageResult)result).PageName.Should().Be("Details");
             ((RedirectToPageResult)result).RouteValues.Should().Contain(
                 new KeyValuePair<string, object>("Id", list[0].Id));
-        });
+        }
     }
 
     [Test]
@@ -119,14 +120,14 @@ public class IndexTests
 
         var result = await page.OnGetFindAsync("abc");
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             result.Should().BeOfType<RedirectToPageResult>();
             ((RedirectToPageResult)result).PageName.Should().Be("/Admin/Search");
             ((RedirectToPageResult)result).PageHandler.Should().Be("search");
             ((RedirectToPageResult)result).RouteValues.Should().Contain(
                 new KeyValuePair<string, object>("OrderNumber", "abc"));
-        });
+        }
     }
 
     [Test]
@@ -137,10 +138,10 @@ public class IndexTests
 
         var result = await page.OnGetFindAsync(string.Empty);
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             result.Should().BeOfType<RedirectToPageResult>();
             ((RedirectToPageResult)result).PageName.Should().Be("Index");
-        });
+        }
     }
 }

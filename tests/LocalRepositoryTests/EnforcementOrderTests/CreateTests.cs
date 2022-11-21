@@ -4,6 +4,7 @@ using Enfo.Domain.Services;
 using Enfo.LocalRepository;
 using EnfoTests.TestData;
 using FluentAssertions;
+using FluentAssertions.Execution;
 using Microsoft.AspNetCore.Http;
 using Moq;
 using NUnit.Framework;
@@ -45,11 +46,12 @@ public class CreateTests
 
         var newItem = await repository.GetAdminViewAsync(itemId);
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             itemId.Should().Be(expectedId);
-            newItem.Should().BeEquivalentTo(expectedItem);
-        });
+            newItem.Should().BeEquivalentTo(expectedItem, opts =>
+                opts.Excluding(i => i.LegalAuthority).Excluding(i => i.CommentContact));
+        }
     }
 
     [Test]
@@ -97,7 +99,7 @@ public class CreateTests
             CommentPeriodClosesDate = DateTime.Today.AddDays(1),
             CommentContactId = EpdContactData.EpdContacts.First().Id,
             ProposedOrderPostedDate = DateTime.Today,
-            Attachment = new FormFile( Stream.Null, 0, 2, "test2", "test2.pdf"),
+            Attachment = new FormFile(Stream.Null, 0, 2, "test2", "test2.pdf"),
         };
 
         using var repository = new EnforcementOrderRepository(new Mock<IFileService>().Object);
@@ -108,13 +110,13 @@ public class CreateTests
         // Assert
         var order = await repository.GetAdminViewAsync(itemId);
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             order.Attachments.Count.Should().Be(1);
             var attachment = order.Attachments.Single();
             attachment.FileName.Should().Be("test2.pdf");
             attachment.FileExtension.Should().Be(".pdf");
             attachment.Size.Should().Be(2);
-        });
+        }
     }
 }

@@ -4,13 +4,8 @@
 		<TargetFramework>net6.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<UserSecretsId>aspnet-Enfo.WebApp-A834A848-D8DF-4E5F-B1E2-7EE74113BF3E</UserSecretsId>
-		<DefaultItemExcludes>$(DefaultItemExcludes);node_modules\**</DefaultItemExcludes>
 		<AssemblyVersion>2022.10.11</AssemblyVersion>
 	</PropertyGroup>
-
-	<ItemGroup>
-	  <Content Include="wwwroot\.well-known\security.txt" CopyToPublishDirectory="PreserveNewest" />
-	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="FluentValidation.AspNetCore" Version="11.2.2" />

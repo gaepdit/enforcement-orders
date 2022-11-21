@@ -3,6 +3,7 @@ using Enfo.Domain.LegalAuthorities.Repositories;
 using Enfo.Domain.LegalAuthorities.Resources;
 using Enfo.Domain.LegalAuthorities.Resources.Validation;
 using FluentAssertions;
+using FluentAssertions.Execution;
 using FluentValidation.TestHelper;
 using Moq;
 using NUnit.Framework;
@@ -22,11 +23,11 @@ public class ValidatingLegalAuthority
 
         var result = await validator.TestValidateAsync(command);
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             result.IsValid.Should().BeTrue();
             result.Errors.Should().BeEmpty();
-        });
+        }
     }
 
     [Test]
@@ -38,12 +39,12 @@ public class ValidatingLegalAuthority
 
         var result = await validator.TestValidateAsync(command);
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             result.IsValid.Should().BeFalse();
             result.Errors.Should().NotBeEmpty().And.HaveCount(1);
             result.ShouldHaveValidationErrorFor(e => e.AuthorityName);
-        });
+        }
     }
 
     [Test]
@@ -59,10 +60,10 @@ public class ValidatingLegalAuthority
 
         var result = await validator.TestValidateAsync(command);
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             result.IsValid.Should().BeFalse();
             result.ShouldHaveValidationErrorFor(e => e.AuthorityName);
-        });
+        }
     }
 }

@@ -9,6 +9,9 @@ using Enfo.WebApp.Pages.Admin;
 using Enfo.WebApp.Platform.RazorHelpers;
 using EnfoTests.TestData;
 using FluentAssertions;
+using FluentAssertions.Execution;
+using FluentValidation;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -17,6 +20,7 @@ using Moq;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace EnfoTests.WebApp.Pages.Admin;
@@ -38,12 +42,12 @@ public class EditTests
 
         await page.OnGetAsync(1);
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             page.Item.Should().BeEquivalentTo(new EnforcementOrderUpdate(item));
             page.Item.Id.Should().Be(item.Id);
             page.OriginalOrderNumber.Should().Be(item.OrderNumber);
-        });
+        }
     }
 
 
@@ -55,11 +59,11 @@ public class EditTests
 
         var result = await page.OnGetAsync(null);
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             result.Should().BeOfType<NotFoundResult>();
             page.Item.Should().BeNull();
-        });
+        }
     }
 
     [Test]
@@ -73,11 +77,11 @@ public class EditTests
 
         var result = await page.OnGetAsync(-1);
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             result.Should().BeOfType<NotFoundObjectResult>();
             page.Item.Should().BeNull();
-        });
+        }
     }
 
     [Test]
@@ -100,13 +104,13 @@ public class EditTests
         var expected = new DisplayMessage(Context.Warning,
             "This Enforcement Order is deleted and cannot be edited.");
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             page.TempData.GetDisplayMessage().Should().BeEquivalentTo(expected);
             result.Should().BeOfType<RedirectToPageResult>();
             ((RedirectToPageResult)result).PageName.Should().Be("Details");
             ((RedirectToPageResult)result).RouteValues!["id"].Should().Be(item.Id);
-        });
+        }
     }
 
     [Test]
@@ -115,13 +119,16 @@ public class EditTests
         var orderRepo = new Mock<IEnforcementOrderRepository>();
         orderRepo.Setup(l => l.GetAdminViewAsync(It.IsAny<int>()))
             .ReturnsAsync(null as EnforcementOrderAdminView);
+        var validator = new Mock<IValidator<EnforcementOrderUpdate>>();
+        validator.Setup(l => l.ValidateAsync(It.IsAny<EnforcementOrderUpdate>(), CancellationToken.None))
+            .ReturnsAsync(new ValidationResult());
         var page = new Edit(orderRepo.Object, Mock.Of<ILegalAuthorityRepository>(),
             Mock.Of<IEpdContactRepository>())
         {
             Item = new EnforcementOrderUpdate(),
         };
 
-        var result = await page.OnPostAsync();
+        var result = await page.OnPostAsync(validator.Object);
 
         result.Should().BeOfType<NotFoundResult>();
     }
@@ -133,6 +140,9 @@ public class EditTests
         var orderRepo = new Mock<IEnforcementOrderRepository>();
         orderRepo.Setup(l => l.GetAdminViewAsync(It.IsAny<int>()))
             .ReturnsAsync(item);
+        var validator = new Mock<IValidator<EnforcementOrderUpdate>>();
+        validator.Setup(l => l.ValidateAsync(It.IsAny<EnforcementOrderUpdate>(), CancellationToken.None))
+            .ReturnsAsync(new ValidationResult());
 
         // Initialize Page TempData
         var httpContext = new DefaultHttpContext();
@@ -144,18 +154,18 @@ public class EditTests
             Item = new EnforcementOrderUpdate { Id = item.Id },
         };
 
-        var result = await page.OnPostAsync();
+        var result = await page.OnPostAsync(validator.Object);
 
         var expected = new DisplayMessage(Context.Warning,
             "This Enforcement Order is deleted and cannot be edited.");
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             page.TempData.GetDisplayMessage().Should().BeEquivalentTo(expected);
             result.Should().BeOfType<RedirectToPageResult>();
             ((RedirectToPageResult)result).PageName.Should().Be("Details");
             ((RedirectToPageResult)result).RouteValues!["id"].Should().Be(item.Id);
-        });
+        }
     }
 
     [Test]
@@ -168,6 +178,9 @@ public class EditTests
             .ReturnsAsync(originalItem);
         orderRepo.Setup(l => l.OrderNumberExistsAsync(It.IsAny<string>(), It.IsAny<int?>()))
             .ReturnsAsync(false);
+        var validator = new Mock<IValidator<EnforcementOrderUpdate>>();
+        validator.Setup(l => l.ValidateAsync(It.IsAny<EnforcementOrderUpdate>(), CancellationToken.None))
+            .ReturnsAsync(new ValidationResult());
 
         // Initialize Page TempData
         var httpContext = new DefaultHttpContext();
@@ -176,18 +189,18 @@ public class EditTests
                 Mock.Of<IEpdContactRepository>())
             { TempData = tempData, Item = item };
 
-        var result = await page.OnPostAsync();
+        var result = await page.OnPostAsync(validator.Object);
 
         var expected = new DisplayMessage(Context.Success,
             "The Enforcement Order has been successfully updated.");
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             page.TempData.GetDisplayMessage().Should().BeEquivalentTo(expected);
             result.Should().BeOfType<RedirectToPageResult>();
             ((RedirectToPageResult)result).PageName.Should().Be("Details");
             ((RedirectToPageResult)result).RouteValues!["Id"].Should().Be(originalItem.Id);
-        });
+        }
     }
 
     [Test]
@@ -202,6 +215,11 @@ public class EditTests
         legalRepo.Setup(l => l.ListAsync(false)).ReturnsAsync(new List<LegalAuthorityView>());
         var contactRepo = new Mock<IEpdContactRepository>();
         contactRepo.Setup(l => l.ListAsync(false)).ReturnsAsync(new List<EpdContactView>());
+
+        var validator = new Mock<IValidator<EnforcementOrderUpdate>>();
+        validator.Setup(l => l.ValidateAsync(It.IsAny<EnforcementOrderUpdate>(), CancellationToken.None))
+            .ReturnsAsync(new ValidationResult());
+
         var page = new Edit(orderRepo.Object, legalRepo.Object, contactRepo.Object)
         {
             Item = new EnforcementOrderUpdate(item),
@@ -209,14 +227,14 @@ public class EditTests
         };
         page.ModelState.AddModelError("key", "message");
 
-        var result = await page.OnPostAsync();
+        var result = await page.OnPostAsync(validator.Object);
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             result.Should().BeOfType<PageResult>();
             page.ModelState.IsValid.Should().BeFalse();
             page.ModelState.ErrorCount.Should().Be(1);
             page.OriginalOrderNumber.Should().Be("original order number");
-        });
+        }
     }
 }

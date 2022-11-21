@@ -2,6 +2,7 @@ using Enfo.Domain.EnforcementOrders.Repositories;
 using Enfo.Domain.EnforcementOrders.Resources;
 using Enfo.Domain.EnforcementOrders.Resources.Validation;
 using FluentAssertions;
+using FluentAssertions.Execution;
 using FluentValidation.TestHelper;
 using Moq;
 using NUnit.Framework;
@@ -35,11 +36,11 @@ public class ValidatingEnforcementOrderCreate
 
         var result = await validator.TestValidateAsync(sampleCreate);
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             result.Errors.Should().BeEmpty();
             result.IsValid.Should().BeTrue();
-        });
+        }
     }
 
     [Test]
@@ -64,13 +65,13 @@ public class ValidatingEnforcementOrderCreate
 
         var result = await validator.TestValidateAsync(sampleCreate);
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             result.IsValid.Should().BeFalse();
             result.Errors.Should().NotBeEmpty().And.HaveCount(2);
             result.ShouldHaveValidationErrorFor(e => e.CommentContactId);
             result.ShouldHaveValidationErrorFor(e => e.CommentPeriodClosesDate);
-        });
+        }
     }
 
     [Test]
@@ -98,11 +99,11 @@ public class ValidatingEnforcementOrderCreate
 
         var result = await validator.TestValidateAsync(sampleCreate);
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             result.IsValid.Should().BeFalse();
             result.Errors.Should().NotBeEmpty();
             result.ShouldHaveValidationErrorFor(e => e.OrderNumber);
-        });
+        }
     }
 }

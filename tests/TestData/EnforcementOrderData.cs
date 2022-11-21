@@ -600,6 +600,7 @@ internal static class EnforcementOrderData
             FacilityName = "Date Range Test",
             County = "",
             LegalAuthorityId = 1,
+            LegalAuthority = LegalAuthorityData.GetLegalAuthority(1),
             Cause = "",
             OrderNumber = "",
             PublicationStatus = EnforcementOrder.PublicationState.Published,

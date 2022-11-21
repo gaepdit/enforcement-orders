@@ -1,5 +1,6 @@
 using Enfo.Domain.Pagination;
 using FluentAssertions;
+using FluentAssertions.Execution;
 using NUnit.Framework;
 using System;
 using System.Diagnostics.CodeAnalysis;
@@ -19,13 +20,13 @@ public class ConstructingPaginationSpec
 
         var pagination = new PaginationSpec(pageNumber, pageSize);
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             pagination.PageSize.Should().Be(pageSize);
             pagination.PageNumber.Should().Be(pageNumber);
             pagination.Take.Should().Be(pageSize);
             pagination.Skip.Should().Be((pageNumber - 1) * pageSize);
-        });
+        }
     }
 
     [Test]

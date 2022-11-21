@@ -154,7 +154,16 @@ public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
     {
         resource.TrimAll();
         var id = EnforcementOrderData.EnforcementOrders.Max(e => e.Id) + 1;
+
         var item = new EnforcementOrder(resource) { Id = id };
+        item.LegalAuthority = LegalAuthorityData.GetLegalAuthority(item.LegalAuthorityId);
+        item.CommentContact = item.CommentContactId is null
+            ? null
+            : EpdContactData.GetEpdContact(item.CommentContactId.Value);
+        item.HearingContact = item.HearingContactId is null
+            ? null
+            : EpdContactData.GetEpdContact(item.HearingContactId.Value);
+
         EnforcementOrderData.EnforcementOrders.Add(item);
         if (resource.Attachment is not null) await AddAttachmentInternalAsync(resource.Attachment, item);
         return id;
@@ -171,6 +180,14 @@ public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
             throw new ArgumentException("A deleted Enforcement Order cannot be modified.", nameof(resource));
 
         item.ApplyUpdate(resource);
+        item.LegalAuthority = LegalAuthorityData.GetLegalAuthority(item.LegalAuthorityId);
+        item.CommentContact = item.CommentContactId is null
+            ? null
+            : EpdContactData.GetEpdContact(item.CommentContactId.Value);
+        item.HearingContact = item.HearingContactId is null
+            ? null
+            : EpdContactData.GetEpdContact(item.HearingContactId.Value);
+
         return Task.CompletedTask;
     }
 

@@ -1,9 +1,6 @@
 using Enfo.Domain.EnforcementOrders.Repositories;
-using Enfo.Domain.EnforcementOrders.Resources;
-using Enfo.Domain.EnforcementOrders.Resources.Validation;
 using Enfo.Domain.EpdContacts.Repositories;
 using Enfo.Domain.LegalAuthorities.Repositories;
-using Enfo.Domain.LegalAuthorities.Resources;
 using Enfo.Domain.LegalAuthorities.Resources.Validation;
 using Enfo.Domain.Services;
 using Enfo.Domain.Users.Entities;
@@ -16,7 +13,6 @@ using Enfo.WebApp.Platform.Raygun;
 using Enfo.WebApp.Platform.SecurityHeaders;
 using Enfo.WebApp.Platform.Settings;
 using FluentValidation;
-using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.AzureAD.UI;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
@@ -80,7 +76,7 @@ builder.Services.AddDataProtection().PersistKeysToFileSystem(Directory.CreateDir
 builder.Services.AddAuthorization();
 
 // Configure UI
-builder.Services.AddRazorPages().AddFluentValidation();
+builder.Services.AddRazorPages();
 
 // Add API documentation
 builder.Services.AddMvcCore().AddApiExplorer();
@@ -116,7 +112,7 @@ if (builder.Environment.IsLocalEnv())
     // When running locally, you have the option to build the database using LocalDB or InMemory.
     // Either way, only the Identity tables are used by the application. The data tables are created,
     // but the data comes from the LocalRepository data files.
-    if(ApplicationSettings.LocalDevSettings.BuildLocalDb)
+    if (ApplicationSettings.LocalDevSettings.BuildLocalDb)
     {
         builder.Services.AddDbContext<EnfoDbContext>(opts =>
             opts.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -133,7 +129,7 @@ if (builder.Environment.IsLocalEnv())
     builder.Services.AddScoped<IEpdContactRepository, EpdContactRepository>();
     builder.Services.AddScoped<ILegalAuthorityRepository, LegalAuthorityRepository>();
 
-    if(ApplicationSettings.LocalDevSettings.UseLocalFileSystem)
+    if (ApplicationSettings.LocalDevSettings.UseLocalFileSystem)
     {
         builder.Services.AddTransient<IFileService,
             Enfo.Infrastructure.Services.FileService>(_ => new Enfo.Infrastructure.Services.FileService(
@@ -168,9 +164,7 @@ else
 builder.Services.AddHostedService<MigratorHostedService>();
 
 // Configure validators
-builder.Services.AddScoped<IValidator<EnforcementOrderCreate>, EnforcementOrderCreateValidator>();
-builder.Services.AddScoped<IValidator<EnforcementOrderUpdate>, EnforcementOrderUpdateValidator>();
-builder.Services.AddScoped<IValidator<LegalAuthorityCommand>, LegalAuthorityValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<LegalAuthorityValidator>(); // Finds all validators
 
 // Configure bundling and minification
 builder.Services.AddWebOptimizer();
@@ -193,7 +187,7 @@ else
 }
 
 // Configure security HTTP headers
-if(!env.IsLocalEnv() || ApplicationSettings.LocalDevSettings.UseSecurityHeadersLocally)
+if (!env.IsLocalEnv() || ApplicationSettings.LocalDevSettings.UseSecurityHeadersLocally)
     app.UseSecurityHeaders(policies => policies.AddSecurityHeaderPolicies());
 
 // Configure the application

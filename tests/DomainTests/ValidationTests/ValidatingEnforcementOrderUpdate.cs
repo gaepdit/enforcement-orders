@@ -2,6 +2,7 @@ using Enfo.Domain.EnforcementOrders.Repositories;
 using Enfo.Domain.EnforcementOrders.Resources;
 using Enfo.Domain.EnforcementOrders.Resources.Validation;
 using FluentAssertions;
+using FluentAssertions.Execution;
 using FluentValidation.TestHelper;
 using Moq;
 using NUnit.Framework;
@@ -44,11 +45,11 @@ public class ValidatingEnforcementOrderUpdate
 
         var result = await validator.TestValidateAsync(model);
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             result.IsValid.Should().BeTrue();
             result.Errors.Should().BeEmpty();
-        });
+        }
     }
 
     [Test]
@@ -126,12 +127,12 @@ public class ValidatingEnforcementOrderUpdate
 
         var result = await validator.TestValidateAsync(model);
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             result.IsValid.Should().BeFalse();
             result.ShouldHaveValidationErrorFor(e => e.ExecutedDate);
             result.ShouldHaveValidationErrorFor(e => e.ExecutedOrderPostedDate);
-        });
+        }
     }
 
     [Test]
@@ -156,13 +157,13 @@ public class ValidatingEnforcementOrderUpdate
 
         var result = await validator.TestValidateAsync(model);
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             result.IsValid.Should().BeFalse();
             result.ShouldHaveValidationErrorFor(e => e.HearingDate);
             result.ShouldHaveValidationErrorFor(e => e.HearingLocation);
             result.ShouldHaveValidationErrorFor(e => e.HearingCommentPeriodClosesDate);
             result.ShouldHaveValidationErrorFor(e => e.HearingContactId);
-        });
+        }
     }
 }

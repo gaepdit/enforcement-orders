@@ -5,12 +5,16 @@ using Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthorities;
 using Enfo.WebApp.Platform.RazorHelpers;
 using EnfoTests.TestData;
 using FluentAssertions;
+using FluentAssertions.Execution;
+using FluentValidation;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Moq;
 using NUnit.Framework;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace EnfoTests.WebApp.Pages.Admin.Maintenance.LegalAuthorities;
@@ -28,12 +32,12 @@ public class EditTests
 
         await page.OnGetAsync(item.Id);
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             page.Item.Should().BeEquivalentTo(new LegalAuthorityCommand(item));
             page.Item.Id.Should().Be(item.Id);
             page.OriginalName.Should().Be(item.AuthorityName);
-        });
+        }
     }
 
     [Test]
@@ -44,11 +48,11 @@ public class EditTests
 
         var result = await page.OnGetAsync(null);
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             result.Should().BeOfType<NotFoundResult>();
             page.Item.Should().BeNull();
-        });
+        }
     }
 
     [Test]
@@ -60,11 +64,11 @@ public class EditTests
 
         var result = await page.OnGetAsync(-1);
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             result.Should().BeOfType<NotFoundObjectResult>();
             page.Item.Should().BeNull();
-        });
+        }
     }
 
     [Test]
@@ -85,12 +89,12 @@ public class EditTests
         var expected = new DisplayMessage(Context.Warning,
             $"Inactive {Edit.ThisOption.PluralName} cannot be edited.");
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             page.TempData.GetDisplayMessage().Should().BeEquivalentTo(expected);
             result.Should().BeOfType<RedirectToPageResult>();
             ((RedirectToPageResult)result).PageName.Should().Be("Index");
-        });
+        }
     }
 
     [Test]
@@ -98,9 +102,12 @@ public class EditTests
     {
         var repo = new Mock<ILegalAuthorityRepository>();
         repo.Setup(l => l.GetAsync(It.IsAny<int>())).ReturnsAsync(null as LegalAuthorityView);
+        var validator = new Mock<IValidator<LegalAuthorityCommand>>();
+        validator.Setup(l => l.ValidateAsync(It.IsAny<LegalAuthorityCommand>(), CancellationToken.None))
+            .ReturnsAsync(new ValidationResult());
         var page = new Edit(repo.Object) { Item = new LegalAuthorityCommand { Id = 0 } };
 
-        var result = await page.OnPostAsync();
+        var result = await page.OnPostAsync(validator.Object);
 
         result.Should().BeOfType<NotFoundResult>();
     }
@@ -112,6 +119,9 @@ public class EditTests
         var repo = new Mock<ILegalAuthorityRepository>();
         repo.Setup(l => l.GetAsync(It.IsAny<int>()))
             .ReturnsAsync(item);
+        var validator = new Mock<IValidator<LegalAuthorityCommand>>();
+        validator.Setup(l => l.ValidateAsync(It.IsAny<LegalAuthorityCommand>(), CancellationToken.None))
+            .ReturnsAsync(new ValidationResult());
 
         // Initialize Page TempData
         var httpContext = new DefaultHttpContext();
@@ -122,17 +132,17 @@ public class EditTests
             Item = new LegalAuthorityCommand(item),
         };
 
-        var result = await page.OnPostAsync();
+        var result = await page.OnPostAsync(validator.Object);
 
         var expected = new DisplayMessage(Context.Warning,
             $"Inactive {Edit.ThisOption.PluralName} cannot be edited.");
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             page.TempData.GetDisplayMessage().Should().BeEquivalentTo(expected);
             result.Should().BeOfType<RedirectToPageResult>();
             ((RedirectToPageResult)result).PageName.Should().Be("Index");
-        });
+        }
     }
 
     [Test]
@@ -144,22 +154,25 @@ public class EditTests
             .ReturnsAsync(ResourceHelper.GetLegalAuthorityViewList()[0]);
         repo.Setup(l => l.NameExistsAsync(It.IsAny<string>()))
             .ReturnsAsync(false);
+        var validator = new Mock<IValidator<LegalAuthorityCommand>>();
+        validator.Setup(l => l.ValidateAsync(It.IsAny<LegalAuthorityCommand>(), CancellationToken.None))
+            .ReturnsAsync(new ValidationResult());
 
         // Initialize Page TempData
         var httpContext = new DefaultHttpContext();
         var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
         var page = new Edit(repo.Object) { TempData = tempData, Item = item };
 
-        var result = await page.OnPostAsync();
+        var result = await page.OnPostAsync(validator.Object);
 
         var expected = new DisplayMessage(Context.Success,
             $"{item.AuthorityName} successfully updated.");
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             page.TempData.GetDisplayMessage().Should().BeEquivalentTo(expected);
             result.Should().BeOfType<RedirectToPageResult>();
             ((RedirectToPageResult)result).PageName.Should().Be("Index");
-        });
+        }
     }
 }

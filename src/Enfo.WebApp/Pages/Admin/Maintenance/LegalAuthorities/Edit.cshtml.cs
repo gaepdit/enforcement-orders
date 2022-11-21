@@ -3,12 +3,13 @@ using Enfo.Domain.LegalAuthorities.Resources;
 using Enfo.Domain.Users.Entities;
 using Enfo.WebApp.Models;
 using Enfo.WebApp.Platform.RazorHelpers;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
 
 namespace Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthorities
 {
@@ -48,7 +49,7 @@ namespace Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthorities
         }
 
         [UsedImplicitly]
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostAsync([FromServices] IValidator<LegalAuthorityCommand> validator)
         {
             if (Item.Id is null) return BadRequest();
 
@@ -61,6 +62,8 @@ namespace Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthorities
                 return RedirectToPage("Index");
             }
 
+            var validationResult = await validator.ValidateAsync(Item);
+            if (!validationResult.IsValid) validationResult.AddToModelState(ModelState, nameof(Item));
             if (!ModelState.IsValid) return Page();
 
             try

@@ -2,6 +2,7 @@
 using Enfo.LocalRepository;
 using EnfoTests.TestData;
 using FluentAssertions;
+using FluentAssertions.Execution;
 using Moq;
 using NUnit.Framework;
 using System;
@@ -24,11 +25,11 @@ public class DeleteAttachmentTests
 
         AttachmentData.Attachments.Count.Should().Be(initialFileCount);
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             attachment.Deleted.Should().BeTrue();
             attachment.DateDeleted.Should().NotBeNull();
-        });
+        }
 
         // Cleanup
         attachment.Deleted = false;

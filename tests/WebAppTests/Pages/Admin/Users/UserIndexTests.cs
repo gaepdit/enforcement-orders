@@ -2,6 +2,7 @@
 using Enfo.Domain.Users.Services;
 using Enfo.WebApp.Pages.Admin.Users;
 using FluentAssertions;
+using FluentAssertions.Execution;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Moq;
 using NUnit.Framework;
@@ -28,13 +29,13 @@ public class UserIndexTests
 
         var result = await pageModel.OnGetSearchAsync(userService.Object, name, email, role);
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             result.Should().BeOfType<PageResult>();
             pageModel.ModelState.IsValid.Should().BeTrue();
             pageModel.SearchResults.Should().BeEquivalentTo(searchResults);
             pageModel.ShowResults.Should().BeTrue();
-        });
+        }
     }
 
     [Test]
@@ -46,10 +47,10 @@ public class UserIndexTests
 
         var result = await pageModel.OnGetSearchAsync(userService.Object, null, null, null);
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             result.Should().BeOfType<PageResult>();
             pageModel.ModelState.IsValid.Should().BeFalse();
-        });
+        }
     }
 }

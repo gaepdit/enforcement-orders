@@ -3,6 +3,7 @@ using Enfo.Domain.EnforcementOrders.Resources;
 using EnfoTests.Infrastructure.Helpers;
 using EnfoTests.TestData;
 using FluentAssertions;
+using FluentAssertions.Execution;
 using Microsoft.AspNetCore.Http;
 using NUnit.Framework;
 using System;
@@ -109,13 +110,13 @@ public class CreateTests
         // Assert
         var order = await repository.GetAdminViewAsync(itemId);
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             order.Attachments.Count.Should().Be(1);
             var attachment = order.Attachments.Single();
             attachment.FileName.Should().Be("test1.pdf");
             attachment.FileExtension.Should().Be(".pdf");
             attachment.Size.Should().Be(1);
-        });
+        }
     }
 }

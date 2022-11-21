@@ -5,6 +5,7 @@ using Enfo.WebApp.Pages.Admin.Maintenance.Contacts;
 using Enfo.WebApp.Platform.RazorHelpers;
 using EnfoTests.TestData;
 using FluentAssertions;
+using FluentAssertions.Execution;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -29,11 +30,11 @@ public class EditTests
 
         await page.OnGetAsync(item.Id);
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             page.Item.Should().BeEquivalentTo(new EpdContactCommand(item));
             page.Item.Id.Should().Be(item.Id);
-        });
+        }
     }
 
     [Test]
@@ -43,11 +44,11 @@ public class EditTests
 
         var result = await page.OnGetAsync(null);
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             result.Should().BeOfType<NotFoundResult>();
             page.Item.Should().BeNull();
-        });
+        }
     }
 
     [Test]
@@ -59,11 +60,11 @@ public class EditTests
 
         var result = await page.OnGetAsync(-1);
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             result.Should().BeOfType<NotFoundObjectResult>();
             page.Item.Should().BeNull();
-        });
+        }
     }
 
     [Test]
@@ -85,12 +86,12 @@ public class EditTests
         var expected = new DisplayMessage(Context.Warning,
             $"Inactive {Edit.ThisOption.PluralName} cannot be edited.");
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             page.TempData.GetDisplayMessage().Should().BeEquivalentTo(expected);
             result.Should().BeOfType<RedirectToPageResult>();
             ((RedirectToPageResult)result).PageName.Should().Be("Index");
-        });
+        }
     }
 
     [Test]
@@ -125,12 +126,12 @@ public class EditTests
         var expected = new DisplayMessage(Context.Warning,
             $"Inactive {Edit.ThisOption.PluralName} cannot be edited.");
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             page.TempData.GetDisplayMessage().Should().BeEquivalentTo(expected);
             result.Should().BeOfType<RedirectToPageResult>();
             ((RedirectToPageResult)result).PageName.Should().Be("Index");
-        });
+        }
     }
 
     [Test]
@@ -151,12 +152,12 @@ public class EditTests
         var expected = new DisplayMessage(Context.Success,
             $"{Edit.ThisOption.SingularName} successfully updated.");
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             page.TempData.GetDisplayMessage().Should().BeEquivalentTo(expected);
             result.Should().BeOfType<RedirectToPageResult>();
             ((RedirectToPageResult)result).PageName.Should().Be("Index");
-        });
+        }
     }
 
     [Test]
@@ -170,10 +171,10 @@ public class EditTests
 
         var result = await page.OnPostAsync();
 
-        Assert.Multiple(() =>
+        using (new AssertionScope())
         {
             result.Should().BeOfType<PageResult>();
             page.ModelState.IsValid.Should().BeFalse();
-        });
+        }
     }
 }
