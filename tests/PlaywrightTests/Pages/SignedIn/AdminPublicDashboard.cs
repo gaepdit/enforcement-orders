@@ -7,7 +7,7 @@ namespace PlaywrightTests.Pages.SignedIn;
 
 [Parallelizable(ParallelScope.Self)]
 [TestFixture]
-public class HomePage : PageTest
+public class AdminPublicDashboard : PageTest
 {
     public override BrowserNewContextOptions ContextOptions()
     {
@@ -19,7 +19,7 @@ public class HomePage : PageTest
     }
 
     [Test]
-    public async Task TestTextHomePage()
+    public async Task TestTextPublicDashboard()
     {
         await Page.GotoAsync("https://localhost:44331/");
         await Page.GetByRole(AriaRole.Link, new() { NameString = "Sign in" }).ClickAsync();
