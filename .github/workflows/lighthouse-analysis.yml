@@ -36,7 +36,7 @@ jobs:
 
       - name: Installing Lighthouse through NPM
         run: |
-          npm install -g @foo-software/lighthouse-check
+          npm install -g @foo-software/lighthouse-check@7.0.0
 
       - name: Run Lighthouse Check
         run: |
@@ -44,6 +44,8 @@ jobs:
           --verbose \
           --prCommentEnabled \
           --emulatedFormFactor "all" \
+          --prCommentAccessToken "${{ secrets.LIGHTHOUSE_CHECK_GITHUB_ACCESS_TOKEN }}" \
+          --prCommentUrl "https://api.github.com/repos/gaepdit/enforcement-orders/pulls/$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }')/reviews" \
           --timeout "5" \
           --overridesJsonFile ".github/workflows/lighthouse-config.json" \
           --urls "https://localhost:44331,https://localhost:44331/Search?Status=All&handler=search#search-results,https://localhost:44331/Details/15" \
