@@ -128,7 +128,7 @@ public class AdminAddOrders : PageTest
         await Expect(Page.Locator("//table/tbody/tr[3]/td")).ToContainTextAsync("Bartow County");
         await Expect(Page.Locator("//table/tbody/tr[4]/td")).ToContainTextAsync("testing");
         await Expect(Page.Locator("//table/tbody/tr[5]/td")).ToContainTextAsync("");
-        await Expect(Page.Locator("//table/tbody/tr[6]/td")).ToContainTextAsync("$123.00");
+        await Expect(Page.Locator("//table/tbody/tr[6]/td")).ToContainTextAsync("123.00");
         await Expect(Page.Locator("//table/tbody/tr[7]/td")).ToContainTextAsync("Air Quality Act");
         await Expect(Page.Locator("//table/tbody/tr[8]/td")).ToContainTextAsync("");
         await Expect(Page.Locator("//table/tbody/tr[9]/td")).ToContainTextAsync("");
