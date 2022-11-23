@@ -8,7 +8,16 @@ namespace PlaywrightTests.Pages.SignedIn;
 [Parallelizable(ParallelScope.Self)]
 [TestFixture]
 public class AdminAddOrders : PageTest
-{ 
+{
+    public override BrowserNewContextOptions ContextOptions()
+    {
+        return new BrowserNewContextOptions()
+        {
+            ColorScheme = ColorScheme.Light,
+            IgnoreHTTPSErrors = true
+        };
+    }
+
     [Test]
     public async Task TestAddOrders()
     {
