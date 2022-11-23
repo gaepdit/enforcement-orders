@@ -78,7 +78,7 @@ public class AdminIndexPage : PageTest
 
         // Proposed Orders
         int tableRows1 = await Page.Locator("//section[1]/div/section[1]/table/tbody/tr").CountAsync();
-        Assert.That(tableRows1, Is.EqualTo(3));
+        Assert.That(tableRows1, Is.GreaterThanOrEqualTo(3));
         // check the column labels of the first table
         await Expect(Page.Locator("//section[1]/div/section[1]/table/thead/tr/th[1]")).ToContainTextAsync("Facility");
         await Expect(Page.Locator("//section[1]/div/section[1]/table/thead/tr/th[2]")).ToContainTextAsync("Date Comment Period Closes");
@@ -86,7 +86,7 @@ public class AdminIndexPage : PageTest
 
         // Executed Orders
         int tableRows2 = await Page.Locator("//section[1]/div/section[2]/table/tbody/tr").CountAsync();
-        Assert.That(tableRows2, Is.EqualTo(3));
+        Assert.That(tableRows2, Is.GreaterThanOrEqualTo(3));
         // check the column labels of the second table
         await Expect(Page.Locator("//section[1]/div/section[2]/table/thead/tr/th[1]")).ToContainTextAsync("Facility");
         await Expect(Page.Locator("//section[1]/div/section[2]/table/thead/tr/th[2]")).ToContainTextAsync("Date Executed");
@@ -94,7 +94,7 @@ public class AdminIndexPage : PageTest
 
         // Pending Orders
         int tableRows3 = await Page.Locator("//section[2]/div/section[1]/table/tbody/tr").CountAsync();
-        Assert.That(tableRows3, Is.EqualTo(3));
+        Assert.That(tableRows3, Is.GreaterThanOrEqualTo(3));
         // check the column labels of the third table
         await Expect(Page.Locator("//section[2]/div/section[1]/table/thead/tr/th[1]")).ToContainTextAsync("Facility");
         await Expect(Page.Locator("//section[2]/div/section[1]/table/thead/tr/th[2]")).ToContainTextAsync("Pending Publication Date");
@@ -102,7 +102,7 @@ public class AdminIndexPage : PageTest
 
         // Draft Orders
         int tableRows4 = await Page.Locator("//section[2]/div/section[2]/table/tbody/tr").CountAsync();
-        Assert.That(tableRows4, Is.EqualTo(3));
+        Assert.That(tableRows4, Is.GreaterThanOrEqualTo(3));
         // check the column labels of the fourth table 
         await Expect(Page.Locator("//section[2]/div/section[2]/table/thead/tr/th[1]")).ToContainTextAsync("Facility");
         await Expect(Page.Locator("//section[2]/div/section[2]/table/thead/tr/th[2]")).ToContainTextAsync("");

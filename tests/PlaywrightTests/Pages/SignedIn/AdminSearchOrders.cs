@@ -59,33 +59,32 @@ public class AdminSearchOrders : PageTest
 
         // check the number of rows in the first table
         int tableRows = await Page.Locator("//table[1]/tbody/tr").CountAsync();
-        Assert.That(tableRows, Is.EqualTo(19));
+        Assert.That(tableRows, Is.GreaterThanOrEqualTo(19));
 
         // check the column labels of the first table
         await Expect(Page.Locator("//table/thead/tr/th[1]")).ToContainTextAsync("Facility");
         await Expect(Page.Locator("//table/thead/tr/th[2]")).ToContainTextAsync("Order");
         await Expect(Page.Locator("//table/thead/tr/th[3]")).ToContainTextAsync("Status/Date");
 
-        // check the value of Order ID in the current order
-        await Expect(Page.Locator("//table/tbody/tr[1]/td[1]")).ToContainTextAsync("EPD-AQ-0013");
-        await Expect(Page.Locator("//table/tbody/tr[2]/td[1]")).ToContainTextAsync("EPD-AQ-0023");
-        await Expect(Page.Locator("//table/tbody/tr[3]/td[1]")).ToContainTextAsync("EPD-AQ-0003");
-        await Expect(Page.Locator("//table/tbody/tr[4]/td[1]")).ToContainTextAsync("EPD-SW-WQ-0015");
-        await Expect(Page.Locator("//table/tbody/tr[5]/td[1]")).ToContainTextAsync("EPD-SW-WQ-0025");
-        await Expect(Page.Locator("//table/tbody/tr[6]/td[1]")).ToContainTextAsync("EPD-SW-WQ-0005");
-        await Expect(Page.Locator("//table/tbody/tr[7]/td[1]")).ToContainTextAsync("EPD-WP-0002");
-        await Expect(Page.Locator("//table/tbody/tr[8]/td[1]")).ToContainTextAsync("EPD-WP-0001");
-        await Expect(Page.Locator("//table/tbody/tr[9]/td[1]")).ToContainTextAsync("EPD-WP-0011");
-        await Expect(Page.Locator("//table/tbody/tr[10]/td[1]")).ToContainTextAsync("EPD-WP-0021");
-        await Expect(Page.Locator("//table/tbody/tr[11]/td[1]")).ToContainTextAsync("EPD-WP-0012");
-        await Expect(Page.Locator("//table/tbody/tr[12]/td[1]")).ToContainTextAsync("EPD-WP-0022");
-        await Expect(Page.Locator("//table/tbody/tr[13]/td[1]")).ToContainTextAsync("EPD-WP-0017");
-        await Expect(Page.Locator("//table/tbody/tr[14]/td[1]")).ToContainTextAsync("EPD-WP-0027");
-        await Expect(Page.Locator("//table/tbody/tr[15]/td[1]")).ToContainTextAsync("EPD-WP-0007");
-        await Expect(Page.Locator("//table/tbody/tr[16]/td[1]")).ToContainTextAsync("EPD-SW-WQ-0016");
-        await Expect(Page.Locator("//table/tbody/tr[17]/td[1]")).ToContainTextAsync("EPD-SW-WQ-0026");
-        await Expect(Page.Locator("//table/tbody/tr[18]/td[1]")).ToContainTextAsync("EPD-SW-WQ-0006");
-        await Expect(Page.Locator("//table/tbody/tr[19]/td[1]")).ToContainTextAsync("");
+        // check the value of Order ID
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-AQ-0013 Air Quality Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-AQ-0023 Air Quality Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-AQ-0003 Air Quality Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-SW-WQ-0015 Asbestos Safety Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-SW-WQ-0025 Asbestos Safety Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-SW-WQ-0005 Asbestos Safety Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-WP-0002 Asbestos Safety Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-WP-0001 Asbestos Safety Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-WP-0011 Asbestos Safety Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-WP-0021 Asbestos Safety Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-WP-0012 Asbestos Safety Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-WP-0022 Asbestos Safety Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-WP-0017 Asbestos Safety Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-WP-0027 Asbestos Safety Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-WP-0007 Asbestos Safety Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-SW-WQ-0016 Air Quality Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-SW-WQ-0026 Air Quality Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-SW-WQ-0006 Air Quality Act" })).ToBeVisibleAsync();
     }
 
     [Test]
@@ -133,33 +132,32 @@ public class AdminSearchOrders : PageTest
 
         // check the number of rows in the first table
         int tableRows = await Page.Locator("//table[1]/tbody/tr").CountAsync();
-        Assert.That(tableRows, Is.EqualTo(19));
+        Assert.That(tableRows, Is.GreaterThanOrEqualTo(19));
 
         // check the column labels of the first table
         await Expect(Page.Locator("//table/thead/tr/th[1]")).ToContainTextAsync("Facility");
         await Expect(Page.Locator("//table/thead/tr/th[2]")).ToContainTextAsync("Order");
         await Expect(Page.Locator("//table/thead/tr/th[3]")).ToContainTextAsync("Status/Date");
 
-        // check the value of Order ID in the current order
-        await Expect(Page.Locator("//table/tbody/tr[1]/td[1]")).ToContainTextAsync("");
-        await Expect(Page.Locator("//table/tbody/tr[2]/td[1]")).ToContainTextAsync("EPD-SW-WQ-0016");
-        await Expect(Page.Locator("//table/tbody/tr[3]/td[1]")).ToContainTextAsync("EPD-SW-WQ-0026");
-        await Expect(Page.Locator("//table/tbody/tr[4]/td[1]")).ToContainTextAsync("EPD-SW-WQ-0006");
-        await Expect(Page.Locator("//table/tbody/tr[5]/td[1]")).ToContainTextAsync("EPD-WP-0017");
-        await Expect(Page.Locator("//table/tbody/tr[6]/td[1]")).ToContainTextAsync("EPD-WP-0027");
-        await Expect(Page.Locator("//table/tbody/tr[7]/td[1]")).ToContainTextAsync("EPD-WP-0007");
-        await Expect(Page.Locator("//table/tbody/tr[8]/td[1]")).ToContainTextAsync("EPD-WP-0002");
-        await Expect(Page.Locator("//table/tbody/tr[9]/td[1]")).ToContainTextAsync("EPD-WP-0001");
-        await Expect(Page.Locator("//table/tbody/tr[10]/td[1]")).ToContainTextAsync("EPD-WP-0011");
-        await Expect(Page.Locator("//table/tbody/tr[11]/td[1]")).ToContainTextAsync("EPD-WP-0021");
-        await Expect(Page.Locator("//table/tbody/tr[12]/td[1]")).ToContainTextAsync("EPD-WP-0012");
-        await Expect(Page.Locator("//table/tbody/tr[13]/td[1]")).ToContainTextAsync("EPD-WP-0022");
-        await Expect(Page.Locator("//table/tbody/tr[14]/td[1]")).ToContainTextAsync("EPD-SW-WQ-0015");
-        await Expect(Page.Locator("//table/tbody/tr[15]/td[1]")).ToContainTextAsync("EPD-SW-WQ-0025");
-        await Expect(Page.Locator("//table/tbody/tr[16]/td[1]")).ToContainTextAsync("EPD-SW-WQ-0005");
-        await Expect(Page.Locator("//table/tbody/tr[17]/td[1]")).ToContainTextAsync("EPD-AQ-0013");
-        await Expect(Page.Locator("//table/tbody/tr[18]/td[1]")).ToContainTextAsync("EPD-AQ-0023");
-        await Expect(Page.Locator("//table/tbody/tr[19]/td[1]")).ToContainTextAsync("EPD-AQ-0003");
+        // check the value of Order ID
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-AQ-0013 Air Quality Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-AQ-0023 Air Quality Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-AQ-0003 Air Quality Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-SW-WQ-0015 Asbestos Safety Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-SW-WQ-0025 Asbestos Safety Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-SW-WQ-0005 Asbestos Safety Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-WP-0002 Asbestos Safety Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-WP-0001 Asbestos Safety Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-WP-0011 Asbestos Safety Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-WP-0021 Asbestos Safety Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-WP-0012 Asbestos Safety Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-WP-0022 Asbestos Safety Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-WP-0017 Asbestos Safety Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-WP-0027 Asbestos Safety Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-WP-0007 Asbestos Safety Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-SW-WQ-0016 Air Quality Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-SW-WQ-0026 Air Quality Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-SW-WQ-0006 Air Quality Act" })).ToBeVisibleAsync();
     }
 
     [Test]
@@ -208,33 +206,32 @@ public class AdminSearchOrders : PageTest
 
         // check the number of rows in the first table
         int tableRows = await Page.Locator("//table[1]/tbody/tr").CountAsync();
-        Assert.That(tableRows, Is.EqualTo(19));
+        Assert.That(tableRows, Is.GreaterThanOrEqualTo(19));
 
         // check the column labels of the first table
         await Expect(Page.Locator("//table/thead/tr/th[1]")).ToContainTextAsync("Facility");
         await Expect(Page.Locator("//table/thead/tr/th[2]")).ToContainTextAsync("Order");
         await Expect(Page.Locator("//table/thead/tr/th[3]")).ToContainTextAsync("Status/Date");
 
-        // check the value of Order ID in the current order
-        await Expect(Page.Locator("//table/tbody/tr[1]/td[1]")).ToContainTextAsync("EPD-AQ-0013");
-        await Expect(Page.Locator("//table/tbody/tr[2]/td[1]")).ToContainTextAsync("EPD-AQ-0023");
-        await Expect(Page.Locator("//table/tbody/tr[3]/td[1]")).ToContainTextAsync("EPD-AQ-0003");
-        await Expect(Page.Locator("//table/tbody/tr[4]/td[1]")).ToContainTextAsync("EPD-SW-WQ-0015");
-        await Expect(Page.Locator("//table/tbody/tr[5]/td[1]")).ToContainTextAsync("EPD-SW-WQ-0025");
-        await Expect(Page.Locator("//table/tbody/tr[6]/td[1]")).ToContainTextAsync("EPD-SW-WQ-0005");
-        await Expect(Page.Locator("//table/tbody/tr[7]/td[1]")).ToContainTextAsync("EPD-WP-0002");
-        await Expect(Page.Locator("//table/tbody/tr[8]/td[1]")).ToContainTextAsync("EPD-WP-0001");
-        await Expect(Page.Locator("//table/tbody/tr[9]/td[1]")).ToContainTextAsync("EPD-WP-0011");
-        await Expect(Page.Locator("//table/tbody/tr[10]/td[1]")).ToContainTextAsync("EPD-WP-0021");
-        await Expect(Page.Locator("//table/tbody/tr[11]/td[1]")).ToContainTextAsync("EPD-WP-0012");
-        await Expect(Page.Locator("//table/tbody/tr[12]/td[1]")).ToContainTextAsync("EPD-WP-0022");
-        await Expect(Page.Locator("//table/tbody/tr[13]/td[1]")).ToContainTextAsync("EPD-WP-0017");
-        await Expect(Page.Locator("//table/tbody/tr[14]/td[1]")).ToContainTextAsync("EPD-WP-0027");
-        await Expect(Page.Locator("//table/tbody/tr[15]/td[1]")).ToContainTextAsync("EPD-WP-0007");
-        await Expect(Page.Locator("//table/tbody/tr[16]/td[1]")).ToContainTextAsync("EPD-SW-WQ-0016");
-        await Expect(Page.Locator("//table/tbody/tr[17]/td[1]")).ToContainTextAsync("EPD-SW-WQ-0026");
-        await Expect(Page.Locator("//table/tbody/tr[18]/td[1]")).ToContainTextAsync("EPD-SW-WQ-0006");
-        await Expect(Page.Locator("//table/tbody/tr[19]/td[1]")).ToContainTextAsync("");
+        // check the value of Order ID
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-AQ-0013 Air Quality Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-AQ-0023 Air Quality Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-AQ-0003 Air Quality Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-SW-WQ-0015 Asbestos Safety Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-SW-WQ-0025 Asbestos Safety Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-SW-WQ-0005 Asbestos Safety Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-WP-0002 Asbestos Safety Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-WP-0001 Asbestos Safety Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-WP-0011 Asbestos Safety Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-WP-0021 Asbestos Safety Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-WP-0012 Asbestos Safety Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-WP-0022 Asbestos Safety Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-WP-0017 Asbestos Safety Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-WP-0027 Asbestos Safety Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-WP-0007 Asbestos Safety Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-SW-WQ-0016 Air Quality Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-SW-WQ-0026 Air Quality Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-SW-WQ-0006 Air Quality Act" })).ToBeVisibleAsync();
     }
 
     [Test]
@@ -281,33 +278,32 @@ public class AdminSearchOrders : PageTest
 
         // check the number of rows in the first table
         int tableRows = await Page.Locator("//table[1]/tbody/tr").CountAsync();
-        Assert.That(tableRows, Is.EqualTo(19));
+        Assert.That(tableRows, Is.GreaterThanOrEqualTo(19));
 
         // check the column labels of the first table
         await Expect(Page.Locator("//table/thead/tr/th[1]")).ToContainTextAsync("Facility");
         await Expect(Page.Locator("//table/thead/tr/th[2]")).ToContainTextAsync("Order");
         await Expect(Page.Locator("//table/thead/tr/th[3]")).ToContainTextAsync("Status/Date");
 
-        // check the value of Order ID in the current order
-        await Expect(Page.Locator("//table/tbody/tr[1]/td[1]")).ToContainTextAsync("EPD-WP-0001");
-        await Expect(Page.Locator("//table/tbody/tr[2]/td[1]")).ToContainTextAsync("EPD-WP-0011");
-        await Expect(Page.Locator("//table/tbody/tr[3]/td[1]")).ToContainTextAsync("EPD-WP-0021");
-        await Expect(Page.Locator("//table/tbody/tr[4]/td[1]")).ToContainTextAsync("EPD-WP-0012");
-        await Expect(Page.Locator("//table/tbody/tr[5]/td[1]")).ToContainTextAsync("EPD-WP-0002");
-        await Expect(Page.Locator("//table/tbody/tr[6]/td[1]")).ToContainTextAsync("EPD-WP-0022");
-        await Expect(Page.Locator("//table/tbody/tr[7]/td[1]")).ToContainTextAsync("");
-        await Expect(Page.Locator("//table/tbody/tr[8]/td[1]")).ToContainTextAsync("EPD-SW-WQ-0015");
-        await Expect(Page.Locator("//table/tbody/tr[9]/td[1]")).ToContainTextAsync("EPD-SW-WQ-0025");
-        await Expect(Page.Locator("//table/tbody/tr[10]/td[1]")).ToContainTextAsync("EPD-SW-WQ-0005");
-        await Expect(Page.Locator("//table/tbody/tr[11]/td[1]")).ToContainTextAsync("EPD-SW-WQ-0016");
-        await Expect(Page.Locator("//table/tbody/tr[12]/td[1]")).ToContainTextAsync("EPD-SW-WQ-0026");
-        await Expect(Page.Locator("//table/tbody/tr[13]/td[1]")).ToContainTextAsync("EPD-SW-WQ-0006");
-        await Expect(Page.Locator("//table/tbody/tr[14]/td[1]")).ToContainTextAsync("EPD-WP-0017");
-        await Expect(Page.Locator("//table/tbody/tr[15]/td[1]")).ToContainTextAsync("EPD-WP-0027");
-        await Expect(Page.Locator("//table/tbody/tr[16]/td[1]")).ToContainTextAsync("EPD-WP-0007");
-        await Expect(Page.Locator("//table/tbody/tr[17]/td[1]")).ToContainTextAsync("EPD-AQ-0013");
-        await Expect(Page.Locator("//table/tbody/tr[18]/td[1]")).ToContainTextAsync("EPD-AQ-0023");
-        await Expect(Page.Locator("//table/tbody/tr[19]/td[1]")).ToContainTextAsync("EPD-AQ-0003");
+        // check the value of Order ID
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-AQ-0013 Air Quality Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-AQ-0023 Air Quality Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-AQ-0003 Air Quality Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-SW-WQ-0015 Asbestos Safety Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-SW-WQ-0025 Asbestos Safety Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-SW-WQ-0005 Asbestos Safety Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-WP-0002 Asbestos Safety Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-WP-0001 Asbestos Safety Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-WP-0011 Asbestos Safety Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-WP-0021 Asbestos Safety Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-WP-0012 Asbestos Safety Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-WP-0022 Asbestos Safety Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-WP-0017 Asbestos Safety Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-WP-0027 Asbestos Safety Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-WP-0007 Asbestos Safety Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-SW-WQ-0016 Air Quality Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-SW-WQ-0026 Air Quality Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-SW-WQ-0006 Air Quality Act" })).ToBeVisibleAsync();
     }
 
     [Test]
@@ -356,33 +352,32 @@ public class AdminSearchOrders : PageTest
 
         // check the number of rows in the first table
         int tableRows = await Page.Locator("//table[1]/tbody/tr").CountAsync();
-        Assert.That(tableRows, Is.EqualTo(19));
+        Assert.That(tableRows, Is.GreaterThanOrEqualTo(19));
 
         // check the column labels of the first table
         await Expect(Page.Locator("//table/thead/tr/th[1]")).ToContainTextAsync("Facility");
         await Expect(Page.Locator("//table/thead/tr/th[2]")).ToContainTextAsync("Order");
         await Expect(Page.Locator("//table/thead/tr/th[3]")).ToContainTextAsync("Status/Date");
 
-        // check the value of Order ID in the current order
-        await Expect(Page.Locator("//table/tbody/tr[19]/td[1]")).ToContainTextAsync("EPD-WP-0001");
-        await Expect(Page.Locator("//table/tbody/tr[18]/td[1]")).ToContainTextAsync("EPD-WP-0011");
-        await Expect(Page.Locator("//table/tbody/tr[17]/td[1]")).ToContainTextAsync("EPD-WP-0021");
-        await Expect(Page.Locator("//table/tbody/tr[16]/td[1]")).ToContainTextAsync("EPD-WP-0012");
-        await Expect(Page.Locator("//table/tbody/tr[15]/td[1]")).ToContainTextAsync("EPD-WP-0002");
-        await Expect(Page.Locator("//table/tbody/tr[14]/td[1]")).ToContainTextAsync("EPD-WP-0022");
-        await Expect(Page.Locator("//table/tbody/tr[13]/td[1]")).ToContainTextAsync("");
-        await Expect(Page.Locator("//table/tbody/tr[12]/td[1]")).ToContainTextAsync("EPD-SW-WQ-0015");
-        await Expect(Page.Locator("//table/tbody/tr[11]/td[1]")).ToContainTextAsync("EPD-SW-WQ-0025");
-        await Expect(Page.Locator("//table/tbody/tr[10]/td[1]")).ToContainTextAsync("EPD-SW-WQ-0005");
-        await Expect(Page.Locator("//table/tbody/tr[9]/td[1]")).ToContainTextAsync("EPD-SW-WQ-0016");
-        await Expect(Page.Locator("//table/tbody/tr[8]/td[1]")).ToContainTextAsync("EPD-SW-WQ-0026");
-        await Expect(Page.Locator("//table/tbody/tr[7]/td[1]")).ToContainTextAsync("EPD-SW-WQ-0006");
-        await Expect(Page.Locator("//table/tbody/tr[6]/td[1]")).ToContainTextAsync("EPD-WP-0017");
-        await Expect(Page.Locator("//table/tbody/tr[5]/td[1]")).ToContainTextAsync("EPD-WP-0027");
-        await Expect(Page.Locator("//table/tbody/tr[4]/td[1]")).ToContainTextAsync("EPD-WP-0007");
-        await Expect(Page.Locator("//table/tbody/tr[3]/td[1]")).ToContainTextAsync("EPD-AQ-0013");
-        await Expect(Page.Locator("//table/tbody/tr[2]/td[1]")).ToContainTextAsync("EPD-AQ-0023");
-        await Expect(Page.Locator("//table/tbody/tr[1]/td[1]")).ToContainTextAsync("EPD-AQ-0003");
+        // check the value of Order ID
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-AQ-0013 Air Quality Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-AQ-0023 Air Quality Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-AQ-0003 Air Quality Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-SW-WQ-0015 Asbestos Safety Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-SW-WQ-0025 Asbestos Safety Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-SW-WQ-0005 Asbestos Safety Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-WP-0002 Asbestos Safety Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-WP-0001 Asbestos Safety Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-WP-0011 Asbestos Safety Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-WP-0021 Asbestos Safety Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-WP-0012 Asbestos Safety Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-WP-0022 Asbestos Safety Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-WP-0017 Asbestos Safety Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-WP-0027 Asbestos Safety Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-WP-0007 Asbestos Safety Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-SW-WQ-0016 Air Quality Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-SW-WQ-0026 Air Quality Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "EPD-SW-WQ-0006 Air Quality Act" })).ToBeVisibleAsync();
     }
 
     [Test]
@@ -471,7 +466,7 @@ public class AdminSearchOrders : PageTest
 
         // check the number of rows in the first table
         int tableRows = await Page.Locator("//table[1]/tbody/tr").CountAsync();
-        Assert.That(tableRows, Is.EqualTo(3));
+        Assert.That(tableRows, Is.GreaterThanOrEqualTo(3));
 
         // check the column labels of the first table
         await Expect(Page.Locator("//table/thead/tr/th[1]")).ToContainTextAsync("Facility");
