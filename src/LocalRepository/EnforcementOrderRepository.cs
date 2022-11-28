@@ -112,7 +112,7 @@ public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
     public Task<bool> OrderNumberExistsAsync(string orderNumber, int? ignoreId = null) =>
         Task.FromResult(
             EnforcementOrderData.EnforcementOrders
-                .Any(e => e.OrderNumber == orderNumber && !e.Deleted && e.Id != ignoreId));
+                .Any(e => e.OrderNumber.ToLower() == orderNumber.ToLower() && !e.Deleted && e.Id != ignoreId));
 
     public Task<IReadOnlyList<EnforcementOrderDetailedView>> ListCurrentProposedEnforcementOrdersAsync() =>
         Task.FromResult(
