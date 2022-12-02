@@ -24,6 +24,17 @@ public class OrderNumberExistsTests
     }
 
     [Test]
+    public async Task WhenExistsInADifferentCase_ReturnsTrue()
+    {
+        using var repository = new EnforcementOrderRepository(new Mock<IFileService>().Object);
+        var orderNumber = EnforcementOrderData.EnforcementOrders.First().OrderNumber.ToLower();
+
+        var result = await repository.OrderNumberExistsAsync(orderNumber);
+
+        result.Should().BeTrue();
+    }
+
+    [Test]
     public async Task WhenNotExists_ReturnsFalse()
     {
         using var repository = new EnforcementOrderRepository(new Mock<IFileService>().Object);

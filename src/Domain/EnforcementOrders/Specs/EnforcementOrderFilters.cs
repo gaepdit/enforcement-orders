@@ -10,7 +10,7 @@ public static class EnforcementOrderFilters
         string facilityFilter) =>
         string.IsNullOrWhiteSpace(facilityFilter)
             ? query
-            : query.Where(e => e.FacilityName.Contains(facilityFilter));
+            : query.Where(e => e.FacilityName.ToLower().Contains(facilityFilter.ToLower()));
 
     internal static IQueryable<EnforcementOrder> FilterByCounty(
         [NotNull] this IQueryable<EnforcementOrder> query,
@@ -93,14 +93,14 @@ public static class EnforcementOrderFilters
         string orderNumber) =>
         string.IsNullOrWhiteSpace(orderNumber)
             ? query
-            : query.Where(e => e.OrderNumber.Contains(orderNumber));
+            : query.Where(e => e.OrderNumber.ToLower().Contains(orderNumber.ToLower()));
 
     internal static IQueryable<EnforcementOrder> FilterByText(
         [NotNull] this IQueryable<EnforcementOrder> query,
         string text) =>
         string.IsNullOrWhiteSpace(text)
             ? query
-            : query.Where(e => e.Cause.Contains(text) || e.Requirements.Contains(text));
+            : query.Where(e => e.Cause.ToLower().Contains(text.ToLower()) || e.Requirements.ToLower().Contains(text.ToLower()));
 
     private static IQueryable<EnforcementOrder> FilterForOpenCommentPeriod(
         [NotNull] this IQueryable<EnforcementOrder> query) =>
