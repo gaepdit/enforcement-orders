@@ -61,6 +61,55 @@ public class ListTests
         }
     }
 
+    [Test]
+    public async Task WithFacilityNameSpec_AndDifferentCase_ReturnsCaseInsensitiveMatches()
+    {
+        var spec = new EnforcementOrderSpec
+        {
+            Facility = EnforcementOrderData.EnforcementOrders.First(e => !e.Deleted).FacilityName.ToUpper(),
+        };
+        using var repository = new EnforcementOrderRepository(new Mock<IFileService>().Object);
+
+        var result = await repository.ListAsync(spec, new PaginationSpec(1, 50));
+
+        var expectedList = EnforcementOrderData.EnforcementOrders
+            .Where(e => !e.Deleted && string.Equals(e.FacilityName.ToLower(), spec.Facility.ToLower()))
+            .Select(e => new EnforcementOrderSummaryView(e))
+            .ToList();
+
+        using (new AssertionScope())
+        {
+            result.PageNumber.Should().Be(1);
+            result.TotalCount.Should().Be(expectedList.Count);
+            result.Items.Should().BeEquivalentTo(expectedList);
+        }
+    }
+
+    [Test]
+    public async Task WithOrderNumberSpec_AndDifferentCase_ReturnsCaseInsensitiveMatches()
+    {
+        var spec = new EnforcementOrderSpec
+        {
+            OrderNumber = EnforcementOrderData.EnforcementOrders.First(e => !e.Deleted).OrderNumber.ToLower(),
+        };
+
+        using var repository = new EnforcementOrderRepository(new Mock<IFileService>().Object);
+
+        var result = await repository.ListAsync(spec, new PaginationSpec(1, 50));
+
+        var expectedList = EnforcementOrderData.EnforcementOrders
+            .Where(e => !e.Deleted && string.Equals(e.OrderNumber.ToLower(), spec.OrderNumber.ToLower()))
+            .Select(e => new EnforcementOrderSummaryView(e))
+            .ToList();
+
+        using (new AssertionScope())
+        {
+            result.PageNumber.Should().Be(1);
+            result.TotalCount.Should().Be(expectedList.Count);
+            result.Items.Should().BeEquivalentTo(expectedList);
+        }
+    }
+
     // Tests confirming date range processing
 
     [Test]
