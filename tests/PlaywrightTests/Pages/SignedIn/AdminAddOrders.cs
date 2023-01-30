@@ -17,6 +17,25 @@ public class AdminAddOrders : PageTest
             IgnoreHTTPSErrors = true
         };
     }
+    
+    [SetUp]
+    public void Setup()
+    {
+        LogOut().Wait();
+    }
+    
+    private async Task LogOut()
+    {
+        await Page.GotoAsync("https://localhost:44331/");
+        // The account is signed in when there is an Account button
+        var isSignedIn = await Page.Locator("text=Account").CountAsync() != 0;
+        if (isSignedIn)
+        {
+            await Page.GetByRole(AriaRole.Button, new() { NameString = "Account" }).ClickAsync();
+            await Page.GetByRole(AriaRole.Button, new() { NameString = "Sign out" }).ClickAsync();
+            await Page.WaitForURLAsync("https://localhost:44331/");
+        }
+    }
 
     [Test]
     public async Task TestAddOrders()
