@@ -2,13 +2,10 @@
 
 namespace Enfo.Domain.Users.Entities;
 
-// Add profile data for application users by adding properties to the 
-// ApplicationUser class
-
+// Add profile data for application users by adding properties to the ApplicationUser class.
+// (IdentityUser already includes Id, Email, and UserName properties.)
 public class ApplicationUser : IdentityUser<Guid>
 {
-    // IdentityUser includes Id, Email, and UserName properties.
-
     /// <summary>
     /// A claim that specifies the given name of an entity, http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname
     /// </summary>
@@ -22,18 +19,6 @@ public class ApplicationUser : IdentityUser<Guid>
     [ProtectedPersonalData]
     [StringLength(150)]
     public string FamilyName { get; set; }
-
-    /// <summary>
-    /// Equivalent to ExternalLoginInfo ProviderKey:
-    /// "The unique identifier for this user provided by the login provider."
-    /// Also ClaimTypes.NameIdentifier:
-    /// "The URI for a claim that specifies the name of an entity, http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier."
-    /// </summary>
-    [Obsolete(
-        "SubjectId is the same as the ProviderKey stored in the user logins table and needn't be stored in the user table.",
-        true)]
-    [PersonalData]
-    public string SubjectId { get; init; }
 
     /// <summary>
     /// "oid: The object identifier for the user in Azure AD. This value is the immutable and non-reusable identifier
