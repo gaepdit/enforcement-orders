@@ -1,7 +1,6 @@
 using Enfo.Domain.Users.Entities;
 using Enfo.Domain.Users.Services;
 using Enfo.WebApp.Models;
-using Enfo.WebApp.Platform.Constants;
 using Enfo.WebApp.Platform.Local;
 using Enfo.WebApp.Platform.RazorHelpers;
 using Enfo.WebApp.Platform.Settings;
@@ -189,14 +188,6 @@ public class ExternalLogin : PageModel
         return LocalRedirect(ReturnUrl);
     }
 
-    // Add error info and return this Page.
-    private IActionResult FailedLogin(IdentityResult result, ApplicationUser user)
-    {
-        DisplayFailedUser = user;
-        foreach (var error in result.Errors) ModelState.AddModelError(string.Empty, error.Description);
-        return Page();
-    }
-
     // Add external login provider to user account and sign in user.
     private async Task<IActionResult> AddLoginProviderAndSignInAsync(ApplicationUser user, ExternalLoginInfo info)
     {
@@ -219,5 +210,13 @@ public class ExternalLogin : PageModel
 
         await _signInManager.SignInAsync(user, props, info.LoginProvider);
         return LocalRedirect(ReturnUrl);
+    }
+
+    // Add error info and return this Page.
+    private IActionResult FailedLogin(IdentityResult result, ApplicationUser user)
+    {
+        DisplayFailedUser = user;
+        foreach (var error in result.Errors) ModelState.AddModelError(string.Empty, error.Description);
+        return Page();
     }
 }
