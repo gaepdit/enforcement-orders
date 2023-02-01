@@ -9,7 +9,7 @@ namespace PlaywrightTests.Pages.SignedIn;
 [TestFixture]
 public class AdminAddOrders : PageTest
 {
-    [SuppressMessage("SonarLint", "roslyn:NUnit1028")]
+    [SuppressMessage("SonarLint", "external_roslyn:NUnit1028")]
     public override BrowserNewContextOptions ContextOptions()
     {
         return new BrowserNewContextOptions()

@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.Playwright;
 using Microsoft.Playwright.NUnit;
@@ -9,6 +10,7 @@ namespace PlaywrightTests.Pages.NotSignedIn;
 [TestFixture]
 public class RecentExecuted : PageTest
 {
+    [SuppressMessage("SonarLint", "external_roslyn:NUnit1028")]
     public override BrowserNewContextOptions ContextOptions()
     {
         return new BrowserNewContextOptions()
