@@ -10,9 +10,9 @@
 	<ItemGroup>
 		<PackageReference Include="FluentValidation.AspNetCore" Version="11.2.2" />
 		<PackageReference Include="LigerShark.WebOptimizer.Core" Version="3.0.372" />
-		<PackageReference Include="Microsoft.AspNetCore.Authentication.AzureAD.UI" Version="6.0.11" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.11" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.11" />
+		<PackageReference Include="Microsoft.Identity.Web" Version="1.25.10" />
 		<PackageReference Include="Microsoft.Web.LibraryManager.Build" Version="2.1.175" />
 		<PackageReference Include="Mindscape.Raygun4Net.AspNetCore" Version="6.6.6" />
 		<PackageReference Include="NetEscapades.AspNetCore.SecurityHeaders" Version="0.17.0" />

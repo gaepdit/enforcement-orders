@@ -51,7 +51,7 @@ dotnet run
 
 There are two launch profiles:
 
-* **WebApp Local** — This profile does not connect to any external server. A local user account is used for authentication.
+* **WebApp Local** — This profile uses data in the "tests/TestData" project and does not connect to a remote database. A local user account can be used to simulate authentication, or an Azure AD account can be configured.
 
     You can modify some development settings by creating an "appsettings.Local.json" file to test various scenarios:
 
@@ -59,6 +59,7 @@ There are two launch profiles:
     - *BuildLocalDb* — Uses LocalDB when `true` or in-memory data when `false`.
     - *UseLocalFileSystem* — If `true`, attachment files are saved/loaded from the file system. If `false`, files are seeded from the TestData project and stored in memory.
     - *UseSecurityHeadersLocally* — Sets whether to include HTTP security headers (when running locally).
+    - *UseAzureAd* — If `true`, the app must be registered in the Azure portal, and configuration settings added in the "AzureAd" settings section. If `false`, authentication is simulated using test user data. (*Note:* `UseAzureAd` is not compatible with in-memory data. If `BuildLocalDb` is `false`, then `UseAzureAd` must be `false`.)
 
 * **WebApp Dev Server** — This profile connects to the remote Dev database server for data and requires an SOG account to log in. *To use this profile, you must add the "appsettings.Development.json" file from the "app-config" repo.*
 

@@ -1,7 +1,8 @@
 ﻿using Enfo.Domain.Users.Entities;
 using Enfo.WebApp.Platform.Local;
-using JetBrains.Annotations;
-using Microsoft.AspNetCore.Authentication.AzureAD.UI;
+using Enfo.WebApp.Platform.Settings;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -12,24 +13,29 @@ namespace Enfo.WebApp.Pages.Account;
 [AllowAnonymous]
 public class Logout : PageModel
 {
-    [UsedImplicitly]
-    public IActionResult OnGet() => RedirectToPage("/Index");
+    private readonly SignInManager<ApplicationUser> _signInManager;
+    private readonly IWebHostEnvironment _environment;
 
-#pragma warning disable 618
-    [UsedImplicitly]
-    public async Task<IActionResult> OnPostAsync(
-        [FromServices] SignInManager<ApplicationUser> signInManager,
-        [FromServices] IWebHostEnvironment environment)
+    public Logout(SignInManager<ApplicationUser> signInManager, IWebHostEnvironment environment)
     {
-        if (!environment.IsLocalEnv())
-        {
-            return SignOut(IdentityConstants.ApplicationScheme, IdentityConstants.ExternalScheme,
-                AzureADDefaults.OpenIdScheme);
-        }
+        _signInManager = signInManager;
+        _environment = environment;
+    }
 
-        // If "test" users is enabled, sign out locally and redirect to home page.
-        await signInManager.SignOutAsync();
+    public Task<IActionResult> OnGetAsync() => LogOutAndRedirectToIndex();
+
+    public Task<IActionResult> OnPostAsync() => LogOutAndRedirectToIndex();
+
+    private async Task<IActionResult> LogOutAndRedirectToIndex()
+    {
+        // If Azure AD is enabled, sign out all authentication schemes.
+        if (!_environment.IsLocalEnv() || ApplicationSettings.LocalDevSettings.UseAzureAd)
+            return SignOut(new AuthenticationProperties { RedirectUri = "/Index" },
+                IdentityConstants.ApplicationScheme,
+                OpenIdConnectDefaults.AuthenticationScheme);
+
+        // If a local user is enabled instead, sign out locally and redirect to home page.
+        await _signInManager.SignOutAsync();
         return RedirectToPage("/Index");
     }
-#pragma warning restore 618
 }

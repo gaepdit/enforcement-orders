@@ -18,7 +18,8 @@ public class RaygunClientSettings
 
 public class LocalDevSettings
 {
-    public bool AuthenticatedUser { get; [UsedImplicitly] init; } = true;
+    public bool UseAzureAd { get; [UsedImplicitly] init; }
+    public bool AuthenticatedUser { get; [UsedImplicitly] init; }
     public bool BuildLocalDb { get; [UsedImplicitly] init; }
     public bool UseLocalFileSystem { get; [UsedImplicitly] init; }
     public bool UseSecurityHeadersLocally { get; [UsedImplicitly] init; }

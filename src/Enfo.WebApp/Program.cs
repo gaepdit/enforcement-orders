@@ -13,14 +13,13 @@ using Enfo.WebApp.Platform.Raygun;
 using Enfo.WebApp.Platform.SecurityHeaders;
 using Enfo.WebApp.Platform.Settings;
 using FluentValidation;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.AzureAD.UI;
-using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Web;
 using Microsoft.OpenApi.Models;
 using Mindscape.Raygun4Net.AspNetCore;
+using FileService = Enfo.Infrastructure.Services.FileService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,38 +35,14 @@ builder.Services
     .AddRoles<IdentityRole<Guid>>()
     .AddEntityFrameworkStores<EnfoDbContext>();
 
-// Configure cookies
-// SameSiteMode.None is needed to get single sign-out to work
-builder.Services.Configure<CookiePolicyOptions>(opts => opts.MinimumSameSitePolicy = SameSiteMode.None);
-
 // Configure authentication
-if (builder.Environment.IsLocalEnv())
-{
-    builder.Services.AddAuthentication();
-}
-else
+var authenticationBuilder = builder.Services.AddAuthentication();
+
+if (!builder.Environment.IsLocalEnv() || ApplicationSettings.LocalDevSettings.UseAzureAd)
 {
     // When running on the server, requires an Azure AD login account (configured in the app settings file).
-    // (AddAzureAD is marked as obsolete and will be removed in a future version, but
-    // the replacement, Microsoft Identity Web, is net yet compatible with RoleManager.)
-    // Follow along at https://github.com/AzureAD/microsoft-identity-web/issues/1091
-#pragma warning disable 618
-    builder.Services
-        .AddAuthentication()
-        .AddAzureAD(opts =>
-        {
-            builder.Configuration.Bind(AzureADDefaults.AuthenticationScheme, opts);
-            opts.CallbackPath = "/signin-oidc";
-            opts.CookieSchemeName = "Identity.External";
-        });
-    builder.Services
-        .Configure<OpenIdConnectOptions>(AzureADDefaults.OpenIdScheme, opts =>
-        {
-            opts.Authority += "/v2.0/";
-            opts.TokenValidationParameters.ValidateIssuer = true;
-            opts.UsePkce = true;
-        });
-#pragma warning restore 618
+    authenticationBuilder.AddMicrosoftIdentityWebApp(builder.Configuration, cookieScheme: null);
+    // Note: `cookieScheme: null` is mandatory. See https://github.com/AzureAD/microsoft-identity-web/issues/133#issuecomment-739550416
 }
 
 // Persist data protection keys
@@ -132,12 +107,12 @@ if (builder.Environment.IsLocalEnv())
     if (ApplicationSettings.LocalDevSettings.UseLocalFileSystem)
     {
         builder.Services.AddTransient<IFileService,
-            Enfo.Infrastructure.Services.FileService>(_ => new Enfo.Infrastructure.Services.FileService(
+            FileService>(_ => new FileService(
             Path.Combine(builder.Configuration["PersistedFilesBasePath"], "Attachments")));
     }
     else
     {
-        builder.Services.AddTransient<IFileService, FileService>();
+        builder.Services.AddTransient<IFileService, Enfo.LocalRepository.FileService>();
     }
 }
 else
@@ -150,7 +125,7 @@ else
     builder.Services.AddScoped<IUserService,
         Enfo.Infrastructure.Services.UserService>();
     builder.Services.AddTransient<IFileService,
-        Enfo.Infrastructure.Services.FileService>(_ => new Enfo.Infrastructure.Services.FileService(
+        FileService>(_ => new FileService(
         Path.Combine(builder.Configuration["PersistedFilesBasePath"], "Attachments")));
     builder.Services.AddScoped<IEnforcementOrderRepository,
         Enfo.Infrastructure.Repositories.EnforcementOrderRepository>();
