@@ -105,9 +105,12 @@ public class AdminAddOrders : PageTest
         // enter legal authority
         await Page.GetByRole(AriaRole.Combobox, new() { NameString = "Legal Authority *" }).SelectOptionAsync(new[] { "1" });
 
+        // Create unique number for order
+        var orderNumber = DateTime.Now.Ticks.ToString();
+        
         // enter order number
         await Page.GetByLabel("Order Number *").ClickAsync();
-        await Page.GetByLabel("Order Number *").FillAsync("123456789");
+        await Page.GetByLabel("Order Number *").FillAsync(orderNumber);
 
         // enter settlement amount
         await Page.GetByLabel("Settlement Amount").ClickAsync();
@@ -118,10 +121,10 @@ public class AdminAddOrders : PageTest
 
         // click button to add the new order
         await Page.GetByRole(AriaRole.Button, new() { NameString = "Add New Order" }).ClickAsync();
-        await Page.WaitForURLAsync("https://localhost:44331/Admin/Details/29");
+        await Page.WaitForURLAsync("https://localhost:44331/Admin/Details/*");
 
         // Expect the following text after the order has been added
-        await Expect(Page.GetByRole(AriaRole.Heading, new() { NameString = "Admin View: Enforcement Order 123456789" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Heading, new() { NameString = $"Admin View: Enforcement Order {orderNumber}" })).ToBeVisibleAsync();
         await Expect(Page.GetByText("This Order is not publicly viewable.")).ToBeVisibleAsync();
 
         // check the number of tables in the new order detail page
@@ -158,17 +161,16 @@ public class AdminAddOrders : PageTest
         // go back and search for the total number of orders
         await Page.GetByRole(AriaRole.Link, new() { NameString = "Search" }).ClickAsync();
         await Page.WaitForURLAsync("https://localhost:44331/Admin/Search");
+        await Page.GetByLabel("Order Number").FillAsync(orderNumber);
         await Page.GetByRole(AriaRole.Button, new() { NameString = "Search" }).ClickAsync();
-        await Page.WaitForURLAsync("https://localhost:44331/Admin/Search?Status=All&Progress=All&handler=search#search-results");
+        await Page.WaitForURLAsync($"https://localhost:44331/Admin/Search?OrderNumber={orderNumber}&Status=All&Progress=All&handler=search#search-results");
 
         // check the number of rows in the first table
         int tableRows3 = await Page.Locator("//table[1]/tbody/tr").CountAsync();
-        Assert.That(tableRows3, Is.EqualTo(20));
+        Assert.That(tableRows3, Is.EqualTo(1));
+        
         // check if the value exists in the table
         await Expect(Page.GetByRole(AriaRole.Rowheader, new() { NameString = "testing Bartow County" })).ToBeVisibleAsync();
-        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = "123456789 Air Quality Act" })).ToBeVisibleAsync();
-        await Expect(Page.GetByRole(AriaRole.Row, new() { NameString = "testing Bartow County 123456789 Air Quality Act Proposed On View" }).GetByText("Proposed On")).ToBeVisibleAsync();
-
-
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = $"{orderNumber} Air Quality Act" })).ToBeVisibleAsync();
     }
 }
