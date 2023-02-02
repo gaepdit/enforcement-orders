@@ -18,14 +18,14 @@ public class AdminIndexPage : PageTest
             IgnoreHTTPSErrors = true
         };
     }
-    
-    [SetUp]
-    public void Setup()
+
+    [TearDown]
+    public async Task TearDown()
     {
-        LogOut().Wait();
+        await LogOutAsync();
     }
-    
-    private async Task LogOut()
+
+    private async Task LogOutAsync()
     {
         await Page.GotoAsync("https://localhost:44331/");
         // The account is signed in when there is an Account button
@@ -127,5 +127,4 @@ public class AdminIndexPage : PageTest
         await Expect(Page.Locator("//section[2]/div/section[2]/table/thead/tr/th[1]")).ToContainTextAsync("Facility");
         await Expect(Page.Locator("//section[2]/div/section[2]/table/thead/tr/th[2]")).ToContainTextAsync("");
     }
-
 }

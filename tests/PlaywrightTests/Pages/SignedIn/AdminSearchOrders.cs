@@ -1,4 +1,4 @@
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 using Microsoft.Playwright;
 using Microsoft.Playwright.NUnit;
@@ -18,14 +18,14 @@ public class AdminSearchOrders : PageTest
             IgnoreHTTPSErrors = true
         };
     }
-    
-    [SetUp]
-    public void Setup()
+
+    [TearDown]
+    public async Task TearDown()
     {
-        LogOut().Wait();
+        await LogOutAsync();
     }
     
-    private async Task LogOut()
+    private async Task LogOutAsync()
     {
         await Page.GotoAsync("https://localhost:44331/");
         // The account is signed in when there is an Account button
