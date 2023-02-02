@@ -11,7 +11,7 @@ namespace PlaywrightTests.Pages.NotSignedIn;
 [TestFixture]
 public class CurrentProposed : PageTest
 {
-    [SuppressMessage("SonarLint", "external_roslyn:NUnit1028")]
+    [SuppressMessage("Structure", "NUnit1028:The non-test method is public")]
     public override BrowserNewContextOptions ContextOptions()
     {
         return new BrowserNewContextOptions()
