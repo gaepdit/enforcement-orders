@@ -1,0 +1,44 @@
+name: Playwright Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  dotnet-test:
+    # ↓ Change this to "false" to disable the workflow without any alert messages.
+    if: ${{ true }}
+      # ↑ Change to "true" (or delete) to enable the workflow.
+
+    name: Run Playwright tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: 6.0.x
+
+      - name: Install Playwright
+        run: dotnet tool install --global Microsoft.Playwright.CLI
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --no-restore
+
+      - name: Install supported browsers
+        run: playwright install
+
+      - name: Run the web server
+        run: |
+          cd src/Enfo.WebApp
+          dotnet run --no-build &
+
+      - name: Test
+        run: dotnet test --filter FullyQualifiedName~PlaywrightTests --no-build --verbosity normal

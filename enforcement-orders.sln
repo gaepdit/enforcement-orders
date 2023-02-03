@@ -1,7 +1,6 @@
-
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29709.97
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32901.215
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "src\Domain\Domain.csproj", "{5E358292-D59C-4A6A-9867-7266BE6396E4}"
 EndProject
@@ -13,15 +12,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DomainTests", "tests\Domain
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IntegrationTests", "tests\IntegrationTests\IntegrationTests.csproj", "{9D9AED72-FBB1-4337-A635-2DC991DEFBAE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Enfo.WebApp", "src\Enfo.WebApp\Enfo.WebApp.csproj", "{7FC28873-402B-4FB1-BC21-45C9EC26EE6F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Enfo.WebApp", "src\Enfo.WebApp\Enfo.WebApp.csproj", "{7FC28873-402B-4FB1-BC21-45C9EC26EE6F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebAppTests", "tests\WebAppTests\WebAppTests.csproj", "{CA58B5AE-895D-4443-A0E4-876DAFAF5654}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebAppTests", "tests\WebAppTests\WebAppTests.csproj", "{CA58B5AE-895D-4443-A0E4-876DAFAF5654}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LocalRepository", "src\LocalRepository\LocalRepository.csproj", "{A3A6DB1A-2E19-49D8-BE93-7423928DC698}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LocalRepository", "src\LocalRepository\LocalRepository.csproj", "{A3A6DB1A-2E19-49D8-BE93-7423928DC698}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LocalRepositoryTests", "tests\LocalRepositoryTests\LocalRepositoryTests.csproj", "{C53D4E0C-17F1-4003-BA3F-134F929FFE1E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LocalRepositoryTests", "tests\LocalRepositoryTests\LocalRepositoryTests.csproj", "{C53D4E0C-17F1-4003-BA3F-134F929FFE1E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestData", "tests\TestData\TestData.csproj", "{352ECCAA-16C5-41EF-B3DF-D770576AA87F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestData", "tests\TestData\TestData.csproj", "{352ECCAA-16C5-41EF-B3DF-D770576AA87F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlaywrightTests", "tests\PlaywrightTests\PlaywrightTests.csproj", "{92CFE689-1E16-4DB3-B8D1-AC35665E8ECF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -65,6 +66,10 @@ Global
 		{352ECCAA-16C5-41EF-B3DF-D770576AA87F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{352ECCAA-16C5-41EF-B3DF-D770576AA87F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{352ECCAA-16C5-41EF-B3DF-D770576AA87F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{92CFE689-1E16-4DB3-B8D1-AC35665E8ECF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{92CFE689-1E16-4DB3-B8D1-AC35665E8ECF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92CFE689-1E16-4DB3-B8D1-AC35665E8ECF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{92CFE689-1E16-4DB3-B8D1-AC35665E8ECF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -75,6 +80,7 @@ Global
 		{CA58B5AE-895D-4443-A0E4-876DAFAF5654} = {D402A373-A352-4299-A872-613290FAD949}
 		{C53D4E0C-17F1-4003-BA3F-134F929FFE1E} = {D402A373-A352-4299-A872-613290FAD949}
 		{352ECCAA-16C5-41EF-B3DF-D770576AA87F} = {D402A373-A352-4299-A872-613290FAD949}
+		{92CFE689-1E16-4DB3-B8D1-AC35665E8ECF} = {D402A373-A352-4299-A872-613290FAD949}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4D94C33A-A18E-4259-8832-482278EA60EE}
