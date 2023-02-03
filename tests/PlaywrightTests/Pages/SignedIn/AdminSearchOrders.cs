@@ -10,14 +10,12 @@ namespace PlaywrightTests.Pages.SignedIn;
 public class AdminSearchOrders : PageTest
 {
     [SuppressMessage("Structure", "NUnit1028:The non-test method is public")]
-    public override BrowserNewContextOptions ContextOptions()
-    {
-        return new BrowserNewContextOptions()
+    public override BrowserNewContextOptions ContextOptions() =>
+        new()
         {
-            ColorScheme = ColorScheme.Light,
-            IgnoreHTTPSErrors = true
+            BaseURL = "https://localhost:44331",
+            IgnoreHTTPSErrors = true,
         };
-    }
 
     [TearDown]
     public async Task TearDown()
@@ -27,28 +25,28 @@ public class AdminSearchOrders : PageTest
     
     private async Task LogOutAsync()
     {
-        await Page.GotoAsync("https://localhost:44331/");
+        await Page.GotoAsync("/");
         // The account is signed in when there is an Account button
         var isSignedIn = await Page.Locator("text=Account").CountAsync() != 0;
         if (isSignedIn)
         {
             await Page.GetByRole(AriaRole.Button, new() { NameString = "Account" }).ClickAsync();
             await Page.GetByRole(AriaRole.Button, new() { NameString = "Sign out" }).ClickAsync();
-            await Page.WaitForURLAsync("https://localhost:44331/");
+            await Page.WaitForURLAsync("/");
         }
     }
 
     [Test]
     public async Task TestSearchOrdersDefaultTable()
     {
-        await Page.GotoAsync("https://localhost:44331/");
+        await Page.GotoAsync("/");
 
         // Expect a title "to contain" a substring.
         await Expect(Page).ToHaveTitleAsync(new Regex("EPD Enforcement Orders"));
 
         // Click sign in tab
         await Page.GetByRole(AriaRole.Link, new() { NameString = "Sign in" }).ClickAsync();
-        await Page.WaitForURLAsync("https://localhost:44331/Account/Login");
+        await Page.WaitForURLAsync("/Account/Login");
 
         // Expect the following text in the home page
         await Expect(Page.GetByRole(AriaRole.Heading, new() { NameString = "Agency Login" })).ToBeVisibleAsync();
@@ -57,11 +55,11 @@ public class AdminSearchOrders : PageTest
 
         // click in sign in button
         await Page.GetByRole(AriaRole.Button, new() { NameString = "Sign in" }).ClickAsync();
-        await Page.WaitForURLAsync("https://localhost:44331/Admin/Index");
+        await Page.WaitForURLAsync("/Admin/Index");
 
         // click on the link
         await Page.GetByRole(AriaRole.Link, new() { NameString = "Search" }).ClickAsync();
-        await Page.WaitForURLAsync("https://localhost:44331/Admin/Search");
+        await Page.WaitForURLAsync("/Admin/Search");
 
         // Expect a title "to contain" a substring.
         await Expect(Page).ToHaveTitleAsync(new Regex("EPD Enforcement Orders"));
@@ -71,7 +69,7 @@ public class AdminSearchOrders : PageTest
         
         // search table with no values
         await Page.GetByRole(AriaRole.Button, new() { NameString = "Search" }).ClickAsync();
-        await Page.WaitForURLAsync("https://localhost:44331/Admin/Search?Status=All&Progress=All&handler=search#search-results");
+        await Page.WaitForURLAsync("**/Admin/Search?Status=All&Progress=All&handler=search#search-results");
 
         // check the number of tables
         int numTables = await Page.Locator("//table").CountAsync();
@@ -110,14 +108,14 @@ public class AdminSearchOrders : PageTest
     [Test]
     public async Task TestSearchOrdersSortTableByAscendingStatusDate()
     {
-        await Page.GotoAsync("https://localhost:44331/");
+        await Page.GotoAsync("/");
 
         // Expect a title "to contain" a substring.
         await Expect(Page).ToHaveTitleAsync(new Regex("EPD Enforcement Orders"));
 
         // Click sign in tab
         await Page.GetByRole(AriaRole.Link, new() { NameString = "Sign in" }).ClickAsync();
-        await Page.WaitForURLAsync("https://localhost:44331/Account/Login");
+        await Page.WaitForURLAsync("/Account/Login");
 
         // Expect the following text in the home page
         await Expect(Page.GetByRole(AriaRole.Heading, new() { NameString = "Agency Login" })).ToBeVisibleAsync();
@@ -126,11 +124,11 @@ public class AdminSearchOrders : PageTest
 
         // click in sign in button
         await Page.GetByRole(AriaRole.Button, new() { NameString = "Sign in" }).ClickAsync();
-        await Page.WaitForURLAsync("https://localhost:44331/Admin/Index");
+        await Page.WaitForURLAsync("/Admin/Index");
 
         // click on the link
         await Page.GetByRole(AriaRole.Link, new() { NameString = "Search" }).ClickAsync();
-        await Page.WaitForURLAsync("https://localhost:44331/Admin/Search");
+        await Page.WaitForURLAsync("/Admin/Search");
 
         // Expect a title "to contain" a substring.
         await Expect(Page).ToHaveTitleAsync(new Regex("EPD Enforcement Orders"));
@@ -140,11 +138,11 @@ public class AdminSearchOrders : PageTest
         
         // search table with no values
         await Page.GetByRole(AriaRole.Button, new() { NameString = "Search" }).ClickAsync();
-        await Page.WaitForURLAsync("https://localhost:44331/Admin/Search?Status=All&Progress=All&handler=search#search-results");
+        await Page.WaitForURLAsync("**/Admin/Search?Status=All&Progress=All&handler=search#search-results");
 
         // click on the Status/Date to filter in ascending order
         await Page.GetByRole(AriaRole.Link, new() { NameString = "Status/Date ▼" }).ClickAsync();
-        await Page.WaitForURLAsync("https://localhost:44331/Admin/Search?Status=All&Progress=All&WithAttachments=False&Sort=DateAsc&handler=search#search-results");
+        await Page.WaitForURLAsync("**/Admin/Search?Status=All&Progress=All&WithAttachments=False&Sort=DateAsc&handler=search#search-results");
 
         // check the number of tables
         int numTables = await Page.Locator("//table").CountAsync();
@@ -182,14 +180,14 @@ public class AdminSearchOrders : PageTest
 
     [Test]
     public async Task TestSearchOrdersSortTableByDescendingStatusDate() {
-        await Page.GotoAsync("https://localhost:44331/");
+        await Page.GotoAsync("/");
 
         // Expect a title "to contain" a substring.
         await Expect(Page).ToHaveTitleAsync(new Regex("EPD Enforcement Orders"));
 
         // Click sign in tab
         await Page.GetByRole(AriaRole.Link, new() { NameString = "Sign in" }).ClickAsync();
-        await Page.WaitForURLAsync("https://localhost:44331/Account/Login");
+        await Page.WaitForURLAsync("/Account/Login");
 
         // Expect the following text in the home page
         await Expect(Page.GetByRole(AriaRole.Heading, new() { NameString = "Agency Login" })).ToBeVisibleAsync();
@@ -198,11 +196,11 @@ public class AdminSearchOrders : PageTest
 
         // click in sign in button
         await Page.GetByRole(AriaRole.Button, new() { NameString = "Sign in" }).ClickAsync();
-        await Page.WaitForURLAsync("https://localhost:44331/Admin/Index");
+        await Page.WaitForURLAsync("/Admin/Index");
 
         // click on the link
         await Page.GetByRole(AriaRole.Link, new() { NameString = "Search" }).ClickAsync();
-        await Page.WaitForURLAsync("https://localhost:44331/Admin/Search");
+        await Page.WaitForURLAsync("/Admin/Search");
 
         // Expect a title "to contain" a substring.
         await Expect(Page).ToHaveTitleAsync(new Regex("EPD Enforcement Orders"));
@@ -212,13 +210,13 @@ public class AdminSearchOrders : PageTest
         
         // search table with no values
         await Page.GetByRole(AriaRole.Button, new() { NameString = "Search" }).ClickAsync();
-        await Page.WaitForURLAsync("https://localhost:44331/Admin/Search?Status=All&Progress=All&handler=search#search-results");
+        await Page.WaitForURLAsync("**/Admin/Search?Status=All&Progress=All&handler=search#search-results");
 
         // click on the Status/Date to filter in descending order
         await Page.GetByRole(AriaRole.Link, new() { NameString = "Status/Date ▼" }).ClickAsync();
-        await Page.WaitForURLAsync("https://localhost:44331/Admin/Search?Status=All&Progress=All&WithAttachments=False&Sort=DateAsc&handler=search#search-results");
+        await Page.WaitForURLAsync("**/Admin/Search?Status=All&Progress=All&WithAttachments=False&Sort=DateAsc&handler=search#search-results");
         await Page.GetByRole(AriaRole.Link, new() { NameString = "Status/Date ▲" }).ClickAsync();
-        await Page.WaitForURLAsync("https://localhost:44331/Admin/Search?Status=All&Progress=All&WithAttachments=False&Sort=DateDesc&handler=search#search-results");
+        await Page.WaitForURLAsync("**/Admin/Search?Status=All&Progress=All&WithAttachments=False&Sort=DateDesc&handler=search#search-results");
 
         // check the number of tables
         int numTables = await Page.Locator("//table").CountAsync();
@@ -256,14 +254,14 @@ public class AdminSearchOrders : PageTest
 
     [Test]
     public async Task TestSearchOrdersSortTableByAscendingFacility() {
-        await Page.GotoAsync("https://localhost:44331/");
+        await Page.GotoAsync("/");
 
         // Expect a title "to contain" a substring.
         await Expect(Page).ToHaveTitleAsync(new Regex("EPD Enforcement Orders"));
 
         // Click sign in tab
         await Page.GetByRole(AriaRole.Link, new() { NameString = "Sign in" }).ClickAsync();
-        await Page.WaitForURLAsync("https://localhost:44331/Account/Login");
+        await Page.WaitForURLAsync("/Account/Login");
 
         // Expect the following text in the home page
         await Expect(Page.GetByRole(AriaRole.Heading, new() { NameString = "Agency Login" })).ToBeVisibleAsync();
@@ -272,11 +270,11 @@ public class AdminSearchOrders : PageTest
 
         // click in sign in button
         await Page.GetByRole(AriaRole.Button, new() { NameString = "Sign in" }).ClickAsync();
-        await Page.WaitForURLAsync("https://localhost:44331/Admin/Index");
+        await Page.WaitForURLAsync("/Admin/Index");
 
         // click on the link
         await Page.GetByRole(AriaRole.Link, new() { NameString = "Search" }).ClickAsync();
-        await Page.WaitForURLAsync("https://localhost:44331/Admin/Search");
+        await Page.WaitForURLAsync("/Admin/Search");
 
         // Expect a title "to contain" a substring.
         await Expect(Page).ToHaveTitleAsync(new Regex("EPD Enforcement Orders"));
@@ -286,11 +284,11 @@ public class AdminSearchOrders : PageTest
         
         // search table with no values
         await Page.GetByRole(AriaRole.Button, new() { NameString = "Search" }).ClickAsync();
-        await Page.WaitForURLAsync("https://localhost:44331/Admin/Search?Status=All&Progress=All&handler=search#search-results");
+        await Page.WaitForURLAsync("**/Admin/Search?Status=All&Progress=All&handler=search#search-results");
 
         // click on the Facility to sort ascendingly
         await Page.GetByRole(AriaRole.Link, new() { NameString = "Facility" }).ClickAsync();
-        await Page.WaitForURLAsync("https://localhost:44331/Admin/Search?Status=All&Progress=All&WithAttachments=False&Sort=FacilityAsc&handler=search#search-results");
+        await Page.WaitForURLAsync("**/Admin/Search?Status=All&Progress=All&WithAttachments=False&Sort=FacilityAsc&handler=search#search-results");
 
         // check the number of tables
         int numTables = await Page.Locator("//table").CountAsync();
@@ -328,14 +326,14 @@ public class AdminSearchOrders : PageTest
 
     [Test]
     public async Task TestSearchOrdersSortTableByDescendingFacility() {
-        await Page.GotoAsync("https://localhost:44331/");
+        await Page.GotoAsync("/");
 
         // Expect a title "to contain" a substring.
         await Expect(Page).ToHaveTitleAsync(new Regex("EPD Enforcement Orders"));
 
         // Click sign in tab
         await Page.GetByRole(AriaRole.Link, new() { NameString = "Sign in" }).ClickAsync();
-        await Page.WaitForURLAsync("https://localhost:44331/Account/Login");
+        await Page.WaitForURLAsync("/Account/Login");
 
         // Expect the following text in the home page
         await Expect(Page.GetByRole(AriaRole.Heading, new() { NameString = "Agency Login" })).ToBeVisibleAsync();
@@ -344,11 +342,11 @@ public class AdminSearchOrders : PageTest
 
         // click in sign in button
         await Page.GetByRole(AriaRole.Button, new() { NameString = "Sign in" }).ClickAsync();
-        await Page.WaitForURLAsync("https://localhost:44331/Admin/Index");
+        await Page.WaitForURLAsync("/Admin/Index");
 
         // click on the link
         await Page.GetByRole(AriaRole.Link, new() { NameString = "Search" }).ClickAsync();
-        await Page.WaitForURLAsync("https://localhost:44331/Admin/Search");
+        await Page.WaitForURLAsync("/Admin/Search");
 
         // Expect a title "to contain" a substring.
         await Expect(Page).ToHaveTitleAsync(new Regex("EPD Enforcement Orders"));
@@ -358,13 +356,13 @@ public class AdminSearchOrders : PageTest
         
         // search table with no values
         await Page.GetByRole(AriaRole.Button, new() { NameString = "Search" }).ClickAsync();
-        await Page.WaitForURLAsync("https://localhost:44331/Admin/Search?Status=All&Progress=All&handler=search#search-results");
+        await Page.WaitForURLAsync("**/Admin/Search?Status=All&Progress=All&handler=search#search-results");
 
         // Click on the Facility to sort the orders descendingly
         await Page.GetByRole(AriaRole.Link, new() { NameString = "Facility" }).ClickAsync();
-        await Page.WaitForURLAsync("https://localhost:44331/Admin/Search?Status=All&Progress=All&WithAttachments=False&Sort=FacilityAsc&handler=search#search-results");
+        await Page.WaitForURLAsync("**/Admin/Search?Status=All&Progress=All&WithAttachments=False&Sort=FacilityAsc&handler=search#search-results");
         await Page.GetByRole(AriaRole.Link, new() { NameString = "Facility ▲" }).ClickAsync();
-        await Page.WaitForURLAsync("https://localhost:44331/Admin/Search?Status=All&Progress=All&WithAttachments=False&Sort=FacilityDesc&handler=search#search-results");
+        await Page.WaitForURLAsync("**/Admin/Search?Status=All&Progress=All&WithAttachments=False&Sort=FacilityDesc&handler=search#search-results");
 
         // check the number of tables
         int numTables = await Page.Locator("//table").CountAsync();
@@ -402,14 +400,14 @@ public class AdminSearchOrders : PageTest
 
     [Test]
     public async Task TestSearchOrdersClearForm() {
-        await Page.GotoAsync("https://localhost:44331/");
+        await Page.GotoAsync("/");
 
         // Expect a title "to contain" a substring.
         await Expect(Page).ToHaveTitleAsync(new Regex("EPD Enforcement Orders"));
 
         // Click sign in tab
         await Page.GetByRole(AriaRole.Link, new() { NameString = "Sign in" }).ClickAsync();
-        await Page.WaitForURLAsync("https://localhost:44331/Account/Login");
+        await Page.WaitForURLAsync("/Account/Login");
 
         // Expect the following text in the home page
         await Expect(Page.GetByRole(AriaRole.Heading, new() { NameString = "Agency Login" })).ToBeVisibleAsync();
@@ -418,11 +416,11 @@ public class AdminSearchOrders : PageTest
 
         // click in sign in button
         await Page.GetByRole(AriaRole.Button, new() { NameString = "Sign in" }).ClickAsync();
-        await Page.WaitForURLAsync("https://localhost:44331/Admin/Index");
+        await Page.WaitForURLAsync("/Admin/Index");
 
         // click on the link
         await Page.GetByRole(AriaRole.Link, new() { NameString = "Search" }).ClickAsync();
-        await Page.WaitForURLAsync("https://localhost:44331/Admin/Search");
+        await Page.WaitForURLAsync("/Admin/Search");
 
         // Expect a title "to contain" a substring.
         await Expect(Page).ToHaveTitleAsync(new Regex("EPD Enforcement Orders"));
@@ -432,11 +430,11 @@ public class AdminSearchOrders : PageTest
         
         // search table with no values
         await Page.GetByRole(AriaRole.Button, new() { NameString = "Search" }).ClickAsync();
-        await Page.WaitForURLAsync("https://localhost:44331/Admin/Search?Status=All&Progress=All&handler=search#search-results");
+        await Page.WaitForURLAsync("**/Admin/Search?Status=All&Progress=All&handler=search#search-results");
 
         // clear form
         await Page.GetByRole(AriaRole.Link, new() { NameString = "Clear Form" }).ClickAsync();
-        await Page.WaitForURLAsync("https://localhost:44331/Admin/Search");
+        await Page.WaitForURLAsync("/Admin/Search");
 
         // check the number of tables
         int numTables = await Page.Locator("//table").CountAsync();
@@ -445,14 +443,14 @@ public class AdminSearchOrders : PageTest
 
     [Test]
     public async Task TestSearchOrdersShowDeletedRecords() {
-        await Page.GotoAsync("https://localhost:44331/");
+        await Page.GotoAsync("/");
 
         // Expect a title "to contain" a substring.
         await Expect(Page).ToHaveTitleAsync(new Regex("EPD Enforcement Orders"));
 
         // Click sign in tab
         await Page.GetByRole(AriaRole.Link, new() { NameString = "Sign in" }).ClickAsync();
-        await Page.WaitForURLAsync("https://localhost:44331/Account/Login");
+        await Page.WaitForURLAsync("/Account/Login");
 
         // Expect the following text in the home page
         await Expect(Page.GetByRole(AriaRole.Heading, new() { NameString = "Agency Login" })).ToBeVisibleAsync();
@@ -461,11 +459,11 @@ public class AdminSearchOrders : PageTest
 
         // click in sign in button
         await Page.GetByRole(AriaRole.Button, new() { NameString = "Sign in" }).ClickAsync();
-        await Page.WaitForURLAsync("https://localhost:44331/Admin/Index");
+        await Page.WaitForURLAsync("/Admin/Index");
 
         // click on the link
         await Page.GetByRole(AriaRole.Link, new() { NameString = "Search" }).ClickAsync();
-        await Page.WaitForURLAsync("https://localhost:44331/Admin/Search");
+        await Page.WaitForURLAsync("/Admin/Search");
 
         // Expect a title "to contain" a substring.
         await Expect(Page).ToHaveTitleAsync(new Regex("EPD Enforcement Orders"));
@@ -478,7 +476,7 @@ public class AdminSearchOrders : PageTest
 
         // search table with no values
         await Page.GetByRole(AriaRole.Button, new() { NameString = "Search" }).ClickAsync();
-        await Page.WaitForURLAsync("https://localhost:44331/Admin/Search?Status=All&Progress=All&handler=search&ShowDeleted=true#search-results");
+        await Page.WaitForURLAsync("**/Admin/Search?Status=All&Progress=All&handler=search&ShowDeleted=true#search-results");
 
         // check the number of tables
         int numTables = await Page.Locator("//table").CountAsync();

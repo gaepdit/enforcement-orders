@@ -10,15 +10,14 @@ namespace PlaywrightTests.Pages.SignedIn;
 public class AdminAddOrders : PageTest
 {
     [SuppressMessage("Structure", "NUnit1028:The non-test method is public")]
-    public override BrowserNewContextOptions ContextOptions()
-    {
-        return new BrowserNewContextOptions()
+    public override BrowserNewContextOptions ContextOptions() =>
+        new()
         {
-            ColorScheme = ColorScheme.Light,
-            IgnoreHTTPSErrors = true
+            BaseURL = "https://localhost:44331",
+            IgnoreHTTPSErrors = true,
         };
-    }
-    
+
+
     [TearDown]
     public async Task TearDown()
     {
@@ -27,14 +26,14 @@ public class AdminAddOrders : PageTest
 
     private async Task LogOutAsync()
     {
-        await Page.GotoAsync("https://localhost:44331/");
+        await Page.GotoAsync("/");
         // The account is signed in when there is an Account button
         var isSignedIn = await Page.Locator("text=Account").CountAsync() != 0;
         if (isSignedIn)
         {
             await Page.GetByRole(AriaRole.Button, new() { NameString = "Account" }).ClickAsync();
             await Page.GetByRole(AriaRole.Button, new() { NameString = "Sign out" }).ClickAsync();
-            await Page.WaitForURLAsync("https://localhost:44331/");
+            await Page.WaitForURLAsync("/");
         }
     }
 
@@ -42,14 +41,14 @@ public class AdminAddOrders : PageTest
     public async Task TestAddOrders()
     {
         // Run after any tests
-        await Page.GotoAsync("https://localhost:44331/");
+        await Page.GotoAsync("/");
 
         // Expect a title "to contain" a substring.
         await Expect(Page).ToHaveTitleAsync(new Regex("EPD Enforcement Orders"));
 
         // Click sign in tab
         await Page.GetByRole(AriaRole.Link, new() { NameString = "Sign in" }).ClickAsync();
-        await Page.WaitForURLAsync("https://localhost:44331/Account/Login");
+        await Page.WaitForURLAsync("/Account/Login");
 
         // Expect the following text in the home page
         await Expect(Page.GetByRole(AriaRole.Heading, new() { NameString = "Agency Login" })).ToBeVisibleAsync();
@@ -58,11 +57,11 @@ public class AdminAddOrders : PageTest
 
         // click in sign in button
         await Page.GetByRole(AriaRole.Button, new() { NameString = "Sign in" }).ClickAsync();
-        await Page.WaitForURLAsync("https://localhost:44331/Admin/Index");
+        await Page.WaitForURLAsync("/Admin/Index");
 
         // click on the link
         await Page.GetByRole(AriaRole.Link, new() { NameString = "Search" }).ClickAsync();
-        await Page.WaitForURLAsync("https://localhost:44331/Admin/Search");
+        await Page.WaitForURLAsync("/Admin/Search");
 
         // Expect a title "to contain" a substring.
         await Expect(Page).ToHaveTitleAsync(new Regex("EPD Enforcement Orders"));
@@ -72,7 +71,7 @@ public class AdminAddOrders : PageTest
 
         // search table with no values
         await Page.GetByRole(AriaRole.Button, new() { NameString = "Search" }).ClickAsync();
-        await Page.WaitForURLAsync("https://localhost:44331/Admin/Search?Status=All&Progress=All&handler=search#search-results");
+        await Page.WaitForURLAsync("**/Admin/Search?Status=All&Progress=All&handler=search#search-results");
 
         // check the number of tables
         int numTables = await Page.Locator("//table").CountAsync();
@@ -89,7 +88,7 @@ public class AdminAddOrders : PageTest
 
         // click on add new order button
         await Page.GetByRole(AriaRole.Link, new() { NameString = "+ New Order" }).ClickAsync();
-        await Page.WaitForURLAsync("https://localhost:44331/Admin/Add");
+        await Page.WaitForURLAsync("/Admin/Add");
 
         // enter the facility value
         await Page.GetByLabel("Facility *").ClickAsync();
@@ -121,7 +120,7 @@ public class AdminAddOrders : PageTest
 
         // click button to add the new order
         await Page.GetByRole(AriaRole.Button, new() { NameString = "Add New Order" }).ClickAsync();
-        await Page.WaitForURLAsync("https://localhost:44331/Admin/Details/*");
+        await Page.WaitForURLAsync("/Admin/Details/*");
 
         // Expect the following text after the order has been added
         await Expect(Page.GetByRole(AriaRole.Heading, new() { NameString = $"Admin View: Enforcement Order {orderNumber}" })).ToBeVisibleAsync();
@@ -160,10 +159,10 @@ public class AdminAddOrders : PageTest
 
         // go back and search for the total number of orders
         await Page.GetByRole(AriaRole.Link, new() { NameString = "Search" }).ClickAsync();
-        await Page.WaitForURLAsync("https://localhost:44331/Admin/Search");
+        await Page.WaitForURLAsync("/Admin/Search");
         await Page.GetByLabel("Order Number").FillAsync(orderNumber);
         await Page.GetByRole(AriaRole.Button, new() { NameString = "Search" }).ClickAsync();
-        await Page.WaitForURLAsync($"https://localhost:44331/Admin/Search?OrderNumber={orderNumber}&Status=All&Progress=All&handler=search#search-results");
+        await Page.WaitForURLAsync($"**/Admin/Search?OrderNumber={orderNumber}&Status=All&Progress=All&handler=search#search-results");
 
         // check the number of rows in the first table
         int tableRows3 = await Page.Locator("//table[1]/tbody/tr").CountAsync();

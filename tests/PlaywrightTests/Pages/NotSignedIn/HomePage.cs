@@ -11,19 +11,17 @@ namespace PlaywrightTests.Pages.NotSignedIn;
 public class HomePage : PageTest
 {
     [SuppressMessage("Structure", "NUnit1028:The non-test method is public")]
-    public override BrowserNewContextOptions ContextOptions()
-    {
-        return new BrowserNewContextOptions()
+    public override BrowserNewContextOptions ContextOptions() =>
+        new()
         {
-            ColorScheme = ColorScheme.Light,
-            IgnoreHTTPSErrors = true
+            BaseURL = "https://localhost:44331",
+            IgnoreHTTPSErrors = true,
         };
-    }
-
+    
     [Test]
     public async Task TestTextHomePage()
     {
-        await Page.GotoAsync("https://localhost:44331/");
+        await Page.GotoAsync("/");
 
         // Expect a title "to contain" a substring.
         await Expect(Page).ToHaveTitleAsync(new Regex("EPD Enforcement Orders"));

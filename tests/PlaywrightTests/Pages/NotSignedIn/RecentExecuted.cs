@@ -11,23 +11,22 @@ namespace PlaywrightTests.Pages.NotSignedIn;
 public class RecentExecuted : PageTest
 {
     [SuppressMessage("Structure", "NUnit1028:The non-test method is public")]
-    public override BrowserNewContextOptions ContextOptions()
-    {
-        return new BrowserNewContextOptions()
+    public override BrowserNewContextOptions ContextOptions() =>
+        new()
         {
-            ColorScheme = ColorScheme.Light,
-            IgnoreHTTPSErrors = true
+            BaseURL = "https://localhost:44331",
+            IgnoreHTTPSErrors = true,
         };
-    }
+
 
     [Test]
     public async Task TestRecentExecuted()
     {
-        await Page.GotoAsync("https://localhost:44331/");
+        await Page.GotoAsync("/");
 
         // click the button
         await Page.Locator("div:has-text(\"Georgia EPD issues a notice of fully executed administrative orders and fully ex\")").GetByRole(AriaRole.Link, new() { NameString = "View Full Report" }).ClickAsync();
-        await Page.WaitForURLAsync("https://localhost:44331/RecentExecuted");
+        await Page.WaitForURLAsync("/RecentExecuted");
 
         // Expect a title "to contain" a substring.
         await Expect(Page).ToHaveTitleAsync(new Regex("EPD Enforcement Orders"));
@@ -59,7 +58,7 @@ public class RecentExecuted : PageTest
     public async Task TestRecentExecutedDetails()
     {
         // I could not click on the `view` link since it involves a randomly generated id
-        await Page.GotoAsync("https://localhost:44331/Details/2");
+        await Page.GotoAsync("/Details/2");
 
         // Expect a title "to contain" a substring.
         await Expect(Page).ToHaveTitleAsync(new Regex("EPD Enforcement Orders"));

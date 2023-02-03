@@ -10,15 +10,14 @@ namespace PlaywrightTests.Pages.SignedIn;
 public class AdminPublicDashboard : PageTest
 {
     [SuppressMessage("Structure", "NUnit1028:The non-test method is public")]
-    public override BrowserNewContextOptions ContextOptions()
-    {
-        return new BrowserNewContextOptions()
+    public override BrowserNewContextOptions ContextOptions() =>
+        new()
         {
-            ColorScheme = ColorScheme.Light,
-            IgnoreHTTPSErrors = true
+            BaseURL = "https://localhost:44331",
+            IgnoreHTTPSErrors = true,
         };
-    }
-    
+
+
     [TearDown]
     public async Task TearDown()
     {
@@ -27,28 +26,28 @@ public class AdminPublicDashboard : PageTest
     
     private async Task LogOutAsync()
     {
-        await Page.GotoAsync("https://localhost:44331/");
+        await Page.GotoAsync("/");
         // The account is signed in when there is an Account button
         var isSignedIn = await Page.Locator("text=Account").CountAsync() != 0;
         if (isSignedIn)
         {
             await Page.GetByRole(AriaRole.Button, new() { NameString = "Account" }).ClickAsync();
             await Page.GetByRole(AriaRole.Button, new() { NameString = "Sign out" }).ClickAsync();
-            await Page.WaitForURLAsync("https://localhost:44331/");
+            await Page.WaitForURLAsync("/");
         }
     }
 
     [Test]
     public async Task TestTextPublicDashboard()
     {
-        await Page.GotoAsync("https://localhost:44331/");
+        await Page.GotoAsync("/");
         await Page.GetByRole(AriaRole.Link, new() { NameString = "Sign in" }).ClickAsync();
-        await Page.WaitForURLAsync("https://localhost:44331/Account/Login");
+        await Page.WaitForURLAsync("/Account/Login");
         await Page.GetByRole(AriaRole.Button, new() { NameString = "Sign in" }).ClickAsync();
-        await Page.WaitForURLAsync("https://localhost:44331/Admin/Index");
+        await Page.WaitForURLAsync("/Admin/Index");
         await Page.GetByRole(AriaRole.Button, new() { NameString = "More" }).ClickAsync();
         await Page.GetByRole(AriaRole.Link, new() { NameString = "Public Dashboard" }).ClickAsync();
-        await Page.WaitForURLAsync("https://localhost:44331/");
+        await Page.WaitForURLAsync("/");
         
         // check dashboard menus
         await Expect(Page.Locator("nav[role=\"navigation\"]:has-text(\"+ New Order Search More Site Maintenance Users List Public Dashboard Account Vie\")")).ToBeVisibleAsync();

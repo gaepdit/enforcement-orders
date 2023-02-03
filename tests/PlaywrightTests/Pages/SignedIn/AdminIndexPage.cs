@@ -10,14 +10,13 @@ namespace PlaywrightTests.Pages.SignedIn;
 public class AdminIndexPage : PageTest
 {
     [SuppressMessage("Structure", "NUnit1028:The non-test method is public")]
-    public override BrowserNewContextOptions ContextOptions()
-    {
-        return new BrowserNewContextOptions()
+    public override BrowserNewContextOptions ContextOptions() =>
+        new()
         {
-            ColorScheme = ColorScheme.Light,
-            IgnoreHTTPSErrors = true
+            BaseURL = "https://localhost:44331",
+            IgnoreHTTPSErrors = true,
         };
-    }
+
 
     [TearDown]
     public async Task TearDown()
@@ -27,28 +26,28 @@ public class AdminIndexPage : PageTest
 
     private async Task LogOutAsync()
     {
-        await Page.GotoAsync("https://localhost:44331/");
+        await Page.GotoAsync("/");
         // The account is signed in when there is an Account button
         var isSignedIn = await Page.Locator("text=Account").CountAsync() != 0;
         if (isSignedIn)
         {
             await Page.GetByRole(AriaRole.Button, new() { NameString = "Account" }).ClickAsync();
             await Page.GetByRole(AriaRole.Button, new() { NameString = "Sign out" }).ClickAsync();
-            await Page.WaitForURLAsync("https://localhost:44331/");
+            await Page.WaitForURLAsync("/");
         }
     }
 
     [Test]
     public async Task TestTextAdminIndexPage()
     {
-        await Page.GotoAsync("https://localhost:44331/");
+        await Page.GotoAsync("/");
 
         // Expect a title "to contain" a substring.
         await Expect(Page).ToHaveTitleAsync(new Regex("EPD Enforcement Orders"));
 
         // Click sign in tab
         await Page.GetByRole(AriaRole.Link, new() { NameString = "Sign in" }).ClickAsync();
-        await Page.WaitForURLAsync("https://localhost:44331/Account/Login");
+        await Page.WaitForURLAsync("/Account/Login");
 
         // Expect the following text in the home page
         await Expect(Page.GetByRole(AriaRole.Heading, new() { NameString = "Agency Login" })).ToBeVisibleAsync();
@@ -57,7 +56,7 @@ public class AdminIndexPage : PageTest
 
         // click in sign in button
         await Page.GetByRole(AriaRole.Button, new() { NameString = "Sign in" }).ClickAsync();
-        await Page.WaitForURLAsync("https://localhost:44331/Admin/Index");
+        await Page.WaitForURLAsync("/Admin/Index");
 
         // check the text in the page
         await Expect(Page.GetByRole(AriaRole.Heading, new() { NameString = "Admin Dashboard" })).ToBeVisibleAsync();
@@ -74,14 +73,14 @@ public class AdminIndexPage : PageTest
     [Test]
     public async Task TestTableAdminIndexPage()
     {
-        await Page.GotoAsync("https://localhost:44331/");
+        await Page.GotoAsync("/");
 
         // Expect a title "to contain" a substring.
         await Expect(Page).ToHaveTitleAsync(new Regex("EPD Enforcement Orders"));
 
         // Click sign in tab
         await Page.GetByRole(AriaRole.Link, new() { NameString = "Sign in" }).ClickAsync();
-        await Page.WaitForURLAsync("https://localhost:44331/Account/Login");
+        await Page.WaitForURLAsync("/Account/Login");
 
         // Expect the following text in the home page
         await Expect(Page.GetByRole(AriaRole.Heading, new() { NameString = "Agency Login" })).ToBeVisibleAsync();
@@ -90,7 +89,7 @@ public class AdminIndexPage : PageTest
 
         // click in sign in button
         await Page.GetByRole(AriaRole.Button, new() { NameString = "Sign in" }).ClickAsync();
-        await Page.WaitForURLAsync("https://localhost:44331/Admin/Index");
+        await Page.WaitForURLAsync("/Admin/Index");
 
         // check the number of tables
         int numTables = await Page.Locator("//table").CountAsync();
