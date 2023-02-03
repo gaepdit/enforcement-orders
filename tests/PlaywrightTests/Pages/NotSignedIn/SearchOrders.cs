@@ -1,23 +1,15 @@
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using Microsoft.Playwright;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
 
 namespace PlaywrightTests.Pages.NotSignedIn;
 
 [Parallelizable(ParallelScope.Self)]
 [TestFixture]
+[SuppressMessage("ReSharper", "ArrangeObjectCreationWhenTypeNotEvident")]
 public class SearchOrders : PageTest
 {
     [SuppressMessage("Structure", "NUnit1028:The non-test method is public")]
-    public override BrowserNewContextOptions ContextOptions() =>
-        new()
-        {
-            BaseURL = "https://localhost:44331",
-            IgnoreHTTPSErrors = true,
-        };
+    public override BrowserNewContextOptions ContextOptions() => PlaywrightHelpers.DefaultContextOptions();
 
     [Test]
     public async Task TestSearchOrdersDefaultTable()
@@ -29,7 +21,7 @@ public class SearchOrders : PageTest
         await Page.WaitForURLAsync("/Search");
 
         // Expect a title "to contain" a substring.
-        await Expect(Page).ToHaveTitleAsync(new Regex("EPD Enforcement Orders"));
+        await Expect(Page).ToHaveTitleAsync(new Regex("Search Enforcement Orders"));
 
         // Check for text in the front of the Page
         await Expect(Page.GetByRole(AriaRole.Heading, new() { NameString = "Search Enforcement Orders" }))
@@ -40,11 +32,11 @@ public class SearchOrders : PageTest
         await Page.WaitForURLAsync("**/Search?Status=All&handler=search#search-results");
 
         // check the number of tables
-        int numTables = await Page.Locator("//table").CountAsync();
+        var numTables = await Page.Locator("//table").CountAsync();
         Assert.That(numTables, Is.EqualTo(1));
 
         // check the number of rows in the first table
-        int tableRows = await Page.Locator("//table[1]/tbody/tr").CountAsync();
+        var tableRows = await Page.Locator("//table[1]/tbody/tr").CountAsync();
         Assert.That(tableRows, Is.EqualTo(13));
 
         // check the column labels of the first table
@@ -71,41 +63,14 @@ public class SearchOrders : PageTest
     [Test]
     public async Task TestSearchOrdersSortTableByAscendingStatusDate()
     {
-        await Page.GotoAsync("/");
-
-        // click on the link
-        await Page.GetByRole(AriaRole.Link, new() { NameString = "Search Orders" }).ClickAsync();
-        await Page.WaitForURLAsync("/Search");
-
-        // Expect a title "to contain" a substring.
-        await Expect(Page).ToHaveTitleAsync(new Regex("EPD Enforcement Orders"));
-
-        // Check for text in the front of the Page
-        await Expect(Page.GetByRole(AriaRole.Heading, new() { NameString = "Search Enforcement Orders" }))
-            .ToBeVisibleAsync();
-
-        // search table with no values
-        await Page.GetByRole(AriaRole.Button, new() { NameString = "Search" }).ClickAsync();
-        await Page.WaitForURLAsync("**/Search?Status=All&handler=search#search-results");
-
-        // check the number of tables
-        int numTables = await Page.Locator("//table").CountAsync();
-        Assert.That(numTables, Is.EqualTo(1));
-
-        // check the number of rows in the first table
-        int tableRows = await Page.Locator("//table[1]/tbody/tr").CountAsync();
-        Assert.That(tableRows, Is.EqualTo(13));
+        await Page.GotoAsync("/Search?Status=All&handler=search");
 
         // change the filter from descending to ascending order
         await Page.GetByRole(AriaRole.Link, new() { NameString = "Status/Date ▼" }).ClickAsync();
         await Page.WaitForURLAsync("**/Search?Status=All&Sort=DateAsc&handler=search#search-results");
 
-        // check the number of tables
-        numTables = await Page.Locator("//table").CountAsync();
-        Assert.That(numTables, Is.EqualTo(1));
-
         // check the number of rows in the first table
-        tableRows = await Page.Locator("//table[1]/tbody/tr").CountAsync();
+        var tableRows = await Page.Locator("//table[1]/tbody/tr").CountAsync();
         Assert.That(tableRows, Is.EqualTo(13));
 
         // check the column labels of the first table
@@ -132,30 +97,7 @@ public class SearchOrders : PageTest
     [Test]
     public async Task TestSearchOrdersSortTableByDescendingStatusDate()
     {
-        await Page.GotoAsync("/");
-
-        // click on the link
-        await Page.GetByRole(AriaRole.Link, new() { NameString = "Search Orders" }).ClickAsync();
-        await Page.WaitForURLAsync("/Search");
-
-        // Expect a title "to contain" a substring.
-        await Expect(Page).ToHaveTitleAsync(new Regex("EPD Enforcement Orders"));
-
-        // Check for text in the front of the Page
-        await Expect(Page.GetByRole(AriaRole.Heading, new() { NameString = "Search Enforcement Orders" }))
-            .ToBeVisibleAsync();
-
-        // search table with no values
-        await Page.GetByRole(AriaRole.Button, new() { NameString = "Search" }).ClickAsync();
-        await Page.WaitForURLAsync("**/Search?Status=All&handler=search#search-results");
-
-        // check the number of tables
-        int numTables = await Page.Locator("//table").CountAsync();
-        Assert.That(numTables, Is.EqualTo(1));
-
-        // check the number of rows in the first table
-        int tableRows = await Page.Locator("//table[1]/tbody/tr").CountAsync();
-        Assert.That(tableRows, Is.EqualTo(13));
+        await Page.GotoAsync("/Search?Status=All&handler=search");
 
         // change the filter from descending to ascending order
         await Page.GetByRole(AriaRole.Link, new() { NameString = "Status/Date ▼" }).ClickAsync();
@@ -163,12 +105,8 @@ public class SearchOrders : PageTest
         await Page.GetByRole(AriaRole.Link, new() { NameString = "Status/Date ▲" }).ClickAsync();
         await Page.WaitForURLAsync("**/Search?Status=All&Sort=DateDesc&handler=search#search-results");
 
-        // check the number of tables
-        numTables = await Page.Locator("//table").CountAsync();
-        Assert.That(numTables, Is.EqualTo(1));
-
         // check the number of rows in the first table
-        tableRows = await Page.Locator("//table[1]/tbody/tr").CountAsync();
+        var tableRows = await Page.Locator("//table[1]/tbody/tr").CountAsync();
         Assert.That(tableRows, Is.EqualTo(13));
 
         // check the column labels of the first table
@@ -195,41 +133,14 @@ public class SearchOrders : PageTest
     [Test]
     public async Task TestSearchOrdersSortTableByAscendingFacility()
     {
-        await Page.GotoAsync("/");
-
-        // click on the link
-        await Page.GetByRole(AriaRole.Link, new() { NameString = "Search Orders" }).ClickAsync();
-        await Page.WaitForURLAsync("/Search");
-
-        // Expect a title "to contain" a substring.
-        await Expect(Page).ToHaveTitleAsync(new Regex("EPD Enforcement Orders"));
-
-        // Check for text in the front of the Page
-        await Expect(Page.GetByRole(AriaRole.Heading, new() { NameString = "Search Enforcement Orders" }))
-            .ToBeVisibleAsync();
-
-        // search table with no values
-        await Page.GetByRole(AriaRole.Button, new() { NameString = "Search" }).ClickAsync();
-        await Page.WaitForURLAsync("**/Search?Status=All&handler=search#search-results");
-
-        // check the number of tables
-        int numTables = await Page.Locator("//table").CountAsync();
-        Assert.That(numTables, Is.EqualTo(1));
-
-        // check the number of rows in the first table
-        int tableRows = await Page.Locator("//table[1]/tbody/tr").CountAsync();
-        Assert.That(tableRows, Is.EqualTo(13));
+        await Page.GotoAsync("/Search?Status=All&handler=search");
 
         // filter the table to be ascending facility
         await Page.GetByRole(AriaRole.Link, new() { NameString = "Facility" }).ClickAsync();
         await Page.WaitForURLAsync("**/Search?Status=All&Sort=FacilityAsc&handler=search#search-results");
 
-        // check the number of tables
-        numTables = await Page.Locator("//table").CountAsync();
-        Assert.That(numTables, Is.EqualTo(1));
-
         // check the number of rows in the first table
-        tableRows = await Page.Locator("//table[1]/tbody/tr").CountAsync();
+        var tableRows = await Page.Locator("//table[1]/tbody/tr").CountAsync();
         Assert.That(tableRows, Is.EqualTo(13));
 
         // check the column labels of the first table
@@ -256,30 +167,7 @@ public class SearchOrders : PageTest
     [Test]
     public async Task TestSearchOrdersSortTableByDescendingFacility()
     {
-        await Page.GotoAsync("/");
-
-        // click on the link
-        await Page.GetByRole(AriaRole.Link, new() { NameString = "Search Orders" }).ClickAsync();
-        await Page.WaitForURLAsync("/Search");
-
-        // Expect a title "to contain" a substring.
-        await Expect(Page).ToHaveTitleAsync(new Regex("EPD Enforcement Orders"));
-
-        // Check for text in the front of the Page
-        await Expect(Page.GetByRole(AriaRole.Heading, new() { NameString = "Search Enforcement Orders" }))
-            .ToBeVisibleAsync();
-
-        // search table with no values
-        await Page.GetByRole(AriaRole.Button, new() { NameString = "Search" }).ClickAsync();
-        await Page.WaitForURLAsync("**/Search?Status=All&handler=search#search-results");
-
-        // check the number of tables
-        int numTables = await Page.Locator("//table").CountAsync();
-        Assert.That(numTables, Is.EqualTo(1));
-
-        // check the number of rows in the first table
-        int tableRows = await Page.Locator("//table[1]/tbody/tr").CountAsync();
-        Assert.That(tableRows, Is.EqualTo(13));
+        await Page.GotoAsync("/Search?Status=All&handler=search");
 
         // filter the table to be descending facility
         await Page.GetByRole(AriaRole.Link, new() { NameString = "Facility" }).ClickAsync();
@@ -287,12 +175,8 @@ public class SearchOrders : PageTest
         await Page.GetByRole(AriaRole.Link, new() { NameString = "Facility ▲" }).ClickAsync();
         await Page.WaitForURLAsync("**/Search?Status=All&Sort=FacilityDesc&handler=search#search-results");
 
-        // check the number of tables
-        numTables = await Page.Locator("//table").CountAsync();
-        Assert.That(numTables, Is.EqualTo(1));
-
         // check the number of rows in the first table
-        tableRows = await Page.Locator("//table[1]/tbody/tr").CountAsync();
+        var tableRows = await Page.Locator("//table[1]/tbody/tr").CountAsync();
         Assert.That(tableRows, Is.EqualTo(13));
 
         // check the column labels of the first table
@@ -319,30 +203,11 @@ public class SearchOrders : PageTest
     [Test]
     public async Task TestSearchOrdersClearForm()
     {
-        await Page.GotoAsync("/");
-
-        // click on the link
-        await Page.GetByRole(AriaRole.Link, new() { NameString = "Search Orders" }).ClickAsync();
-        await Page.WaitForURLAsync("/Search");
-
-        // Expect a title "to contain" a substring.
-        await Expect(Page).ToHaveTitleAsync(new Regex("EPD Enforcement Orders"));
-
-        // Check for text in the front of the Page
-        await Expect(Page.GetByRole(AriaRole.Heading, new() { NameString = "Search Enforcement Orders" }))
-            .ToBeVisibleAsync();
-
-        // search table with no values
-        await Page.GetByRole(AriaRole.Button, new() { NameString = "Search" }).ClickAsync();
-        await Page.WaitForURLAsync("**/Search?Status=All&handler=search#search-results");
+        await Page.GotoAsync("/Search?Status=All&handler=search");
 
         // check the number of tables
-        int numTables = await Page.Locator("//table").CountAsync();
+        var numTables = await Page.Locator("//table").CountAsync();
         Assert.That(numTables, Is.EqualTo(1));
-
-        // check the number of rows in the first table
-        int tableRows = await Page.Locator("//table[1]/tbody/tr").CountAsync();
-        Assert.That(tableRows, Is.EqualTo(13));
 
         // click on the clear form button
         await Page.GetByRole(AriaRole.Link, new() { NameString = "Clear Form" }).ClickAsync();

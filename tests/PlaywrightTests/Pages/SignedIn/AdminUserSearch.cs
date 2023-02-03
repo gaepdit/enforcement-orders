@@ -1,73 +1,47 @@
-﻿using Microsoft.Playwright;
-using Microsoft.Playwright.NUnit;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 
 namespace PlaywrightTests.Pages.SignedIn;
 
 [Parallelizable(ParallelScope.None)]
 [TestFixture]
+[SuppressMessage("ReSharper", "ArrangeObjectCreationWhenTypeNotEvident")]
 public class AdminUserSearch : PageTest
 {
     [SuppressMessage("Structure", "NUnit1028:The non-test method is public")]
-    public override BrowserNewContextOptions ContextOptions() =>
-        new()
-        {
-            BaseURL = "https://localhost:44331",
-            IgnoreHTTPSErrors = true,
-        };
+    public override BrowserNewContextOptions ContextOptions() => PlaywrightHelpers.DefaultContextOptions();
+
+    [SetUp]
+    public async Task SetUp() => await PlaywrightHelpers.SignInAsync(Page);
 
     [TearDown]
-    public async Task TearDown()
-    {
-        await LogOutAsync();
-    }
-
-    private async Task LogOutAsync()
-    {
-        await Page.GotoAsync("/");
-        // The account is signed in when there is an Account button
-        var isSignedIn = await Page.Locator("text=Account").CountAsync() != 0;
-        if (isSignedIn)
-        {
-            await Page.GetByRole(AriaRole.Button, new() { NameString = "Account" }).ClickAsync();
-            await Page.GetByRole(AriaRole.Button, new() { NameString = "Sign out" }).ClickAsync();
-            await Page.WaitForURLAsync("/");
-        }
-    }
+    public async Task TearDown() => await PlaywrightHelpers.LogOutAsync(Page);
 
     [Test]
     public async Task TestGeneralUserSearch()
     {
-        await Page.GotoAsync("/");
-
-        await Page.GetByRole(AriaRole.Link, new() { NameString = "Sign in" }).ClickAsync();
-        await Page.WaitForURLAsync("/Account/Login");
-
-        await Page.GetByRole(AriaRole.Button, new() { NameString = "Sign in" }).ClickAsync();
-        await Page.WaitForURLAsync("/Admin/Index");
-
         await Page.GetByRole(AriaRole.Button, new() { NameString = "More" }).ClickAsync();
-
         await Page.GetByRole(AriaRole.Link, new() { NameString = "Users List" }).ClickAsync();
         await Page.WaitForURLAsync("/Admin/Users");
 
         // Expect a title "to contain" a substring.
-        await Expect(Page).ToHaveTitleAsync(new Regex("EPD Enforcement Orders"));
+        await Expect(Page).ToHaveTitleAsync(new Regex("User Search"));
 
         // Expect the following text in the home page
         await Expect(Page.GetByRole(AriaRole.Heading, new() { NameString = "ENFO User Search" })).ToBeVisibleAsync();
 
+        // Search with no parameter
         await Page.GetByRole(AriaRole.Button, new() { NameString = "Search" }).ClickAsync();
         await Page.WaitForURLAsync("**/Admin/Users?handler=search#search-results");
 
-        //// Search with no parameter
         // check the number of tables
-        int numTables = await Page.Locator("//table").CountAsync();
+        var numTables = await Page.Locator("//table").CountAsync();
         Assert.That(numTables, Is.EqualTo(1));
+
         // check the number of rows
-        int tableRows1 = await Page.Locator("//table/tbody/tr").CountAsync();
+        var tableRows1 = await Page.Locator("//table/tbody/tr").CountAsync();
         Assert.That(tableRows1, Is.EqualTo(1));
+
         // check the column labels
         await Expect(Page.Locator("//table/thead/tr/th[1]")).ToContainTextAsync("Name");
         await Expect(Page.Locator("//table/thead/tr/th[2]")).ToContainTextAsync("Email");
@@ -76,24 +50,7 @@ public class AdminUserSearch : PageTest
     [Test]
     public async Task TestUserSearchFilterName()
     {
-        await Page.GotoAsync("/");
-
-        await Page.GetByRole(AriaRole.Link, new() { NameString = "Sign in" }).ClickAsync();
-        await Page.WaitForURLAsync("/Account/Login");
-
-        await Page.GetByRole(AriaRole.Button, new() { NameString = "Sign in" }).ClickAsync();
-        await Page.WaitForURLAsync("/Admin/Index");
-
-        await Page.GetByRole(AriaRole.Button, new() { NameString = "More" }).ClickAsync();
-
-        await Page.GetByRole(AriaRole.Link, new() { NameString = "Users List" }).ClickAsync();
-        await Page.WaitForURLAsync("/Admin/Users");
-
-        // Expect a title "to contain" a substring.
-        await Expect(Page).ToHaveTitleAsync(new Regex("EPD Enforcement Orders"));
-
-        // Expect the following text in the home page
-        await Expect(Page.GetByRole(AriaRole.Heading, new() { NameString = "ENFO User Search" })).ToBeVisibleAsync();
+        await Page.GotoAsync("/Admin/Users");
 
         // enter the name
         await Page.GetByLabel("Name").ClickAsync();
@@ -102,13 +59,14 @@ public class AdminUserSearch : PageTest
         await Page.GetByRole(AriaRole.Button, new() { NameString = "Search" }).ClickAsync();
         await Page.WaitForURLAsync("**/Admin/Users?Name=Local&handler=search#search-results");
 
-        //// Search with no parameter
         // check the number of tables
-        int numTables = await Page.Locator("//table").CountAsync();
+        var numTables = await Page.Locator("//table").CountAsync();
         Assert.That(numTables, Is.EqualTo(1));
+
         // check the number of rows
-        int tableRows1 = await Page.Locator("//table/tbody/tr").CountAsync();
+        var tableRows1 = await Page.Locator("//table/tbody/tr").CountAsync();
         Assert.That(tableRows1, Is.EqualTo(1));
+
         // check the column labels
         await Expect(Page.Locator("//table/thead/tr/th[1]")).ToContainTextAsync("Name");
         await Expect(Page.Locator("//table/thead/tr/th[2]")).ToContainTextAsync("Email");
@@ -117,39 +75,23 @@ public class AdminUserSearch : PageTest
     [Test]
     public async Task TestUserSearchFilterEmail()
     {
-        await Page.GotoAsync("/");
+        await Page.GotoAsync("/Admin/Users");
 
-        await Page.GetByRole(AriaRole.Link, new() { NameString = "Sign in" }).ClickAsync();
-        await Page.WaitForURLAsync("/Account/Login");
-
-        await Page.GetByRole(AriaRole.Button, new() { NameString = "Sign in" }).ClickAsync();
-        await Page.WaitForURLAsync("/Admin/Index");
-
-        await Page.GetByRole(AriaRole.Button, new() { NameString = "More" }).ClickAsync();
-
-        await Page.GetByRole(AriaRole.Link, new() { NameString = "Users List" }).ClickAsync();
-        await Page.WaitForURLAsync("/Admin/Users");
-
-        // Expect a title "to contain" a substring.
-        await Expect(Page).ToHaveTitleAsync(new Regex("EPD Enforcement Orders"));
-
-        // Expect the following text in the home page
-        await Expect(Page.GetByRole(AriaRole.Heading, new() { NameString = "ENFO User Search" })).ToBeVisibleAsync();
-
-        // enter the name
+        // enter the email
         await Page.GetByLabel("Email").ClickAsync();
         await Page.GetByLabel("Email").FillAsync("local.user@example.net");
 
         await Page.GetByRole(AriaRole.Button, new() { NameString = "Search" }).ClickAsync();
         await Page.WaitForURLAsync("**/Admin/Users?Email=local.user%40example.net&handler=search#search-results");
 
-        //// Search with no parameter
         // check the number of tables
-        int numTables = await Page.Locator("//table").CountAsync();
+        var numTables = await Page.Locator("//table").CountAsync();
         Assert.That(numTables, Is.EqualTo(1));
+
         // check the number of rows
-        int tableRows1 = await Page.Locator("//table/tbody/tr").CountAsync();
+        var tableRows1 = await Page.Locator("//table/tbody/tr").CountAsync();
         Assert.That(tableRows1, Is.EqualTo(1));
+
         // check the column labels
         await Expect(Page.Locator("//table/thead/tr/th[1]")).ToContainTextAsync("Name");
         await Expect(Page.Locator("//table/thead/tr/th[2]")).ToContainTextAsync("Email");
@@ -158,24 +100,7 @@ public class AdminUserSearch : PageTest
     [Test]
     public async Task TestUserSearchFilterRole()
     {
-        await Page.GotoAsync("/");
-
-        await Page.GetByRole(AriaRole.Link, new() { NameString = "Sign in" }).ClickAsync();
-        await Page.WaitForURLAsync("/Account/Login");
-
-        await Page.GetByRole(AriaRole.Button, new() { NameString = "Sign in" }).ClickAsync();
-        await Page.WaitForURLAsync("/Admin/Index");
-
-        await Page.GetByRole(AriaRole.Button, new() { NameString = "More" }).ClickAsync();
-
-        await Page.GetByRole(AriaRole.Link, new() { NameString = "Users List" }).ClickAsync();
-        await Page.WaitForURLAsync("/Admin/Users");
-
-        // Expect a title "to contain" a substring.
-        await Expect(Page).ToHaveTitleAsync(new Regex("EPD Enforcement Orders"));
-
-        // Expect the following text in the home page
-        await Expect(Page.GetByRole(AriaRole.Heading, new() { NameString = "ENFO User Search" })).ToBeVisibleAsync();
+        await Page.GotoAsync("/Admin/Users");
 
         // choose the role
         await Page.GetByRole(AriaRole.Combobox, new() { NameString = "Role" })
@@ -184,13 +109,14 @@ public class AdminUserSearch : PageTest
         await Page.GetByRole(AriaRole.Button, new() { NameString = "Search" }).ClickAsync();
         await Page.WaitForURLAsync("**/Admin/Users?Role=OrderAdministrator&handler=search#search-results");
 
-        //// Search with no parameter
         // check the number of tables
-        int numTables = await Page.Locator("//table").CountAsync();
+        var numTables = await Page.Locator("//table").CountAsync();
         Assert.That(numTables, Is.EqualTo(1));
+
         // check the number of rows
-        int tableRows1 = await Page.Locator("//table/tbody/tr").CountAsync();
+        var tableRows1 = await Page.Locator("//table/tbody/tr").CountAsync();
         Assert.That(tableRows1, Is.EqualTo(1));
+
         // check the column labels
         await Expect(Page.Locator("//table/thead/tr/th[1]")).ToContainTextAsync("Name");
         await Expect(Page.Locator("//table/thead/tr/th[2]")).ToContainTextAsync("Email");
@@ -199,44 +125,17 @@ public class AdminUserSearch : PageTest
     [Test]
     public async Task TestUserSearchClearForm()
     {
-        await Page.GotoAsync("/");
+        await Page.GotoAsync("/Admin/Users?handler=search");
 
-        await Page.GetByRole(AriaRole.Link, new() { NameString = "Sign in" }).ClickAsync();
-        await Page.WaitForURLAsync("/Account/Login");
-
-        await Page.GetByRole(AriaRole.Button, new() { NameString = "Sign in" }).ClickAsync();
-        await Page.WaitForURLAsync("/Admin/Index");
-
-        await Page.GetByRole(AriaRole.Button, new() { NameString = "More" }).ClickAsync();
-
-        await Page.GetByRole(AriaRole.Link, new() { NameString = "Users List" }).ClickAsync();
-        await Page.WaitForURLAsync("/Admin/Users");
-
-        // Expect a title "to contain" a substring.
-        await Expect(Page).ToHaveTitleAsync(new Regex("EPD Enforcement Orders"));
-
-        // Expect the following text in the home page
-        await Expect(Page.GetByRole(AriaRole.Heading, new() { NameString = "ENFO User Search" })).ToBeVisibleAsync();
-
-        await Page.GetByRole(AriaRole.Button, new() { NameString = "Search" }).ClickAsync();
-        await Page.WaitForURLAsync("**/Admin/Users?handler=search#search-results");
-
-        //// Search with no parameter
         // check the number of tables
-        int numTables = await Page.Locator("//table").CountAsync();
+        var numTables = await Page.Locator("//table").CountAsync();
         Assert.That(numTables, Is.EqualTo(1));
-        // check the number of rows
-        int tableRows1 = await Page.Locator("//table/tbody/tr").CountAsync();
-        Assert.That(tableRows1, Is.EqualTo(1));
-        // check the column labels
-        await Expect(Page.Locator("//table/thead/tr/th[1]")).ToContainTextAsync("Name");
-        await Expect(Page.Locator("//table/thead/tr/th[2]")).ToContainTextAsync("Email");
 
         await Page.GetByRole(AriaRole.Link, new() { NameString = "Clear Form" }).ClickAsync();
         await Page.WaitForURLAsync("/Admin/Users");
 
         // check the number of rows
-        int tableRows2 = await Page.Locator("//table/tbody/tr").CountAsync();
+        var tableRows2 = await Page.Locator("//table/tbody/tr").CountAsync();
         Assert.That(tableRows2, Is.EqualTo(0));
     }
 }

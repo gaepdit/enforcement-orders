@@ -1,91 +1,24 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using System.Text.RegularExpressions;
-using Microsoft.Playwright;
-using Microsoft.Playwright.NUnit;
 
 namespace PlaywrightTests.Pages.SignedIn;
 
 [Parallelizable(ParallelScope.None)]
 [TestFixture]
+[SuppressMessage("ReSharper", "ArrangeObjectCreationWhenTypeNotEvident")]
 public class AdminAddOrders : PageTest
 {
     [SuppressMessage("Structure", "NUnit1028:The non-test method is public")]
-    public override BrowserNewContextOptions ContextOptions() =>
-        new()
-        {
-            BaseURL = "https://localhost:44331",
-            IgnoreHTTPSErrors = true,
-        };
+    public override BrowserNewContextOptions ContextOptions() => PlaywrightHelpers.DefaultContextOptions();
 
+    [SetUp]
+    public async Task SetUp() => await PlaywrightHelpers.SignInAsync(Page);
 
     [TearDown]
-    public async Task TearDown()
-    {
-        await LogOutAsync();
-    }
-
-    private async Task LogOutAsync()
-    {
-        await Page.GotoAsync("/");
-        // The account is signed in when there is an Account button
-        var isSignedIn = await Page.Locator("text=Account").CountAsync() != 0;
-        if (isSignedIn)
-        {
-            await Page.GetByRole(AriaRole.Button, new() { NameString = "Account" }).ClickAsync();
-            await Page.GetByRole(AriaRole.Button, new() { NameString = "Sign out" }).ClickAsync();
-            await Page.WaitForURLAsync("/");
-        }
-    }
+    public async Task TearDown() => await PlaywrightHelpers.LogOutAsync(Page);
 
     [Test]
     public async Task TestAddOrders()
     {
-        // Run after any tests
-        await Page.GotoAsync("/");
-
-        // Expect a title "to contain" a substring.
-        await Expect(Page).ToHaveTitleAsync(new Regex("EPD Enforcement Orders"));
-
-        // Click sign in tab
-        await Page.GetByRole(AriaRole.Link, new() { NameString = "Sign in" }).ClickAsync();
-        await Page.WaitForURLAsync("/Account/Login");
-
-        // Expect the following text in the home page
-        await Expect(Page.GetByRole(AriaRole.Heading, new() { NameString = "Agency Login" })).ToBeVisibleAsync();
-        await Expect(Page.GetByText("The Enforcement Orders admin site is a State of Georgia application. It is provi")).ToBeVisibleAsync();
-        await Expect(Page.GetByRole(AriaRole.Heading, new() { NameString = "Sign in using your work account" })).ToBeVisibleAsync();
-
-        // click in sign in button
-        await Page.GetByRole(AriaRole.Button, new() { NameString = "Sign in" }).ClickAsync();
-        await Page.WaitForURLAsync("/Admin/Index");
-
-        // click on the link
-        await Page.GetByRole(AriaRole.Link, new() { NameString = "Search" }).ClickAsync();
-        await Page.WaitForURLAsync("/Admin/Search");
-
-        // Expect a title "to contain" a substring.
-        await Expect(Page).ToHaveTitleAsync(new Regex("EPD Enforcement Orders"));
-
-        // Check for text in the front of the Page
-        await Expect(Page.GetByRole(AriaRole.Heading, new() { NameString = "Admin: Search Enforcement Orders" })).ToBeVisibleAsync();
-
-        // search table with no values
-        await Page.GetByRole(AriaRole.Button, new() { NameString = "Search" }).ClickAsync();
-        await Page.WaitForURLAsync("**/Admin/Search?Status=All&Progress=All&handler=search#search-results");
-
-        // check the number of tables
-        int numTables = await Page.Locator("//table").CountAsync();
-        Assert.That(numTables, Is.EqualTo(1));
-
-        // check the number of rows in the first table
-        int tableRows = await Page.Locator("//table[1]/tbody/tr").CountAsync();
-        Assert.That(tableRows, Is.GreaterThanOrEqualTo(19));
-
-        // check the column labels of the first table
-        await Expect(Page.Locator("//table/thead/tr/th[1]")).ToContainTextAsync("Facility");
-        await Expect(Page.Locator("//table/thead/tr/th[2]")).ToContainTextAsync("Order");
-        await Expect(Page.Locator("//table/thead/tr/th[3]")).ToContainTextAsync("Status/Date");
-
         // click on add new order button
         await Page.GetByRole(AriaRole.Link, new() { NameString = "+ New Order" }).ClickAsync();
         await Page.WaitForURLAsync("/Admin/Add");
@@ -95,18 +28,20 @@ public class AdminAddOrders : PageTest
         await Page.GetByLabel("Facility *").FillAsync("testing");
 
         // select county
-        await Page.GetByRole(AriaRole.Combobox, new() { NameString = "County *" }).SelectOptionAsync(new[] { "Bartow" });
+        await Page.GetByRole(AriaRole.Combobox, new() { NameString = "County *" })
+            .SelectOptionAsync(new[] { "Bartow" });
 
         // enter cause of order
         await Page.GetByLabel("Cause of Order *").ClickAsync();
         await Page.GetByLabel("Cause of Order *").FillAsync("testing");
 
         // enter legal authority
-        await Page.GetByRole(AriaRole.Combobox, new() { NameString = "Legal Authority *" }).SelectOptionAsync(new[] { "1" });
+        await Page.GetByRole(AriaRole.Combobox, new() { NameString = "Legal Authority *" })
+            .SelectOptionAsync(new[] { "1" });
 
         // Create unique number for order
         var orderNumber = DateTime.Now.Ticks.ToString();
-        
+
         // enter order number
         await Page.GetByLabel("Order Number *").ClickAsync();
         await Page.GetByLabel("Order Number *").FillAsync(orderNumber);
@@ -123,15 +58,18 @@ public class AdminAddOrders : PageTest
         await Page.WaitForURLAsync("/Admin/Details/*");
 
         // Expect the following text after the order has been added
-        await Expect(Page.GetByRole(AriaRole.Heading, new() { NameString = $"Admin View: Enforcement Order {orderNumber}" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Heading,
+            new() { NameString = $"Admin View: Enforcement Order {orderNumber}" })).ToBeVisibleAsync();
         await Expect(Page.GetByText("This Order is not publicly viewable.")).ToBeVisibleAsync();
 
         // check the number of tables in the new order detail page
-        int numTables2 = await Page.Locator("//table").CountAsync();
+        var numTables2 = await Page.Locator("//table").CountAsync();
         Assert.That(numTables2, Is.EqualTo(1));
+
         // check the number of rows
-        int tableRows2 = await Page.Locator("//table/tbody/tr").CountAsync();
+        var tableRows2 = await Page.Locator("//table/tbody/tr").CountAsync();
         Assert.That(tableRows2, Is.EqualTo(12));
+
         // check the column labels
         await Expect(Page.Locator("//table/tbody/tr[1]/th[1]")).ToContainTextAsync("Progress");
         await Expect(Page.Locator("//table/tbody/tr[2]/th[1]")).ToContainTextAsync("Facility");
@@ -140,7 +78,8 @@ public class AdminAddOrders : PageTest
         await Expect(Page.Locator("//table/tbody/tr[5]/th[1]")).ToContainTextAsync("Requirements of Order");
         await Expect(Page.Locator("//table/tbody/tr[6]/th[1]")).ToContainTextAsync("Proposed Settlement Amount");
         await Expect(Page.Locator("//table/tbody/tr[7]/th[1]")).ToContainTextAsync("Legal Authority");
-        await Expect(Page.Locator("//table/tbody/tr[8]/th[1]")).ToContainTextAsync("Publication Date For Proposed Order");
+        await Expect(Page.Locator("//table/tbody/tr[8]/th[1]"))
+            .ToContainTextAsync("Publication Date For Proposed Order");
         await Expect(Page.Locator("//table/tbody/tr[9]/th[1]")).ToContainTextAsync("Date Comment Period Closes");
         await Expect(Page.Locator("//table/tbody/tr[10]/th[1]")).ToContainTextAsync("Send Comments To");
         await Expect(Page.Locator("//table/tbody/tr[11]/th[1]")).ToContainTextAsync("File Attachments");
@@ -157,19 +96,22 @@ public class AdminAddOrders : PageTest
         await Expect(Page.Locator("//table/tbody/tr[10]/td")).ToContainTextAsync("N/A");
         await Expect(Page.Locator("//table/tbody/tr[11]/td")).ToContainTextAsync("None");
 
-        // go back and search for the total number of orders
+        // go back and search for the order
         await Page.GetByRole(AriaRole.Link, new() { NameString = "Search" }).ClickAsync();
         await Page.WaitForURLAsync("/Admin/Search");
         await Page.GetByLabel("Order Number").FillAsync(orderNumber);
         await Page.GetByRole(AriaRole.Button, new() { NameString = "Search" }).ClickAsync();
-        await Page.WaitForURLAsync($"**/Admin/Search?OrderNumber={orderNumber}&Status=All&Progress=All&handler=search#search-results");
+        await Page.WaitForURLAsync(
+            $"**/Admin/Search?OrderNumber={orderNumber}&Status=All&Progress=All&handler=search#search-results");
 
         // check the number of rows in the first table
-        int tableRows3 = await Page.Locator("//table[1]/tbody/tr").CountAsync();
+        var tableRows3 = await Page.Locator("//table[1]/tbody/tr").CountAsync();
         Assert.That(tableRows3, Is.EqualTo(1));
-        
+
         // check if the value exists in the table
-        await Expect(Page.GetByRole(AriaRole.Rowheader, new() { NameString = "testing Bartow County" })).ToBeVisibleAsync();
-        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = $"{orderNumber} Air Quality Act" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Rowheader, new() { NameString = "testing Bartow County" }))
+            .ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Cell, new() { NameString = $"{orderNumber} Air Quality Act" }))
+            .ToBeVisibleAsync();
     }
 }

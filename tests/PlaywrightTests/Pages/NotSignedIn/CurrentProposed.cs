@@ -1,46 +1,41 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using Microsoft.Playwright;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
 
 namespace PlaywrightTests.Pages.NotSignedIn;
 
 [Parallelizable(ParallelScope.Self)]
 [TestFixture]
+[SuppressMessage("ReSharper", "ArrangeObjectCreationWhenTypeNotEvident")]
 public class CurrentProposed : PageTest
 {
     [SuppressMessage("Structure", "NUnit1028:The non-test method is public")]
-    public override BrowserNewContextOptions ContextOptions() =>
-        new()
-        {
-            BaseURL = "https://localhost:44331",
-            IgnoreHTTPSErrors = true,
-        };
-    
+    public override BrowserNewContextOptions ContextOptions() => PlaywrightHelpers.DefaultContextOptions();
+
     [Test]
     public async Task TestCurrentProposed()
     {
         await Page.GotoAsync("/");
 
         // click on the link
-        await Page.Locator("div:has-text(\"Georgia EPD provides notice and opportunity for public comment on certain propos\")").GetByRole(AriaRole.Link, new() { NameString = "View Full Report" }).ClickAsync();
+        await Page.GetByRole(AriaRole.Heading, new() { NameString = "Proposed Orders" })
+            .Locator("..")
+            .GetByRole(AriaRole.Link, new() { NameString = "View Full Report" }).ClickAsync();
         await Page.WaitForURLAsync("/CurrentProposed");
 
         // Expect a title "to contain" a substring.
-        await Expect(Page).ToHaveTitleAsync(new Regex("EPD Enforcement Orders"));
+        await Expect(Page).ToHaveTitleAsync(new Regex("Current Proposed Enforcement Orders"));
 
         // Check for text in the front of the Page
-        await Expect(Page.GetByRole(AriaRole.Heading, new() { NameString = "Current Proposed Enforcement Orders" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Heading, new() { NameString = "Current Proposed Enforcement Orders" }))
+            .ToBeVisibleAsync();
         await Expect(Page.GetByText("(Notices that change weekly)")).ToBeVisibleAsync();
 
         // check the number of tables
-        int numTables = await Page.Locator("//table").CountAsync();
+        var numTables = await Page.Locator("//table").CountAsync();
         Assert.That(numTables, Is.EqualTo(3));
 
         // check the number of rows in the first table
-        int tableRows = await Page.Locator("//table[1]/tbody/tr").CountAsync();
+        var tableRows = await Page.Locator("//table[1]/tbody/tr").CountAsync();
         Assert.That(tableRows, Is.EqualTo(10));
 
         // check to see if there are these text in the table
@@ -50,7 +45,8 @@ public class CurrentProposed : PageTest
         await Expect(Page.Locator("//table[1]/tbody/tr[4]/th")).ToContainTextAsync("Requirements of Order");
         await Expect(Page.Locator("//table[1]/tbody/tr[5]/th")).ToContainTextAsync("Proposed Settlement Amount");
         await Expect(Page.Locator("//table[1]/tbody/tr[6]/th")).ToContainTextAsync("Legal Authority");
-        await Expect(Page.Locator("//table[1]/tbody/tr[7]/th")).ToContainTextAsync("Publication Date For Proposed Order");
+        await Expect(Page.Locator("//table[1]/tbody/tr[7]/th"))
+            .ToContainTextAsync("Publication Date For Proposed Order");
         await Expect(Page.Locator("//table[1]/tbody/tr[8]/th")).ToContainTextAsync("Date Comment Period Closes");
         await Expect(Page.Locator("//table[1]/tbody/tr[9]/th")).ToContainTextAsync("Send Comments To");
         await Expect(Page.Locator("//table[1]/tbody/tr[10]/th")).ToContainTextAsync("Public Hearing Scheduled");
@@ -59,21 +55,21 @@ public class CurrentProposed : PageTest
     [Test]
     public async Task TestCurrentProposedDetails()
     {
-        // I could not click on the `view` link since it involves a randomly generated id
         await Page.GotoAsync("/Details/15");
 
         // Expect a title "to contain" a substring.
-        await Expect(Page).ToHaveTitleAsync(new Regex("EPD Enforcement Orders"));
+        await Expect(Page).ToHaveTitleAsync(new Regex("Enforcement Order EPD-SW-WQ-0015"));
 
         // Check for text in the front of the Page
-        await Expect(Page.GetByRole(AriaRole.Heading, new() { NameString = "Enforcement Order EPD-SW-WQ-0015" })).ToBeVisibleAsync();
+        await Expect(Page.GetByRole(AriaRole.Heading, new() { NameString = "Enforcement Order EPD-SW-WQ-0015" }))
+            .ToBeVisibleAsync();
 
         // check the number of tables
-        int numTables = await Page.Locator("//table").CountAsync();
+        var numTables = await Page.Locator("//table").CountAsync();
         Assert.That(numTables, Is.EqualTo(1));
 
         // check the number of rows in the first table
-        int tableRows = await Page.Locator("//table[1]/tbody/tr").CountAsync();
+        var tableRows = await Page.Locator("//table[1]/tbody/tr").CountAsync();
         Assert.That(tableRows, Is.EqualTo(11));
 
         // check to see if there are these text in the table
@@ -83,11 +79,11 @@ public class CurrentProposed : PageTest
         await Expect(Page.Locator("//table[1]/tbody/tr[4]/th")).ToContainTextAsync("Requirements of Order");
         await Expect(Page.Locator("//table[1]/tbody/tr[5]/th")).ToContainTextAsync("Proposed Settlement Amount");
         await Expect(Page.Locator("//table[1]/tbody/tr[6]/th")).ToContainTextAsync("Legal Authority");
-        await Expect(Page.Locator("//table[1]/tbody/tr[7]/th")).ToContainTextAsync("Publication Date For Proposed Order");
+        await Expect(Page.Locator("//table[1]/tbody/tr[7]/th"))
+            .ToContainTextAsync("Publication Date For Proposed Order");
         await Expect(Page.Locator("//table[1]/tbody/tr[8]/th")).ToContainTextAsync("Date Comment Period Closes");
         await Expect(Page.Locator("//table[1]/tbody/tr[9]/th")).ToContainTextAsync("Send Comments To");
         await Expect(Page.Locator("//table[1]/tbody/tr[10]/th")).ToContainTextAsync("Public Hearing Scheduled");
         await Expect(Page.Locator("//table[1]/tbody/tr[11]/th")).ToContainTextAsync("File Attachments");
-
     }
 }
