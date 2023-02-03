@@ -11,6 +11,8 @@ jobs:
     # ↓ Change this to "false" to disable the workflow without any alert messages.
     if: ${{ true }}
       # ↑ Change to "true" (or delete) to enable the workflow.
+
+    name: Run Playwright tests
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -36,7 +38,7 @@ jobs:
       - name: Run the web server
         run: |
           cd src/Enfo.WebApp
-          dotnet run &
+          dotnet run --no-build &
 
       - name: Test
         run: dotnet test --filter FullyQualifiedName~PlaywrightTests --no-build --verbosity normal
