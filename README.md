@@ -9,26 +9,26 @@ Enforcement Orders (ENFO) is an online application to allow EPD staff to publish
 
 ## Background
 
-The Georgia Environmental Protection Division is mandated by Rule 391-1-3-.01 to "issue notices of proposed or final administrative orders and proposed or final administrative consent orders." The Rule requires these notices to be posted on the Environmental Protection Division's Internet Web Site.
+The Georgia Environmental Protection Division is mandated by Rule 391-1-3-.01 to "issue notices of proposed or final administrative orders and proposed or final administrative consent orders." The Rule requires these notices to be posted on the Environmental Protection Division's Internet Website.
 
-## General project requirements
+### General project requirements
 
 Enforcement order notices are time-critical and high-profile public information. EPD staff must have complete control over the posting of the orders, and not require IT support to publish, modify, or remove them.
 
 * EPD staff can input new orders, review and update existing orders, and remove orders.
 * The public can view and search for proposed and executed orders.
 
-# Info for developers
+## Info for developers
 
 ENFO is written using .NET 6.
 
-## Prerequisites
+### Prerequisites
 
 + [Visual Studio](https://www.visualstudio.com/vs/) or similar
 + [.NET 6.0 SDK](https://dotnet.microsoft.com/download)
 + [NPM](https://www.npmjs.com/) or [PNPM](https://pnpm.io/)
 
-## Project organization
+### Project organization
 
 The solution contains the following projects:
 
@@ -38,14 +38,6 @@ The solution contains the following projects:
 * **Enfo.WebApp** — The front end web application written in ASP.NET Razor Pages.
 
 There are also corresponding unit test projects for each, plus a **TestData** project containing test data for development/testing purposes.
-
-## Setup
-
-```
-dotnet build
-cd src/Enfo.WebApp
-dotnet run
-```
 
 ### Launch profiles
 
@@ -64,3 +56,13 @@ There are two launch profiles:
 * **WebApp Dev Server** — This profile connects to the remote Dev database server for data and requires an SOG account to log in. *To use this profile, you must add the "appsettings.Development.json" file from the "app-config" repo.*
 
 Most development should be done using the Local profile. The Dev Server profile is only needed when specifically troubleshooting issues with the database server or SOG account.
+
+### Entity Framework database migrations
+
+Instructions for adding a new Entity Framework database migration:
+
+1. Open a command prompt to "./src/Infrastructure/" folder.
+
+2. Run the following command with an appropriate migration name:
+
+   `dotnet ef migrations add NAME_OF_MIGRATION --msbuildprojectextensionspath ..\..\artifacts\Infrastructure\obj\`
