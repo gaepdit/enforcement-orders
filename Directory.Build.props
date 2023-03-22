@@ -6,6 +6,11 @@
     </PropertyGroup>
 
     <PropertyGroup>
+        <!-- https://aka.ms/vs-build-acceleration -->
+        <AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
+    </PropertyGroup>
+
+    <PropertyGroup>
         <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory).sonarlint\gaepdit_enforcement-orderscsharp.ruleset</CodeAnalysisRuleSet>
     </PropertyGroup>
 
