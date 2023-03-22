@@ -1,5 +1,4 @@
 ### NOTE: Project-specific rules are at the bottom of this file.
-# Generated 2022-10-11
 
 ### Generic rules ###
 # Created by https://www.toptal.com/developers/gitignore/api/visualstudio,visualstudiocode,jetbrains
@@ -136,12 +135,6 @@ fabric.properties
 # Ignore all local history of files
 .history
 .ionide
-
-# Support for Project snippet scope
-.vscode/*.code-snippets
-
-# Ignore code-workspaces
-*.code-workspace
 
 ### VisualStudio ###
 ## Ignore Visual Studio temporary files, build results, and
@@ -521,6 +514,7 @@ MigrationBackup/
 FodyWeavers.xsd
 
 # VS Code files for those working on multiple tools
+*.code-workspace
 
 # Local History for Visual Studio Code
 
