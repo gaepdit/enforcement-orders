@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
 	<PropertyGroup>
-		<TargetFramework>net6.0</TargetFramework>
+		<TargetFramework>net7.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<UserSecretsId>aspnet-Enfo.WebApp-A834A848-D8DF-4E5F-B1E2-7EE74113BF3E</UserSecretsId>
 		<AssemblyVersion>2022.10.11</AssemblyVersion>
