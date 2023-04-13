@@ -16,7 +16,7 @@ namespace EnfoTests.LocalRepositoryTests.EnforcementOrderTests;
 public class UpdateTests
 {
     // Sample data for update
-    private static EnforcementOrderUpdate getUpdateResource(EnforcementOrder order) => new()
+    private static EnforcementOrderUpdate GetUpdateResource(EnforcementOrder order) => new()
     {
         Id = order.Id,
         Cause = order.Cause,
@@ -46,7 +46,7 @@ public class UpdateTests
     public async Task FromValidItem_Updates()
     {
         var original = EnforcementOrderData.EnforcementOrders.First();
-        var resource = getUpdateResource(original);
+        var resource = GetUpdateResource(original);
         resource.Cause = "new text";
 
         using var repository = new EnforcementOrderRepository(new Mock<IFileService>().Object);
@@ -62,7 +62,7 @@ public class UpdateTests
     public async Task WithNoChanges_Succeeds()
     {
         var original = EnforcementOrderData.EnforcementOrders.First();
-        var resource = getUpdateResource(original);
+        var resource = GetUpdateResource(original);
 
         using var repository = new EnforcementOrderRepository(new Mock<IFileService>().Object);
 
@@ -77,7 +77,7 @@ public class UpdateTests
     public async Task FromInvalidItem_ThrowsException()
     {
         var original = EnforcementOrderData.EnforcementOrders.First();
-        var resource = getUpdateResource(original);
+        var resource = GetUpdateResource(original);
         resource.County = null;
 
         var action = async () =>
@@ -111,7 +111,7 @@ public class UpdateTests
     public async Task FromDeletedOrder_ThrowsException()
     {
         var original = EnforcementOrderData.EnforcementOrders.First(e => e.Deleted);
-        var resource = getUpdateResource(original);
+        var resource = GetUpdateResource(original);
 
         var action = async () =>
         {

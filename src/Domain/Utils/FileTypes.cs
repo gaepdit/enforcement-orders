@@ -32,7 +32,5 @@ public static class FileTypes
         FileContentTypes.ContainsKey(fileExtension.ToLower());
 
     public static string GetContentType(string fileExtension) =>
-        FileContentTypes.ContainsKey(fileExtension.ToLower())
-            ? FileContentTypes[fileExtension.ToLower()]
-            : "application/octet-stream";
+        FileContentTypes.TryGetValue(fileExtension.ToLower(), out var value) ? value : "application/octet-stream";
 }

@@ -1,4 +1,4 @@
-using Enfo.Domain.EnforcementOrders.Entities;
+﻿using Enfo.Domain.EnforcementOrders.Entities;
 using Enfo.Domain.EnforcementOrders.Repositories;
 using Enfo.Domain.EnforcementOrders.Resources;
 using Enfo.Domain.EnforcementOrders.Specs;
@@ -210,9 +210,8 @@ public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
     {
         var order = await _context.EnforcementOrders
             .Include(e => e.Attachments)
-            .SingleOrDefaultAsync(e => e.Id == orderId).ConfigureAwait(false);
-
-        if (order is null) throw new ArgumentException($"Order ID {orderId} does not exist.", nameof(orderId));
+            .SingleOrDefaultAsync(e => e.Id == orderId).ConfigureAwait(false)
+            ?? throw new ArgumentException($"Order ID {orderId} does not exist.", nameof(orderId));
 
         if (order.Deleted)
             throw new ArgumentException($"Order ID {orderId} has been deleted and cannot be edited.", nameof(orderId));
@@ -244,19 +243,16 @@ public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
     public async Task DeleteAttachmentAsync(int orderId, Guid attachmentId)
     {
         var order = await _context.EnforcementOrders.AsNoTracking()
-            .SingleOrDefaultAsync(e => e.Id == orderId).ConfigureAwait(false);
-
-        if (order is null) throw new ArgumentException($"Order ID {orderId} does not exist.", nameof(orderId));
+            .SingleOrDefaultAsync(e => e.Id == orderId).ConfigureAwait(false)
+            ?? throw new ArgumentException($"Order ID {orderId} does not exist.", nameof(orderId));
 
         if (order.Deleted)
             throw new ArgumentException($"Order ID {orderId} has been deleted and cannot be edited.", nameof(orderId));
 
         var attachment = await _context.Attachments
             .Include(a => a.EnforcementOrder)
-            .SingleOrDefaultAsync(a => a.Id == attachmentId).ConfigureAwait(false);
-
-        if (attachment is null)
-            throw new ArgumentException($"Attachment ID {attachmentId} does not exist.", nameof(attachmentId));
+            .SingleOrDefaultAsync(a => a.Id == attachmentId).ConfigureAwait(false)
+            ?? throw new ArgumentException($"Attachment ID {attachmentId} does not exist.", nameof(attachmentId));
 
         if (attachment.EnforcementOrder.Id != orderId)
             throw new ArgumentException($"Order ID {orderId} does not include Attachment ID {attachmentId}.",

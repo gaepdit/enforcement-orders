@@ -55,8 +55,8 @@ namespace Enfo.Infrastructure.Repositories
 
         public async Task UpdateStatusAsync(int id, bool newActiveStatus)
         {
-            var item = await _context.LegalAuthorities.FindAsync(id);
-            if (item == null) throw new ArgumentException($"ID ({id}) not found.", nameof(id));
+            var item = await _context.LegalAuthorities.FindAsync(id)
+                ?? throw new ArgumentException($"ID ({id}) not found.", nameof(id));
             item.Active = newActiveStatus;
             await _context.SaveChangesAsync();
         }
