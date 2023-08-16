@@ -93,7 +93,7 @@ public class ListAdminTests
         using var repository = new EnforcementOrderRepository(Substitute.For<IFileService>());
 
         var result = await repository.ListAdminAsync(spec, new PaginationSpec(1, 50));
-        
+
         using (new AssertionScope())
         {
             result.PageNumber.Should().Be(1);
@@ -101,6 +101,7 @@ public class ListAdminTests
             result.Items.Count.Should().Be(0);
         }
     }
+
     [Test]
     public async Task WithTextMatchSpec_ReturnsMatches()
     {
@@ -126,5 +127,4 @@ public class ListAdminTests
             result.Items.Should().BeEquivalentTo(expectedList);
         }
     }
-
 }

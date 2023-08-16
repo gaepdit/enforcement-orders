@@ -102,7 +102,8 @@ public class EditTests
         var repo = Substitute.For<ILegalAuthorityRepository>();
         repo.GetAsync(Arg.Any<int>()).Returns(null as LegalAuthorityView);
         var validator = Substitute.For<IValidator<LegalAuthorityCommand>>();
-        validator.ValidateAsync(Arg.Any<LegalAuthorityCommand>(), CancellationToken.None).Returns(new ValidationResult());
+        validator.ValidateAsync(Arg.Any<LegalAuthorityCommand>(), CancellationToken.None)
+            .Returns(new ValidationResult());
         var page = new Edit(repo) { Item = new LegalAuthorityCommand { Id = 0 } };
 
         var result = await page.OnPostAsync(validator);
@@ -117,7 +118,8 @@ public class EditTests
         var repo = Substitute.For<ILegalAuthorityRepository>();
         repo.GetAsync(Arg.Any<int>()).Returns(item);
         var validator = Substitute.For<IValidator<LegalAuthorityCommand>>();
-        validator.ValidateAsync(Arg.Any<LegalAuthorityCommand>(), CancellationToken.None).Returns(new ValidationResult());
+        validator.ValidateAsync(Arg.Any<LegalAuthorityCommand>(), CancellationToken.None)
+            .Returns(new ValidationResult());
 
         // Initialize Page TempData
         var httpContext = new DefaultHttpContext();
@@ -149,7 +151,8 @@ public class EditTests
         repo.GetAsync(Arg.Any<int>()).Returns(ResourceHelper.GetLegalAuthorityViewList()[0]);
         repo.NameExistsAsync(Arg.Any<string>()).Returns(false);
         var validator = Substitute.For<IValidator<LegalAuthorityCommand>>();
-        validator.ValidateAsync(Arg.Any<LegalAuthorityCommand>(), CancellationToken.None).Returns(new ValidationResult());
+        validator.ValidateAsync(Arg.Any<LegalAuthorityCommand>(), CancellationToken.None)
+            .Returns(new ValidationResult());
 
         // Initialize Page TempData
         var httpContext = new DefaultHttpContext();

@@ -130,7 +130,8 @@ public class UserEditTests
     public async Task OnPost_GivenSuccess_ReturnsRedirectWithDisplayMessage()
     {
         var userService = Substitute.For<IUserService>();
-        userService.UpdateUserRolesAsync(Arg.Any<Guid>(), Arg.Any<Dictionary<string, bool>>()).Returns(IdentityResult.Success);
+        userService.UpdateUserRolesAsync(Arg.Any<Guid>(), Arg.Any<Dictionary<string, bool>>())
+            .Returns(IdentityResult.Success);
         // Initialize Page TempData
         var httpContext = new DefaultHttpContext();
         var tempData = new TempDataDictionary(httpContext, Substitute.For<ITempDataProvider>());

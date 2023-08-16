@@ -29,7 +29,8 @@ public class AddTests
         repo.NameExistsAsync(Arg.Any<string>()).Returns(false);
         repo.CreateAsync(Arg.Any<LegalAuthorityCommand>()).Returns(1);
         var validator = Substitute.For<IValidator<LegalAuthorityCommand>>();
-        validator.ValidateAsync(Arg.Any<LegalAuthorityCommand>(), CancellationToken.None).Returns(new ValidationResult());
+        validator.ValidateAsync(Arg.Any<LegalAuthorityCommand>(), CancellationToken.None)
+            .Returns(new ValidationResult());
 
         // Initialize Page TempData
         var httpContext = new DefaultHttpContext();
@@ -55,7 +56,8 @@ public class AddTests
     {
         var repo = Substitute.For<ILegalAuthorityRepository>();
         var validator = Substitute.For<IValidator<LegalAuthorityCommand>>();
-        validator.ValidateAsync(Arg.Any<LegalAuthorityCommand>(), CancellationToken.None).Returns(new ValidationResult());
+        validator.ValidateAsync(Arg.Any<LegalAuthorityCommand>(), CancellationToken.None)
+            .Returns(new ValidationResult());
         var page = new Add { Item = new LegalAuthorityCommand() };
         page.ModelState.AddModelError("key", "message");
 
