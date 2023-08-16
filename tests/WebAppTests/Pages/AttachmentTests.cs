@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Routing;
-using Moq;
+using NSubstitute;
 using NUnit.Framework;
 using System;
 using System.Linq;
@@ -39,19 +39,17 @@ public class AttachmentTests
         var item = new AttachmentView(AttachmentData.Attachments.First());
         var expectedContentType = FileTypes.GetContentType(item.FileExtension);
 
-        var repo = new Mock<IEnforcementOrderRepository>();
-        repo.Setup(l => l.GetAttachmentAsync(It.IsAny<Guid>()))
-            .ReturnsAsync(item);
+        var repo = Substitute.For<IEnforcementOrderRepository>();
+        repo.GetAttachmentAsync(Arg.Any<Guid>()).Returns(item);
 
         const string expectedFileContents = "Hello world!";
         var encoder = new UTF8Encoding();
         var expectedFile = encoder.GetBytes(expectedFileContents);
-        var fileService = new Mock<IFileService>();
-        fileService.Setup(l => l.GetFileAsync(It.IsAny<string>()))
-            .ReturnsAsync(expectedFile);
+        var fileService = Substitute.For<IFileService>();
+        fileService.GetFileAsync(Arg.Any<string>()).Returns(expectedFile);
 
         // Act
-        var page = new Attachment(repo.Object, fileService.Object) { PageContext = pageContext };
+        var page = new Attachment(repo, fileService) { PageContext = pageContext };
         var response = await page.OnGetAsync(item.Id, item.FileName);
 
         // Assert
@@ -81,11 +79,10 @@ public class AttachmentTests
         var actionContext = new ActionContext(httpContext, new RouteData(), new PageActionDescriptor());
         var pageContext = new PageContext(actionContext);
 
-        var repo = new Mock<IEnforcementOrderRepository>();
-        repo.Setup(l => l.GetAttachmentAsync(It.IsAny<Guid>()))
-            .ReturnsAsync(null as AttachmentView);
+        var repo = Substitute.For<IEnforcementOrderRepository>();
+        repo.GetAttachmentAsync(Arg.Any<Guid>()).Returns(null as AttachmentView);
 
-        var page = new Attachment(repo.Object, default) { PageContext = pageContext };
+        var page = new Attachment(repo, default) { PageContext = pageContext };
         var response = await page.OnGetAsync(Guid.Empty, null);
 
         using (new AssertionScope())
@@ -110,11 +107,10 @@ public class AttachmentTests
             EnforcementOrder = new EnforcementOrder { Id = 1 },
         });
 
-        var repo = new Mock<IEnforcementOrderRepository>();
-        repo.Setup(l => l.GetAttachmentAsync(It.IsAny<Guid>()))
-            .ReturnsAsync(view);
+        var repo = Substitute.For<IEnforcementOrderRepository>();
+        repo.GetAttachmentAsync(Arg.Any<Guid>()).Returns(view);
 
-        var page = new Attachment(repo.Object, default) { PageContext = pageContext };
+        var page = new Attachment(repo, default) { PageContext = pageContext };
         var response = await page.OnGetAsync(Guid.Empty, null);
 
         using (new AssertionScope())
@@ -139,11 +135,10 @@ public class AttachmentTests
             EnforcementOrder = new EnforcementOrder { Id = 1 },
         });
 
-        var repo = new Mock<IEnforcementOrderRepository>();
-        repo.Setup(l => l.GetAttachmentAsync(It.IsAny<Guid>()))
-            .ReturnsAsync(view);
+        var repo = Substitute.For<IEnforcementOrderRepository>();
+        repo.GetAttachmentAsync(Arg.Any<Guid>()).Returns(view);
 
-        var page = new Attachment(repo.Object, default) { PageContext = pageContext };
+        var page = new Attachment(repo, default) { PageContext = pageContext };
         var response = await page.OnGetAsync(Guid.Empty, "wrong");
 
         using (new AssertionScope())
@@ -171,15 +166,13 @@ public class AttachmentTests
             EnforcementOrder = new EnforcementOrder { Id = 1 },
         });
 
-        var repo = new Mock<IEnforcementOrderRepository>();
-        repo.Setup(l => l.GetAttachmentAsync(It.IsAny<Guid>()))
-            .ReturnsAsync(view);
+        var repo = Substitute.For<IEnforcementOrderRepository>();
+        repo.GetAttachmentAsync(Arg.Any<Guid>()).Returns(view);
 
-        var fileService = new Mock<IFileService>();
-        fileService.Setup(l => l.GetFileAsync(It.IsAny<string>()))
-            .ReturnsAsync(Array.Empty<byte>());
+        var fileService = Substitute.For<IFileService>();
+        fileService.GetFileAsync(Arg.Any<string>()).Returns(Array.Empty<byte>());
 
-        var page = new Attachment(repo.Object, fileService.Object) { PageContext = pageContext };
+        var page = new Attachment(repo, fileService) { PageContext = pageContext };
         var response = await page.OnGetAsync(Guid.Empty, view.FileName);
 
         using (new AssertionScope())

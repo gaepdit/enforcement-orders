@@ -8,7 +8,7 @@ using FluentAssertions.Execution;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Moq;
+using NSubstitute;
 using NUnit.Framework;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,11 +23,11 @@ public class DetailsTests
     {
         var itemId = EnforcementOrderData.EnforcementOrders.First().Id;
         var item = ResourceHelper.GetEnforcementOrderDetailedView(itemId);
-        var repo = new Mock<IEnforcementOrderRepository>();
-        repo.Setup(l => l.GetAsync(itemId)).ReturnsAsync(item);
+        var repo = Substitute.For<IEnforcementOrderRepository>();
+        repo.GetAsync(itemId).Returns(item);
         var page = new Details();
 
-        await page.OnGetAsync(repo.Object, itemId);
+        await page.OnGetAsync(repo, itemId);
 
         page.Item.Should().Be(item);
     }
@@ -38,17 +38,17 @@ public class DetailsTests
         // Not testing returned Item, but it must be populated to return Page
         var itemId = EnforcementOrderData.EnforcementOrders.First().Id;
         var item = ResourceHelper.GetEnforcementOrderDetailedView(itemId);
-        var repo = new Mock<IEnforcementOrderRepository>();
-        repo.Setup(l => l.GetAsync(itemId)).ReturnsAsync(item);
+        var repo = Substitute.For<IEnforcementOrderRepository>();
+        repo.GetAsync(itemId).Returns(item);
 
         // Initialize Page TempData
         var httpContext = new DefaultHttpContext();
-        var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
+        var tempData = new TempDataDictionary(httpContext, Substitute.For<ITempDataProvider>());
 
         var page = new Details { TempData = tempData };
 
         page.TempData.SetDisplayMessage(Context.Info, "Info message");
-        await page.OnGetAsync(repo.Object, itemId);
+        await page.OnGetAsync(repo, itemId);
 
         var expected = new DisplayMessage(Context.Info, "Info message");
         page.Message.Should().BeEquivalentTo(expected);
@@ -57,10 +57,10 @@ public class DetailsTests
     [Test]
     public async Task OnGet_NullId_ReturnsNotFound()
     {
-        var repo = new Mock<IEnforcementOrderRepository>();
+        var repo = Substitute.For<IEnforcementOrderRepository>();
         var page = new Details();
 
-        var result = await page.OnGetAsync(repo.Object, null);
+        var result = await page.OnGetAsync(repo, null);
 
         using (new AssertionScope())
         {
@@ -73,10 +73,10 @@ public class DetailsTests
     [Test]
     public async Task OnGet_NonexistentId_ReturnsNotFound()
     {
-        var repo = new Mock<IEnforcementOrderRepository>();
+        var repo = Substitute.For<IEnforcementOrderRepository>();
         var page = new Details();
 
-        var result = await page.OnGetAsync(repo.Object, -1);
+        var result = await page.OnGetAsync(repo, -1);
 
         using (new AssertionScope())
         {

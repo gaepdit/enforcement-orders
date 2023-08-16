@@ -6,7 +6,7 @@ using EnfoTests.TestData;
 using FluentAssertions;
 using FluentAssertions.Execution;
 using Microsoft.AspNetCore.Http;
-using Moq;
+using NSubstitute;
 using NUnit.Framework;
 using System;
 using System.IO;
@@ -37,7 +37,7 @@ public class CreateTests
         };
 
         var expectedId = EnforcementOrderData.EnforcementOrders.Max(e => e.Id) + 1;
-        using var repository = new EnforcementOrderRepository(new Mock<IFileService>().Object);
+        using var repository = new EnforcementOrderRepository(Substitute.For<IFileService>());
 
         var itemId = await repository.CreateAsync(resource);
 
@@ -74,7 +74,7 @@ public class CreateTests
 
         var action = async () =>
         {
-            using var repository = new EnforcementOrderRepository(new Mock<IFileService>().Object);
+            using var repository = new EnforcementOrderRepository(Substitute.For<IFileService>());
             await repository.CreateAsync(resource);
         };
 
@@ -102,7 +102,7 @@ public class CreateTests
             Attachment = new FormFile(Stream.Null, 0, 2, "test2", "test2.pdf"),
         };
 
-        using var repository = new EnforcementOrderRepository(new Mock<IFileService>().Object);
+        using var repository = new EnforcementOrderRepository(Substitute.For<IFileService>());
 
         // Act
         var itemId = await repository.CreateAsync(resource);

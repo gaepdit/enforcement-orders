@@ -7,7 +7,7 @@ using FluentAssertions;
 using FluentAssertions.Execution;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Moq;
+using NSubstitute;
 using NUnit.Framework;
 using System.Threading.Tasks;
 
@@ -20,14 +20,12 @@ public class IndexTests
     public async Task OnGet_ReturnsWithOrders()
     {
         var list = ResourceHelper.GetEnforcementOrderDetailedViewList();
-        var repo = new Mock<IEnforcementOrderRepository>();
-        repo.Setup(l => l.ListCurrentProposedEnforcementOrdersAsync())
-            .ReturnsAsync(list);
-        repo.Setup(l => l.ListRecentlyExecutedEnforcementOrdersAsync())
-            .ReturnsAsync(list);
+        var repo = Substitute.For<IEnforcementOrderRepository>();
+        repo.ListCurrentProposedEnforcementOrdersAsync().Returns(list);
+        repo.ListRecentlyExecutedEnforcementOrdersAsync().Returns(list);
         var page = new Index();
 
-        await page.OnGetAsync(repo.Object);
+        await page.OnGetAsync(repo);
 
         using (new AssertionScope())
         {
@@ -40,10 +38,10 @@ public class IndexTests
     [Test]
     public async Task OnGet_GivenNoResults_ReturnsWithEmptyOrders()
     {
-        var repo = new Mock<IEnforcementOrderRepository> { DefaultValue = DefaultValue.Mock };
+        var repo = Substitute.For<IEnforcementOrderRepository>();
         var page = new Index();
 
-        await page.OnGetAsync(repo.Object);
+        await page.OnGetAsync(repo);
 
         using (new AssertionScope())
         {
@@ -57,14 +55,14 @@ public class IndexTests
     public async Task SetDisplayMessage_ReturnsWithDisplayMessage()
     {
         // Initialize Page TempData
-        var repo = new Mock<IEnforcementOrderRepository> { DefaultValue = DefaultValue.Mock };
+        var repo = Substitute.For<IEnforcementOrderRepository>();
         var httpContext = new DefaultHttpContext();
-        var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
+        var tempData = new TempDataDictionary(httpContext, Substitute.For<ITempDataProvider>());
 
         var page = new Index { TempData = tempData };
 
         page.TempData.SetDisplayMessage(Context.Info, "Info message");
-        await page.OnGetAsync(repo.Object);
+        await page.OnGetAsync(repo);
 
         var expected = new DisplayMessage(Context.Info, "Info message");
         page.Message.Should().BeEquivalentTo(expected);

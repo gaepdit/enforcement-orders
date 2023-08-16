@@ -2,7 +2,7 @@
 using Enfo.LocalRepository;
 using EnfoTests.TestData;
 using FluentAssertions;
-using Moq;
+using NSubstitute;
 using NUnit.Framework;
 using System;
 using System.Linq;
@@ -17,7 +17,7 @@ public class DeleteRestoreTests
     public async Task Delete_Succeeds([Values] bool alreadyDeleted)
     {
         var itemId = EnforcementOrderData.EnforcementOrders.First(e => e.Deleted == alreadyDeleted).Id;
-        using var repository = new EnforcementOrderRepository(new Mock<IFileService>().Object);
+        using var repository = new EnforcementOrderRepository(Substitute.For<IFileService>());
 
         await repository.DeleteAsync(itemId);
 
@@ -29,7 +29,7 @@ public class DeleteRestoreTests
     public async Task Restore_Succeeds([Values] bool alreadyDeleted)
     {
         var itemId = EnforcementOrderData.EnforcementOrders.First(e => e.Deleted == alreadyDeleted).Id;
-        using var repository = new EnforcementOrderRepository(new Mock<IFileService>().Object);
+        using var repository = new EnforcementOrderRepository(Substitute.For<IFileService>());
 
         await repository.RestoreAsync(itemId);
 
@@ -44,7 +44,7 @@ public class DeleteRestoreTests
 
         var action = async () =>
         {
-            using var repository = new EnforcementOrderRepository(new Mock<IFileService>().Object);
+            using var repository = new EnforcementOrderRepository(Substitute.For<IFileService>());
             await repository.DeleteAsync(id);
         };
 
@@ -59,7 +59,7 @@ public class DeleteRestoreTests
 
         var action = async () =>
         {
-            using var repository = new EnforcementOrderRepository(new Mock<IFileService>().Object);
+            using var repository = new EnforcementOrderRepository(Substitute.For<IFileService>());
             await repository.RestoreAsync(id);
         };
 

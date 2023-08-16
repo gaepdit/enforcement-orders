@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Moq;
+using NSubstitute;
 using NUnit.Framework;
 using System.Threading.Tasks;
 
@@ -26,16 +26,15 @@ public class AddTests
             Email = "abc", Organization = "abc", Telephone = "abc", Title = "abc", ContactName = "abc",
             City = "abc", State = "GA", Street = "123", PostalCode = "01234",
         };
-        var repo = new Mock<IEpdContactRepository> { DefaultValue = DefaultValue.Mock };
-        repo.Setup(l => l.CreateAsync(It.IsAny<EpdContactCommand>()))
-            .ReturnsAsync(1);
+        var repo = Substitute.For<IEpdContactRepository>();
+        repo.CreateAsync(Arg.Any<EpdContactCommand>()).Returns(1);
 
         // Initialize Page TempData
         var httpContext = new DefaultHttpContext();
-        var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
+        var tempData = new TempDataDictionary(httpContext, Substitute.For<ITempDataProvider>());
         var page = new Add { TempData = tempData, Item = item };
 
-        var result = await page.OnPostAsync(repo.Object);
+        var result = await page.OnPostAsync(repo);
 
         var expected = new DisplayMessage(Context.Success,
             $"{Add.ThisOption.SingularName} successfully added.");
@@ -53,11 +52,11 @@ public class AddTests
     [Test]
     public async Task OnPost_GivenModelError_ReturnsPageWithModelError()
     {
-        var repo = new Mock<IEpdContactRepository> { DefaultValue = DefaultValue.Mock };
+        var repo = Substitute.For<IEpdContactRepository>();
         var page = new Add { Item = new EpdContactCommand() };
         page.ModelState.AddModelError("key", "message");
 
-        var result = await page.OnPostAsync(repo.Object);
+        var result = await page.OnPostAsync(repo);
 
         using (new AssertionScope())
         {

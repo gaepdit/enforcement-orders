@@ -4,7 +4,7 @@ using Enfo.WebApp.Pages.Admin.Users;
 using FluentAssertions;
 using FluentAssertions.Execution;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Moq;
+using NSubstitute;
 using NUnit.Framework;
 using System.Linq;
 using System.Threading.Tasks;
@@ -22,12 +22,11 @@ public class UserIndexTests
         var users = UserTestData.ApplicationUsers;
         var searchResults = users.Select(e => new UserView(e)).ToList();
 
-        var userService = new Mock<IUserService>();
-        userService.Setup(l => l.GetUsersAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
-            .ReturnsAsync(searchResults);
+        var userService = Substitute.For<IUserService>();
+        userService.GetUsersAsync(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>()).Returns(searchResults);
         var pageModel = new Index();
 
-        var result = await pageModel.OnGetSearchAsync(userService.Object, name, email, role);
+        var result = await pageModel.OnGetSearchAsync(userService, name, email, role);
 
         using (new AssertionScope())
         {
@@ -41,11 +40,11 @@ public class UserIndexTests
     [Test]
     public async Task OnSearch_IfInvalidModel_ReturnPageWithInvalidModelState()
     {
-        var userService = new Mock<IUserService>();
+        var userService = Substitute.For<IUserService>();
         var pageModel = new Index();
         pageModel.ModelState.AddModelError("Error", "Sample error description");
 
-        var result = await pageModel.OnGetSearchAsync(userService.Object, null, null, null);
+        var result = await pageModel.OnGetSearchAsync(userService, null, null, null);
 
         using (new AssertionScope())
         {

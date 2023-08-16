@@ -4,7 +4,7 @@ using Enfo.Domain.EnforcementOrders.Resources.Validation;
 using FluentAssertions;
 using FluentAssertions.Execution;
 using FluentValidation.TestHelper;
-using Moq;
+using NSubstitute;
 using NUnit.Framework;
 using System;
 using System.Threading.Tasks;
@@ -32,7 +32,7 @@ public class ValidatingEnforcementOrderCreate
             ProposedOrderPostedDate = DateTime.Today,
         };
 
-        var validator = new EnforcementOrderCreateValidator(new Mock<IEnforcementOrderRepository>().Object);
+        var validator = new EnforcementOrderCreateValidator(Substitute.For<IEnforcementOrderRepository>());
 
         var result = await validator.TestValidateAsync(sampleCreate);
 
@@ -61,7 +61,7 @@ public class ValidatingEnforcementOrderCreate
             ProposedOrderPostedDate = DateTime.Today,
         };
 
-        var validator = new EnforcementOrderCreateValidator(new Mock<IEnforcementOrderRepository>().Object);
+        var validator = new EnforcementOrderCreateValidator(Substitute.For<IEnforcementOrderRepository>());
 
         var result = await validator.TestValidateAsync(sampleCreate);
 
@@ -92,10 +92,9 @@ public class ValidatingEnforcementOrderCreate
             ProposedOrderPostedDate = DateTime.Today,
         };
 
-        var repoMock = new Mock<IEnforcementOrderRepository>();
-        repoMock.Setup(l => l.OrderNumberExistsAsync(It.IsAny<string>(), It.IsAny<int?>()))
-            .ReturnsAsync(true);
-        var validator = new EnforcementOrderCreateValidator(repoMock.Object);
+        var repoMock = Substitute.For<IEnforcementOrderRepository>();
+        repoMock.OrderNumberExistsAsync(Arg.Any<string>(), Arg.Any<int?>()).Returns(true);
+        var validator = new EnforcementOrderCreateValidator(repoMock);
 
         var result = await validator.TestValidateAsync(sampleCreate);
 

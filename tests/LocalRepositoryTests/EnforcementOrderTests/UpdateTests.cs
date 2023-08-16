@@ -4,7 +4,7 @@ using Enfo.Domain.Services;
 using Enfo.LocalRepository;
 using EnfoTests.TestData;
 using FluentAssertions;
-using Moq;
+using NSubstitute;
 using NUnit.Framework;
 using System;
 using System.Linq;
@@ -49,7 +49,7 @@ public class UpdateTests
         var resource = GetUpdateResource(original);
         resource.Cause = "new text";
 
-        using var repository = new EnforcementOrderRepository(new Mock<IFileService>().Object);
+        using var repository = new EnforcementOrderRepository(Substitute.For<IFileService>());
 
         await repository.UpdateAsync(resource);
 
@@ -64,7 +64,7 @@ public class UpdateTests
         var original = EnforcementOrderData.EnforcementOrders.First();
         var resource = GetUpdateResource(original);
 
-        using var repository = new EnforcementOrderRepository(new Mock<IFileService>().Object);
+        using var repository = new EnforcementOrderRepository(Substitute.For<IFileService>());
 
         await repository.UpdateAsync(resource);
 
@@ -82,7 +82,7 @@ public class UpdateTests
 
         var action = async () =>
         {
-            using var repository = new EnforcementOrderRepository(new Mock<IFileService>().Object);
+            using var repository = new EnforcementOrderRepository(Substitute.For<IFileService>());
             await repository.UpdateAsync(resource);
         };
 
@@ -98,7 +98,7 @@ public class UpdateTests
 
         var action = async () =>
         {
-            using var repository = new EnforcementOrderRepository(new Mock<IFileService>().Object);
+            using var repository = new EnforcementOrderRepository(Substitute.For<IFileService>());
             await repository.UpdateAsync(resource);
         };
 
@@ -115,7 +115,7 @@ public class UpdateTests
 
         var action = async () =>
         {
-            using var repository = new EnforcementOrderRepository(new Mock<IFileService>().Object);
+            using var repository = new EnforcementOrderRepository(Substitute.For<IFileService>());
             await repository.UpdateAsync(resource);
         };
 

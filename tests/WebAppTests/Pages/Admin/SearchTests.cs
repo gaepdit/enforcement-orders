@@ -9,7 +9,7 @@ using EnfoTests.TestData;
 using FluentAssertions;
 using FluentAssertions.Execution;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Moq;
+using NSubstitute;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -22,10 +22,10 @@ public class SearchTests
     [Test]
     public async Task OnGet_ReturnsWithDefaults()
     {
-        var orderRepo = new Mock<IEnforcementOrderRepository>();
-        var legalRepo = new Mock<ILegalAuthorityRepository>();
-        legalRepo.Setup(l => l.ListAsync(false)).ReturnsAsync(ResourceHelper.GetLegalAuthorityViewList());
-        var page = new Search(orderRepo.Object, legalRepo.Object);
+        var orderRepo = Substitute.For<IEnforcementOrderRepository>();
+        var legalRepo = Substitute.For<ILegalAuthorityRepository>();
+        legalRepo.ListAsync(false).Returns(ResourceHelper.GetLegalAuthorityViewList());
+        var page = new Search(orderRepo, legalRepo);
 
         await page.OnGetAsync();
 
@@ -45,12 +45,12 @@ public class SearchTests
     {
         var expectedOrders = new PaginatedResult<EnforcementOrderAdminSummaryView>(
             ResourceHelper.GetEnforcementOrderAdminSummaryViewListOfOne(), 1, new PaginationSpec(1, 1));
-        var orderRepo = new Mock<IEnforcementOrderRepository>();
-        orderRepo.Setup(l => l.ListAdminAsync(It.IsAny<EnforcementOrderAdminSpec>(), It.IsAny<PaginationSpec>()))
-            .ReturnsAsync(expectedOrders);
-        var legalRepo = new Mock<ILegalAuthorityRepository>();
-        legalRepo.Setup(l => l.ListAsync(false)).ReturnsAsync(ResourceHelper.GetLegalAuthorityViewList());
-        var page = new Search(orderRepo.Object, legalRepo.Object);
+        var orderRepo = Substitute.For<IEnforcementOrderRepository>();
+        orderRepo.ListAdminAsync(Arg.Any<EnforcementOrderAdminSpec>(), Arg.Any<PaginationSpec>())
+            .Returns(expectedOrders);
+        var legalRepo = Substitute.For<ILegalAuthorityRepository>();
+        legalRepo.ListAsync(false).Returns(ResourceHelper.GetLegalAuthorityViewList());
+        var page = new Search(orderRepo, legalRepo);
 
         await page.OnGetSearchAsync(new EnforcementOrderAdminSpec());
 
@@ -71,12 +71,12 @@ public class SearchTests
     {
         var expectedOrders = new PaginatedResult<EnforcementOrderAdminSummaryView>(
             new List<EnforcementOrderAdminSummaryView>(), 0, new PaginationSpec(1, 1));
-        var orderRepo = new Mock<IEnforcementOrderRepository>();
-        orderRepo.Setup(l => l.ListAdminAsync(It.IsAny<EnforcementOrderAdminSpec>(), It.IsAny<PaginationSpec>()))
-            .ReturnsAsync(expectedOrders);
-        var legalRepo = new Mock<ILegalAuthorityRepository>();
-        legalRepo.Setup(l => l.ListAsync(false)).ReturnsAsync(ResourceHelper.GetLegalAuthorityViewList());
-        var page = new Search(orderRepo.Object, legalRepo.Object);
+        var orderRepo = Substitute.For<IEnforcementOrderRepository>();
+        orderRepo.ListAdminAsync(Arg.Any<EnforcementOrderAdminSpec>(), Arg.Any<PaginationSpec>())
+            .Returns(expectedOrders);
+        var legalRepo = Substitute.For<ILegalAuthorityRepository>();
+        legalRepo.ListAsync(false).Returns(ResourceHelper.GetLegalAuthorityViewList());
+        var page = new Search(orderRepo, legalRepo);
 
         await page.OnGetSearchAsync(new EnforcementOrderAdminSpec());
 

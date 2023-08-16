@@ -6,7 +6,7 @@ using Enfo.LocalRepository;
 using EnfoTests.TestData;
 using FluentAssertions;
 using FluentAssertions.Execution;
-using Moq;
+using NSubstitute;
 using NUnit.Framework;
 using System;
 using System.Linq;
@@ -20,7 +20,7 @@ public class ListDetailedTests
     [Test]
     public async Task ByDefault_ReturnsOnlyPublic()
     {
-        using var repository = new EnforcementOrderRepository(new Mock<IFileService>().Object);
+        using var repository = new EnforcementOrderRepository(Substitute.For<IFileService>());
 
         var result = await repository.ListDetailedAsync(new EnforcementOrderSpec(), new PaginationSpec(1, 50));
 
@@ -44,7 +44,7 @@ public class ListDetailedTests
         {
             Facility = EnforcementOrderData.EnforcementOrders.First(e => !e.Deleted).FacilityName,
         };
-        using var repository = new EnforcementOrderRepository(new Mock<IFileService>().Object);
+        using var repository = new EnforcementOrderRepository(Substitute.For<IFileService>());
 
         var result = await repository.ListDetailedAsync(spec, new PaginationSpec(1, 50));
 
@@ -72,7 +72,7 @@ public class ListDetailedTests
             FromDate = new DateTime(999, 3, 1),
             TillDate = new DateTime(999, 4, 1),
         };
-        using var repository = new EnforcementOrderRepository(new Mock<IFileService>().Object);
+        using var repository = new EnforcementOrderRepository(Substitute.For<IFileService>());
 
         var result = await repository.ListDetailedAsync(spec, new PaginationSpec(1, 50));
 
@@ -92,7 +92,7 @@ public class ListDetailedTests
             Facility = "Date Range Test",
             FromDate = new DateTime(999, 1, 1),
         };
-        using var repository = new EnforcementOrderRepository(new Mock<IFileService>().Object);
+        using var repository = new EnforcementOrderRepository(Substitute.For<IFileService>());
 
         var result = await repository.ListDetailedAsync(spec, new PaginationSpec(1, 50));
 
@@ -118,7 +118,7 @@ public class ListDetailedTests
             Facility = "Date Range Test",
             TillDate = new DateTime(999, 6, 1),
         };
-        using var repository = new EnforcementOrderRepository(new Mock<IFileService>().Object);
+        using var repository = new EnforcementOrderRepository(Substitute.For<IFileService>());
 
         var result = await repository.ListDetailedAsync(spec, new PaginationSpec(1, 50));
 

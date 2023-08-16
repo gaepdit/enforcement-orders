@@ -11,7 +11,7 @@ using FluentAssertions;
 using FluentAssertions.Execution;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using Moq;
+using NSubstitute;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,7 +30,7 @@ public class ApiTests
             .AddInMemoryCollection(new Dictionary<string, string> { { "BaseUrl", baseUrl } })
             .Build();
 
-        using var repository = new EnforcementOrderRepository(new Mock<IFileService>().Object);
+        using var repository = new EnforcementOrderRepository(Substitute.For<IFileService>());
 
         var controller = new ApiController();
         var result = await controller.ListOrdersAsync(repository, config, new EnforcementOrderSpec(), 1, 100);
@@ -59,12 +59,11 @@ public class ApiTests
             .AddInMemoryCollection(new Dictionary<string, string> { { "BaseUrl", string.Empty } })
             .Build();
 
-        var repo = new Mock<IEnforcementOrderRepository>();
-        repo.Setup(l => l.GetAsync(It.IsAny<int>()))
-            .ReturnsAsync(null as EnforcementOrderDetailedView);
+        var repo = Substitute.For<IEnforcementOrderRepository>();
+        repo.GetAsync(Arg.Any<int>()).Returns(null as EnforcementOrderDetailedView);
 
         var controller = new ApiController();
-        var response = await controller.GetOrderAsync(repo.Object, config, 1);
+        var response = await controller.GetOrderAsync(repo, config, 1);
 
         using (new AssertionScope())
         {
@@ -84,11 +83,11 @@ public class ApiTests
 
         var itemId = EnforcementOrderData.EnforcementOrders.First().Id;
         var item = ResourceHelper.GetEnforcementOrderDetailedView(itemId);
-        var repo = new Mock<IEnforcementOrderRepository>();
-        repo.Setup(l => l.GetAsync(itemId)).ReturnsAsync(item);
+        var repo = Substitute.For<IEnforcementOrderRepository>();
+        repo.GetAsync(itemId).Returns(item);
 
         var controller = new ApiController();
-        var response = await controller.GetOrderAsync(repo.Object, config, itemId);
+        var response = await controller.GetOrderAsync(repo, config, itemId);
 
         using (new AssertionScope())
         {
@@ -125,12 +124,11 @@ public class ApiTests
     [Test]
     public async Task GetAuthority_UnknownId_Returns404Object()
     {
-        var repo = new Mock<ILegalAuthorityRepository>();
-        repo.Setup(l => l.GetAsync(It.IsAny<int>()))
-            .ReturnsAsync(null as LegalAuthorityView);
+        var repo = Substitute.For<ILegalAuthorityRepository>();
+        repo.GetAsync(Arg.Any<int>()).Returns(null as LegalAuthorityView);
 
         var controller = new ApiController();
-        var response = await controller.GetLegalAuthorityAsync(repo.Object, 1);
+        var response = await controller.GetLegalAuthorityAsync(repo, 1);
 
         using (new AssertionScope())
         {
@@ -144,11 +142,11 @@ public class ApiTests
     public async Task GetAuthority_ReturnsItem()
     {
         var item = ResourceHelper.GetLegalAuthorityViewList().First();
-        var repo = new Mock<ILegalAuthorityRepository>();
-        repo.Setup(l => l.GetAsync(item.Id)).ReturnsAsync(item);
+        var repo = Substitute.For<ILegalAuthorityRepository>();
+        repo.GetAsync(item.Id).Returns(item);
 
         var controller = new ApiController();
-        var response = await controller.GetLegalAuthorityAsync(repo.Object, item.Id);
+        var response = await controller.GetLegalAuthorityAsync(repo, item.Id);
 
         using (new AssertionScope())
         {

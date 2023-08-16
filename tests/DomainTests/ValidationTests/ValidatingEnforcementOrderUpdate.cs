@@ -4,7 +4,7 @@ using Enfo.Domain.EnforcementOrders.Resources.Validation;
 using FluentAssertions;
 using FluentAssertions.Execution;
 using FluentValidation.TestHelper;
-using Moq;
+using NSubstitute;
 using NUnit.Framework;
 using System;
 using System.Threading.Tasks;
@@ -41,7 +41,7 @@ public class ValidatingEnforcementOrderUpdate
             SettlementAmount = 2000,
         };
 
-        var validator = new EnforcementOrderUpdateValidator(new Mock<IEnforcementOrderRepository>().Object);
+        var validator = new EnforcementOrderUpdateValidator(Substitute.For<IEnforcementOrderRepository>());
 
         var result = await validator.TestValidateAsync(model);
 
@@ -73,7 +73,7 @@ public class ValidatingEnforcementOrderUpdate
             SettlementAmount = 2000,
         };
 
-        var validator = new EnforcementOrderUpdateValidator(new Mock<IEnforcementOrderRepository>().Object);
+        var validator = new EnforcementOrderUpdateValidator(Substitute.For<IEnforcementOrderRepository>());
 
         var result = await validator.TestValidateAsync(model);
 
@@ -98,7 +98,7 @@ public class ValidatingEnforcementOrderUpdate
             SettlementAmount = 2000,
         };
 
-        var validator = new EnforcementOrderUpdateValidator(new Mock<IEnforcementOrderRepository>().Object);
+        var validator = new EnforcementOrderUpdateValidator(Substitute.For<IEnforcementOrderRepository>());
 
         var result = await validator.TestValidateAsync(model);
 
@@ -123,7 +123,7 @@ public class ValidatingEnforcementOrderUpdate
             SettlementAmount = 2000,
         };
 
-        var validator = new EnforcementOrderUpdateValidator(new Mock<IEnforcementOrderRepository>().Object);
+        var validator = new EnforcementOrderUpdateValidator(Substitute.For<IEnforcementOrderRepository>());
 
         var result = await validator.TestValidateAsync(model);
 
@@ -153,7 +153,7 @@ public class ValidatingEnforcementOrderUpdate
             SettlementAmount = 2000,
         };
 
-        var validator = new EnforcementOrderUpdateValidator(new Mock<IEnforcementOrderRepository>().Object);
+        var validator = new EnforcementOrderUpdateValidator(Substitute.For<IEnforcementOrderRepository>());
 
         var result = await validator.TestValidateAsync(model);
 

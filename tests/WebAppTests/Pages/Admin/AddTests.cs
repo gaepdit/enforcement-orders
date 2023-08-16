@@ -15,7 +15,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Moq;
+using NSubstitute;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -53,11 +53,11 @@ public class AddTests
     [Test]
     public async Task OnGet_ReturnsWithDefaultCreateResource()
     {
-        var legalRepo = new Mock<ILegalAuthorityRepository>();
-        legalRepo.Setup(l => l.ListAsync(false)).ReturnsAsync(new List<LegalAuthorityView>());
-        var contactRepo = new Mock<IEpdContactRepository>();
-        contactRepo.Setup(l => l.ListAsync(false)).ReturnsAsync(new List<EpdContactView>());
-        var page = new Add(Mock.Of<IEnforcementOrderRepository>(), legalRepo.Object, contactRepo.Object);
+        var legalRepo = Substitute.For<ILegalAuthorityRepository>();
+        legalRepo.ListAsync(false).Returns(new List<LegalAuthorityView>());
+        var contactRepo = Substitute.For<IEpdContactRepository>();
+        contactRepo.ListAsync(false).Returns(new List<EpdContactView>());
+        var page = new Add(Substitute.For<IEnforcementOrderRepository>(), legalRepo, contactRepo);
 
         await page.OnGetAsync();
         page.Item.Should().BeEquivalentTo(new EnforcementOrderCreate());
@@ -69,20 +69,18 @@ public class AddTests
         var item = GetValidEnforcementOrderCreate();
         // Initialize Page TempData
         var httpContext = new DefaultHttpContext();
-        var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
+        var tempData = new TempDataDictionary(httpContext, Substitute.For<ITempDataProvider>());
         // Mock repos
-        var orderRepo = new Mock<IEnforcementOrderRepository>();
-        orderRepo.Setup(l => l.OrderNumberExistsAsync(It.IsAny<string>(), It.IsAny<int?>()))
-            .ReturnsAsync(false);
-        orderRepo.Setup(l => l.CreateAsync(item)).ReturnsAsync(9);
-        var validator = new Mock<IValidator<EnforcementOrderCreate>>();
-        validator.Setup(l => l.ValidateAsync(It.IsAny<EnforcementOrderCreate>(), CancellationToken.None))
-            .ReturnsAsync(new ValidationResult());
+        var orderRepo = Substitute.For<IEnforcementOrderRepository>();
+        orderRepo.OrderNumberExistsAsync(Arg.Any<string>(), Arg.Any<int?>()).Returns(false);
+        orderRepo.CreateAsync(item).Returns(9);
+        var validator = Substitute.For<IValidator<EnforcementOrderCreate>>();
+        validator.ValidateAsync(Arg.Any<EnforcementOrderCreate>(), CancellationToken.None).Returns(new ValidationResult());
         // Construct Page
-        var page = new Add(orderRepo.Object, Mock.Of<ILegalAuthorityRepository>(), Mock.Of<IEpdContactRepository>())
+        var page = new Add(orderRepo, Substitute.For<ILegalAuthorityRepository>(), Substitute.For<IEpdContactRepository>())
             { TempData = tempData, Item = item };
 
-        var result = await page.OnPostAsync(validator.Object);
+        var result = await page.OnPostAsync(validator);
 
         var expected = new DisplayMessage(Context.Success,
             "The new Enforcement Order has been successfully added.");
@@ -125,20 +123,18 @@ public class AddTests
 
         // Initialize Page TempData
         var httpContext = new DefaultHttpContext();
-        var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
+        var tempData = new TempDataDictionary(httpContext, Substitute.For<ITempDataProvider>());
         // Mock repos
-        var orderRepo = new Mock<IEnforcementOrderRepository>();
-        orderRepo.Setup(l => l.OrderNumberExistsAsync(It.IsAny<string>(), It.IsAny<int?>()))
-            .ReturnsAsync(false);
-        orderRepo.Setup(l => l.CreateAsync(item)).ReturnsAsync(9);
-        var validator = new Mock<IValidator<EnforcementOrderCreate>>();
-        validator.Setup(l => l.ValidateAsync(It.IsAny<EnforcementOrderCreate>(), CancellationToken.None))
-            .ReturnsAsync(new ValidationResult());
+        var orderRepo = Substitute.For<IEnforcementOrderRepository>();
+        orderRepo.OrderNumberExistsAsync(Arg.Any<string>(), Arg.Any<int?>()).Returns(false);
+        orderRepo.CreateAsync(item).Returns(9);
+        var validator = Substitute.For<IValidator<EnforcementOrderCreate>>();
+        validator.ValidateAsync(Arg.Any<EnforcementOrderCreate>(), CancellationToken.None).Returns(new ValidationResult());
         // Construct Page
-        var page = new Add(orderRepo.Object, Mock.Of<ILegalAuthorityRepository>(), Mock.Of<IEpdContactRepository>())
+        var page = new Add(orderRepo, Substitute.For<ILegalAuthorityRepository>(), Substitute.For<IEpdContactRepository>())
             { TempData = tempData, Item = item };
 
-        var result = await page.OnPostAsync(validator.Object);
+        var result = await page.OnPostAsync(validator);
 
         var expected = new DisplayMessage(Context.Success,
             "The new Enforcement Order has been successfully added.");
@@ -157,22 +153,20 @@ public class AddTests
     {
         var item = GetValidEnforcementOrderCreate();
         // Mock repos
-        var legalRepo = new Mock<ILegalAuthorityRepository>();
-        legalRepo.Setup(l => l.ListAsync(false)).ReturnsAsync(new List<LegalAuthorityView>());
-        var contactRepo = new Mock<IEpdContactRepository>();
-        contactRepo.Setup(l => l.ListAsync(false)).ReturnsAsync(new List<EpdContactView>());
-        var orderRepo = new Mock<IEnforcementOrderRepository>();
-        orderRepo.Setup(l => l.OrderNumberExistsAsync(It.IsAny<string>(), It.IsAny<int?>()))
-            .ReturnsAsync(false);
-        var validator = new Mock<IValidator<EnforcementOrderCreate>>();
-        validator.Setup(l => l.ValidateAsync(It.IsAny<EnforcementOrderCreate>(), CancellationToken.None))
-            .ReturnsAsync(new ValidationResult());
+        var legalRepo = Substitute.For<ILegalAuthorityRepository>();
+        legalRepo.ListAsync(false).Returns(new List<LegalAuthorityView>());
+        var contactRepo = Substitute.For<IEpdContactRepository>();
+        contactRepo.ListAsync(false).Returns(new List<EpdContactView>());
+        var orderRepo = Substitute.For<IEnforcementOrderRepository>();
+        orderRepo.OrderNumberExistsAsync(Arg.Any<string>(), Arg.Any<int?>()).Returns(false);
+        var validator = Substitute.For<IValidator<EnforcementOrderCreate>>();
+        validator.ValidateAsync(Arg.Any<EnforcementOrderCreate>(), CancellationToken.None).Returns(new ValidationResult());
         // Construct Page
-        var page = new Add(orderRepo.Object, legalRepo.Object, contactRepo.Object)
+        var page = new Add(orderRepo, legalRepo, contactRepo)
             { Item = item };
         page.ModelState.AddModelError("key", "message");
 
-        var result = await page.OnPostAsync(validator.Object);
+        var result = await page.OnPostAsync(validator);
 
         using (new AssertionScope())
         {

@@ -2,7 +2,7 @@
 using Enfo.LocalRepository;
 using EnfoTests.TestData;
 using FluentAssertions;
-using Moq;
+using NSubstitute;
 using NUnit.Framework;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,7 +15,7 @@ public class GetTests
     [Test]
     public async Task WhenItemExistsAndIsPublic_ReturnsItem()
     {
-        using var repository = new EnforcementOrderRepository(new Mock<IFileService>().Object);
+        using var repository = new EnforcementOrderRepository(Substitute.For<IFileService>());
         var itemId = EnforcementOrderData.EnforcementOrders.First(e => e.GetIsPublic).Id;
 
         var result = await repository.GetAsync(itemId);
@@ -27,7 +27,7 @@ public class GetTests
     [Test]
     public async Task WhenNotExists_ReturnsNull()
     {
-        using var repository = new EnforcementOrderRepository(new Mock<IFileService>().Object);
+        using var repository = new EnforcementOrderRepository(Substitute.For<IFileService>());
         var result = await repository.GetAsync(-1);
         result.Should().BeNull();
     }
@@ -35,7 +35,7 @@ public class GetTests
     [Test]
     public async Task WhenItemExistsButIsNotPublic_ReturnsNull()
     {
-        using var repository = new EnforcementOrderRepository(new Mock<IFileService>().Object);
+        using var repository = new EnforcementOrderRepository(Substitute.For<IFileService>());
         var itemId = EnforcementOrderData.EnforcementOrders.First(e => !e.GetIsPublic).Id;
 
         var result = await repository.GetAsync(itemId);

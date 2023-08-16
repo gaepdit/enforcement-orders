@@ -9,7 +9,7 @@ using FluentAssertions.Execution;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Moq;
+using NSubstitute;
 using NUnit.Framework;
 using System.Threading.Tasks;
 
@@ -22,9 +22,9 @@ public class IndexTests
     public async Task OnGet_ReturnsWithOrder()
     {
         var list = ResourceHelper.GetEpdContactViewList();
-        var repo = new Mock<IEpdContactRepository>();
-        repo.Setup(l => l.ListAsync(true)).ReturnsAsync(list);
-        var page = new Index(repo.Object);
+        var repo = Substitute.For<IEpdContactRepository>();
+        repo.ListAsync(true).Returns(list);
+        var page = new Index(repo);
 
         await page.OnGetAsync();
 
@@ -38,12 +38,12 @@ public class IndexTests
     [Test]
     public async Task SetDisplayMessage_ReturnsWithDisplayMessage()
     {
-        var repo = new Mock<IEpdContactRepository> { DefaultValue = DefaultValue.Mock };
+        var repo = Substitute.For<IEpdContactRepository>();
 
         // Initialize Page TempData
         var httpContext = new DefaultHttpContext();
-        var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
-        var page = new Index(repo.Object) { TempData = tempData };
+        var tempData = new TempDataDictionary(httpContext, Substitute.For<ITempDataProvider>());
+        var page = new Index(repo) { TempData = tempData };
 
         page.TempData.SetDisplayMessage(Context.Info, "Info message");
         await page.OnGetAsync();
@@ -56,14 +56,13 @@ public class IndexTests
     public async Task OnPost_ReturnsRedirectWithDisplayMessage()
     {
         var item = ResourceHelper.GetEpdContactViewList()[0];
-        var repo = new Mock<IEpdContactRepository> { DefaultValue = DefaultValue.Mock };
-        repo.Setup(l => l.GetAsync(It.IsAny<int>()))
-            .ReturnsAsync(item);
+        var repo = Substitute.For<IEpdContactRepository>();
+        repo.GetAsync(Arg.Any<int>()).Returns(item);
 
         // Initialize Page TempData
         var httpContext = new DefaultHttpContext();
-        var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
-        var page = new Index(repo.Object) { TempData = tempData };
+        var tempData = new TempDataDictionary(httpContext, Substitute.For<ITempDataProvider>());
+        var page = new Index(repo) { TempData = tempData };
 
         var result = await page.OnPostAsync(item.Id);
 
@@ -81,8 +80,8 @@ public class IndexTests
     [Test]
     public async Task OnPost_GivenNullId_ReturnsBadRequest()
     {
-        var repo = new Mock<IEpdContactRepository> { DefaultValue = DefaultValue.Mock };
-        var page = new Index(repo.Object);
+        var repo = Substitute.For<IEpdContactRepository>();
+        var page = new Index(repo);
 
         var result = await page.OnPostAsync(null);
 
@@ -92,10 +91,9 @@ public class IndexTests
     [Test]
     public async Task OnPost_GivenInvalidId_ReturnsNotFound()
     {
-        var repo = new Mock<IEpdContactRepository> { DefaultValue = DefaultValue.Mock };
-        repo.Setup(l => l.GetAsync(It.IsAny<int>()))
-            .ReturnsAsync(null as EpdContactView);
-        var page = new Index(repo.Object);
+        var repo = Substitute.For<IEpdContactRepository>();
+        repo.GetAsync(Arg.Any<int>()).Returns(null as EpdContactView);
+        var page = new Index(repo);
 
         var result = await page.OnPostAsync(1);
 

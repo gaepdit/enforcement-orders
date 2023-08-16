@@ -3,7 +3,7 @@ using Enfo.Domain.Services;
 using Enfo.LocalRepository;
 using EnfoTests.TestData;
 using FluentAssertions;
-using Moq;
+using NSubstitute;
 using NUnit.Framework;
 using System;
 using System.Linq;
@@ -17,7 +17,7 @@ public class GetAttachmentTests
     [Test]
     public async Task WhenItemExists_ReturnsItem()
     {
-        using var repository = new EnforcementOrderRepository(new Mock<IFileService>().Object);
+        using var repository = new EnforcementOrderRepository(Substitute.For<IFileService>());
         var item = new AttachmentView(AttachmentData.Attachments.First());
 
         var result = await repository.GetAttachmentAsync(item.Id);
@@ -28,7 +28,7 @@ public class GetAttachmentTests
     [Test]
     public async Task WhenNotExists_ReturnsNull()
     {
-        using var repository = new EnforcementOrderRepository(new Mock<IFileService>().Object);
+        using var repository = new EnforcementOrderRepository(Substitute.For<IFileService>());
         var result = await repository.GetAttachmentAsync(Guid.Empty);
         result.Should().BeNull();
     }

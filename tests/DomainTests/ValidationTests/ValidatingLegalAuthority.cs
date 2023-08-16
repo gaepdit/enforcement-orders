@@ -1,11 +1,10 @@
-using Enfo.Domain.EnforcementOrders.Repositories;
 using Enfo.Domain.LegalAuthorities.Repositories;
 using Enfo.Domain.LegalAuthorities.Resources;
 using Enfo.Domain.LegalAuthorities.Resources.Validation;
 using FluentAssertions;
 using FluentAssertions.Execution;
 using FluentValidation.TestHelper;
-using Moq;
+using NSubstitute;
 using NUnit.Framework;
 using System.Threading.Tasks;
 
@@ -19,7 +18,7 @@ public class ValidatingLegalAuthority
     {
         var command = new LegalAuthorityCommand { Id = 1, AuthorityName = "auth" };
 
-        var validator = new LegalAuthorityValidator(new Mock<ILegalAuthorityRepository>().Object);
+        var validator = new LegalAuthorityValidator(Substitute.For<ILegalAuthorityRepository>());
 
         var result = await validator.TestValidateAsync(command);
 
@@ -35,7 +34,7 @@ public class ValidatingLegalAuthority
     {
         var command = new LegalAuthorityCommand { Id = 1, AuthorityName = null };
 
-        var validator = new LegalAuthorityValidator(new Mock<ILegalAuthorityRepository>().Object);
+        var validator = new LegalAuthorityValidator(Substitute.For<ILegalAuthorityRepository>());
 
         var result = await validator.TestValidateAsync(command);
 
@@ -52,11 +51,10 @@ public class ValidatingLegalAuthority
     {
         var command = new LegalAuthorityCommand { Id = 1, AuthorityName = "auth" };
 
-        var repoMock = new Mock<ILegalAuthorityRepository>();
-        repoMock.Setup(l => l.NameExistsAsync(It.IsAny<string>()))
-            .ReturnsAsync(true);
+        var repoMock = Substitute.For<ILegalAuthorityRepository>();
+        repoMock.NameExistsAsync(Arg.Any<string>()).Returns(true);
 
-        var validator = new LegalAuthorityValidator(repoMock.Object);
+        var validator = new LegalAuthorityValidator(repoMock);
 
         var result = await validator.TestValidateAsync(command);
 
