@@ -1,35 +1,34 @@
-﻿namespace Enfo.WebApp.Models
+﻿namespace Enfo.WebApp.Models;
+
+public class DisplayMessage
 {
-    public class DisplayMessage
+    // ReSharper disable once MemberCanBePrivate.Global
+    // Context must be public so it works with deserialization in TempDataExtensions class
+    public Context Context { get; }
+    public string Message { get; }
+    public bool ShowCloseButton { get; }
+
+    public DisplayMessage(Context context, string message, bool showCloseButton = true)
     {
-        // ReSharper disable once MemberCanBePrivate.Global
-        // Context must be public so it works with deserialization in TempDataExtensions class
-        public Context Context { get; }
-        public string Message { get; }
-        public bool ShowCloseButton { get; }
-
-        public DisplayMessage(Context context, string message, bool showCloseButton = true)
-        {
-            Context = context;
-            Message = message;
-            ShowCloseButton = showCloseButton;
-        }
-
-        public string AlertClass => Context switch
-        {
-            Context.Success => "usa-alert-success",
-            Context.Warning => "usa-alert-warning",
-            Context.Error => "usa-alert-error",
-            Context.Info => "usa-alert-info",
-            _ => string.Empty
-        };
+        Context = context;
+        Message = message;
+        ShowCloseButton = showCloseButton;
     }
 
-    public enum Context
+    public string AlertClass => Context switch
     {
-        Success,
-        Warning,
-        Error,
-        Info,
-    }
+        Context.Success => "usa-alert-success",
+        Context.Warning => "usa-alert-warning",
+        Context.Error => "usa-alert-error",
+        Context.Info => "usa-alert-info",
+        _ => string.Empty,
+    };
+}
+
+public enum Context
+{
+    Success,
+    Warning,
+    Error,
+    Info,
 }

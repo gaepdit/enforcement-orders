@@ -45,7 +45,7 @@ public class UpdateTests
     [Test]
     public async Task FromValidItem_Updates()
     {
-        var original = EnforcementOrderData.EnforcementOrders.First();
+        var original = EnforcementOrderData.EnforcementOrders[0];
         var resource = GetUpdateResource(original);
         resource.Cause = "new text";
 
@@ -61,7 +61,7 @@ public class UpdateTests
     [Test]
     public async Task WithNoChanges_Succeeds()
     {
-        var original = EnforcementOrderData.EnforcementOrders.First();
+        var original = EnforcementOrderData.EnforcementOrders[0];
         var resource = GetUpdateResource(original);
 
         using var repository = new EnforcementOrderRepository(Substitute.For<IFileService>());
@@ -76,7 +76,7 @@ public class UpdateTests
     [Test]
     public async Task FromInvalidItem_ThrowsException()
     {
-        var original = EnforcementOrderData.EnforcementOrders.First();
+        var original = EnforcementOrderData.EnforcementOrders[0];
         var resource = GetUpdateResource(original);
         resource.County = null;
 
@@ -93,7 +93,7 @@ public class UpdateTests
     [Test]
     public async Task WithMissingId_ThrowsException()
     {
-        var original = new EnforcementOrderAdminView(EnforcementOrderData.EnforcementOrders.First());
+        var original = new EnforcementOrderAdminView(EnforcementOrderData.EnforcementOrders[0]);
         var resource = new EnforcementOrderUpdate(original) { Id = -1 };
 
         var action = async () =>

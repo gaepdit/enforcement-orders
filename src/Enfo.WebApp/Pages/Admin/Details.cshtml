@@ -20,7 +20,7 @@
 else if (Model.Item.IsPublic)
 {
     <div class="gaepd-noprint">
-        <a asp-page="/Details" asp-route-id="@Model.Item.Id">Go to public view</a>
+        <a asp-page="/Details" asp-route-id="@Model.Item.Id.ToString()">Go to public view</a>
     </div>
 }
 else
@@ -152,7 +152,7 @@ else
                     {
                         <tr>
                             <td>
-                                <a asp-page="/Attachment" asp-route-id="@item.Id" asp-route-fileName="@item.FileName" class="gaepd-file-link" target="_blank">
+                                <a asp-page="/Attachment" asp-route-id="@item.Id.ToString()" asp-route-fileName="@item.FileName" class="gaepd-file-link" target="_blank">
                                     @Html.DisplayFor(m => item.FileExtension) @item.FileName
                                 </a>
                             </td>
@@ -163,7 +163,7 @@ else
                                 <td>
                                     <form method="post" asp-page-handler="DeleteAttachment" enctype="multipart/form-data">
                                         <button type="submit" class="usa-button-gray gaepd-button-inline-action">Delete</button>
-                                        <input type="hidden" name="attachmentId" value="@item.Id" />
+                                        <input type="hidden" name="attachmentId" value="@item.Id.ToString()" />
                                     </form>
                                 </td>
                             }
@@ -198,12 +198,12 @@ else
     <div>
         @if (Model.Item.Deleted)
         {
-            <a asp-page="Restore" asp-route-id="@Model.Item.Id" class="usa-button usa-button-secondary">Restore deleted order</a>
+            <a asp-page="Restore" asp-route-id="@Model.Item.Id.ToString()" class="usa-button usa-button-secondary">Restore deleted order</a>
         }
         else
         {
-            <a asp-page="Edit" asp-route-id="@Model.Item.Id" class="usa-button usa-button-secondary">Edit</a>
-            <a asp-page="Delete" asp-route-id="@Model.Item.Id" class="usa-button usa-button-red">Delete</a>
+            <a asp-page="Edit" asp-route-id="@Model.Item.Id.ToString()" class="usa-button usa-button-secondary">Edit</a>
+            <a asp-page="Delete" asp-route-id="@Model.Item.Id.ToString()" class="usa-button usa-button-red">Delete</a>
         }
     </div>
 }

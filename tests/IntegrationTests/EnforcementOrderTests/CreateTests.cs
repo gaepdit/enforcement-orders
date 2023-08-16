@@ -25,12 +25,12 @@ public class CreateTests
             Requirements = "Requirements of order",
             FacilityName = "Facility 4",
             County = "Fulton",
-            LegalAuthorityId = LegalAuthorityData.LegalAuthorities.First().Id,
+            LegalAuthorityId = LegalAuthorityData.LegalAuthorities[0].Id,
             Progress = PublicationProgress.Draft,
             OrderNumber = "NEW-4",
             CreateAs = NewEnforcementOrderType.Proposed,
             CommentPeriodClosesDate = DateTime.Today.AddDays(1),
-            CommentContactId = EpdContactData.EpdContacts.First().Id,
+            CommentContactId = EpdContactData.EpdContacts[0].Id,
             ProposedOrderPostedDate = DateTime.Today,
         };
 
@@ -59,12 +59,12 @@ public class CreateTests
             Requirements = "Requirements of order",
             FacilityName = "Facility 2",
             County = null,
-            LegalAuthorityId = LegalAuthorityData.LegalAuthorities.First().Id,
+            LegalAuthorityId = LegalAuthorityData.LegalAuthorities[0].Id,
             Progress = PublicationProgress.Draft,
             OrderNumber = "NEW-2",
             CreateAs = NewEnforcementOrderType.Proposed,
             CommentPeriodClosesDate = DateTime.Today.AddDays(1),
-            CommentContactId = EpdContactData.EpdContacts.First().Id,
+            CommentContactId = EpdContactData.EpdContacts[0].Id,
             ProposedOrderPostedDate = DateTime.Today,
         };
 
@@ -88,14 +88,14 @@ public class CreateTests
             Requirements = "Requirements of order",
             FacilityName = "Facility with Attachments",
             County = "Fulton",
-            LegalAuthorityId = LegalAuthorityData.LegalAuthorities.First().Id,
+            LegalAuthorityId = LegalAuthorityData.LegalAuthorities[0].Id,
             Progress = PublicationProgress.Draft,
             OrderNumber = "ATT-1",
             CreateAs = NewEnforcementOrderType.Proposed,
             CommentPeriodClosesDate = DateTime.Today.AddDays(1),
-            CommentContactId = EpdContactData.EpdContacts.First().Id,
+            CommentContactId = EpdContactData.EpdContacts[0].Id,
             ProposedOrderPostedDate = DateTime.Today,
-            Attachment = new FormFile(Stream.Null, 0, 1, "test1", "test1.pdf")
+            Attachment = new FormFile(Stream.Null, 0, 1, "test1", "test1.pdf"),
         };
 
         using var repositoryHelper = RepositoryHelper.CreateRepositoryHelper();

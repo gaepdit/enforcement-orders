@@ -2,7 +2,6 @@
 using EnfoTests.TestData;
 using FluentAssertions;
 using NUnit.Framework;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace EnfoTests.LocalRepositoryTests.EpdContacts;
@@ -14,7 +13,7 @@ public class ExistsTests
     public async Task WhenItemExists_ReturnsTrue()
     {
         using var repository = new EpdContactRepository();
-        var result = await repository.ExistsAsync(EpdContactData.EpdContacts.First().Id);
+        var result = await repository.ExistsAsync(EpdContactData.EpdContacts[0].Id);
         result.Should().BeTrue();
     }
 

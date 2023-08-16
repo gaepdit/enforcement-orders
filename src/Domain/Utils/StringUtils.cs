@@ -8,7 +8,7 @@ public static class StringUtils
     /// <summary>
     /// Indicates whether this string is null or a System.String.Empty string.
     /// </summary>
-    public static bool IsNullOrEmptyString(this string str) => string.IsNullOrEmpty(str);
+    private static bool IsNullOrEmptyString(this string str) => string.IsNullOrEmpty(str);
 
     /// <summary>
     /// indicates whether this string is null, empty, or consists only of white-space characters.

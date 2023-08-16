@@ -185,6 +185,6 @@ public class EnforcementOrder : IdentifiedEntity, IAuditable
         {
             PublicationProgress.Draft => PublicationState.Draft,
             PublicationProgress.Published => PublicationState.Published,
-            _ => throw new InvalidEnumArgumentException(nameof(status), (int)status, typeof(PublicationState))
+            _ => throw new InvalidEnumArgumentException(nameof(status), (int)status, typeof(PublicationState)),
         };
 }

@@ -15,61 +15,60 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace Enfo.WebApp.Pages.Admin
+namespace Enfo.WebApp.Pages.Admin;
+
+[Authorize(Roles = UserRole.OrderAdministrator)]
+public class Add : PageModel
 {
-    [Authorize(Roles = UserRole.OrderAdministrator)]
-    public class Add : PageModel
+    [BindProperty]
+    public EnforcementOrderCreate Item { get; set; }
+
+    // Select Lists
+    public SelectList EpdContactsSelectList { get; private set; }
+    public SelectList LegalAuthoritiesSelectList { get; private set; }
+
+    private readonly IEnforcementOrderRepository _order;
+    private readonly ILegalAuthorityRepository _legalAuthority;
+    private readonly IEpdContactRepository _contact;
+
+    public Add(IEnforcementOrderRepository order,
+        ILegalAuthorityRepository legalAuthority,
+        IEpdContactRepository contact)
     {
-        [BindProperty]
-        public EnforcementOrderCreate Item { get; set; }
+        _order = order;
+        _legalAuthority = legalAuthority;
+        _contact = contact;
+    }
 
-        // Select Lists
-        public SelectList EpdContactsSelectList { get; private set; }
-        public SelectList LegalAuthoritiesSelectList { get; private set; }
+    [UsedImplicitly]
+    public async Task OnGetAsync()
+    {
+        await PopulateSelectListsAsync();
+        Item = new EnforcementOrderCreate();
+    }
 
-        private readonly IEnforcementOrderRepository _order;
-        private readonly ILegalAuthorityRepository _legalAuthority;
-        private readonly IEpdContactRepository _contact;
+    [UsedImplicitly]
+    public async Task<IActionResult> OnPostAsync([FromServices] IValidator<EnforcementOrderCreate> validator)
+    {
+        var validationResult = await validator.ValidateAsync(Item);
+        if (!validationResult.IsValid) validationResult.AddToModelState(ModelState, nameof(Item));
 
-        public Add(IEnforcementOrderRepository order,
-            ILegalAuthorityRepository legalAuthority,
-            IEpdContactRepository contact)
-        {
-            _order = order;
-            _legalAuthority = legalAuthority;
-            _contact = contact;
-        }
-
-        [UsedImplicitly]
-        public async Task OnGetAsync()
+        if (!ModelState.IsValid)
         {
             await PopulateSelectListsAsync();
-            Item = new EnforcementOrderCreate();
+            return Page();
         }
 
-        [UsedImplicitly]
-        public async Task<IActionResult> OnPostAsync([FromServices] IValidator<EnforcementOrderCreate> validator)
-        {
-            var validationResult = await validator.ValidateAsync(Item);
-            if (!validationResult.IsValid) validationResult.AddToModelState(ModelState, nameof(Item));
+        var id = await _order.CreateAsync(Item);
+        TempData.SetDisplayMessage(Context.Success, "The new Enforcement Order has been successfully added.");
+        return RedirectToPage("Details", new { id });
+    }
 
-            if (!ModelState.IsValid)
-            {
-                await PopulateSelectListsAsync();
-                return Page();
-            }
-
-            var id = await _order.CreateAsync(Item);
-            TempData.SetDisplayMessage(Context.Success, "The new Enforcement Order has been successfully added.");
-            return RedirectToPage("Details", new { id });
-        }
-
-        private async Task PopulateSelectListsAsync()
-        {
-            LegalAuthoritiesSelectList = new SelectList(await _legalAuthority.ListAsync(),
-                nameof(LegalAuthorityView.Id), nameof(LegalAuthorityView.AuthorityName));
-            EpdContactsSelectList = new SelectList(await _contact.ListAsync(),
-                nameof(EpdContactView.Id), nameof(EpdContactView.AsLinearString));
-        }
+    private async Task PopulateSelectListsAsync()
+    {
+        LegalAuthoritiesSelectList = new SelectList(await _legalAuthority.ListAsync(),
+            nameof(LegalAuthorityView.Id), nameof(LegalAuthorityView.AuthorityName));
+        EpdContactsSelectList = new SelectList(await _contact.ListAsync(),
+            nameof(EpdContactView.Id), nameof(EpdContactView.AsLinearString));
     }
 }

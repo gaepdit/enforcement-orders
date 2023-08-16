@@ -54,9 +54,9 @@ public class AddTests
     public async Task OnGet_ReturnsWithDefaultCreateResource()
     {
         var legalRepo = Substitute.For<ILegalAuthorityRepository>();
-        legalRepo.ListAsync(false).Returns(new List<LegalAuthorityView>());
+        legalRepo.ListAsync().Returns(new List<LegalAuthorityView>());
         var contactRepo = Substitute.For<IEpdContactRepository>();
-        contactRepo.ListAsync(false).Returns(new List<EpdContactView>());
+        contactRepo.ListAsync().Returns(new List<EpdContactView>());
         var page = new Add(Substitute.For<IEnforcementOrderRepository>(), legalRepo, contactRepo);
 
         await page.OnGetAsync();
@@ -154,9 +154,9 @@ public class AddTests
         var item = GetValidEnforcementOrderCreate();
         // Mock repos
         var legalRepo = Substitute.For<ILegalAuthorityRepository>();
-        legalRepo.ListAsync(false).Returns(new List<LegalAuthorityView>());
+        legalRepo.ListAsync().Returns(new List<LegalAuthorityView>());
         var contactRepo = Substitute.For<IEpdContactRepository>();
-        contactRepo.ListAsync(false).Returns(new List<EpdContactView>());
+        contactRepo.ListAsync().Returns(new List<EpdContactView>());
         var orderRepo = Substitute.For<IEnforcementOrderRepository>();
         orderRepo.OrderNumberExistsAsync(Arg.Any<string>(), Arg.Any<int?>()).Returns(false);
         var validator = Substitute.For<IValidator<EnforcementOrderCreate>>();

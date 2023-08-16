@@ -115,5 +115,5 @@
 <form method="post">
     <input asp-for="Id" />
     <button type="submit" class="usa-button-red">Restore Order</button>
-    <a asp-page="Details" asp-route-id="@Model.Id" class="usa-button usa-button-secondary">Cancel</a>
+    <a asp-page="Details" asp-route-id="@Model.Id.ToString()" class="usa-button usa-button-secondary">Cancel</a>
 </form>

@@ -6,7 +6,6 @@ using FluentAssertions;
 using NSubstitute;
 using NUnit.Framework;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace EnfoTests.LocalRepositoryTests.Attachments;
@@ -18,7 +17,7 @@ public class GetAttachmentTests
     public async Task WhenItemExists_ReturnsItem()
     {
         using var repository = new EnforcementOrderRepository(Substitute.For<IFileService>());
-        var item = new AttachmentView(AttachmentData.Attachments.First());
+        var item = new AttachmentView(AttachmentData.Attachments[0]);
 
         var result = await repository.GetAttachmentAsync(item.Id);
 

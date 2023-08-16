@@ -16,98 +16,97 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
-namespace Enfo.WebApp.Pages.Admin
+namespace Enfo.WebApp.Pages.Admin;
+
+[Authorize(Roles = UserRole.OrderAdministrator)]
+public class Edit : PageModel
 {
-    [Authorize(Roles = UserRole.OrderAdministrator)]
-    public class Edit : PageModel
+    [BindProperty]
+    public EnforcementOrderUpdate Item { get; set; }
+
+    [BindProperty, HiddenInput]
+    public string OriginalOrderNumber { get; set; }
+
+    // Select Lists
+    public SelectList EpdContactsSelectList { get; private set; }
+    public SelectList LegalAuthoritiesSelectList { get; private set; }
+
+    private readonly IEnforcementOrderRepository _orderRepository;
+    private readonly ILegalAuthorityRepository _legalAuthorityRepository;
+    private readonly IEpdContactRepository _contactRepository;
+
+    public Edit(IEnforcementOrderRepository orderRepository,
+        ILegalAuthorityRepository legalAuthorityRepository,
+        IEpdContactRepository contactRepository)
     {
-        [BindProperty]
-        public EnforcementOrderUpdate Item { get; set; }
+        _orderRepository = orderRepository;
+        _legalAuthorityRepository = legalAuthorityRepository;
+        _contactRepository = contactRepository;
+    }
 
-        [BindProperty, HiddenInput]
-        public string OriginalOrderNumber { get; set; }
+    [UsedImplicitly]
+    public async Task<IActionResult> OnGetAsync(int? id)
+    {
+        if (id == null) return NotFound();
+        var originalItem = await _orderRepository.GetAdminViewAsync(id.Value);
+        if (originalItem == null) return NotFound("ID not found.");
 
-        // Select Lists
-        public SelectList EpdContactsSelectList { get; private set; }
-        public SelectList LegalAuthoritiesSelectList { get; private set; }
-
-        private readonly IEnforcementOrderRepository _orderRepository;
-        private readonly ILegalAuthorityRepository _legalAuthorityRepository;
-        private readonly IEpdContactRepository _contactRepository;
-
-        public Edit(IEnforcementOrderRepository orderRepository,
-            ILegalAuthorityRepository legalAuthorityRepository,
-            IEpdContactRepository contactRepository)
+        if (originalItem.Deleted)
         {
-            _orderRepository = orderRepository;
-            _legalAuthorityRepository = legalAuthorityRepository;
-            _contactRepository = contactRepository;
+            TempData.SetDisplayMessage(Context.Warning, "This Enforcement Order is deleted and cannot be edited.");
+            return RedirectToPage("Details", new { id });
         }
 
-        [UsedImplicitly]
-        public async Task<IActionResult> OnGetAsync(int? id)
+        Item = new EnforcementOrderUpdate(originalItem);
+        OriginalOrderNumber = originalItem.OrderNumber;
+        await PopulateSelectListsAsync();
+        return Page();
+    }
+
+    [UsedImplicitly]
+    public async Task<IActionResult> OnPostAsync([FromServices] IValidator<EnforcementOrderUpdate> validator)
+    {
+        var originalItem = await _orderRepository.GetAdminViewAsync(Item.Id);
+        if (originalItem == null) return NotFound();
+
+        if (originalItem.Deleted)
         {
-            if (id == null) return NotFound();
-            var originalItem = await _orderRepository.GetAdminViewAsync(id.Value);
-            if (originalItem == null) return NotFound("ID not found.");
+            TempData.SetDisplayMessage(Context.Warning, "This Enforcement Order is deleted and cannot be edited.");
+            return RedirectToPage("Details", new { Item.Id });
+        }
 
-            if (originalItem.Deleted)
-            {
-                TempData.SetDisplayMessage(Context.Warning, "This Enforcement Order is deleted and cannot be edited.");
-                return RedirectToPage("Details", new { id });
-            }
+        var validationResult = await validator.ValidateAsync(Item);
+        if (!validationResult.IsValid) validationResult.AddToModelState(ModelState, nameof(Item));
 
-            Item = new EnforcementOrderUpdate(originalItem);
-            OriginalOrderNumber = originalItem.OrderNumber;
+        if (!ModelState.IsValid)
+        {
             await PopulateSelectListsAsync();
             return Page();
         }
 
-        [UsedImplicitly]
-        public async Task<IActionResult> OnPostAsync([FromServices] IValidator<EnforcementOrderUpdate> validator)
+        try
         {
-            var originalItem = await _orderRepository.GetAdminViewAsync(Item.Id);
-            if (originalItem == null) return NotFound();
-
-            if (originalItem.Deleted)
+            await _orderRepository.UpdateAsync(Item);
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!await _orderRepository.ExistsAsync(Item.Id))
             {
-                TempData.SetDisplayMessage(Context.Warning, "This Enforcement Order is deleted and cannot be edited.");
-                return RedirectToPage("Details", new { Item.Id });
+                return NotFound();
             }
 
-            var validationResult = await validator.ValidateAsync(Item);
-            if (!validationResult.IsValid) validationResult.AddToModelState(ModelState, nameof(Item));
-
-            if (!ModelState.IsValid)
-            {
-                await PopulateSelectListsAsync();
-                return Page();
-            }
-
-            try
-            {
-                await _orderRepository.UpdateAsync(Item);
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!await _orderRepository.ExistsAsync(Item.Id))
-                {
-                    return NotFound();
-                }
-
-                throw;
-            }
-
-            TempData.SetDisplayMessage(Context.Success, "The Enforcement Order has been successfully updated.");
-            return RedirectToPage("Details", new { Item.Id });
+            throw;
         }
 
-        private async Task PopulateSelectListsAsync()
-        {
-            LegalAuthoritiesSelectList = new SelectList(await _legalAuthorityRepository.ListAsync(),
-                nameof(LegalAuthorityView.Id), nameof(LegalAuthorityView.AuthorityName));
-            EpdContactsSelectList = new SelectList(await _contactRepository.ListAsync(),
-                nameof(EpdContactView.Id), nameof(EpdContactView.AsLinearString));
-        }
+        TempData.SetDisplayMessage(Context.Success, "The Enforcement Order has been successfully updated.");
+        return RedirectToPage("Details", new { Item.Id });
+    }
+
+    private async Task PopulateSelectListsAsync()
+    {
+        LegalAuthoritiesSelectList = new SelectList(await _legalAuthorityRepository.ListAsync(),
+            nameof(LegalAuthorityView.Id), nameof(LegalAuthorityView.AuthorityName));
+        EpdContactsSelectList = new SelectList(await _contactRepository.ListAsync(),
+            nameof(EpdContactView.Id), nameof(EpdContactView.AsLinearString));
     }
 }

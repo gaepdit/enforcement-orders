@@ -24,12 +24,12 @@ public class Attachment : PageModel
 
         var item = await _repository.GetAttachmentAsync(id.Value);
         if (item == null || string.IsNullOrWhiteSpace(item.FileName))
-            return NotFound($"Attachment ID not found: {id.Value}");
+            return NotFound($"Attachment ID not found: {id.Value.ToString()}");
 
         var order = await _repository.GetAdminViewAsync(item.EnforcementOrderId);
 
         if ((User.Identity is null || !User.Identity.IsAuthenticated) && (order.Deleted || !order.IsPublic))
-            return NotFound($"Attachment ID not found: {id.Value}");
+            return NotFound($"Attachment ID not found: {id.Value.ToString()}");
 
         if (fileName != item.FileName)
             return RedirectToPage("Attachment", new { id, item.FileName });

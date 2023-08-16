@@ -2,15 +2,14 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace Enfo.WebApp.Pages.Admin.Maintenance
+namespace Enfo.WebApp.Pages.Admin.Maintenance;
+
+[Authorize]
+public class Index : PageModel
 {
-    [Authorize]
-    public class Index : PageModel
+    [UsedImplicitly]
+    public static void OnGet()
     {
-        [UsedImplicitly]
-        public static void OnGet()
-        {
-            // Method intentionally left empty.
-        }
+        // Method intentionally left empty.
     }
 }

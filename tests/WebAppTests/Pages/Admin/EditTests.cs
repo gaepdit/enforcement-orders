@@ -35,9 +35,9 @@ public class EditTests
         var orderRepo = Substitute.For<IEnforcementOrderRepository>();
         orderRepo.GetAdminViewAsync(Arg.Any<int>()).Returns(item);
         var legalRepo = Substitute.For<ILegalAuthorityRepository>();
-        legalRepo.ListAsync(false).Returns(new List<LegalAuthorityView>());
+        legalRepo.ListAsync().Returns(new List<LegalAuthorityView>());
         var contactRepo = Substitute.For<IEpdContactRepository>();
-        contactRepo.ListAsync(false).Returns(new List<EpdContactView>());
+        contactRepo.ListAsync().Returns(new List<EpdContactView>());
         var page = new Edit(orderRepo, legalRepo, contactRepo);
 
         await page.OnGetAsync(1);
@@ -205,9 +205,9 @@ public class EditTests
         orderRepo.GetAdminViewAsync(Arg.Any<int>()).Returns(item);
         orderRepo.OrderNumberExistsAsync(Arg.Any<string>(), Arg.Any<int?>()).Returns(false);
         var legalRepo = Substitute.For<ILegalAuthorityRepository>();
-        legalRepo.ListAsync(false).Returns(new List<LegalAuthorityView>());
+        legalRepo.ListAsync().Returns(new List<LegalAuthorityView>());
         var contactRepo = Substitute.For<IEpdContactRepository>();
-        contactRepo.ListAsync(false).Returns(new List<EpdContactView>());
+        contactRepo.ListAsync().Returns(new List<EpdContactView>());
 
         var validator = Substitute.For<IValidator<EnforcementOrderUpdate>>();
         validator.ValidateAsync(Arg.Any<EnforcementOrderUpdate>(), CancellationToken.None)

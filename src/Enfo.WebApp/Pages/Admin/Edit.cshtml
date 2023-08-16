@@ -1,6 +1,5 @@
 ﻿@page "{id}"
 @using Enfo.Domain.EnforcementOrders.Entities
-@using Enfo.WebApp.Platform
 @using Enfo.WebApp.Platform.RazorHelpers
 @model Enfo.WebApp.Pages.Admin.Edit
 @{
@@ -55,9 +54,9 @@
                 htmlAttributes = new
                 {
                     @class = "usa-input-medium",
-                    @pattern = "^\\$?(([1-9](\\d*|\\d{0,2}(,\\d{3})*))|0)(\\.\\d{1,2})?$",
-                    @title = "Settlement Amount must be a decimal amount"
-                }
+                    pattern = @"^\$?(([1-9](\d*|\d{0,2}(,\d{3})*))|0)(\.\d{1,2})?$",
+                    title = "Settlement Amount must be a decimal amount",
+                },
             })
             <span asp-validation-for="Item.SettlementAmount" class="usa-input-error-message"></span>
         </fieldset>
@@ -172,7 +171,7 @@
         <div class="gaepd-buttonrow">
             <input asp-for="Item.Id" />
             <button type="submit">Save Changes</button>
-            <a asp-page="Details" asp-route-id="@Model.Item.Id" class="usa-button usa-button-secondary">Cancel</a>
+            <a asp-page="Details" asp-route-id="@Model.Item.Id.ToString()" class="usa-button usa-button-secondary">Cancel</a>
             <input asp-for="OriginalOrderNumber" />
         </div>
     </form>

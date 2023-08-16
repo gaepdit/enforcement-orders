@@ -30,7 +30,7 @@ public class ListTests
         var items = await repository.ListAsync(true);
         items.Should().HaveCount(EpdContactData.EpdContacts.Count);
 
-        var epdContact = EpdContactData.EpdContacts.First();
+        var epdContact = EpdContactData.EpdContacts[0];
         var expected = new EpdContactView(epdContact);
 
         items[0].Should().BeEquivalentTo(expected);

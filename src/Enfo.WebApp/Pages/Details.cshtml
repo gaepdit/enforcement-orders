@@ -1,5 +1,4 @@
 @page "{id}"
-@using Microsoft.AspNetCore.Mvc.TagHelpers
 @model Details
 @{
     ViewData["Title"] = $"Enforcement Order {Model.Item.OrderNumber}";
@@ -8,10 +7,10 @@
 
 <h1>@ViewData["Title"]</h1>
 
-@if (User?.Identity?.IsAuthenticated == true)
+@if (User.Identity?.IsAuthenticated == true)
 {
     <div class="gaepd-noprint">
-        <a asp-page="/Admin/Details" asp-route-id="@Model.Item.Id">Go to admin view</a>
+        <a asp-page="/Admin/Details" asp-route-id="@Model.Item.Id.ToString()">Go to admin view</a>
     </div>
 }
 
@@ -117,7 +116,7 @@
                     @foreach (var item in Model.Item.Attachments)
                     {
                         <li>
-                            <a asp-page="/Attachment" asp-route-id="@item.Id" asp-route-fileName="@item.FileName" class="gaepd-file-link" target="_blank">
+                            <a asp-page="/Attachment" asp-route-id="@item.Id.ToString()" asp-route-fileName="@item.FileName" class="gaepd-file-link" target="_blank">
                                 @Html.DisplayFor(m => item.FileExtension)
                                 @item.FileName
                             </a>

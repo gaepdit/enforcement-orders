@@ -49,7 +49,7 @@
                 {
                     <tr>
                         <td data-label="@Html.DisplayNameFor(m => m.Name)">
-                            <a asp-page="Details" asp-route-id="@item.Id">@Html.DisplayFor(m => item.Name)</a>
+                            <a asp-page="Details" asp-route-id="@item.Id.ToString()">@Html.DisplayFor(m => item.Name)</a>
                         </td>
                         <td data-label="@Html.DisplayNameFor(m => m.Email)">@Html.DisplayFor(m => item.Email)</td>
                     </tr>

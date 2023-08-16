@@ -13,7 +13,6 @@ using Microsoft.AspNetCore.Routing;
 using NSubstitute;
 using NUnit.Framework;
 using System;
-using System.Linq;
 using System.Security.Claims;
 using System.Security.Principal;
 using System.Text;
@@ -36,7 +35,7 @@ public class AttachmentTests
         var pageContext = new PageContext(actionContext);
 
         // Arrange
-        var item = new AttachmentView(AttachmentData.Attachments.First());
+        var item = new AttachmentView(AttachmentData.Attachments[0]);
         var expectedContentType = FileTypes.GetContentType(item.FileExtension);
 
         var repo = Substitute.For<IEnforcementOrderRepository>();
@@ -88,7 +87,7 @@ public class AttachmentTests
         using (new AssertionScope())
         {
             response.Should().BeOfType<NotFoundObjectResult>();
-            ((NotFoundObjectResult)response).Value.Should().Be($"Attachment ID not found: {Guid.Empty}");
+            ((NotFoundObjectResult)response).Value.Should().Be($"Attachment ID not found: {Guid.Empty.ToString()}");
         }
     }
 
@@ -116,7 +115,7 @@ public class AttachmentTests
         using (new AssertionScope())
         {
             response.Should().BeOfType<NotFoundObjectResult>();
-            ((NotFoundObjectResult)response).Value.Should().Be($"Attachment ID not found: {Guid.Empty}");
+            ((NotFoundObjectResult)response).Value.Should().Be($"Attachment ID not found: {Guid.Empty.ToString()}");
         }
     }
 

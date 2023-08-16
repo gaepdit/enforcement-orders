@@ -3,7 +3,6 @@ using EnfoTests.TestData;
 using FluentAssertions;
 using NUnit.Framework;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace EnfoTests.Infrastructure.EnforcementOrderTests;
@@ -14,7 +13,7 @@ public class OrderNumberExistsTests
     public async Task OrderNumberExists_GivenExists_ReturnsTrue()
     {
         using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
-        (await repository.OrderNumberExistsAsync(EnforcementOrderData.EnforcementOrders.First().OrderNumber))
+        (await repository.OrderNumberExistsAsync(EnforcementOrderData.EnforcementOrders[0].OrderNumber))
             .Should().BeTrue();
     }
 
@@ -30,8 +29,8 @@ public class OrderNumberExistsTests
     public async Task OrderNumberExists_GivenExistsAndIgnore_ReturnsFalse()
     {
         using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
-        (await repository.OrderNumberExistsAsync(EnforcementOrderData.EnforcementOrders.First().OrderNumber,
-                EnforcementOrderData.EnforcementOrders.First().Id))
+        (await repository.OrderNumberExistsAsync(EnforcementOrderData.EnforcementOrders[0].OrderNumber,
+                EnforcementOrderData.EnforcementOrders[0].Id))
             .Should().BeFalse();
     }
 }

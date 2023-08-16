@@ -2,15 +2,14 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace Enfo.WebApp.Pages.Account
+namespace Enfo.WebApp.Pages.Account;
+
+[AllowAnonymous]
+public class AccessDenied : PageModel
 {
-    [AllowAnonymous]
-    public class AccessDenied : PageModel
+    [UsedImplicitly]
+    public static void OnGet()
     {
-        [UsedImplicitly]
-        public static void OnGet()
-        {
-            // Method intentionally left empty.
-        }
+        // Method intentionally left empty.
     }
 }

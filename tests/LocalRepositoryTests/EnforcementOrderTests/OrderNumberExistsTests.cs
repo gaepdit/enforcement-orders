@@ -4,7 +4,6 @@ using EnfoTests.TestData;
 using FluentAssertions;
 using NSubstitute;
 using NUnit.Framework;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace EnfoTests.LocalRepositoryTests.EnforcementOrderTests;
@@ -16,7 +15,7 @@ public class OrderNumberExistsTests
     public async Task WhenExists_ReturnsTrue()
     {
         using var repository = new EnforcementOrderRepository(Substitute.For<IFileService>());
-        var orderNumber = EnforcementOrderData.EnforcementOrders.First().OrderNumber;
+        var orderNumber = EnforcementOrderData.EnforcementOrders[0].OrderNumber;
 
         var result = await repository.OrderNumberExistsAsync(orderNumber);
 
@@ -27,7 +26,7 @@ public class OrderNumberExistsTests
     public async Task WhenExistsInADifferentCase_ReturnsTrue()
     {
         using var repository = new EnforcementOrderRepository(Substitute.For<IFileService>());
-        var orderNumber = EnforcementOrderData.EnforcementOrders.First().OrderNumber.ToLower();
+        var orderNumber = EnforcementOrderData.EnforcementOrders[0].OrderNumber.ToLower();
 
         var result = await repository.OrderNumberExistsAsync(orderNumber);
 
@@ -46,8 +45,8 @@ public class OrderNumberExistsTests
     public async Task WhenExistsAndIdIsIgnored_ReturnsFalse()
     {
         using var repository = new EnforcementOrderRepository(Substitute.For<IFileService>());
-        var orderNumber = EnforcementOrderData.EnforcementOrders.First().OrderNumber;
-        var id = EnforcementOrderData.EnforcementOrders.First().Id;
+        var orderNumber = EnforcementOrderData.EnforcementOrders[0].OrderNumber;
+        var id = EnforcementOrderData.EnforcementOrders[0].Id;
 
         var result = await repository.OrderNumberExistsAsync(orderNumber, id);
 

@@ -53,7 +53,7 @@ public static class EnforcementOrderFilters
                 query.Where(e => e.ProposedOrderPostedDate <= tillDate),
             ActivityState.Proposed =>
                 query.Where(e => e.ProposedOrderPostedDate >= fromDate && e.ProposedOrderPostedDate <= tillDate),
-            _ => query
+            _ => query,
         };
     }
 
@@ -85,7 +85,7 @@ public static class EnforcementOrderFilters
                 e.PublicationStatus == EnforcementOrder.PublicationState.Draft),
             PublicationState.Published => query.Where(e =>
                 e.PublicationStatus == EnforcementOrder.PublicationState.Published),
-            _ => query
+            _ => query,
         };
 
     internal static IQueryable<EnforcementOrder> FilterByOrderNumber(

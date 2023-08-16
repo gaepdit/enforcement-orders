@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Http;
 using NSubstitute;
 using NUnit.Framework;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace EnfoTests.LocalRepositoryTests.FileService;
@@ -29,7 +28,7 @@ public class SaveFileTests
         using (new AssertionScope())
         {
             AttachmentData.AttachmentFiles.Count.Should().Be(fileCount + 1);
-            AttachmentData.AttachmentFiles.Any(a => a.FileName == $"{id.ToString()}.pdf").Should().BeTrue();
+            AttachmentData.AttachmentFiles.Exists(a => a.FileName == $"{id.ToString()}.pdf").Should().BeTrue();
         }
     }
 
@@ -50,7 +49,7 @@ public class SaveFileTests
         using (new AssertionScope())
         {
             AttachmentData.AttachmentFiles.Count.Should().Be(fileCount);
-            AttachmentData.AttachmentFiles.Any(a => a.FileName == expectedFilename).Should().BeFalse();
+            AttachmentData.AttachmentFiles.Exists(a => a.FileName == expectedFilename).Should().BeFalse();
         }
     }
 
@@ -72,7 +71,7 @@ public class SaveFileTests
         using (new AssertionScope())
         {
             AttachmentData.AttachmentFiles.Count.Should().Be(fileCount);
-            AttachmentData.AttachmentFiles.Any(a => a.FileName == expectedFilename).Should().BeFalse();
+            AttachmentData.AttachmentFiles.Exists(a => a.FileName == expectedFilename).Should().BeFalse();
         }
     }
 

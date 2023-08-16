@@ -64,7 +64,7 @@
                                 @(item.CommentPeriodClosesDate?.ToString(DisplayFormats.ShortDate) ?? "not entered")
                             </td>
                             <td class="gaepd-tablecell-nolabel">
-                                <a asp-page="Details" asp-route-id="@item.Id">View</a>
+                                <a asp-page="Details" asp-route-id="@item.Id.ToString()">View</a>
                             </td>
                         </tr>
                     }
@@ -104,7 +104,7 @@
                                 @(item.ExecutedDate?.ToString(DisplayFormats.ShortDate) ?? "not entered")
                             </td>
                             <td class="gaepd-tablecell-nolabel">
-                                <a asp-page="Details" asp-route-id="@item.Id">View</a>
+                                <a asp-page="Details" asp-route-id="@item.Id.ToString()">View</a>
                             </td>
                         </tr>
                     }
@@ -156,7 +156,7 @@
                                     @(item.PendingPublicationDate?.ToString(DisplayFormats.ShortDate) ?? "error")
                                 </td>
                                 <td class="gaepd-tablecell-nolabel">
-                                    <a asp-page="Details" asp-route-id="@item.Id">View</a>
+                                    <a asp-page="Details" asp-route-id="@item.Id.ToString()">View</a>
                                 </td>
                             </tr>
                         }
@@ -196,7 +196,7 @@
                                     <em>@item.County County</em>
                                 </th>
                                 <td class="gaepd-tablecell-nolabel">
-                                    <a asp-page="Edit" asp-route-id="@item.Id">Edit</a>
+                                    <a asp-page="Edit" asp-route-id="@item.Id.ToString()">Edit</a>
                                 </td>
                             </tr>
                         }

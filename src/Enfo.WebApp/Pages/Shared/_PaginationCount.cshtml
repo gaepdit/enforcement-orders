@@ -5,6 +5,6 @@
     @if (Model.TotalPages > 1)
     {
         <br />
-        @($"Showing results {Model.FirstItemIndex} – {Model.LastItemIndex}")
+        @($"Showing results {Model.FirstItemIndex.ToString()} – {Model.LastItemIndex.ToString()}")
     }
 </div>

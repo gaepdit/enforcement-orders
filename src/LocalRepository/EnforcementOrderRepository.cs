@@ -39,7 +39,7 @@ public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
     }
 
     public Task<AttachmentView> GetAttachmentAsync(Guid id) =>
-        AttachmentData.Attachments.Any(a => a.Id == id && !a.Deleted)
+        AttachmentData.Attachments.Exists(a => a.Id == id && !a.Deleted)
             ? Task.FromResult(new AttachmentView(
                 AttachmentData.Attachments.Single(a => a.Id == id)!))
             : Task.FromResult(null as AttachmentView);
@@ -107,12 +107,12 @@ public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
     public Task<bool> ExistsAsync(int id, bool onlyPublic = true) =>
         Task.FromResult(
             EnforcementOrderData.EnforcementOrders
-                .Any(e => e.Id == id && (e.GetIsPublic || !onlyPublic)));
+                .Exists(e => e.Id == id && (e.GetIsPublic || !onlyPublic)));
 
     public Task<bool> OrderNumberExistsAsync(string orderNumber, int? ignoreId = null) =>
         Task.FromResult(
             EnforcementOrderData.EnforcementOrders
-                .Any(e => e.OrderNumber.ToLower() == orderNumber.ToLower() && !e.Deleted && e.Id != ignoreId));
+                .Exists(e => string.Equals(e.OrderNumber, orderNumber, StringComparison.CurrentCultureIgnoreCase) && !e.Deleted && e.Id != ignoreId));
 
     public Task<IReadOnlyList<EnforcementOrderDetailedView>> ListCurrentProposedEnforcementOrdersAsync() =>
         Task.FromResult(

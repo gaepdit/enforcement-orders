@@ -81,7 +81,7 @@ public class ApiTests
             .AddInMemoryCollection(new Dictionary<string, string> { { "BaseUrl", baseUrl } })
             .Build();
 
-        var itemId = EnforcementOrderData.EnforcementOrders.First().Id;
+        var itemId = EnforcementOrderData.EnforcementOrders[0].Id;
         var item = ResourceHelper.GetEnforcementOrderDetailedView(itemId);
         var repo = Substitute.For<IEnforcementOrderRepository>();
         repo.GetAsync(itemId).Returns(item);
@@ -141,7 +141,7 @@ public class ApiTests
     [Test]
     public async Task GetAuthority_ReturnsItem()
     {
-        var item = ResourceHelper.GetLegalAuthorityViewList().First();
+        var item = ResourceHelper.GetLegalAuthorityViewList()[0];
         var repo = Substitute.For<ILegalAuthorityRepository>();
         repo.GetAsync(item.Id).Returns(item);
 

@@ -1,5 +1,4 @@
 ﻿@page
-@using Enfo.Domain.EnforcementOrders.Resources
 @using Enfo.Domain.EnforcementOrders.Specs
 @using Enfo.WebApp.Models
 @using Enfo.WebApp.Platform.RazorHelpers
@@ -120,7 +119,7 @@
                         }
                         data-label="Sort by">
                         <a asp-fragment="search-results" asp-all-route-data="Model.Spec.AsRouteValues()"
-                           asp-route-Sort="@(Model.Spec.Sort == OrderSorting.FacilityAsc ? OrderSorting.FacilityDesc : OrderSorting.FacilityAsc)"
+                           asp-route-Sort="@(Model.Spec.Sort == OrderSorting.FacilityAsc ? nameof(OrderSorting.FacilityDesc) : nameof(OrderSorting.FacilityAsc))"
                            asp-route-handler="search">
                             Facility
                         </a>
@@ -137,7 +136,7 @@
                         }
                         data-label="Sort by">
                         <a asp-fragment="search-results" asp-all-route-data="Model.Spec.AsRouteValues()"
-                           asp-route-Sort="@(Model.Spec.Sort == OrderSorting.DateAsc ? OrderSorting.DateDesc : OrderSorting.DateAsc)"
+                           asp-route-Sort="@(Model.Spec.Sort == OrderSorting.DateAsc ? nameof(OrderSorting.DateDesc) : nameof(OrderSorting.DateAsc))"
                            asp-route-handler="search">
                             Status/Date
                         </a>
@@ -145,7 +144,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                @foreach (EnforcementOrderSummaryView enfo in Model.OrdersList.Items)
+                @foreach (var enfo in Model.OrdersList.Items)
                 {
                     <tr>
                         <th scope="row" data-label="Facility">
@@ -175,7 +174,7 @@
                             }
                         </td>
                         <td class="gaepd-tablecell-nolabel">
-                            <a asp-page="/Details" asp-route-id="@enfo.Id">View</a>
+                            <a asp-page="/Details" asp-route-id="@enfo.Id.ToString()">View</a>
                         </td>
                     </tr>
                 }

@@ -44,15 +44,15 @@
                 {
                     @if (item.Active)
                     {
-                        <a asp-page="Edit" asp-route-id="@item.Id" class="gaepd-button-inline-action usa-button">Edit</a>
+                        <a asp-page="Edit" asp-route-id="@item.Id.ToString()" class="gaepd-button-inline-action usa-button">Edit</a>
                         <form method="post">
-                            <button type="submit" name="id" value="@item.Id" class="gaepd-button-inline-action usa-button-secondary">Remove from use</button>
+                            <button type="submit" name="id" value="@item.Id.ToString()" class="gaepd-button-inline-action usa-button-secondary">Remove from use</button>
                         </form>
                     }
                     else
                     {
                         <form method="post">
-                            <button type="submit" name="id" value="@item.Id" class="gaepd-button-inline-action usa-button-secondary">Restore</button>
+                            <button type="submit" name="id" value="@item.Id.ToString()" class="gaepd-button-inline-action usa-button-secondary">Restore</button>
                         </form>
                     }
                 }

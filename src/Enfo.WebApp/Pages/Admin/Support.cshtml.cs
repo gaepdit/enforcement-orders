@@ -2,17 +2,15 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Configuration;
 
-namespace Enfo.WebApp.Pages.Admin
+namespace Enfo.WebApp.Pages.Admin;
+
+[Authorize]
+public class Support : PageModel
 {
-    [Authorize]
-    public class Support : PageModel
-    {
-        public string SupportEmail { get; private set; }
+    public string SupportEmail { get; private set; }
 
-        [UsedImplicitly]
-        public void OnGet([FromServices] IConfiguration configuration) =>
-            SupportEmail = configuration["SupportEmail"];
-    }
+    [UsedImplicitly]
+    public void OnGet([FromServices] IConfiguration configuration) =>
+        SupportEmail = configuration["SupportEmail"];
 }

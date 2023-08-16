@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using NSubstitute;
 using NUnit.Framework;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace EnfoTests.WebApp.Pages;
@@ -21,7 +20,7 @@ public class DetailsTests
     [Test]
     public async Task OnGet_ReturnsWithOrder()
     {
-        var itemId = EnforcementOrderData.EnforcementOrders.First().Id;
+        var itemId = EnforcementOrderData.EnforcementOrders[0].Id;
         var item = ResourceHelper.GetEnforcementOrderDetailedView(itemId);
         var repo = Substitute.For<IEnforcementOrderRepository>();
         repo.GetAsync(itemId).Returns(item);
@@ -36,7 +35,7 @@ public class DetailsTests
     public async Task SetDisplayMessage_ReturnsWithDisplayMessage()
     {
         // Not testing returned Item, but it must be populated to return Page
-        var itemId = EnforcementOrderData.EnforcementOrders.First().Id;
+        var itemId = EnforcementOrderData.EnforcementOrders[0].Id;
         var item = ResourceHelper.GetEnforcementOrderDetailedView(itemId);
         var repo = Substitute.For<IEnforcementOrderRepository>();
         repo.GetAsync(itemId).Returns(item);

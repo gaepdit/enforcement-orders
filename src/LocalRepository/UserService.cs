@@ -91,7 +91,7 @@ public class UserService : IUserService
         return addToRole switch
         {
             true => await _userManager.AddToRoleAsync(user, role),
-            false => await _userManager.RemoveFromRoleAsync(user, role)
+            false => await _userManager.RemoveFromRoleAsync(user, role),
         };
     }
 }

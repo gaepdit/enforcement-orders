@@ -52,7 +52,7 @@ public class EnforcementOrderAdminSpec
         Text = Text?.Trim();
     }
 
-    public IDictionary<string, string> AsRouteValues() => new Dictionary<string, string>()
+    public IDictionary<string, string> AsRouteValues() => new Dictionary<string, string>
     {
         { nameof(Facility), Facility },
         { nameof(County), County },

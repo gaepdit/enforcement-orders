@@ -14,7 +14,6 @@ using Microsoft.AspNetCore.Routing;
 using NSubstitute;
 using NUnit.Framework;
 using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -28,7 +27,7 @@ public class DetailsTests
     [Test]
     public async Task OnGet_ReturnsWithOrder()
     {
-        var itemId = EnforcementOrderData.EnforcementOrders.First().Id;
+        var itemId = EnforcementOrderData.EnforcementOrders[0].Id;
         var item = ResourceHelper.GetEnforcementOrderAdminView(itemId);
         var repo = Substitute.For<IEnforcementOrderRepository>();
         repo.GetAdminViewAsync(itemId).Returns(item);
@@ -43,7 +42,7 @@ public class DetailsTests
     public async Task SetDisplayMessage_ReturnsWithDisplayMessage()
     {
         // Not testing returned Item, but it must be populated to return Page
-        var itemId = EnforcementOrderData.EnforcementOrders.First().Id;
+        var itemId = EnforcementOrderData.EnforcementOrders[0].Id;
         var item = ResourceHelper.GetEnforcementOrderAdminView(itemId);
         var repo = Substitute.For<IEnforcementOrderRepository>();
         repo.GetAdminViewAsync(itemId).Returns(item);
@@ -102,7 +101,7 @@ public class DetailsTests
         var pageContext = new PageContext(actionContext);
 
         // Mock repo
-        var itemId = EnforcementOrderData.EnforcementOrders.First().Id;
+        var itemId = EnforcementOrderData.EnforcementOrders[0].Id;
         var item = ResourceHelper.GetEnforcementOrderAdminView(itemId);
         var repoMock = Substitute.For<IEnforcementOrderRepository>();
         repoMock.GetAdminViewAsync(itemId).Returns(item);

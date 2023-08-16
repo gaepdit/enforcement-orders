@@ -24,7 +24,7 @@ public class SearchTests
     {
         var orderRepo = Substitute.For<IEnforcementOrderRepository>();
         var legalRepo = Substitute.For<ILegalAuthorityRepository>();
-        legalRepo.ListAsync(false).Returns(ResourceHelper.GetLegalAuthorityViewList());
+        legalRepo.ListAsync().Returns(ResourceHelper.GetLegalAuthorityViewList());
         var page = new Search(orderRepo, legalRepo);
 
         await page.OnGetAsync();
@@ -49,7 +49,7 @@ public class SearchTests
         orderRepo.ListAdminAsync(Arg.Any<EnforcementOrderAdminSpec>(), Arg.Any<PaginationSpec>())
             .Returns(expectedOrders);
         var legalRepo = Substitute.For<ILegalAuthorityRepository>();
-        legalRepo.ListAsync(false).Returns(ResourceHelper.GetLegalAuthorityViewList());
+        legalRepo.ListAsync().Returns(ResourceHelper.GetLegalAuthorityViewList());
         var page = new Search(orderRepo, legalRepo);
 
         await page.OnGetSearchAsync(new EnforcementOrderAdminSpec());
@@ -75,7 +75,7 @@ public class SearchTests
         orderRepo.ListAdminAsync(Arg.Any<EnforcementOrderAdminSpec>(), Arg.Any<PaginationSpec>())
             .Returns(expectedOrders);
         var legalRepo = Substitute.For<ILegalAuthorityRepository>();
-        legalRepo.ListAsync(false).Returns(ResourceHelper.GetLegalAuthorityViewList());
+        legalRepo.ListAsync().Returns(ResourceHelper.GetLegalAuthorityViewList());
         var page = new Search(orderRepo, legalRepo);
 
         await page.OnGetSearchAsync(new EnforcementOrderAdminSpec());

@@ -2,7 +2,6 @@
 using EnfoTests.TestData;
 using FluentAssertions;
 using NUnit.Framework;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace EnfoTests.LocalRepositoryTests.LegalAuthorities;
@@ -14,7 +13,7 @@ public class NameExistsTests
     public async Task WhenNameExists_ReturnsTrue()
     {
         using var repository = new LegalAuthorityRepository();
-        var result = await repository.NameExistsAsync(LegalAuthorityData.LegalAuthorities.First().AuthorityName);
+        var result = await repository.NameExistsAsync(LegalAuthorityData.LegalAuthorities[0].AuthorityName);
         result.Should().BeTrue();
     }
 

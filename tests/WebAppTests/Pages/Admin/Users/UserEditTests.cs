@@ -151,7 +151,7 @@ public class UserEditTests
             ((RedirectToPageResult)result).PageName.Should().Be("Details");
             ((RedirectToPageResult)result).RouteValues!["id"].Should().Be(Guid.Empty);
             var expectedMessage = new DisplayMessage(Context.Success, "User roles successfully updated.");
-            pageModel.TempData?.GetDisplayMessage().Should().BeEquivalentTo(expectedMessage);
+            pageModel.TempData.GetDisplayMessage().Should().BeEquivalentTo(expectedMessage);
         }
     }
 

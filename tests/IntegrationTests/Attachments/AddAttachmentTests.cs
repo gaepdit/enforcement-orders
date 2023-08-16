@@ -5,7 +5,6 @@ using FluentAssertions.Execution;
 using Microsoft.AspNetCore.Http;
 using NUnit.Framework;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -37,7 +36,7 @@ public class AddAttachmentTests
         using (new AssertionScope())
         {
             order.Attachments.Count.Should().Be(initialCount + 1);
-            var attachment = order.Attachments.Last();
+            var attachment = order.Attachments[^1];
             attachment.FileName.Should().Be("test.pdf");
             attachment.FileExtension.Should().Be(".pdf");
             attachment.Size.Should().Be(1);

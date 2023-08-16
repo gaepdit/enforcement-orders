@@ -37,7 +37,7 @@ public class EnforcementOrderAdminView : EnforcementOrderAdminSummaryView
             EnforcementOrder.PublicationState.Draft => PublicationProgress.Draft,
             EnforcementOrder.PublicationState.Published => PublicationProgress.Published,
             _ => throw new InvalidEnumArgumentException(nameof(status), (int)status,
-                typeof(EnforcementOrder.PublicationState))
+                typeof(EnforcementOrder.PublicationState)),
         };
 
     [DisplayName("Progress")]

@@ -69,10 +69,10 @@ public class ExternalLogin : PageModel
     private async Task<IActionResult> SignInAsLocalUser()
     {
         _logger.LogInformation("Local user signin attempted with settings {AuthenticatedUser}",
-            ApplicationSettings.LocalDevSettings.AuthenticatedUser);
+            ApplicationSettings.LocalDevSettings.AuthenticatedUser.ToString());
         if (!ApplicationSettings.LocalDevSettings.AuthenticatedUser) return Forbid();
 
-        var userView = (await _userService.GetUsersAsync(null, null, null)).First();
+        var userView = (await _userService.GetUsersAsync(null, null, null))[0];
         var user = new ApplicationUser
         {
             Email = userView.Email,

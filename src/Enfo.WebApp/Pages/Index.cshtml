@@ -68,7 +68,7 @@
                             @(enfo.CommentPeriodClosesDate?.ToString(DisplayFormats.ShortDate) ?? "not entered")
                         </td>
                         <td>
-                            <a asp-page="Details" asp-route-id="@enfo.Id">View</a>
+                            <a asp-page="Details" asp-route-id="@enfo.Id.ToString()">View</a>
                         </td>
                     </tr>
                 }
@@ -118,7 +118,7 @@
                             @(enfo.ExecutedDate?.ToString(DisplayFormats.ShortDate) ?? "not entered")
                         </td>
                         <td>
-                            <a asp-page="Details" asp-route-id="@enfo.Id">View</a>
+                            <a asp-page="Details" asp-route-id="@enfo.Id.ToString()">View</a>
                         </td>
                     </tr>
                 }

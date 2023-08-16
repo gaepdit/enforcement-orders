@@ -38,8 +38,8 @@ public class EnforcementOrderSpec
         OrderNumber = OrderNumber?.Trim();
     }
 
-    public IDictionary<string, string> AsRouteValues() => new Dictionary<string, string>()
-        {
+    public IDictionary<string, string> AsRouteValues() => new Dictionary<string, string>
+    {
             {nameof(Facility), Facility},
             {nameof(County), County},
             {nameof(LegalAuth), LegalAuth?.ToString()},

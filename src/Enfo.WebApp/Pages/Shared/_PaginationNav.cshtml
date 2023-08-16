@@ -6,7 +6,7 @@
         @if (Model.Paging.HasPreviousPage)
         {
             <a asp-fragment="search-results" asp-all-route-data="Model.RouteValues"
-               asp-route-p="@(Model.Paging.PageNumber - 1)" asp-route-handler="search"
+               asp-route-p="@((Model.Paging.PageNumber - 1).ToString())" asp-route-handler="search"
                class="gaepd-pagination-prev">
                 Previous
             </a>
@@ -30,14 +30,14 @@
                 @if (index == Model.Paging.PageNumber)
                 {
                     <a class="gaepd-pagination-active">
-                        @index <span class="usa-sr-only">(current)</span>
+                        @index.ToString() <span class="usa-sr-only">(current)</span>
                     </a>
                 }
                 else
                 {
                     <a asp-fragment="search-results" asp-all-route-data="@Model.RouteValues"
-                       asp-route-p="@index" asp-route-handler="search">
-                        @index
+                       asp-route-p="@index.ToString()" asp-route-handler="search">
+                        @index.ToString()
                     </a>
                 }
             }
@@ -51,7 +51,7 @@
         @if (Model.Paging.HasNextPage)
         {
             <a asp-fragment="search-results" asp-all-route-data="@Model.RouteValues"
-               asp-route-p="@(Model.Paging.PageNumber + 1)" asp-route-handler="search"
+               asp-route-p="@((Model.Paging.PageNumber + 1).ToString())" asp-route-handler="search"
                class="gaepd-pagination-next">
                 Next
             </a>
