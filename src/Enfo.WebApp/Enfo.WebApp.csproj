@@ -17,9 +17,9 @@
 		<PackageReference Include="Mindscape.Raygun4Net.AspNetCore" />
 		<PackageReference Include="NetEscapades.AspNetCore.SecurityHeaders" />
 		<PackageReference Include="NetEscapades.AspNetCore.SecurityHeaders.TagHelpers" />
-		<PackageReference Include="SonarAnalyzer.CSharp" Condition="'$(Configuration)' == 'Debug'">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		<PackageReference Include="SonarAnalyzer.CSharp">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="Swashbuckle.AspNetCore" />
 	</ItemGroup>
