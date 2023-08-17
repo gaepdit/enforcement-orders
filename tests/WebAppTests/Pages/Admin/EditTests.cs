@@ -16,7 +16,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Moq;
+using NSubstitute;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,13 +32,13 @@ public class EditTests
     public async Task OnGet_ReturnsWithItem()
     {
         var item = ResourceHelper.GetEnforcementOrderAdminView(1);
-        var orderRepo = new Mock<IEnforcementOrderRepository>();
-        orderRepo.Setup(l => l.GetAdminViewAsync(It.IsAny<int>())).ReturnsAsync(item);
-        var legalRepo = new Mock<ILegalAuthorityRepository>();
-        legalRepo.Setup(l => l.ListAsync(false)).ReturnsAsync(new List<LegalAuthorityView>());
-        var contactRepo = new Mock<IEpdContactRepository>();
-        contactRepo.Setup(l => l.ListAsync(false)).ReturnsAsync(new List<EpdContactView>());
-        var page = new Edit(orderRepo.Object, legalRepo.Object, contactRepo.Object);
+        var orderRepo = Substitute.For<IEnforcementOrderRepository>();
+        orderRepo.GetAdminViewAsync(Arg.Any<int>()).Returns(item);
+        var legalRepo = Substitute.For<ILegalAuthorityRepository>();
+        legalRepo.ListAsync(false).Returns(new List<LegalAuthorityView>());
+        var contactRepo = Substitute.For<IEpdContactRepository>();
+        contactRepo.ListAsync(false).Returns(new List<EpdContactView>());
+        var page = new Edit(orderRepo, legalRepo, contactRepo);
 
         await page.OnGetAsync(1);
 
@@ -54,8 +54,8 @@ public class EditTests
     [Test]
     public async Task OnGet_GivenNullId_ReturnsNotFound()
     {
-        var page = new Edit(Mock.Of<IEnforcementOrderRepository>(),
-            Mock.Of<ILegalAuthorityRepository>(), Mock.Of<IEpdContactRepository>());
+        var page = new Edit(Substitute.For<IEnforcementOrderRepository>(),
+            Substitute.For<ILegalAuthorityRepository>(), Substitute.For<IEpdContactRepository>());
 
         var result = await page.OnGetAsync(null);
 
@@ -69,11 +69,10 @@ public class EditTests
     [Test]
     public async Task OnGet_GivenInvalidId_ReturnsNotFound()
     {
-        var orderRepo = new Mock<IEnforcementOrderRepository>();
-        orderRepo.Setup(l => l.GetAdminViewAsync(It.IsAny<int>()))
-            .ReturnsAsync(null as EnforcementOrderAdminView);
-        var page = new Edit(orderRepo.Object, Mock.Of<ILegalAuthorityRepository>(),
-            Mock.Of<IEpdContactRepository>());
+        var orderRepo = Substitute.For<IEnforcementOrderRepository>();
+        orderRepo.GetAdminViewAsync(Arg.Any<int>()).Returns(null as EnforcementOrderAdminView);
+        var page = new Edit(orderRepo, Substitute.For<ILegalAuthorityRepository>(),
+            Substitute.For<IEpdContactRepository>());
 
         var result = await page.OnGetAsync(-1);
 
@@ -88,15 +87,14 @@ public class EditTests
     public async Task OnGet_GivenDeletedItem_RedirectsWithDisplayMessage()
     {
         var item = ResourceHelper.GetEnforcementOrderAdminViewList().First(e => e.Deleted);
-        var orderRepo = new Mock<IEnforcementOrderRepository>();
-        orderRepo.Setup(l => l.GetAdminViewAsync(It.IsAny<int>()))
-            .ReturnsAsync(item);
+        var orderRepo = Substitute.For<IEnforcementOrderRepository>();
+        orderRepo.GetAdminViewAsync(Arg.Any<int>()).Returns(item);
 
         // Initialize Page TempData
         var httpContext = new DefaultHttpContext();
-        var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
-        var page = new Edit(orderRepo.Object, Mock.Of<ILegalAuthorityRepository>(),
-                Mock.Of<IEpdContactRepository>())
+        var tempData = new TempDataDictionary(httpContext, Substitute.For<ITempDataProvider>());
+        var page = new Edit(orderRepo, Substitute.For<ILegalAuthorityRepository>(),
+                Substitute.For<IEpdContactRepository>())
             { TempData = tempData };
 
         var result = await page.OnGetAsync(item.Id);
@@ -116,19 +114,18 @@ public class EditTests
     [Test]
     public async Task OnPost_GivenInvalidId_ReturnsNotFound()
     {
-        var orderRepo = new Mock<IEnforcementOrderRepository>();
-        orderRepo.Setup(l => l.GetAdminViewAsync(It.IsAny<int>()))
-            .ReturnsAsync(null as EnforcementOrderAdminView);
-        var validator = new Mock<IValidator<EnforcementOrderUpdate>>();
-        validator.Setup(l => l.ValidateAsync(It.IsAny<EnforcementOrderUpdate>(), CancellationToken.None))
-            .ReturnsAsync(new ValidationResult());
-        var page = new Edit(orderRepo.Object, Mock.Of<ILegalAuthorityRepository>(),
-            Mock.Of<IEpdContactRepository>())
+        var orderRepo = Substitute.For<IEnforcementOrderRepository>();
+        orderRepo.GetAdminViewAsync(Arg.Any<int>()).Returns(null as EnforcementOrderAdminView);
+        var validator = Substitute.For<IValidator<EnforcementOrderUpdate>>();
+        validator.ValidateAsync(Arg.Any<EnforcementOrderUpdate>(), CancellationToken.None)
+            .Returns(new ValidationResult());
+        var page = new Edit(orderRepo, Substitute.For<ILegalAuthorityRepository>(),
+            Substitute.For<IEpdContactRepository>())
         {
             Item = new EnforcementOrderUpdate(),
         };
 
-        var result = await page.OnPostAsync(validator.Object);
+        var result = await page.OnPostAsync(validator);
 
         result.Should().BeOfType<NotFoundResult>();
     }
@@ -137,24 +134,23 @@ public class EditTests
     public async Task OnPost_GivenDeletedItem_RedirectsWithDisplayMessage()
     {
         var item = ResourceHelper.GetEnforcementOrderAdminViewList().First(e => e.Deleted);
-        var orderRepo = new Mock<IEnforcementOrderRepository>();
-        orderRepo.Setup(l => l.GetAdminViewAsync(It.IsAny<int>()))
-            .ReturnsAsync(item);
-        var validator = new Mock<IValidator<EnforcementOrderUpdate>>();
-        validator.Setup(l => l.ValidateAsync(It.IsAny<EnforcementOrderUpdate>(), CancellationToken.None))
-            .ReturnsAsync(new ValidationResult());
+        var orderRepo = Substitute.For<IEnforcementOrderRepository>();
+        orderRepo.GetAdminViewAsync(Arg.Any<int>()).Returns(item);
+        var validator = Substitute.For<IValidator<EnforcementOrderUpdate>>();
+        validator.ValidateAsync(Arg.Any<EnforcementOrderUpdate>(), CancellationToken.None)
+            .Returns(new ValidationResult());
 
         // Initialize Page TempData
         var httpContext = new DefaultHttpContext();
-        var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
-        var page = new Edit(orderRepo.Object, Mock.Of<ILegalAuthorityRepository>(),
-            Mock.Of<IEpdContactRepository>())
+        var tempData = new TempDataDictionary(httpContext, Substitute.For<ITempDataProvider>());
+        var page = new Edit(orderRepo, Substitute.For<ILegalAuthorityRepository>(),
+            Substitute.For<IEpdContactRepository>())
         {
             TempData = tempData,
             Item = new EnforcementOrderUpdate { Id = item.Id },
         };
 
-        var result = await page.OnPostAsync(validator.Object);
+        var result = await page.OnPostAsync(validator);
 
         var expected = new DisplayMessage(Context.Warning,
             "This Enforcement Order is deleted and cannot be edited.");
@@ -173,23 +169,21 @@ public class EditTests
     {
         var originalItem = ResourceHelper.GetEnforcementOrderAdminViewList().First(e => !e.Deleted);
         var item = new EnforcementOrderUpdate(originalItem);
-        var orderRepo = new Mock<IEnforcementOrderRepository> { DefaultValue = DefaultValue.Mock };
-        orderRepo.Setup(l => l.GetAdminViewAsync(It.IsAny<int>()))
-            .ReturnsAsync(originalItem);
-        orderRepo.Setup(l => l.OrderNumberExistsAsync(It.IsAny<string>(), It.IsAny<int?>()))
-            .ReturnsAsync(false);
-        var validator = new Mock<IValidator<EnforcementOrderUpdate>>();
-        validator.Setup(l => l.ValidateAsync(It.IsAny<EnforcementOrderUpdate>(), CancellationToken.None))
-            .ReturnsAsync(new ValidationResult());
+        var orderRepo = Substitute.For<IEnforcementOrderRepository>();
+        orderRepo.GetAdminViewAsync(Arg.Any<int>()).Returns(originalItem);
+        orderRepo.OrderNumberExistsAsync(Arg.Any<string>(), Arg.Any<int?>()).Returns(false);
+        var validator = Substitute.For<IValidator<EnforcementOrderUpdate>>();
+        validator.ValidateAsync(Arg.Any<EnforcementOrderUpdate>(), CancellationToken.None)
+            .Returns(new ValidationResult());
 
         // Initialize Page TempData
         var httpContext = new DefaultHttpContext();
-        var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
-        var page = new Edit(orderRepo.Object, Mock.Of<ILegalAuthorityRepository>(),
-                Mock.Of<IEpdContactRepository>())
+        var tempData = new TempDataDictionary(httpContext, Substitute.For<ITempDataProvider>());
+        var page = new Edit(orderRepo, Substitute.For<ILegalAuthorityRepository>(),
+                Substitute.For<IEpdContactRepository>())
             { TempData = tempData, Item = item };
 
-        var result = await page.OnPostAsync(validator.Object);
+        var result = await page.OnPostAsync(validator);
 
         var expected = new DisplayMessage(Context.Success,
             "The Enforcement Order has been successfully updated.");
@@ -207,27 +201,26 @@ public class EditTests
     public async Task OnPost_GivenModelError_ReturnsPageWithModelError()
     {
         var item = ResourceHelper.GetEnforcementOrderAdminView(1);
-        var orderRepo = new Mock<IEnforcementOrderRepository>();
-        orderRepo.Setup(l => l.GetAdminViewAsync(It.IsAny<int>())).ReturnsAsync(item);
-        orderRepo.Setup(l => l.OrderNumberExistsAsync(It.IsAny<string>(), It.IsAny<int?>()))
-            .ReturnsAsync(false);
-        var legalRepo = new Mock<ILegalAuthorityRepository>();
-        legalRepo.Setup(l => l.ListAsync(false)).ReturnsAsync(new List<LegalAuthorityView>());
-        var contactRepo = new Mock<IEpdContactRepository>();
-        contactRepo.Setup(l => l.ListAsync(false)).ReturnsAsync(new List<EpdContactView>());
+        var orderRepo = Substitute.For<IEnforcementOrderRepository>();
+        orderRepo.GetAdminViewAsync(Arg.Any<int>()).Returns(item);
+        orderRepo.OrderNumberExistsAsync(Arg.Any<string>(), Arg.Any<int?>()).Returns(false);
+        var legalRepo = Substitute.For<ILegalAuthorityRepository>();
+        legalRepo.ListAsync(false).Returns(new List<LegalAuthorityView>());
+        var contactRepo = Substitute.For<IEpdContactRepository>();
+        contactRepo.ListAsync(false).Returns(new List<EpdContactView>());
 
-        var validator = new Mock<IValidator<EnforcementOrderUpdate>>();
-        validator.Setup(l => l.ValidateAsync(It.IsAny<EnforcementOrderUpdate>(), CancellationToken.None))
-            .ReturnsAsync(new ValidationResult());
+        var validator = Substitute.For<IValidator<EnforcementOrderUpdate>>();
+        validator.ValidateAsync(Arg.Any<EnforcementOrderUpdate>(), CancellationToken.None)
+            .Returns(new ValidationResult());
 
-        var page = new Edit(orderRepo.Object, legalRepo.Object, contactRepo.Object)
+        var page = new Edit(orderRepo, legalRepo, contactRepo)
         {
             Item = new EnforcementOrderUpdate(item),
             OriginalOrderNumber = "original order number",
         };
         page.ModelState.AddModelError("key", "message");
 
-        var result = await page.OnPostAsync(validator.Object);
+        var result = await page.OnPostAsync(validator);
 
         using (new AssertionScope())
         {

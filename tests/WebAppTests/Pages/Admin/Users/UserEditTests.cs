@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Moq;
+using NSubstitute;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -52,12 +52,10 @@ public class UserEditTests
     {
         var userView = new UserView(UserTestData.ApplicationUsers[0]);
 
-        var userService = new Mock<IUserService>();
-        userService.Setup(l => l.GetUserByIdAsync(It.IsAny<Guid>()))
-            .ReturnsAsync(userView);
-        userService.Setup(l => l.GetUserRolesAsync(It.IsAny<Guid>()))
-            .ReturnsAsync(new List<string>());
-        var pageModel = new Edit(userService.Object);
+        var userService = Substitute.For<IUserService>();
+        userService.GetUserByIdAsync(Arg.Any<Guid>()).Returns(userView);
+        userService.GetUserRolesAsync(Arg.Any<Guid>()).Returns(new List<string>());
+        var pageModel = new Edit(userService);
 
         var result = await pageModel.OnGetAsync(Guid.Empty);
 
@@ -77,12 +75,10 @@ public class UserEditTests
         var userView = new UserView(UserTestData.ApplicationUsers[0]);
         var roles = new List<string> { UserRole.OrderAdministrator };
 
-        var userService = new Mock<IUserService>();
-        userService.Setup(l => l.GetUserByIdAsync(It.IsAny<Guid>()))
-            .ReturnsAsync(userView);
-        userService.Setup(l => l.GetUserRolesAsync(It.IsAny<Guid>()))
-            .ReturnsAsync(roles);
-        var pageModel = new Edit(userService.Object);
+        var userService = Substitute.For<IUserService>();
+        userService.GetUserByIdAsync(Arg.Any<Guid>()).Returns(userView);
+        userService.GetUserRolesAsync(Arg.Any<Guid>()).Returns(roles);
+        var pageModel = new Edit(userService);
 
         var result = await pageModel.OnGetAsync(Guid.Empty);
 
@@ -98,8 +94,8 @@ public class UserEditTests
     [Test]
     public async Task OnGet_MissingId_ReturnsNotFound()
     {
-        var userService = new Mock<IUserService>();
-        var pageModel = new Edit(userService.Object);
+        var userService = Substitute.For<IUserService>();
+        var pageModel = new Edit(userService);
 
         var result = await pageModel.OnGetAsync(null);
 
@@ -115,10 +111,9 @@ public class UserEditTests
     [Test]
     public async Task OnGet_NonexistentId_ReturnsNotFound()
     {
-        var userService = new Mock<IUserService>();
-        userService.Setup(l => l.GetUserByIdAsync(It.IsAny<Guid>()))
-            .ReturnsAsync((UserView)null);
-        var pageModel = new Edit(userService.Object);
+        var userService = Substitute.For<IUserService>();
+        userService.GetUserByIdAsync(Arg.Any<Guid>()).Returns((UserView)null);
+        var pageModel = new Edit(userService);
 
         var result = await pageModel.OnGetAsync(Guid.Empty);
 
@@ -134,13 +129,13 @@ public class UserEditTests
     [Test]
     public async Task OnPost_GivenSuccess_ReturnsRedirectWithDisplayMessage()
     {
-        var userService = new Mock<IUserService>();
-        userService.Setup(l => l.UpdateUserRolesAsync(It.IsAny<Guid>(), It.IsAny<Dictionary<string, bool>>()))
-            .ReturnsAsync(IdentityResult.Success);
+        var userService = Substitute.For<IUserService>();
+        userService.UpdateUserRolesAsync(Arg.Any<Guid>(), Arg.Any<Dictionary<string, bool>>())
+            .Returns(IdentityResult.Success);
         // Initialize Page TempData
         var httpContext = new DefaultHttpContext();
-        var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
-        var pageModel = new Edit(userService.Object)
+        var tempData = new TempDataDictionary(httpContext, Substitute.For<ITempDataProvider>());
+        var pageModel = new Edit(userService)
         {
             TempData = tempData,
             UserId = Guid.Empty,
@@ -163,13 +158,11 @@ public class UserEditTests
     [Test]
     public async Task OnPost_InvalidModel_ReturnsPageWithInvalidModelState()
     {
-        var userService = new Mock<IUserService>();
-        userService.Setup(l => l.GetUserByIdAsync(It.IsAny<Guid>()))
-            .ReturnsAsync(new UserView(UserTestData.ApplicationUsers[0]));
-        userService.Setup(l => l.GetUserRolesAsync(It.IsAny<Guid>()))
-            .ReturnsAsync(new List<string>());
+        var userService = Substitute.For<IUserService>();
+        userService.GetUserByIdAsync(Arg.Any<Guid>()).Returns(new UserView(UserTestData.ApplicationUsers[0]));
+        userService.GetUserRolesAsync(Arg.Any<Guid>()).Returns(new List<string>());
 
-        var pageModel = new Edit(userService.Object) { UserRoleSettings = new List<Edit.UserRoleSetting>() };
+        var pageModel = new Edit(userService) { UserRoleSettings = new List<Edit.UserRoleSetting>() };
         pageModel.ModelState.AddModelError("Error", "Sample error description");
 
         var result = await pageModel.OnPostAsync();
@@ -188,12 +181,10 @@ public class UserEditTests
         var userView = new UserView(UserTestData.ApplicationUsers[0]);
         var identityResult = IdentityResult.Failed(new IdentityError { Code = "CODE", Description = "DESCRIPTION" });
 
-        var userService = new Mock<IUserService> { DefaultValue = DefaultValue.Mock };
-        userService.Setup(l => l.UpdateUserRolesAsync(It.IsAny<Guid>(), It.IsAny<Dictionary<string, bool>>()))
-            .ReturnsAsync(identityResult);
-        userService.Setup(l => l.GetUserByIdAsync(It.IsAny<Guid>()))
-            .ReturnsAsync(userView);
-        var pageModel = new Edit(userService.Object) { UserRoleSettings = _roleSettings };
+        var userService = Substitute.For<IUserService>();
+        userService.UpdateUserRolesAsync(Arg.Any<Guid>(), Arg.Any<Dictionary<string, bool>>()).Returns(identityResult);
+        userService.GetUserByIdAsync(Arg.Any<Guid>()).Returns(userView);
+        var pageModel = new Edit(userService) { UserRoleSettings = _roleSettings };
 
         var result = await pageModel.OnPostAsync();
 

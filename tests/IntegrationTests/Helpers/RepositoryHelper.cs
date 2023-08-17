@@ -6,7 +6,7 @@ using Enfo.Infrastructure.Contexts;
 using Enfo.Infrastructure.Repositories;
 using EnfoTests.TestData;
 using Microsoft.EntityFrameworkCore;
-using Moq;
+using NSubstitute;
 using System;
 using System.Linq;
 using TestSupport.EfHelpers;
@@ -75,8 +75,8 @@ namespace EnfoTests.Infrastructure.Helpers
             DbContext = new EnfoDbContext(_options, null);
             return new EnforcementOrderRepository(
                 DbContext,
-                new Mock<IFileService>().Object,
-                new Mock<IErrorLogger>().Object
+                Substitute.For<IFileService>(),
+                Substitute.For<IErrorLogger>()
             );
         }
 

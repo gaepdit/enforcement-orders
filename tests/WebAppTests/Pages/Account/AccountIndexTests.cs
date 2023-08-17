@@ -4,7 +4,7 @@ using Enfo.WebApp.Pages.Account;
 using EnfoTests.WebApp.Pages.Admin.Users;
 using FluentAssertions;
 using FluentAssertions.Execution;
-using Moq;
+using NSubstitute;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -20,14 +20,12 @@ public class AccountIndexTests
         var userView = new UserView(UserTestData.ApplicationUsers[0]);
         var roles = new List<string> { "abc" };
 
-        var userService = new Mock<IUserService>();
-        userService.Setup(l => l.GetCurrentUserAsync())
-            .ReturnsAsync(userView);
-        userService.Setup(l => l.GetCurrentUserRolesAsync())
-            .ReturnsAsync(roles);
+        var userService = Substitute.For<IUserService>();
+        userService.GetCurrentUserAsync().Returns(userView);
+        userService.GetCurrentUserRolesAsync().Returns(roles);
         var pageModel = new Index();
 
-        await pageModel.OnGetAsync(userService.Object);
+        await pageModel.OnGetAsync(userService);
 
         using (new AssertionScope())
         {

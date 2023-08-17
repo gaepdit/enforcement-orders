@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Routing;
-using Moq;
+using NSubstitute;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,9 +30,9 @@ public class DetailsTests
     {
         var itemId = EnforcementOrderData.EnforcementOrders.First().Id;
         var item = ResourceHelper.GetEnforcementOrderAdminView(itemId);
-        var repo = new Mock<IEnforcementOrderRepository>();
-        repo.Setup(l => l.GetAdminViewAsync(itemId)).ReturnsAsync(item);
-        var page = new Details(repo.Object);
+        var repo = Substitute.For<IEnforcementOrderRepository>();
+        repo.GetAdminViewAsync(itemId).Returns(item);
+        var page = new Details(repo);
 
         await page.OnGetAsync(itemId);
 
@@ -45,13 +45,13 @@ public class DetailsTests
         // Not testing returned Item, but it must be populated to return Page
         var itemId = EnforcementOrderData.EnforcementOrders.First().Id;
         var item = ResourceHelper.GetEnforcementOrderAdminView(itemId);
-        var repo = new Mock<IEnforcementOrderRepository>();
-        repo.Setup(l => l.GetAdminViewAsync(itemId)).ReturnsAsync(item);
+        var repo = Substitute.For<IEnforcementOrderRepository>();
+        repo.GetAdminViewAsync(itemId).Returns(item);
 
         // Initialize Page TempData
         var httpContext = new DefaultHttpContext();
-        var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
-        var page = new Details(repo.Object) { TempData = tempData };
+        var tempData = new TempDataDictionary(httpContext, Substitute.For<ITempDataProvider>());
+        var page = new Details(repo) { TempData = tempData };
 
         page.TempData.SetDisplayMessage(Context.Info, "Info message");
         await page.OnGetAsync(itemId);
@@ -63,8 +63,8 @@ public class DetailsTests
     [Test]
     public async Task OnGet_MissingIdReturnsNotFound()
     {
-        var repo = new Mock<IEnforcementOrderRepository>();
-        var page = new Details(repo.Object);
+        var repo = Substitute.For<IEnforcementOrderRepository>();
+        var page = new Details(repo);
 
         var result = await page.OnGetAsync(null);
 
@@ -79,8 +79,8 @@ public class DetailsTests
     [Test]
     public async Task OnGet_NonexistentIdReturnsNotFound()
     {
-        var repo = new Mock<IEnforcementOrderRepository>();
-        var page = new Details(repo.Object);
+        var repo = Substitute.For<IEnforcementOrderRepository>();
+        var page = new Details(repo);
 
         var result = await page.OnGetAsync(-1);
 
@@ -104,18 +104,18 @@ public class DetailsTests
         // Mock repo
         var itemId = EnforcementOrderData.EnforcementOrders.First().Id;
         var item = ResourceHelper.GetEnforcementOrderAdminView(itemId);
-        var repoMock = new Mock<IEnforcementOrderRepository>();
-        repoMock.Setup(l => l.GetAdminViewAsync(itemId)).ReturnsAsync(item);
+        var repoMock = Substitute.For<IEnforcementOrderRepository>();
+        repoMock.GetAdminViewAsync(itemId).Returns(item);
 
         // Mock attachment
-        var formFileMock = new Mock<IFormFile>();
-        formFileMock.Setup(l => l.Length).Returns(1);
-        formFileMock.Setup(l => l.FileName).Returns("test.pdf");
-        
-        var page = new Details(repoMock.Object)
+        var formFileMock = Substitute.For<IFormFile>();
+        formFileMock.Length.Returns(1);
+        formFileMock.FileName.Returns("test.pdf");
+
+        var page = new Details(repoMock)
         {
-            Id = itemId, 
-            Attachment = formFileMock.Object,
+            Id = itemId,
+            Attachment = formFileMock,
             PageContext = pageContext,
         };
 

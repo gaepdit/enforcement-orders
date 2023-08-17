@@ -3,7 +3,7 @@ using Enfo.Domain.EnforcementOrders.Resources;
 using Enfo.WebApp.Pages;
 using EnfoTests.TestData;
 using FluentAssertions;
-using Moq;
+using NSubstitute;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -17,12 +17,11 @@ public class CurrentProposedTests
     public async Task OnGet_ReturnsWithOrders()
     {
         var list = ResourceHelper.GetEnforcementOrderDetailedViewList();
-        var repo = new Mock<IEnforcementOrderRepository>();
-        repo.Setup(l => l.ListCurrentProposedEnforcementOrdersAsync())
-            .ReturnsAsync(list);
+        var repo = Substitute.For<IEnforcementOrderRepository>();
+        repo.ListCurrentProposedEnforcementOrdersAsync().Returns(list);
         var page = new CurrentProposed();
 
-        await page.OnGetAsync(repo.Object);
+        await page.OnGetAsync(repo);
 
         page.Orders.Should().BeEquivalentTo(list);
     }
@@ -30,12 +29,11 @@ public class CurrentProposedTests
     [Test]
     public async Task OnGet_GivenNoResults_ReturnsWithEmptyOrders()
     {
-        var repo = new Mock<IEnforcementOrderRepository>();
-        repo.Setup(l => l.ListCurrentProposedEnforcementOrdersAsync())
-            .ReturnsAsync(null as IReadOnlyList<EnforcementOrderDetailedView>);
+        var repo = Substitute.For<IEnforcementOrderRepository>();
+        repo.ListCurrentProposedEnforcementOrdersAsync().Returns(null as IReadOnlyList<EnforcementOrderDetailedView>);
         var page = new CurrentProposed();
 
-        await page.OnGetAsync(repo.Object);
+        await page.OnGetAsync(repo);
 
         page.Orders.Should().BeNull();
     }

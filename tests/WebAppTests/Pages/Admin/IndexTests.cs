@@ -11,7 +11,7 @@ using FluentAssertions.Execution;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Moq;
+using NSubstitute;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -26,16 +26,12 @@ public class IndexTests
     {
         var list = ResourceHelper.GetEnforcementOrderDetailedViewList();
         var adminList = ResourceHelper.GetEnforcementOrderAdminSummaryViewList();
-        var repo = new Mock<IEnforcementOrderRepository>();
-        repo.Setup(l => l.ListCurrentProposedEnforcementOrdersAsync())
-            .ReturnsAsync(list);
-        repo.Setup(l => l.ListRecentlyExecutedEnforcementOrdersAsync())
-            .ReturnsAsync(list);
-        repo.Setup(l => l.ListPendingEnforcementOrdersAsync())
-            .ReturnsAsync(adminList);
-        repo.Setup(l => l.ListDraftEnforcementOrdersAsync())
-            .ReturnsAsync(adminList);
-        var page = new Index(repo.Object);
+        var repo = Substitute.For<IEnforcementOrderRepository>();
+        repo.ListCurrentProposedEnforcementOrdersAsync().Returns(list);
+        repo.ListRecentlyExecutedEnforcementOrdersAsync().Returns(list);
+        repo.ListPendingEnforcementOrdersAsync().Returns(adminList);
+        repo.ListDraftEnforcementOrdersAsync().Returns(adminList);
+        var page = new Index(repo);
 
         await page.OnGetAsync();
 
@@ -52,8 +48,8 @@ public class IndexTests
     [Test]
     public async Task OnGet_GivenNoResults_ReturnsWithEmptyOrders()
     {
-        var repo = new Mock<IEnforcementOrderRepository> { DefaultValue = DefaultValue.Mock };
-        var page = new Index(repo.Object);
+        var repo = Substitute.For<IEnforcementOrderRepository>();
+        var page = new Index(repo);
 
         await page.OnGetAsync();
 
@@ -71,10 +67,10 @@ public class IndexTests
     public async Task SetDisplayMessage_ReturnsWithDisplayMessage()
     {
         // Initialize Page TempData
-        var repo = new Mock<IEnforcementOrderRepository> { DefaultValue = DefaultValue.Mock };
+        var repo = Substitute.For<IEnforcementOrderRepository>();
         var httpContext = new DefaultHttpContext();
-        var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
-        var page = new Index(repo.Object) { TempData = tempData };
+        var tempData = new TempDataDictionary(httpContext, Substitute.For<ITempDataProvider>());
+        var page = new Index(repo) { TempData = tempData };
 
         page.TempData.SetDisplayMessage(Context.Info, "Info message");
         await page.OnGetAsync();
@@ -90,10 +86,9 @@ public class IndexTests
         var listResult = new PaginatedResult<EnforcementOrderAdminSummaryView>(
             list, 1, new PaginationSpec(1, 1));
 
-        var repo = new Mock<IEnforcementOrderRepository>();
-        repo.Setup(l => l.ListAdminAsync(It.IsAny<EnforcementOrderAdminSpec>(), It.IsAny<PaginationSpec>()))
-            .ReturnsAsync(listResult);
-        var page = new Index(repo.Object);
+        var repo = Substitute.For<IEnforcementOrderRepository>();
+        repo.ListAdminAsync(Arg.Any<EnforcementOrderAdminSpec>(), Arg.Any<PaginationSpec>()).Returns(listResult);
+        var page = new Index(repo);
 
         var result = await page.OnGetFindAsync("abc");
 
@@ -113,10 +108,9 @@ public class IndexTests
         var listResult = new PaginatedResult<EnforcementOrderAdminSummaryView>(
             list, 2, new PaginationSpec(1, 1));
 
-        var repo = new Mock<IEnforcementOrderRepository>();
-        repo.Setup(l => l.ListAdminAsync(It.IsAny<EnforcementOrderAdminSpec>(), It.IsAny<PaginationSpec>()))
-            .ReturnsAsync(listResult);
-        var page = new Index(repo.Object);
+        var repo = Substitute.For<IEnforcementOrderRepository>();
+        repo.ListAdminAsync(Arg.Any<EnforcementOrderAdminSpec>(), Arg.Any<PaginationSpec>()).Returns(listResult);
+        var page = new Index(repo);
 
         var result = await page.OnGetFindAsync("abc");
 
@@ -133,8 +127,8 @@ public class IndexTests
     [Test]
     public async Task Find_GivenEmptySearch_ReturnsPage()
     {
-        var repo = new Mock<IEnforcementOrderRepository>();
-        var page = new Index(repo.Object);
+        var repo = Substitute.For<IEnforcementOrderRepository>();
+        var page = new Index(repo);
 
         var result = await page.OnGetFindAsync(string.Empty);
 

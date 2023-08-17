@@ -2,7 +2,7 @@
 using FluentAssertions;
 using FluentAssertions.Execution;
 using Microsoft.AspNetCore.Http;
-using Moq;
+using NSubstitute;
 using NUnit.Framework;
 using System;
 using System.Linq;
@@ -16,15 +16,15 @@ public class SaveFileTests
     [Test]
     public async Task WhenValid_AddsFileToList()
     {
-        var formFile = new Mock<IFormFile>();
-        formFile.Setup(l => l.Length).Returns(1);
-        formFile.Setup(l => l.FileName).Returns("test.pdf");
+        var formFile = Substitute.For<IFormFile>();
+        formFile.Length.Returns(1);
+        formFile.FileName.Returns("test.pdf");
 
         var fileCount = AttachmentData.AttachmentFiles.Count;
         var id = Guid.NewGuid();
 
         var fileService = new Enfo.LocalRepository.FileService();
-        await fileService.SaveFileAsync(formFile.Object, id);
+        await fileService.SaveFileAsync(formFile, id);
 
         using (new AssertionScope())
         {
@@ -36,16 +36,16 @@ public class SaveFileTests
     [Test]
     public async Task WhenFileIsEmpty_ListIsUnchanged()
     {
-        var formFile = new Mock<IFormFile>();
-        formFile.Setup(l => l.Length).Returns(0);
-        formFile.Setup(l => l.FileName).Returns("test.pdf");
+        var formFile = Substitute.For<IFormFile>();
+        formFile.Length.Returns(0);
+        formFile.FileName.Returns("test.pdf");
 
         var fileCount = AttachmentData.AttachmentFiles.Count;
         var id = Guid.NewGuid();
         var expectedFilename = $"{id.ToString()}.pdf";
 
         var fileService = new Enfo.LocalRepository.FileService();
-        await fileService.SaveFileAsync(formFile.Object, id);
+        await fileService.SaveFileAsync(formFile, id);
 
         using (new AssertionScope())
         {
@@ -59,15 +59,15 @@ public class SaveFileTests
     {
         var fileCount = AttachmentData.AttachmentFiles.Count;
 
-        var formFile = new Mock<IFormFile>();
-        formFile.Setup(l => l.Length).Returns(1);
-        formFile.Setup(l => l.FileName).Returns("");
+        var formFile = Substitute.For<IFormFile>();
+        formFile.Length.Returns(1);
+        formFile.FileName.Returns("");
 
         var id = Guid.NewGuid();
         var expectedFilename = $"{id.ToString()}.pdf";
 
         var fileService = new Enfo.LocalRepository.FileService();
-        await fileService.SaveFileAsync(formFile.Object, id);
+        await fileService.SaveFileAsync(formFile, id);
 
         using (new AssertionScope())
         {
@@ -82,11 +82,11 @@ public class SaveFileTests
         var fileCount = AttachmentData.AttachmentFiles.Count;
         var fileService = new Enfo.LocalRepository.FileService();
 
-        var formFile = new Mock<IFormFile>();
-        formFile.Setup(l => l.Length).Returns((long)int.MaxValue + 1);
-        formFile.Setup(l => l.FileName).Returns("test.pdf");
+        var formFile = Substitute.For<IFormFile>();
+        formFile.Length.Returns((long)int.MaxValue + 1);
+        formFile.FileName.Returns("test.pdf");
 
-        var action = async () => await fileService.SaveFileAsync(formFile.Object, Guid.Empty);
+        var action = async () => await fileService.SaveFileAsync(formFile, Guid.Empty);
 
         using (new AssertionScope())
         {
