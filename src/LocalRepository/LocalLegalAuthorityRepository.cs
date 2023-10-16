@@ -8,7 +8,7 @@ namespace Enfo.LocalRepository;
 public sealed class LocalLegalAuthorityRepository : ILegalAuthorityRepository
 {
     public Task<LegalAuthorityView> GetAsync(int id) =>
-        LegalAuthorityData.LegalAuthorities.Any(e => e.Id == id)
+        LegalAuthorityData.LegalAuthorities.Exists(e => e.Id == id)
             ? Task.FromResult(new LegalAuthorityView(
                 LegalAuthorityData.LegalAuthorities.SingleOrDefault(e => e.Id == id)!))
             : Task.FromResult(null as LegalAuthorityView);
@@ -32,7 +32,7 @@ public sealed class LocalLegalAuthorityRepository : ILegalAuthorityRepository
 
     public Task UpdateAsync(LegalAuthorityCommand resource)
     {
-        if (LegalAuthorityData.LegalAuthorities.All(e => e.Id != resource.Id))
+        if (!LegalAuthorityData.LegalAuthorities.Exists(e => e.Id == resource.Id))
             throw new ArgumentException($"ID ({resource.Id}) not found.", nameof(resource));
 
         var item = LegalAuthorityData.LegalAuthorities.Single(e => e.Id == resource.Id);
@@ -47,7 +47,7 @@ public sealed class LocalLegalAuthorityRepository : ILegalAuthorityRepository
 
     public Task UpdateStatusAsync(int id, bool newActiveStatus)
     {
-        if (LegalAuthorityData.LegalAuthorities.All(e => e.Id != id))
+        if (!LegalAuthorityData.LegalAuthorities.Exists(e => e.Id == id))
             throw new ArgumentException($"ID ({id}) not found.", nameof(id));
 
         var item = LegalAuthorityData.LegalAuthorities.Single(e => e.Id == id);
@@ -57,12 +57,10 @@ public sealed class LocalLegalAuthorityRepository : ILegalAuthorityRepository
     }
 
     public Task<bool> ExistsAsync(int id) =>
-        Task.FromResult(
-            LegalAuthorityData.LegalAuthorities.Any(e => e.Id == id));
+        Task.FromResult(LegalAuthorityData.LegalAuthorities.Exists(e => e.Id == id));
 
     public Task<bool> NameExistsAsync(string name) =>
-        Task.FromResult(
-            LegalAuthorityData.LegalAuthorities.Any(e => e.AuthorityName == name));
+        Task.FromResult(LegalAuthorityData.LegalAuthorities.Exists(e => e.AuthorityName == name));
 
     public void Dispose()
     {
