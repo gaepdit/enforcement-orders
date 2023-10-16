@@ -30,7 +30,7 @@ public class UpdateTests
             PostalCode = "00000",
         };
 
-        using var repository = new EpdContactRepository();
+        using var repository = new LocalEpdContactRepository();
 
         await repository.UpdateAsync(resource);
 
@@ -56,7 +56,7 @@ public class UpdateTests
             PostalCode = "00000",
         };
 
-        using var repository = new EpdContactRepository();
+        using var repository = new LocalEpdContactRepository();
 
         await repository.UpdateAsync(resource);
 
@@ -84,7 +84,7 @@ public class UpdateTests
 
         var action = async () =>
         {
-            using var repository = new EpdContactRepository();
+            using var repository = new LocalEpdContactRepository();
             await repository.UpdateAsync(resource);
         };
 
@@ -112,7 +112,7 @@ public class UpdateTests
 
         var action = async () =>
         {
-            using var repository = new EpdContactRepository();
+            using var repository = new LocalEpdContactRepository();
             await repository.UpdateAsync(resource);
         };
 

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Enfo.LocalRepository;
 
-public class FileService : IFileService
+public class InMemoryFileService : IFileService
 {
     public Task<byte[]> GetFileAsync(string fileName)
     {

@@ -30,7 +30,7 @@ public class ApiTests
             .AddInMemoryCollection(new Dictionary<string, string> { { "BaseUrl", baseUrl } })
             .Build();
 
-        using var repository = new EnforcementOrderRepository(Substitute.For<IFileService>());
+        using var repository = new LocalEnforcementOrderRepository(Substitute.For<IFileService>());
 
         var controller = new ApiController();
         var result = await controller.ListOrdersAsync(repository, config, new EnforcementOrderSpec(), 1, 100);
@@ -104,7 +104,7 @@ public class ApiTests
     [Test]
     public async Task ListAuthorities_ReturnsActiveItems()
     {
-        using var repository = new LegalAuthorityRepository();
+        using var repository = new LocalLegalAuthorityRepository();
 
         var controller = new ApiController();
         var response = await controller.ListLegalAuthoritiesAsync(repository);
@@ -114,7 +114,7 @@ public class ApiTests
     [Test]
     public async Task ListAuthorities_WithInactive_ReturnsAllItems()
     {
-        using var repository = new LegalAuthorityRepository();
+        using var repository = new LocalLegalAuthorityRepository();
 
         var controller = new ApiController();
         var response = await controller.ListLegalAuthoritiesAsync(repository, true);

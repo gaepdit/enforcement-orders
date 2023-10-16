@@ -25,7 +25,7 @@ public class AddAttachmentTests
         var initialCount = AttachmentData.Attachments.Count(a => a.EnforcementOrder.Id == orderId);
 
         // Act
-        using var repository = new EnforcementOrderRepository(Substitute.For<IFileService>());
+        using var repository = new LocalEnforcementOrderRepository(Substitute.For<IFileService>());
         await repository.AddAttachmentAsync(orderId, file);
 
         // Assert
@@ -49,7 +49,7 @@ public class AddAttachmentTests
 
         var action = async () =>
         {
-            using var repository = new EnforcementOrderRepository(Substitute.For<IFileService>());
+            using var repository = new LocalEnforcementOrderRepository(Substitute.For<IFileService>());
             await repository.AddAttachmentAsync(orderId, file);
         };
 
@@ -66,7 +66,7 @@ public class AddAttachmentTests
 
         var action = async () =>
         {
-            using var repository = new EnforcementOrderRepository(Substitute.For<IFileService>());
+            using var repository = new LocalEnforcementOrderRepository(Substitute.For<IFileService>());
             await repository.AddAttachmentAsync(orderId, file);
         };
 

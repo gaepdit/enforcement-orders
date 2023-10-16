@@ -19,7 +19,7 @@ public class CreateTests
     {
         var resource = new LegalAuthorityCommand { AuthorityName = "New Item" };
         var expectedId = LegalAuthorityData.LegalAuthorities.Max(e => e.Id) + 1;
-        var repository = new LegalAuthorityRepository();
+        var repository = new LocalLegalAuthorityRepository();
 
         var itemId = await repository.CreateAsync(resource);
 
@@ -41,7 +41,7 @@ public class CreateTests
 
         var action = async () =>
         {
-            using var repository = new LegalAuthorityRepository();
+            using var repository = new LocalLegalAuthorityRepository();
             await repository.CreateAsync(resource);
         };
 

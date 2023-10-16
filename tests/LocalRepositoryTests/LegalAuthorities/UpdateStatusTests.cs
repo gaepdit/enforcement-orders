@@ -15,7 +15,7 @@ public class UpdateStatusTests
     public async Task IfStatusChanged_Succeeds([Values] bool newActiveStatus)
     {
         var itemId = LegalAuthorityData.LegalAuthorities.First(e => e.Active != newActiveStatus).Id;
-        using var repository = new LegalAuthorityRepository();
+        using var repository = new LocalLegalAuthorityRepository();
 
         await repository.UpdateStatusAsync(itemId, newActiveStatus);
 
@@ -27,7 +27,7 @@ public class UpdateStatusTests
     public async Task IfStatusUnchanged_Succeeds([Values] bool newActiveStatus)
     {
         var itemId = LegalAuthorityData.LegalAuthorities.First(e => e.Active == newActiveStatus).Id;
-        using var repository = new LegalAuthorityRepository();
+        using var repository = new LocalLegalAuthorityRepository();
 
         await repository.UpdateStatusAsync(itemId, newActiveStatus);
 
@@ -42,7 +42,7 @@ public class UpdateStatusTests
 
         var action = async () =>
         {
-            using var repository = new LegalAuthorityRepository();
+            using var repository = new LocalLegalAuthorityRepository();
             await repository.UpdateStatusAsync(id, true);
         };
 

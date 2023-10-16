@@ -15,7 +15,7 @@ public class UpdateStatusTests
     public async Task IfStatusChanged_Succeeds([Values] bool newActiveStatus)
     {
         var itemId = EpdContactData.EpdContacts.First(e => e.Active != newActiveStatus).Id;
-        using var repository = new EpdContactRepository();
+        using var repository = new LocalEpdContactRepository();
 
         await repository.UpdateStatusAsync(itemId, newActiveStatus);
 
@@ -27,7 +27,7 @@ public class UpdateStatusTests
     public async Task IfStatusUnchanged_Succeeds([Values] bool newActiveStatus)
     {
         var itemId = EpdContactData.EpdContacts.First(e => e.Active == newActiveStatus).Id;
-        using var repository = new EpdContactRepository();
+        using var repository = new LocalEpdContactRepository();
 
         await repository.UpdateStatusAsync(itemId, newActiveStatus);
 
@@ -42,7 +42,7 @@ public class UpdateStatusTests
 
         var action = async () =>
         {
-            using var repository = new EpdContactRepository();
+            using var repository = new LocalEpdContactRepository();
             await repository.UpdateStatusAsync(id, true);
         };
 

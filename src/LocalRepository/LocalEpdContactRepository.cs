@@ -5,7 +5,7 @@ using EnfoTests.TestData;
 
 namespace Enfo.LocalRepository;
 
-public sealed class EpdContactRepository : IEpdContactRepository
+public sealed class LocalEpdContactRepository : IEpdContactRepository
 {
     public Task<EpdContactView> GetAsync(int id) =>
         EpdContactData.EpdContacts.Any(e => e.Id == id)

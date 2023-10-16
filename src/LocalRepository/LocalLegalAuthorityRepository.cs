@@ -5,7 +5,7 @@ using EnfoTests.TestData;
 
 namespace Enfo.LocalRepository;
 
-public sealed class LegalAuthorityRepository : ILegalAuthorityRepository
+public sealed class LocalLegalAuthorityRepository : ILegalAuthorityRepository
 {
     public Task<LegalAuthorityView> GetAsync(int id) =>
         LegalAuthorityData.LegalAuthorities.Any(e => e.Id == id)
