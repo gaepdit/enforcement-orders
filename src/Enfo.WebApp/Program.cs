@@ -21,8 +21,16 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Web;
 using Microsoft.OpenApi.Models;
 using Mindscape.Raygun4Net.AspNetCore;
+using System.Runtime.InteropServices;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Persist data protection keys
+var directory =
+    Directory.CreateDirectory(Path.Combine(builder.Configuration["PersistedFilesBasePath"]!, "DataProtectionKeys"));
+var dataProtectionBuilder = builder.Services.AddDataProtection().PersistKeysToFileSystem(directory);
+if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+    dataProtectionBuilder.ProtectKeysWithDpapi(protectToLocalMachine: true);
 
 // Bind Application Settings
 builder.Configuration.GetSection(ApplicationSettings.RaygunSettingsSection)
@@ -36,7 +44,7 @@ builder.Services
     .AddRoles<IdentityRole<Guid>>()
     .AddEntityFrameworkStores<EnfoDbContext>();
 
-// Configure authentication
+// Configure authentication/authorization
 var authenticationBuilder = builder.Services.AddAuthentication();
 
 if (!builder.Environment.IsLocalEnv() || ApplicationSettings.LocalDevSettings.UseAzureAd)
@@ -46,9 +54,6 @@ if (!builder.Environment.IsLocalEnv() || ApplicationSettings.LocalDevSettings.Us
     // Note: `cookieScheme: null` is mandatory. See https://github.com/AzureAD/microsoft-identity-web/issues/133#issuecomment-739550416
 }
 
-// Persist data protection keys
-var keysFolder = Path.Combine(builder.Configuration["PersistedFilesBasePath"], "DataProtectionKeys");
-builder.Services.AddDataProtection().PersistKeysToFileSystem(Directory.CreateDirectory(keysFolder));
 builder.Services.AddAuthorization();
 
 // Configure UI
@@ -89,8 +94,8 @@ if (builder.Environment.IsLocalEnv() && !ApplicationSettings.LocalDevSettings.Us
 }
 else
 {
-    builder.Services.AddTransient<IFileService, FileService>(_ => 
-    	new FileService(Path.Combine(builder.Configuration["PersistedFilesBasePath"], "Attachments")));
+    builder.Services.AddTransient<IFileService, FileService>(_ =>
+        new FileService(Path.Combine(builder.Configuration["PersistedFilesBasePath"]!, "Attachments")));
 }
 
 if (builder.Environment.IsLocalEnv())
