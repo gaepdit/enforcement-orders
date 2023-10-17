@@ -5,10 +5,10 @@ using EnfoTests.TestData;
 
 namespace Enfo.LocalRepository;
 
-public sealed class EpdContactRepository : IEpdContactRepository
+public sealed class LocalEpdContactRepository : IEpdContactRepository
 {
     public Task<EpdContactView> GetAsync(int id) =>
-        EpdContactData.EpdContacts.Any(e => e.Id == id)
+        EpdContactData.EpdContacts.Exists(e => e.Id == id)
             ? Task.FromResult(new EpdContactView(
                 EpdContactData.EpdContacts.SingleOrDefault(e => e.Id == id)!))
             : Task.FromResult(null as EpdContactView);
@@ -32,7 +32,7 @@ public sealed class EpdContactRepository : IEpdContactRepository
 
     public Task UpdateAsync(EpdContactCommand resource)
     {
-        if (EpdContactData.EpdContacts.All(e => e.Id != resource.Id))
+        if (!EpdContactData.EpdContacts.Exists(e => e.Id == resource.Id))
             throw new ArgumentException($"ID ({resource.Id}) not found.", nameof(resource));
 
         var item = EpdContactData.EpdContacts.Single(e => e.Id == resource.Id);
@@ -47,7 +47,7 @@ public sealed class EpdContactRepository : IEpdContactRepository
 
     public Task UpdateStatusAsync(int id, bool newActiveStatus)
     {
-        if (EpdContactData.EpdContacts.All(e => e.Id != id))
+        if (!EpdContactData.EpdContacts.Exists(e => e.Id == id))
             throw new ArgumentException($"ID ({id}) not found.", nameof(id));
 
         var item = EpdContactData.EpdContacts.Single(e => e.Id == id);
@@ -57,8 +57,7 @@ public sealed class EpdContactRepository : IEpdContactRepository
     }
 
     public Task<bool> ExistsAsync(int id) =>
-        Task.FromResult(
-            EpdContactData.EpdContacts.Any(e => e.Id == id));
+        Task.FromResult(EpdContactData.EpdContacts.Exists(e => e.Id == id));
 
     public void Dispose()
     {

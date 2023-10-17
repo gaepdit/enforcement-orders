@@ -6,6 +6,8 @@ using Enfo.Domain.Services;
 using Enfo.Domain.Users.Entities;
 using Enfo.Domain.Users.Services;
 using Enfo.Infrastructure.Contexts;
+using Enfo.Infrastructure.Repositories;
+using Enfo.Infrastructure.Services;
 using Enfo.LocalRepository;
 using Enfo.WebApp.Platform.Local;
 using Enfo.WebApp.Platform.Migrator;
@@ -19,7 +21,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Web;
 using Microsoft.OpenApi.Models;
 using Mindscape.Raygun4Net.AspNetCore;
-using FileService = Enfo.Infrastructure.Services.FileService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -82,6 +83,16 @@ builder.Services.AddRaygun(builder.Configuration,
 builder.Services.AddHttpContextAccessor(); // needed by RaygunScriptPartial
 
 // Configure the database contexts, data repositories, and services
+if (builder.Environment.IsLocalEnv() && !ApplicationSettings.LocalDevSettings.UseLocalFileSystem)
+{
+    builder.Services.AddTransient<IFileService, InMemoryFileService>();
+}
+else
+{
+    builder.Services.AddTransient<IFileService, FileService>(_ => 
+    	new FileService(Path.Combine(builder.Configuration["PersistedFilesBasePath"], "Attachments")));
+}
+
 if (builder.Environment.IsLocalEnv())
 {
     // When running locally, you have the option to build the database using LocalDB or InMemory.
@@ -99,40 +110,22 @@ if (builder.Environment.IsLocalEnv())
     }
 
     // Uses static data when running locally
-    builder.Services.AddScoped<IUserService, UserService>();
-    builder.Services.AddScoped<IEnforcementOrderRepository, EnforcementOrderRepository>();
-    builder.Services.AddScoped<IEpdContactRepository, EpdContactRepository>();
-    builder.Services.AddScoped<ILegalAuthorityRepository, LegalAuthorityRepository>();
-
-    if (ApplicationSettings.LocalDevSettings.UseLocalFileSystem)
-    {
-        builder.Services.AddTransient<IFileService,
-            FileService>(_ => new FileService(
-            Path.Combine(builder.Configuration["PersistedFilesBasePath"], "Attachments")));
-    }
-    else
-    {
-        builder.Services.AddTransient<IFileService, Enfo.LocalRepository.FileService>();
-    }
+    builder.Services.AddScoped<IUserService, InMemoryUserService>();
+    builder.Services.AddScoped<IEnforcementOrderRepository, LocalEnforcementOrderRepository>();
+    builder.Services.AddScoped<IEpdContactRepository, LocalEpdContactRepository>();
+    builder.Services.AddScoped<ILegalAuthorityRepository, LocalLegalAuthorityRepository>();
 }
 else
 {
     // When running on the server, requires a deployed database (configured in the app settings file)
     builder.Services.AddDbContext<EnfoDbContext>(opts =>
         opts.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
-            x => x.MigrationsAssembly("Infrastructure")));
+            options => options.MigrationsAssembly("Infrastructure")));
 
-    builder.Services.AddScoped<IUserService,
-        Enfo.Infrastructure.Services.UserService>();
-    builder.Services.AddTransient<IFileService,
-        FileService>(_ => new FileService(
-        Path.Combine(builder.Configuration["PersistedFilesBasePath"], "Attachments")));
-    builder.Services.AddScoped<IEnforcementOrderRepository,
-        Enfo.Infrastructure.Repositories.EnforcementOrderRepository>();
-    builder.Services.AddScoped<IEpdContactRepository,
-        Enfo.Infrastructure.Repositories.EpdContactRepository>();
-    builder.Services.AddScoped<ILegalAuthorityRepository,
-        Enfo.Infrastructure.Repositories.LegalAuthorityRepository>();
+    builder.Services.AddScoped<IUserService, UserService>();
+    builder.Services.AddScoped<IEnforcementOrderRepository, EnforcementOrderRepository>();
+    builder.Services.AddScoped<IEpdContactRepository, EpdContactRepository>();
+    builder.Services.AddScoped<ILegalAuthorityRepository, LegalAuthorityRepository>();
 }
 
 // Initialize database

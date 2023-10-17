@@ -7,12 +7,12 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Enfo.LocalRepository;
 
-public class UserService : IUserService
+public class InMemoryUserService : IUserService
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public UserService(UserManager<ApplicationUser> userManager, IHttpContextAccessor httpContextAccessor)
+    public InMemoryUserService(UserManager<ApplicationUser> userManager, IHttpContextAccessor httpContextAccessor)
     {
         _userManager = userManager;
         _httpContextAccessor = httpContextAccessor;

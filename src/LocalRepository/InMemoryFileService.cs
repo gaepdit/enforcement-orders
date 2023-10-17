@@ -4,13 +4,13 @@ using Microsoft.AspNetCore.Http;
 
 namespace Enfo.LocalRepository;
 
-public class FileService : IFileService
+public class InMemoryFileService : IFileService
 {
     public Task<byte[]> GetFileAsync(string fileName)
     {
         try
         {
-            if (AttachmentData.AttachmentFiles.All(e => e.FileName != fileName))
+            if (!AttachmentData.AttachmentFiles.Exists(e => e.FileName == fileName))
                 return Task.FromResult(Array.Empty<byte>());
 
             var base64EncodedFile = AttachmentData.AttachmentFiles

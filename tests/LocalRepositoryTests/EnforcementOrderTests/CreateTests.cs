@@ -37,7 +37,7 @@ public class CreateTests
         };
 
         var expectedId = EnforcementOrderData.EnforcementOrders.Max(e => e.Id) + 1;
-        using var repository = new EnforcementOrderRepository(Substitute.For<IFileService>());
+        using var repository = new LocalEnforcementOrderRepository(Substitute.For<IFileService>());
 
         var itemId = await repository.CreateAsync(resource);
 
@@ -74,7 +74,7 @@ public class CreateTests
 
         var action = async () =>
         {
-            using var repository = new EnforcementOrderRepository(Substitute.For<IFileService>());
+            using var repository = new LocalEnforcementOrderRepository(Substitute.For<IFileService>());
             await repository.CreateAsync(resource);
         };
 
@@ -102,7 +102,7 @@ public class CreateTests
             Attachment = new FormFile(Stream.Null, 0, 2, "test2", "test2.pdf"),
         };
 
-        using var repository = new EnforcementOrderRepository(Substitute.For<IFileService>());
+        using var repository = new LocalEnforcementOrderRepository(Substitute.For<IFileService>());
 
         // Act
         var itemId = await repository.CreateAsync(resource);

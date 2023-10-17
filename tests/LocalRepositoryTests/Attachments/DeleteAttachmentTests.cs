@@ -20,7 +20,7 @@ public class DeleteAttachmentTests
         var initialFileCount = AttachmentData.Attachments.Count;
         var attachment = AttachmentData.Attachments.First(a => !a.Deleted);
 
-        var repository = new EnforcementOrderRepository(Substitute.For<IFileService>());
+        var repository = new LocalEnforcementOrderRepository(Substitute.For<IFileService>());
         await repository.DeleteAttachmentAsync(attachment.EnforcementOrder.Id, attachment.Id);
 
         AttachmentData.Attachments.Count.Should().Be(initialFileCount);
@@ -43,7 +43,7 @@ public class DeleteAttachmentTests
 
         var action = async () =>
         {
-            var repository = new EnforcementOrderRepository(Substitute.For<IFileService>());
+            var repository = new LocalEnforcementOrderRepository(Substitute.For<IFileService>());
             await repository.DeleteAttachmentAsync(orderId, Guid.Empty);
         };
 
@@ -59,7 +59,7 @@ public class DeleteAttachmentTests
 
         var action = async () =>
         {
-            var repository = new EnforcementOrderRepository(Substitute.For<IFileService>());
+            var repository = new LocalEnforcementOrderRepository(Substitute.For<IFileService>());
             await repository.DeleteAttachmentAsync(orderId, Guid.Empty);
         };
 
@@ -76,7 +76,7 @@ public class DeleteAttachmentTests
 
         var action = async () =>
         {
-            var repository = new EnforcementOrderRepository(Substitute.For<IFileService>());
+            var repository = new LocalEnforcementOrderRepository(Substitute.For<IFileService>());
             await repository.DeleteAttachmentAsync(orderId, attachmentId);
         };
 
@@ -95,7 +95,7 @@ public class DeleteAttachmentTests
 
         var action = async () =>
         {
-            var repository = new EnforcementOrderRepository(Substitute.For<IFileService>());
+            var repository = new LocalEnforcementOrderRepository(Substitute.For<IFileService>());
             await repository.DeleteAttachmentAsync(orderId, attachment.Id);
         };
 

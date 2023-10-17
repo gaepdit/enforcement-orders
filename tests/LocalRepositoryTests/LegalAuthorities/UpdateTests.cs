@@ -17,7 +17,7 @@ public class UpdateTests
     {
         var itemId = LegalAuthorityData.LegalAuthorities.First(e => e.Active).Id;
         var resource = new LegalAuthorityCommand { Id = itemId, AuthorityName = "New Name" };
-        using var repository = new LegalAuthorityRepository();
+        using var repository = new LocalLegalAuthorityRepository();
 
         await repository.UpdateAsync(resource);
 
@@ -30,7 +30,7 @@ public class UpdateTests
     {
         var item = LegalAuthorityData.LegalAuthorities.First(e => e.Active);
         var resource = new LegalAuthorityCommand { Id = item.Id, AuthorityName = item.AuthorityName };
-        using var repository = new LegalAuthorityRepository();
+        using var repository = new LocalLegalAuthorityRepository();
 
         await repository.UpdateAsync(resource);
 
@@ -46,7 +46,7 @@ public class UpdateTests
 
         var action = async () =>
         {
-            using var repository = new LegalAuthorityRepository();
+            using var repository = new LocalLegalAuthorityRepository();
             await repository.UpdateAsync(resource);
         };
 
@@ -62,7 +62,7 @@ public class UpdateTests
 
         var action = async () =>
         {
-            using var repository = new LegalAuthorityRepository();
+            using var repository = new LocalLegalAuthorityRepository();
             await repository.UpdateAsync(resource);
         };
 

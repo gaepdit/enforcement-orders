@@ -10,11 +10,11 @@ using Microsoft.AspNetCore.Http;
 
 namespace Enfo.LocalRepository;
 
-public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
+public sealed class LocalEnforcementOrderRepository : IEnforcementOrderRepository
 {
     private readonly IFileService _fileService;
 
-    public EnforcementOrderRepository(IFileService fileService) =>
+    public LocalEnforcementOrderRepository(IFileService fileService) =>
         _fileService = fileService;
 
     public Task<EnforcementOrderDetailedView> GetAsync(int id)

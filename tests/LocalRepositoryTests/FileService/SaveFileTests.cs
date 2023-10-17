@@ -22,7 +22,7 @@ public class SaveFileTests
         var fileCount = AttachmentData.AttachmentFiles.Count;
         var id = Guid.NewGuid();
 
-        var fileService = new Enfo.LocalRepository.FileService();
+        var fileService = new Enfo.LocalRepository.InMemoryFileService();
         await fileService.SaveFileAsync(formFile, id);
 
         using (new AssertionScope())
@@ -43,7 +43,7 @@ public class SaveFileTests
         var id = Guid.NewGuid();
         var expectedFilename = $"{id.ToString()}.pdf";
 
-        var fileService = new Enfo.LocalRepository.FileService();
+        var fileService = new Enfo.LocalRepository.InMemoryFileService();
         await fileService.SaveFileAsync(formFile, id);
 
         using (new AssertionScope())
@@ -65,7 +65,7 @@ public class SaveFileTests
         var id = Guid.NewGuid();
         var expectedFilename = $"{id.ToString()}.pdf";
 
-        var fileService = new Enfo.LocalRepository.FileService();
+        var fileService = new Enfo.LocalRepository.InMemoryFileService();
         await fileService.SaveFileAsync(formFile, id);
 
         using (new AssertionScope())
@@ -79,7 +79,7 @@ public class SaveFileTests
     public async Task WhenFileIsTooLarge_ThrowsException()
     {
         var fileCount = AttachmentData.AttachmentFiles.Count;
-        var fileService = new Enfo.LocalRepository.FileService();
+        var fileService = new Enfo.LocalRepository.InMemoryFileService();
 
         var formFile = Substitute.For<IFormFile>();
         formFile.Length.Returns((long)int.MaxValue + 1);

@@ -31,7 +31,7 @@ public class CreateTests
         };
 
         var expectedId = EpdContactData.EpdContacts.Max(e => e.Id) + 1;
-        var repository = new EpdContactRepository();
+        var repository = new LocalEpdContactRepository();
 
         var itemId = await repository.CreateAsync(resource);
 
@@ -65,7 +65,7 @@ public class CreateTests
 
         var action = async () =>
         {
-            using var repository = new EpdContactRepository();
+            using var repository = new LocalEpdContactRepository();
             await repository.CreateAsync(resource);
         };
 
@@ -91,7 +91,7 @@ public class CreateTests
 
         var action = async () =>
         {
-            using var repository = new EpdContactRepository();
+            using var repository = new LocalEpdContactRepository();
             await repository.CreateAsync(resource);
         };
 
@@ -118,7 +118,7 @@ public class CreateTests
 
         var action = async () =>
         {
-            using var repository = new EpdContactRepository();
+            using var repository = new LocalEpdContactRepository();
             await repository.CreateAsync(resource);
         };
 
@@ -145,7 +145,7 @@ public class CreateTests
 
         var action = async () =>
         {
-            using var repository = new EpdContactRepository();
+            using var repository = new LocalEpdContactRepository();
             await repository.CreateAsync(resource);
         };
 
@@ -172,7 +172,7 @@ public class CreateTests
 
         var action = async () =>
         {
-            using var repository = new EpdContactRepository();
+            using var repository = new LocalEpdContactRepository();
             await repository.CreateAsync(resource);
         };
 

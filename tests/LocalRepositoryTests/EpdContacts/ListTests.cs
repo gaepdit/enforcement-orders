@@ -13,7 +13,7 @@ public class ListTests
     [Test]
     public async Task ByDefault_ReturnsOnlyActive()
     {
-        using var repository = new EpdContactRepository();
+        using var repository = new LocalEpdContactRepository();
         var result = await repository.ListAsync();
         result.Should().BeEquivalentTo(EpdContactData.EpdContacts.Where(e => e.Active));
     }
@@ -21,7 +21,7 @@ public class ListTests
     [Test]
     public async Task IfIncludeAll_ReturnsAll()
     {
-        using var repository = new EpdContactRepository();
+        using var repository = new LocalEpdContactRepository();
         var result = await repository.ListAsync(true);
         result.Should().BeEquivalentTo(EpdContactData.EpdContacts);
     }
