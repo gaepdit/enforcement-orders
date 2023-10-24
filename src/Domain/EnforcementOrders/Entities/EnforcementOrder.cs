@@ -2,7 +2,6 @@ using Enfo.Domain.BaseEntities;
 using Enfo.Domain.EnforcementOrders.Resources;
 using Enfo.Domain.EpdContacts.Entities;
 using Enfo.Domain.LegalAuthorities.Entities;
-using Enfo.Domain.Utils;
 
 namespace Enfo.Domain.EnforcementOrders.Entities;
 
@@ -12,21 +11,21 @@ public class EnforcementOrder : IdentifiedEntity, IAuditable
 
     public EnforcementOrder(EnforcementOrderCreate resource)
     {
-        Guard.NotNull(resource, nameof(resource));
+        Guard.NotNull(resource);
 
-        Cause = Guard.NotNullOrWhiteSpace(resource.Cause, nameof(resource.Cause));
+        Cause = Guard.NotNullOrWhiteSpace(resource.Cause);
         CommentContactId = resource.CreateAs == NewEnforcementOrderType.Proposed
             ? resource.CommentContactId
             : null;
         CommentPeriodClosesDate = resource.CreateAs == NewEnforcementOrderType.Proposed
             ? resource.CommentPeriodClosesDate
             : null;
-        County = Guard.NotNullOrWhiteSpace(resource.County, nameof(resource.County));
+        County = Guard.NotNullOrWhiteSpace(resource.County);
         ExecutedDate = resource.CreateAs == NewEnforcementOrderType.Executed ? resource.ExecutedDate : null;
         ExecutedOrderPostedDate = resource.CreateAs == NewEnforcementOrderType.Executed
             ? resource.ExecutedOrderPostedDate
             : null;
-        FacilityName = Guard.NotNullOrWhiteSpace(resource.FacilityName, nameof(resource.FacilityName));
+        FacilityName = Guard.NotNullOrWhiteSpace(resource.FacilityName);
         HearingCommentPeriodClosesDate =
             resource.IsHearingScheduled ? resource.HearingCommentPeriodClosesDate : null;
         HearingContactId = resource.IsHearingScheduled ? resource.HearingContactId : null;
@@ -36,7 +35,7 @@ public class EnforcementOrder : IdentifiedEntity, IAuditable
         IsHearingScheduled = resource.IsHearingScheduled;
         IsProposedOrder = resource.CreateAs == NewEnforcementOrderType.Proposed;
         LegalAuthorityId = resource.LegalAuthorityId ?? 0;
-        OrderNumber = Guard.NotNullOrWhiteSpace(resource.OrderNumber, nameof(resource.OrderNumber));
+        OrderNumber = Guard.NotNullOrWhiteSpace(resource.OrderNumber);
         ProposedOrderPostedDate = resource.CreateAs == NewEnforcementOrderType.Proposed
             ? resource.ProposedOrderPostedDate
             : null;
@@ -154,16 +153,16 @@ public class EnforcementOrder : IdentifiedEntity, IAuditable
 
     public void ApplyUpdate(EnforcementOrderUpdate resource)
     {
-        Guard.NotNull(resource, nameof(resource));
+        Guard.NotNull(resource);
 
         resource.TrimAll();
-        Cause = Guard.NotNullOrWhiteSpace(resource.Cause, nameof(resource.Cause));
+        Cause = Guard.NotNullOrWhiteSpace(resource.Cause);
         CommentContactId = IsProposedOrder ? resource.CommentContactId : null;
         CommentPeriodClosesDate = IsProposedOrder ? resource.CommentPeriodClosesDate : null;
-        County = Guard.NotNullOrWhiteSpace(resource.County, nameof(resource.County));
+        County = Guard.NotNullOrWhiteSpace(resource.County);
         ExecutedDate = resource.IsExecutedOrder ? resource.ExecutedDate : null;
         ExecutedOrderPostedDate = resource.IsExecutedOrder ? resource.ExecutedOrderPostedDate : null;
-        FacilityName = Guard.NotNullOrWhiteSpace(resource.FacilityName, nameof(resource.FacilityName));
+        FacilityName = Guard.NotNullOrWhiteSpace(resource.FacilityName);
         HearingCommentPeriodClosesDate =
             resource.IsHearingScheduled ? resource.HearingCommentPeriodClosesDate : null;
         HearingContactId = resource.IsHearingScheduled ? resource.HearingContactId : null;
@@ -173,7 +172,7 @@ public class EnforcementOrder : IdentifiedEntity, IAuditable
         IsExecutedOrder = resource.IsExecutedOrder;
         IsHearingScheduled = resource.IsHearingScheduled;
         LegalAuthorityId = resource.LegalAuthorityId;
-        OrderNumber = Guard.NotNullOrWhiteSpace(resource.OrderNumber, nameof(resource.OrderNumber));
+        OrderNumber = Guard.NotNullOrWhiteSpace(resource.OrderNumber);
         ProposedOrderPostedDate = IsProposedOrder ? resource.ProposedOrderPostedDate : null;
         PublicationStatus = GetEntityPublicationProgress(resource.Progress);
         Requirements = resource.Requirements;

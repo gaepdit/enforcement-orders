@@ -44,8 +44,8 @@ public class AttachmentTests
         const string expectedFileContents = "Hello world!";
         var encoder = new UTF8Encoding();
         var expectedFile = encoder.GetBytes(expectedFileContents);
-        var fileService = Substitute.For<IFileService>();
-        fileService.GetFileAsync(Arg.Any<string>()).Returns(expectedFile);
+        var fileService = Substitute.For<IAttachmentStore>();
+        fileService.GetFileAttachmentAsync(Arg.Any<string>()).Returns(expectedFile);
 
         // Act
         var page = new Attachment(repo, fileService) { PageContext = pageContext };
@@ -168,8 +168,8 @@ public class AttachmentTests
         var repo = Substitute.For<IEnforcementOrderRepository>();
         repo.GetAttachmentAsync(Arg.Any<Guid>()).Returns(view);
 
-        var fileService = Substitute.For<IFileService>();
-        fileService.GetFileAsync(Arg.Any<string>()).Returns(Array.Empty<byte>());
+        var fileService = Substitute.For<IAttachmentStore>();
+        fileService.GetFileAttachmentAsync(Arg.Any<string>()).Returns(Array.Empty<byte>());
 
         var page = new Attachment(repo, fileService) { PageContext = pageContext };
         var response = await page.OnGetAsync(Guid.Empty, view.FileName);

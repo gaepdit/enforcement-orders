@@ -8,7 +8,7 @@ public class EnforcementOrderDetailedView : EnforcementOrderSummaryView
 {
     public EnforcementOrderDetailedView([NotNull] EnforcementOrder item) : base(item)
     {
-        Guard.NotNull(item, nameof(item));
+        Guard.NotNull(item);
 
         Cause = item.Cause;
         Requirements = item.Requirements;

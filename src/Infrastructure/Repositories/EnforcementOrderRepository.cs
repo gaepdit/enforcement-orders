@@ -6,6 +6,7 @@ using Enfo.Domain.Pagination;
 using Enfo.Domain.Services;
 using Enfo.Domain.Utils;
 using Enfo.Infrastructure.Contexts;
+using GaEpd.GuardClauses;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,13 +15,13 @@ namespace Enfo.Infrastructure.Repositories;
 public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
 {
     private readonly EnfoDbContext _context;
-    private readonly IFileService _fileService;
+    private readonly IAttachmentStore _attachmentStore;
     private readonly IErrorLogger _errorLogger;
 
-    public EnforcementOrderRepository(EnfoDbContext context, IFileService fileService, IErrorLogger errorLogger)
+    public EnforcementOrderRepository(EnfoDbContext context, IAttachmentStore attachmentStore, IErrorLogger errorLogger)
     {
         _context = context;
-        _fileService = fileService;
+        _attachmentStore = attachmentStore;
         _errorLogger = errorLogger;
     }
 
@@ -61,8 +62,8 @@ public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
     public async Task<PaginatedResult<EnforcementOrderSummaryView>> ListAsync(
         EnforcementOrderSpec spec, PaginationSpec paging)
     {
-        Guard.NotNull(spec, nameof(spec));
-        Guard.NotNull(paging, nameof(paging));
+        Guard.NotNull(spec);
+        Guard.NotNull(paging);
 
         var filteredItems = _context.EnforcementOrders.AsNoTracking()
             .ApplySpecFilter(spec);
@@ -82,8 +83,8 @@ public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
     public async Task<PaginatedResult<EnforcementOrderDetailedView>> ListDetailedAsync(
         EnforcementOrderSpec spec, PaginationSpec paging)
     {
-        Guard.NotNull(spec, nameof(spec));
-        Guard.NotNull(paging, nameof(paging));
+        Guard.NotNull(spec);
+        Guard.NotNull(paging);
 
         var filteredItems = _context.EnforcementOrders.AsNoTracking()
             .ApplySpecFilter(spec);
@@ -106,8 +107,8 @@ public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
     public async Task<PaginatedResult<EnforcementOrderAdminSummaryView>> ListAdminAsync(
         EnforcementOrderAdminSpec spec, PaginationSpec paging)
     {
-        Guard.NotNull(spec, nameof(spec));
-        Guard.NotNull(paging, nameof(paging));
+        Guard.NotNull(spec);
+        Guard.NotNull(paging);
 
         var filteredItems = _context.EnforcementOrders.AsNoTracking()
             .ApplyAdminSpecFilter(spec);
@@ -194,7 +195,7 @@ public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
 
     public async Task UpdateAsync(EnforcementOrderUpdate resource)
     {
-        Guard.NotNull(resource, nameof(resource));
+        Guard.NotNull(resource);
 
         var item = await _context.EnforcementOrders.FindAsync(resource.Id).ConfigureAwait(false)
             ?? throw new ArgumentException($"ID ({resource.Id}) not found.", nameof(resource));
@@ -209,8 +210,8 @@ public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
     public async Task AddAttachmentAsync(int orderId, IFormFile file)
     {
         var order = await _context.EnforcementOrders
-            .Include(e => e.Attachments)
-            .SingleOrDefaultAsync(e => e.Id == orderId).ConfigureAwait(false)
+                .Include(e => e.Attachments)
+                .SingleOrDefaultAsync(e => e.Id == orderId).ConfigureAwait(false)
             ?? throw new ArgumentException($"Order ID {orderId} does not exist.", nameof(orderId));
 
         if (order.Deleted)
@@ -235,7 +236,7 @@ public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
             EnforcementOrder = order,
         };
 
-        await _fileService.SaveFileAsync(file, attachmentId);
+        await _attachmentStore.SaveFileAttachmentAsync(file, attachmentId);
         await _context.Attachments.AddAsync(attachment).ConfigureAwait(false);
         await _context.SaveChangesAsync().ConfigureAwait(false);
     }
@@ -243,15 +244,15 @@ public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
     public async Task DeleteAttachmentAsync(int orderId, Guid attachmentId)
     {
         var order = await _context.EnforcementOrders.AsNoTracking()
-            .SingleOrDefaultAsync(e => e.Id == orderId).ConfigureAwait(false)
+                .SingleOrDefaultAsync(e => e.Id == orderId).ConfigureAwait(false)
             ?? throw new ArgumentException($"Order ID {orderId} does not exist.", nameof(orderId));
 
         if (order.Deleted)
             throw new ArgumentException($"Order ID {orderId} has been deleted and cannot be edited.", nameof(orderId));
 
         var attachment = await _context.Attachments
-            .Include(a => a.EnforcementOrder)
-            .SingleOrDefaultAsync(a => a.Id == attachmentId).ConfigureAwait(false)
+                .Include(a => a.EnforcementOrder)
+                .SingleOrDefaultAsync(a => a.Id == attachmentId).ConfigureAwait(false)
             ?? throw new ArgumentException($"Attachment ID {attachmentId} does not exist.", nameof(attachmentId));
 
         if (attachment.EnforcementOrder.Id != orderId)
@@ -264,7 +265,7 @@ public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
 
         try
         {
-            _fileService.TryDeleteFile(attachment.AttachmentFileName);
+            await _attachmentStore.TryDeleteFileAttachmentAsync(attachment.AttachmentFileName);
         }
         catch (Exception e)
         {

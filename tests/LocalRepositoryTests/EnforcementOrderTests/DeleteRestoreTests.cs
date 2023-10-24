@@ -1,4 +1,4 @@
-﻿using Enfo.Domain.Services;
+using Enfo.Domain.Services;
 using Enfo.LocalRepository;
 using EnfoTests.TestData;
 using FluentAssertions;
@@ -17,7 +17,7 @@ public class DeleteRestoreTests
     public async Task Delete_Succeeds([Values] bool alreadyDeleted)
     {
         var itemId = EnforcementOrderData.EnforcementOrders.First(e => e.Deleted == alreadyDeleted).Id;
-        using var repository = new LocalEnforcementOrderRepository(Substitute.For<IFileService>());
+        using var repository = new LocalEnforcementOrderRepository(Substitute.For<IAttachmentStore>());
 
         await repository.DeleteAsync(itemId);
 
@@ -29,7 +29,7 @@ public class DeleteRestoreTests
     public async Task Restore_Succeeds([Values] bool alreadyDeleted)
     {
         var itemId = EnforcementOrderData.EnforcementOrders.First(e => e.Deleted == alreadyDeleted).Id;
-        using var repository = new LocalEnforcementOrderRepository(Substitute.For<IFileService>());
+        using var repository = new LocalEnforcementOrderRepository(Substitute.For<IAttachmentStore>());
 
         await repository.RestoreAsync(itemId);
 
@@ -44,7 +44,7 @@ public class DeleteRestoreTests
 
         var action = async () =>
         {
-            using var repository = new LocalEnforcementOrderRepository(Substitute.For<IFileService>());
+            using var repository = new LocalEnforcementOrderRepository(Substitute.For<IAttachmentStore>());
             await repository.DeleteAsync(id);
         };
 
@@ -59,7 +59,7 @@ public class DeleteRestoreTests
 
         var action = async () =>
         {
-            using var repository = new LocalEnforcementOrderRepository(Substitute.For<IFileService>());
+            using var repository = new LocalEnforcementOrderRepository(Substitute.For<IAttachmentStore>());
             await repository.RestoreAsync(id);
         };
 

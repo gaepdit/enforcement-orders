@@ -1,4 +1,4 @@
-﻿using Enfo.Domain.EnforcementOrders.Entities;
+using Enfo.Domain.EnforcementOrders.Entities;
 using Enfo.Domain.EnforcementOrders.Resources;
 using Enfo.Domain.Services;
 using Enfo.LocalRepository;
@@ -19,7 +19,7 @@ public class ListReportsTests
     [Test]
     public async Task ListCurrentProposedEnforcementOrders_ReturnsCorrectList()
     {
-        using var repository = new LocalEnforcementOrderRepository(Substitute.For<IFileService>());
+        using var repository = new LocalEnforcementOrderRepository(Substitute.For<IAttachmentStore>());
 
         var result = await repository.ListCurrentProposedEnforcementOrdersAsync();
 
@@ -36,7 +36,7 @@ public class ListReportsTests
     [Test]
     public async Task ListRecentlyExecutedEnforcementOrders_ReturnsCorrectList()
     {
-        using var repository = new LocalEnforcementOrderRepository(Substitute.For<IFileService>());
+        using var repository = new LocalEnforcementOrderRepository(Substitute.For<IAttachmentStore>());
 
         var result = await repository.ListRecentlyExecutedEnforcementOrdersAsync();
 
@@ -53,7 +53,7 @@ public class ListReportsTests
     [Test]
     public async Task ListDraftEnforcementOrders_ReturnsCorrectList()
     {
-        using var repository = new LocalEnforcementOrderRepository(Substitute.For<IFileService>());
+        using var repository = new LocalEnforcementOrderRepository(Substitute.For<IAttachmentStore>());
 
         var result = await repository.ListDraftEnforcementOrdersAsync();
 
@@ -69,7 +69,7 @@ public class ListReportsTests
     [Test]
     public async Task ListPendingEnforcementOrders_ReturnsCorrectList()
     {
-        using var repository = new LocalEnforcementOrderRepository(Substitute.For<IFileService>());
+        using var repository = new LocalEnforcementOrderRepository(Substitute.For<IAttachmentStore>());
 
         var result = await repository.ListPendingEnforcementOrdersAsync();
 

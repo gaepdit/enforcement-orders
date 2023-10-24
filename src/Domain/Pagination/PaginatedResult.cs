@@ -1,14 +1,12 @@
-﻿using Enfo.Domain.Utils;
-
-namespace Enfo.Domain.Pagination;
+﻿namespace Enfo.Domain.Pagination;
 
 public class PaginatedResult<T> : IPaginatedResult
 {
     public PaginatedResult([NotNull] IEnumerable<T> items, int totalCount, [NotNull] PaginationSpec paging)
     {
-        Guard.NotNull(paging, nameof(paging));
+        Guard.NotNull(paging);
 
-        TotalCount = Guard.NotNegative(totalCount, nameof(totalCount));
+        TotalCount = Guard.NotNegative(totalCount);
         PageNumber = paging.PageNumber;
         PageSize = paging.PageSize;
 

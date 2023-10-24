@@ -1,12 +1,12 @@
-﻿using Enfo.Domain.Utils;
+﻿using Enfo.Domain.LegalAuthorities.Entities;
 
 namespace Enfo.Domain.LegalAuthorities.Resources;
 
 public class LegalAuthorityView
 {
-    public LegalAuthorityView([NotNull] Entities.LegalAuthority item)
+    public LegalAuthorityView([NotNull] LegalAuthority item)
     {
-        Guard.NotNull(item, nameof(item));
+        Guard.NotNull(item);
 
         Id = item.Id;
         Active = item.Active;

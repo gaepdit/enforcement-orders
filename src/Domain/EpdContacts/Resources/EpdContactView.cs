@@ -1,12 +1,13 @@
-﻿using Enfo.Domain.Utils;
+﻿using Enfo.Domain.EpdContacts.Entities;
+using Enfo.Domain.Utils;
 
 namespace Enfo.Domain.EpdContacts.Resources;
 
 public class EpdContactView
 {
-    public EpdContactView([NotNull] Entities.EpdContact item)
+    public EpdContactView([NotNull] EpdContact item)
     {
-        Guard.NotNull(item, nameof(item));
+        Guard.NotNull(item);
 
         Id = item.Id;
         Active = item.Active;

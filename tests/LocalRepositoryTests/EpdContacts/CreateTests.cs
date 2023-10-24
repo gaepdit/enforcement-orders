@@ -69,8 +69,7 @@ public class CreateTests
             await repository.CreateAsync(resource);
         };
 
-        (await action.Should().ThrowAsync<ArgumentException>())
-            .And.ParamName.Should().Be(nameof(EpdContactCommand.ContactName));
+        await action.Should().ThrowAsync<ArgumentException>();
     }
 
     [Test]
@@ -95,9 +94,7 @@ public class CreateTests
             await repository.CreateAsync(resource);
         };
 
-        (await action.Should().ThrowAsync<ArgumentException>())
-            .WithMessage($"Value ({resource.Email}) is not valid. (Parameter '{nameof(resource.Email)}')")
-            .And.ParamName.Should().Be(nameof(resource.Email));
+        await action.Should().ThrowAsync<ArgumentException>();
     }
 
     [Test]
@@ -122,9 +119,7 @@ public class CreateTests
             await repository.CreateAsync(resource);
         };
 
-        (await action.Should().ThrowAsync<ArgumentException>())
-            .WithMessage($"Value ({resource.Telephone}) is not valid. (Parameter '{nameof(resource.Telephone)}')")
-            .And.ParamName.Should().Be(nameof(resource.Telephone));
+        await action.Should().ThrowAsync<ArgumentException>();
     }
 
     [Test]
@@ -149,9 +144,7 @@ public class CreateTests
             await repository.CreateAsync(resource);
         };
 
-        (await action.Should().ThrowAsync<ArgumentException>())
-            .WithMessage($"Value cannot be null. (Parameter '{nameof(resource.Street)}')")
-            .And.ParamName.Should().Be(nameof(resource.Street));
+        await action.Should().ThrowAsync<ArgumentException>();
     }
 
     [Test]
@@ -176,8 +169,6 @@ public class CreateTests
             await repository.CreateAsync(resource);
         };
 
-        (await action.Should().ThrowAsync<ArgumentException>())
-            .WithMessage($"Value ({resource.PostalCode}) is not valid. (Parameter '{nameof(resource.PostalCode)}')")
-            .And.ParamName.Should().Be(nameof(resource.PostalCode));
+        await action.Should().ThrowAsync<ArgumentException>();
     }
 }

@@ -1,4 +1,4 @@
-﻿using Enfo.Domain.EnforcementOrders.Resources;
+using Enfo.Domain.EnforcementOrders.Resources;
 using Enfo.Domain.EnforcementOrders.Specs;
 using Enfo.Domain.Pagination;
 using Enfo.Domain.Services;
@@ -20,7 +20,7 @@ public class ListAdminTests
     [Test]
     public async Task ByDefault_ReturnsNonDeleted()
     {
-        using var repository = new LocalEnforcementOrderRepository(Substitute.For<IFileService>());
+        using var repository = new LocalEnforcementOrderRepository(Substitute.For<IAttachmentStore>());
 
         var result = await repository.ListAdminAsync(new EnforcementOrderAdminSpec(), new PaginationSpec(1, 50));
 
@@ -41,7 +41,7 @@ public class ListAdminTests
     public async Task WithShowDeletedSpec_ReturnsOnlyDeleted()
     {
         var spec = new EnforcementOrderAdminSpec { ShowDeleted = true };
-        using var repository = new LocalEnforcementOrderRepository(Substitute.For<IFileService>());
+        using var repository = new LocalEnforcementOrderRepository(Substitute.For<IAttachmentStore>());
 
         var result = await repository.ListAdminAsync(spec, new PaginationSpec(1, 50));
 
@@ -65,7 +65,7 @@ public class ListAdminTests
         {
             Facility = EnforcementOrderData.EnforcementOrders.First(e => !e.Deleted).FacilityName,
         };
-        using var repository = new LocalEnforcementOrderRepository(Substitute.For<IFileService>());
+        using var repository = new LocalEnforcementOrderRepository(Substitute.For<IAttachmentStore>());
 
         var result = await repository.ListAdminAsync(spec, new PaginationSpec(1, 50));
 
@@ -90,7 +90,7 @@ public class ListAdminTests
         {
             Facility = "None",
         };
-        using var repository = new LocalEnforcementOrderRepository(Substitute.For<IFileService>());
+        using var repository = new LocalEnforcementOrderRepository(Substitute.For<IAttachmentStore>());
 
         var result = await repository.ListAdminAsync(spec, new PaginationSpec(1, 50));
 
@@ -109,7 +109,7 @@ public class ListAdminTests
         {
             Text = EnforcementOrderData.EnforcementOrders.First(e => !e.Deleted).Cause[..4].ToLowerInvariant(),
         };
-        using var repository = new LocalEnforcementOrderRepository(Substitute.For<IFileService>());
+        using var repository = new LocalEnforcementOrderRepository(Substitute.For<IAttachmentStore>());
 
         var result = await repository.ListAdminAsync(spec, new PaginationSpec(1, 50));
 

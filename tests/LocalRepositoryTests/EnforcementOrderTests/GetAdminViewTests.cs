@@ -1,4 +1,4 @@
-﻿using Enfo.Domain.Services;
+using Enfo.Domain.Services;
 using Enfo.LocalRepository;
 using EnfoTests.TestData;
 using FluentAssertions;
@@ -15,7 +15,7 @@ public class GetAdminViewTests
     [Test]
     public async Task WhenItemExistsAndIsPublic_ReturnsItem()
     {
-        using var repository = new LocalEnforcementOrderRepository(Substitute.For<IFileService>());
+        using var repository = new LocalEnforcementOrderRepository(Substitute.For<IAttachmentStore>());
         var itemId = EnforcementOrderData.EnforcementOrders.First(e => e.GetIsPublic).Id;
 
         var result = await repository.GetAdminViewAsync(itemId);
@@ -27,7 +27,7 @@ public class GetAdminViewTests
     [Test]
     public async Task WhenNotExists_ReturnsNull()
     {
-        using var repository = new LocalEnforcementOrderRepository(Substitute.For<IFileService>());
+        using var repository = new LocalEnforcementOrderRepository(Substitute.For<IAttachmentStore>());
         var result = await repository.GetAsync(-1);
         result.Should().BeNull();
     }
@@ -35,7 +35,7 @@ public class GetAdminViewTests
     [Test]
     public async Task WhenItemExistsButIsNotPublic_ReturnsItem()
     {
-        using var repository = new LocalEnforcementOrderRepository(Substitute.For<IFileService>());
+        using var repository = new LocalEnforcementOrderRepository(Substitute.For<IAttachmentStore>());
         var itemId = EnforcementOrderData.EnforcementOrders.First(e => !e.GetIsPublic).Id;
 
         var result = await repository.GetAdminViewAsync(itemId);

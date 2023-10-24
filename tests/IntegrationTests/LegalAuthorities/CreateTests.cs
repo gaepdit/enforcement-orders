@@ -38,7 +38,6 @@ public class CreateTests
             await repository.CreateAsync(resource);
         };
 
-        (await action.Should().ThrowAsync<ArgumentException>())
-            .And.ParamName.Should().Be(nameof(LegalAuthorityCommand.AuthorityName));
+        await action.Should().ThrowAsync<ArgumentException>();
     }
 }
