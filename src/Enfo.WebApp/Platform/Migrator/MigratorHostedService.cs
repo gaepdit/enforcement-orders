@@ -26,12 +26,13 @@ public class MigratorHostedService : IHostedService
 
         var env = scope.ServiceProvider.GetRequiredService<IWebHostEnvironment>();
 
-        // Initialize database.
+        // Initialize database and file store.
         if (env.IsLocalEnv())
         {
             // Delete and re-create database as currently defined.
             await context.Database.EnsureDeletedAsync(cancellationToken);
             await context.Database.EnsureCreatedAsync(cancellationToken);
+            await SeedFileStore(scope, cancellationToken);
         }
         else
         {
@@ -45,6 +46,10 @@ public class MigratorHostedService : IHostedService
             if (!await context.Roles.AnyAsync(e => e.Name == role, cancellationToken))
                 await roleManager.CreateAsync(new IdentityRole<Guid>(role));
 
+    }
+
+    private static async Task SeedFileStore(IServiceScope scope, CancellationToken cancellationToken)
+    {
         // Initialize the attachments store
         var fileService = scope.ServiceProvider.GetRequiredService<IFileService>();
         foreach (var attachment in AttachmentData.GetAttachmentFiles())
