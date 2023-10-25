@@ -8,7 +8,7 @@ public class EnforcementOrderAdminView : EnforcementOrderAdminSummaryView
 {
     public EnforcementOrderAdminView([NotNull] EnforcementOrder item) : base(item)
     {
-        Guard.NotNull(item, nameof(item));
+        Guard.NotNull(item);
 
         PublicationStatus = GetResourcePublicationState(item.PublicationStatus);
         Cause = item.Cause;
@@ -26,7 +26,7 @@ public class EnforcementOrderAdminView : EnforcementOrderAdminSummaryView
         ExecutedOrderPostedDate = item.ExecutedOrderPostedDate;
         Attachments = item.Attachments?
                 .Where(a => !a.Deleted)
-                .Select(a => new AttachmentView(a)).ToList() 
+                .Select(a => new AttachmentView(a)).ToList()
             ?? new List<AttachmentView>();
     }
 

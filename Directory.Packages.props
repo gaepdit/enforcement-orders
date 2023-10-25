@@ -3,8 +3,12 @@
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
   <ItemGroup>
+    <PackageVersion Include="Azure.Identity" Version="1.10.3" />
+    <PackageVersion Include="Azure.Storage.Blobs" Version="12.18.0" />
     <PackageVersion Include="FluentValidation.AspNetCore" Version="11.3.0" />
     <PackageVersion Include="FluentValidation" Version="11.7.1" />
+    <PackageVersion Include="GaEpd.FileService" Version="1.0.0" />
+    <PackageVersion Include="GaEpd.GuardClauses" Version="1.0.0" />
     <PackageVersion Include="JetBrains.Annotations" Version="2023.2.0" />
     <PackageVersion Include="LigerShark.WebOptimizer.Core" Version="3.0.386" />
     <PackageVersion Include="Microsoft.AspNetCore.Http" Version="2.2.2" />

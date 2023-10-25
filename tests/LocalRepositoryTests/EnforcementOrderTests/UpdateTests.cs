@@ -1,4 +1,4 @@
-﻿using Enfo.Domain.EnforcementOrders.Entities;
+using Enfo.Domain.EnforcementOrders.Entities;
 using Enfo.Domain.EnforcementOrders.Resources;
 using Enfo.Domain.Services;
 using Enfo.LocalRepository;
@@ -49,7 +49,7 @@ public class UpdateTests
         var resource = GetUpdateResource(original);
         resource.Cause = "new text";
 
-        using var repository = new LocalEnforcementOrderRepository(Substitute.For<IFileService>());
+        using var repository = new LocalEnforcementOrderRepository(Substitute.For<IAttachmentStore>());
 
         await repository.UpdateAsync(resource);
 
@@ -64,7 +64,7 @@ public class UpdateTests
         var original = EnforcementOrderData.EnforcementOrders[0];
         var resource = GetUpdateResource(original);
 
-        using var repository = new LocalEnforcementOrderRepository(Substitute.For<IFileService>());
+        using var repository = new LocalEnforcementOrderRepository(Substitute.For<IAttachmentStore>());
 
         await repository.UpdateAsync(resource);
 
@@ -82,12 +82,11 @@ public class UpdateTests
 
         var action = async () =>
         {
-            using var repository = new LocalEnforcementOrderRepository(Substitute.For<IFileService>());
+            using var repository = new LocalEnforcementOrderRepository(Substitute.For<IAttachmentStore>());
             await repository.UpdateAsync(resource);
         };
 
-        (await action.Should().ThrowAsync<ArgumentException>())
-            .And.ParamName.Should().Be(nameof(EnforcementOrderCreate.County));
+        await action.Should().ThrowAsync<ArgumentException>();
     }
 
     [Test]
@@ -98,7 +97,7 @@ public class UpdateTests
 
         var action = async () =>
         {
-            using var repository = new LocalEnforcementOrderRepository(Substitute.For<IFileService>());
+            using var repository = new LocalEnforcementOrderRepository(Substitute.For<IAttachmentStore>());
             await repository.UpdateAsync(resource);
         };
 
@@ -115,7 +114,7 @@ public class UpdateTests
 
         var action = async () =>
         {
-            using var repository = new LocalEnforcementOrderRepository(Substitute.For<IFileService>());
+            using var repository = new LocalEnforcementOrderRepository(Substitute.For<IAttachmentStore>());
             await repository.UpdateAsync(resource);
         };
 

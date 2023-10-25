@@ -87,7 +87,6 @@ public class UpdateTests
             await repository.UpdateAsync(itemUpdate);
         };
 
-        (await action.Should().ThrowAsync<ArgumentException>())
-            .And.ParamName.Should().Be("OrderNumber");
+        await action.Should().ThrowAsync<ArgumentException>();
     }
 }

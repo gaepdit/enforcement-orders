@@ -10,12 +10,12 @@ namespace Enfo.WebApp.Pages;
 public class Attachment : PageModel
 {
     private readonly IEnforcementOrderRepository _repository;
-    private readonly IFileService _fileService;
+    private readonly IAttachmentStore _attachmentStore;
 
-    public Attachment(IEnforcementOrderRepository repository, IFileService fileService)
+    public Attachment(IEnforcementOrderRepository repository, IAttachmentStore attachmentStore)
     {
         _repository = repository;
-        _fileService = fileService;
+        _attachmentStore = attachmentStore;
     }
 
     public async Task<IActionResult> OnGetAsync(Guid? id, [CanBeNull] string fileName)
@@ -34,7 +34,7 @@ public class Attachment : PageModel
         if (fileName != item.FileName)
             return RedirectToPage("Attachment", new { id, item.FileName });
 
-        var fileBytes = await _fileService.GetFileAsync(item.AttachmentFileName);
+        var fileBytes = await _attachmentStore.GetFileAttachmentAsync(item.AttachmentFileName);
 
         return fileBytes.Length == 0
             ? NotFound($"File not available: {item.FileName}")

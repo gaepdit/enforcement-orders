@@ -8,6 +8,8 @@
 
     <ItemGroup>
         <PackageReference Include="FluentValidation" />
+        <PackageReference Include="GaEpd.FileService" />
+        <PackageReference Include="GaEpd.GuardClauses" />
         <PackageReference Include="JetBrains.Annotations" />
         <PackageReference Include="Microsoft.Extensions.Identity.Stores" />
         <PackageReference Include="SonarAnalyzer.CSharp">

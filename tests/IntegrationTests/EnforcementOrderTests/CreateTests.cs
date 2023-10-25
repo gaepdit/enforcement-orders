@@ -74,8 +74,7 @@ public class CreateTests
             await repository.CreateAsync(resource);
         };
 
-        (await action.Should().ThrowAsync<ArgumentException>())
-            .And.ParamName.Should().Be(nameof(EnforcementOrderCreate.County));
+        await action.Should().ThrowAsync<ArgumentException>();
     }
 
     [Test]

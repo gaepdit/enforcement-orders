@@ -30,7 +30,7 @@ public class ApiTests
             .AddInMemoryCollection(new Dictionary<string, string> { { "BaseUrl", baseUrl } })
             .Build();
 
-        using var repository = new LocalEnforcementOrderRepository(Substitute.For<IFileService>());
+        using var repository = new LocalEnforcementOrderRepository(Substitute.For<IAttachmentStore>());
 
         var controller = new ApiController();
         var result = await controller.ListOrdersAsync(repository, config, new EnforcementOrderSpec(), 1, 100);

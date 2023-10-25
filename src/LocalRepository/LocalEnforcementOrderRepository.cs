@@ -6,16 +6,17 @@ using Enfo.Domain.Pagination;
 using Enfo.Domain.Services;
 using Enfo.Domain.Utils;
 using EnfoTests.TestData;
+using GaEpd.GuardClauses;
 using Microsoft.AspNetCore.Http;
 
 namespace Enfo.LocalRepository;
 
 public sealed class LocalEnforcementOrderRepository : IEnforcementOrderRepository
 {
-    private readonly IFileService _fileService;
+    private readonly IAttachmentStore _attachmentStore;
 
-    public LocalEnforcementOrderRepository(IFileService fileService) =>
-        _fileService = fileService;
+    public LocalEnforcementOrderRepository(IAttachmentStore attachmentStore) =>
+        _attachmentStore = attachmentStore;
 
     public Task<EnforcementOrderDetailedView> GetAsync(int id)
     {
@@ -47,8 +48,8 @@ public sealed class LocalEnforcementOrderRepository : IEnforcementOrderRepositor
     public Task<PaginatedResult<EnforcementOrderSummaryView>> ListAsync(
         EnforcementOrderSpec spec, PaginationSpec paging)
     {
-        Guard.NotNull(spec, nameof(spec));
-        Guard.NotNull(paging, nameof(paging));
+        Guard.NotNull(spec);
+        Guard.NotNull(paging);
 
         var filteredItems = EnforcementOrderData.GetEnforcementOrdersIncludeAttachments().AsQueryable()
             .ApplySpecFilter(spec);
@@ -67,8 +68,8 @@ public sealed class LocalEnforcementOrderRepository : IEnforcementOrderRepositor
     public Task<PaginatedResult<EnforcementOrderDetailedView>> ListDetailedAsync(
         EnforcementOrderSpec spec, PaginationSpec paging)
     {
-        Guard.NotNull(spec, nameof(spec));
-        Guard.NotNull(paging, nameof(paging));
+        Guard.NotNull(spec);
+        Guard.NotNull(paging);
 
         var filteredItems = EnforcementOrderData.GetEnforcementOrdersIncludeAttachments().AsQueryable()
             .ApplySpecFilter(spec);
@@ -87,8 +88,8 @@ public sealed class LocalEnforcementOrderRepository : IEnforcementOrderRepositor
     public Task<PaginatedResult<EnforcementOrderAdminSummaryView>> ListAdminAsync(
         EnforcementOrderAdminSpec spec, PaginationSpec paging)
     {
-        Guard.NotNull(spec, nameof(spec));
-        Guard.NotNull(paging, nameof(paging));
+        Guard.NotNull(spec);
+        Guard.NotNull(paging);
 
         var filteredItems = EnforcementOrderData.GetEnforcementOrdersIncludeAttachments().AsQueryable()
             .ApplyAdminSpecFilter(spec);
@@ -171,7 +172,7 @@ public sealed class LocalEnforcementOrderRepository : IEnforcementOrderRepositor
 
     public Task UpdateAsync(EnforcementOrderUpdate resource)
     {
-        Guard.NotNull(resource, nameof(resource));
+        Guard.NotNull(resource);
 
         var item = EnforcementOrderData.EnforcementOrders.SingleOrDefault(e => e.Id == resource.Id)
             ?? throw new ArgumentException($"ID ({resource.Id}) not found.", nameof(resource));
@@ -210,7 +211,7 @@ public sealed class LocalEnforcementOrderRepository : IEnforcementOrderRepositor
         if (file.Length == 0 || !FileTypes.FileUploadAllowed(extension)) return;
 
         var attachmentId = Guid.NewGuid();
-        await _fileService.SaveFileAsync(file, attachmentId);
+        await _attachmentStore.SaveFileAttachmentAsync(file, attachmentId);
 
         var attachment = new Attachment
         {
@@ -247,7 +248,7 @@ public sealed class LocalEnforcementOrderRepository : IEnforcementOrderRepositor
         attachment.Deleted = true;
         attachment.DateDeleted = DateTime.Today;
 
-        _fileService.TryDeleteFile(attachment.AttachmentFileName);
+        _attachmentStore.TryDeleteFileAttachmentAsync(attachment.AttachmentFileName);
         return Task.CompletedTask;
     }
 

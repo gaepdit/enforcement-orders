@@ -1,13 +1,14 @@
-﻿using Enfo.Domain.LegalAuthorities.Resources;
+﻿using Enfo.Domain.EnforcementOrders.Entities;
+using Enfo.Domain.LegalAuthorities.Resources;
 using Enfo.Domain.Utils;
 
 namespace Enfo.Domain.EnforcementOrders.Resources;
 
 public class EnforcementOrderAdminSummaryView
 {
-    public EnforcementOrderAdminSummaryView([NotNull] Entities.EnforcementOrder item)
+    public EnforcementOrderAdminSummaryView([NotNull] EnforcementOrder item)
     {
-        Guard.NotNull(item, nameof(item));
+        Guard.NotNull(item);
 
         Id = item.Id;
         Deleted = item.Deleted;

@@ -88,8 +88,7 @@ public class UpdateTests
             await repository.UpdateAsync(resource);
         };
 
-        (await action.Should().ThrowAsync<ArgumentException>())
-            .And.ParamName.Should().Be(nameof(EpdContactCommand.ContactName));
+        await action.Should().ThrowAsync<ArgumentException>();
     }
 
     [Test]

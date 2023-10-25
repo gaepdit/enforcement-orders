@@ -1,6 +1,4 @@
-﻿using Enfo.Domain.Utils;
-
-namespace Enfo.Domain.Pagination;
+﻿namespace Enfo.Domain.Pagination;
 
 public class PaginationSpec
 {
@@ -12,7 +10,7 @@ public class PaginationSpec
 
     public PaginationSpec(int pageNumber, int pageSize)
     {
-        PageNumber = Guard.Positive(pageNumber, nameof(pageNumber));
-        PageSize = Guard.Positive(pageSize, nameof(pageSize));
+        PageNumber = Guard.Positive(pageNumber);
+        PageSize = Guard.Positive(pageSize);
     }
 }

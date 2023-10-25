@@ -1,8 +1,8 @@
 ﻿using Enfo.Domain.LegalAuthorities.Entities;
 using Enfo.Domain.LegalAuthorities.Repositories;
 using Enfo.Domain.LegalAuthorities.Resources;
-using Enfo.Domain.Utils;
 using Enfo.Infrastructure.Contexts;
+using GaEpd.GuardClauses;
 using Microsoft.EntityFrameworkCore;
 
 namespace Enfo.Infrastructure.Repositories;
@@ -10,7 +10,7 @@ namespace Enfo.Infrastructure.Repositories;
 public sealed class LegalAuthorityRepository : ILegalAuthorityRepository
 {
     private readonly EnfoDbContext _context;
-    public LegalAuthorityRepository(EnfoDbContext context) => _context = Guard.NotNull(context, nameof(context));
+    public LegalAuthorityRepository(EnfoDbContext context) => _context = Guard.NotNull(context);
 
     public async Task<LegalAuthorityView> GetAsync(int id)
     {

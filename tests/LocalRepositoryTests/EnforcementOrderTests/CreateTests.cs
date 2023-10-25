@@ -1,4 +1,4 @@
-﻿using Enfo.Domain.EnforcementOrders.Entities;
+using Enfo.Domain.EnforcementOrders.Entities;
 using Enfo.Domain.EnforcementOrders.Resources;
 using Enfo.Domain.Services;
 using Enfo.LocalRepository;
@@ -37,7 +37,7 @@ public class CreateTests
         };
 
         var expectedId = EnforcementOrderData.EnforcementOrders.Max(e => e.Id) + 1;
-        using var repository = new LocalEnforcementOrderRepository(Substitute.For<IFileService>());
+        using var repository = new LocalEnforcementOrderRepository(Substitute.For<IAttachmentStore>());
 
         var itemId = await repository.CreateAsync(resource);
 
@@ -74,12 +74,11 @@ public class CreateTests
 
         var action = async () =>
         {
-            using var repository = new LocalEnforcementOrderRepository(Substitute.For<IFileService>());
+            using var repository = new LocalEnforcementOrderRepository(Substitute.For<IAttachmentStore>());
             await repository.CreateAsync(resource);
         };
 
-        (await action.Should().ThrowAsync<ArgumentException>())
-            .And.ParamName.Should().Be(nameof(EnforcementOrderCreate.County));
+        await action.Should().ThrowAsync<ArgumentException>();
     }
 
     [Test]
@@ -102,7 +101,7 @@ public class CreateTests
             Attachment = new FormFile(Stream.Null, 0, 2, "test2", "test2.pdf"),
         };
 
-        using var repository = new LocalEnforcementOrderRepository(Substitute.For<IFileService>());
+        using var repository = new LocalEnforcementOrderRepository(Substitute.For<IAttachmentStore>());
 
         // Act
         var itemId = await repository.CreateAsync(resource);

@@ -1,4 +1,4 @@
-﻿using Enfo.Domain.EnforcementOrders.Resources;
+using Enfo.Domain.EnforcementOrders.Resources;
 using Enfo.Domain.EnforcementOrders.Specs;
 using Enfo.Domain.Pagination;
 using Enfo.Domain.Services;
@@ -20,7 +20,7 @@ public class ListTests
     [Test]
     public async Task ByDefault_ReturnsOnlyPublic()
     {
-        using var repository = new LocalEnforcementOrderRepository(Substitute.For<IFileService>());
+        using var repository = new LocalEnforcementOrderRepository(Substitute.For<IAttachmentStore>());
 
         var result = await repository.ListAsync(new EnforcementOrderSpec(), new PaginationSpec(1, 50));
 
@@ -44,7 +44,7 @@ public class ListTests
         {
             Facility = EnforcementOrderData.EnforcementOrders.First(e => !e.Deleted).FacilityName,
         };
-        using var repository = new LocalEnforcementOrderRepository(Substitute.For<IFileService>());
+        using var repository = new LocalEnforcementOrderRepository(Substitute.For<IAttachmentStore>());
 
         var result = await repository.ListAsync(spec, new PaginationSpec(1, 50));
 
@@ -68,7 +68,7 @@ public class ListTests
         {
             Facility = EnforcementOrderData.EnforcementOrders.First(e => !e.Deleted).FacilityName.ToUpper(),
         };
-        using var repository = new LocalEnforcementOrderRepository(Substitute.For<IFileService>());
+        using var repository = new LocalEnforcementOrderRepository(Substitute.For<IAttachmentStore>());
 
         var result = await repository.ListAsync(spec, new PaginationSpec(1, 50));
 
@@ -93,7 +93,7 @@ public class ListTests
             OrderNumber = EnforcementOrderData.EnforcementOrders.First(e => !e.Deleted).OrderNumber.ToLower(),
         };
 
-        using var repository = new LocalEnforcementOrderRepository(Substitute.For<IFileService>());
+        using var repository = new LocalEnforcementOrderRepository(Substitute.For<IAttachmentStore>());
 
         var result = await repository.ListAsync(spec, new PaginationSpec(1, 50));
 
@@ -121,7 +121,7 @@ public class ListTests
             FromDate = new DateTime(999, 3, 1),
             TillDate = new DateTime(999, 4, 1),
         };
-        using var repository = new LocalEnforcementOrderRepository(Substitute.For<IFileService>());
+        using var repository = new LocalEnforcementOrderRepository(Substitute.For<IAttachmentStore>());
 
         var result = await repository.ListAsync(spec, new PaginationSpec(1, 50));
 
@@ -141,7 +141,7 @@ public class ListTests
             Facility = "Date Range Test",
             FromDate = new DateTime(999, 1, 1),
         };
-        using var repository = new LocalEnforcementOrderRepository(Substitute.For<IFileService>());
+        using var repository = new LocalEnforcementOrderRepository(Substitute.For<IAttachmentStore>());
 
         var result = await repository.ListAsync(spec, new PaginationSpec(1, 50));
 
@@ -167,7 +167,7 @@ public class ListTests
             Facility = "Date Range Test",
             TillDate = new DateTime(999, 6, 1),
         };
-        using var repository = new LocalEnforcementOrderRepository(Substitute.For<IFileService>());
+        using var repository = new LocalEnforcementOrderRepository(Substitute.For<IAttachmentStore>());
 
         var result = await repository.ListAsync(spec, new PaginationSpec(1, 50));
 

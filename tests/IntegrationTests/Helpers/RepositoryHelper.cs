@@ -75,7 +75,7 @@ public sealed class RepositoryHelper : IDisposable
         DbContext = new EnfoDbContext(_options, null);
         return new EnforcementOrderRepository(
             DbContext,
-            Substitute.For<IFileService>(),
+            Substitute.For<IAttachmentStore>(),
             Substitute.For<IErrorLogger>()
         );
     }

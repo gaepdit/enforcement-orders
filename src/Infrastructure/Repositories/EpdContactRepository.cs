@@ -1,8 +1,8 @@
 ﻿using Enfo.Domain.EpdContacts.Entities;
 using Enfo.Domain.EpdContacts.Repositories;
 using Enfo.Domain.EpdContacts.Resources;
-using Enfo.Domain.Utils;
 using Enfo.Infrastructure.Contexts;
+using GaEpd.GuardClauses;
 using Microsoft.EntityFrameworkCore;
 
 namespace Enfo.Infrastructure.Repositories;
@@ -10,7 +10,7 @@ namespace Enfo.Infrastructure.Repositories;
 public sealed class EpdContactRepository : IEpdContactRepository
 {
     private readonly EnfoDbContext _context;
-    public EpdContactRepository(EnfoDbContext context) => _context = Guard.NotNull(context, nameof(context));
+    public EpdContactRepository(EnfoDbContext context) => _context = Guard.NotNull(context);
 
     public async Task<EpdContactView> GetAsync(int id)
     {

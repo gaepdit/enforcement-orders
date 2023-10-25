@@ -1,6 +1,8 @@
 ﻿using Enfo.Domain.Users.Entities;
 using Enfo.Infrastructure.Contexts;
 using Enfo.WebApp.Platform.Local;
+using EnfoTests.TestData;
+using GaEpd.FileService;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -42,6 +44,18 @@ public class MigratorHostedService : IHostedService
         foreach (var role in UserRole.AllRoles.Keys)
             if (!await context.Roles.AnyAsync(e => e.Name == role, cancellationToken))
                 await roleManager.CreateAsync(new IdentityRole<Guid>(role));
+
+        // Initialize the attachments store
+        var fileService = scope.ServiceProvider.GetRequiredService<IFileService>();
+        foreach (var attachment in AttachmentData.GetAttachmentFiles())
+        {
+            var fileBytes = attachment.Base64EncodedFile == null
+                ? Array.Empty<byte>()
+                : Convert.FromBase64String(attachment.Base64EncodedFile);
+
+            await using var fileStream = new MemoryStream(fileBytes);
+            await fileService.SaveFileAsync(fileStream, attachment.FileName, token: cancellationToken);
+        }
     }
 
     // noop

@@ -2,9 +2,9 @@ using Enfo.Domain.EnforcementOrders.Entities;
 
 namespace EnfoTests.TestData;
 
-internal static class AttachmentData
+public static class AttachmentData
 {
-    public static readonly List<Attachment> Attachments = new()
+    internal static readonly List<Attachment> Attachments = new()
     {
         new Attachment
         {
@@ -64,18 +64,31 @@ internal static class AttachmentData
         },
     };
 
-    internal record AttachmentFile(string FileName, string? Base64EncodedFile);
+    public record AttachmentFile(string FileName, string? Base64EncodedFile);
 
-    internal static readonly List<AttachmentFile> AttachmentFiles = new()
+    private static List<AttachmentFile>? _attachmentFiles;
+
+    public static List<AttachmentFile> GetAttachmentFiles()
+    {
+        if (_attachmentFiles is not null) return _attachmentFiles;
+        _attachmentFiles = SeedAttachmentFiles;
+        return _attachmentFiles;
+    }
+
+    private static List<AttachmentFile> SeedAttachmentFiles => new()
     {
         new AttachmentFile("00000000-0000-0000-0000-000000000001.pdf", EncodedPdfFile),
         new AttachmentFile("00000000-0000-0000-0000-000000000002.pdf", EncodedPdfFile),
         new AttachmentFile("00000000-0000-0000-0000-000000000003.pdf", EncodedPdfFile),
-        new AttachmentFile("00000000-0000-0000-0000-000000000004.pdf", null),
+        new AttachmentFile("00000000-0000-0000-0000-000000000004.pdf", Base64EncodedFile: null),
         new AttachmentFile("00000000-0000-0000-0000-000000000005.pdf", EncodedPdfFile),
         new AttachmentFile("00000000-0000-0000-0000-000000000006.pdf", EncodedPdfFile),
     };
 
+
     private const string EncodedPdfFile =
-        "JVBERi0xLjIKMSAwIG9iago8PD4+CnN0cmVhbQpCVC9GMSAyNCBUZiAxMCA4IFREIChIZWxsbyB3b3JsZCEpJyBFVAplbmRzdHJlYW0KZW5kb2JqCjQgMCBvYmoKPDwvVHlwZSAvUGFnZS9QYXJlbnQgMiAwIFIvQ29udGVudHMgMSAwIFI+PgplbmRvYmoKMiAwIG9iago8PC9LaWRzIFs0IDAgUl0vQ291bnQgMS9UeXBlIC9QYWdlcy9NZWRpYUJveCBbMCAwIDI1MCA1MF0+PgplbmRvYmoKMyAwIG9iago8PC9QYWdlcyAyIDAgUi9UeXBlIC9DYXRhbG9nPj4KZW5kb2JqCnRyYWlsZXIKPDwvUm9vdCAzIDAgUj4+CiUlRU9G";
+        "JVBERi0xLjIKMSAwIG9iago8PD4+CnN0cmVhbQpCVC9GMSAyNCBUZiAxMCA4IFREIChIZWxsbyB3b3JsZCEpJyBFVAplbmRzdHJlYW0KZW5" +
+        "kb2JqCjQgMCBvYmoKPDwvVHlwZSAvUGFnZS9QYXJlbnQgMiAwIFIvQ29udGVudHMgMSAwIFI+PgplbmRvYmoKMiAwIG9iago8PC9LaWRzIF" +
+        "s0IDAgUl0vQ291bnQgMS9UeXBlIC9QYWdlcy9NZWRpYUJveCBbMCAwIDI1MCA1MF0+PgplbmRvYmoKMyAwIG9iago8PC9QYWdlcyAyIDAgU" +
+        "i9UeXBlIC9DYXRhbG9nPj4KZW5kb2JqCnRyYWlsZXIKPDwvUm9vdCAzIDAgUj4+CiUlRU9G";
 }
