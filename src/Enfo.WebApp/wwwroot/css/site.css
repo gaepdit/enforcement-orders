@@ -743,6 +743,15 @@ table {
     outline: 3px solid #3e94cf;
 }
 
+/* Banners
+-------------------------------------------------- */
+.banner {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    margin-bottom: 10px;
+    background: #fff9d0ba;
+}
+
 /* Test site banner */
 
 .banner-test-site {
@@ -778,7 +787,8 @@ table {
     .usa-nav,
     .usa-footer-return-to-top,
     #gagov_external_blocks-topper,
-    .gaepd-footer {
+    .gaepd-footer,
+    .banner {
         display: none;
     }
 
