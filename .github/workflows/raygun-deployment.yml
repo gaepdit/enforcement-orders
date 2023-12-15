@@ -4,7 +4,7 @@ name: Raygun Deployment Tracking
 
 on:
   push:
-    tags: prod/*
+    tags: [prod/*]
 
 jobs:
   raygun-deployment:
@@ -16,7 +16,7 @@ jobs:
 
       - name: Send to the Raygun Deployments API
         id: send_deployment
-        uses: fjogeleit/http-request-action@master
+        uses: fjogeleit/http-request-action@v1.11.1
         with:
           url: https://app.raygun.com/deployments?authToken=${{ secrets.RAYGUN_AUTHTOKEN }}
           method: POST

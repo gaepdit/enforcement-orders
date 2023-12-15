@@ -9,7 +9,7 @@
       "type": "coreclr",
       "request": "launch",
       "preLaunchTask": "build",
-      "program": "${workspaceFolder}/.artifacts/Enfo.WebApp/bin/Debug/net7.0/Enfo.WebApp.dll",
+      "program": "${workspaceFolder}/.artifacts/Enfo.WebApp/bin/Debug/net8.0/Enfo.WebApp.dll",
       "args": [],
       "cwd": "${workspaceFolder}/src/Enfo.WebApp",
       "stopAtEntry": false,
@@ -18,10 +18,6 @@
         "ASPNETCORE_ENVIRONMENT": "Local",
         "ENABLE_TEST_USER": "true"
       },
-      //   "serverReadyAction": {
-      //     "action": "debugWithChrome",
-      //     "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
-      //   },
       "launchBrowser": {
         "enabled": true,
         "osx": {
