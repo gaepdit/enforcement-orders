@@ -16,7 +16,6 @@ using Enfo.WebApp.Platform.SecurityHeaders;
 using Enfo.WebApp.Platform.Settings;
 using FluentValidation;
 using GaEpd.FileService;
-using GaEpd.FileService.Implementations;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -39,8 +38,6 @@ builder.Configuration.GetSection(ApplicationSettings.RaygunSettingsSection)
     .Bind(ApplicationSettings.RaygunClientSettings);
 builder.Configuration.GetSection(ApplicationSettings.LocalDevSettingsSection)
     .Bind(ApplicationSettings.LocalDevSettings);
-builder.Configuration.GetSection(nameof(ApplicationSettings.FileServiceSettings))
-    .Bind(ApplicationSettings.FileServiceSettings);
 
 // Configure Identity
 builder.Services
@@ -92,32 +89,8 @@ builder.Services.AddRaygun(builder.Configuration,
 builder.Services.AddHttpContextAccessor(); // needed by RaygunScriptPartial
 
 // Configure the attachments store
+builder.Services.AddFileServices(builder.Configuration);
 builder.Services.AddTransient<IAttachmentStore, AttachmentStore>();
-switch (ApplicationSettings.FileServiceSettings.FileService)
-{
-    case FileServiceConstants.InMemory:
-        builder.Services.AddSingleton<IFileService, InMemory>();
-        break;
-
-    case FileServiceConstants.FileSystem:
-        builder.Services.AddTransient<IFileService, FileSystem>(_ =>
-            new FileSystem(
-                Path.Combine(ApplicationSettings.FileServiceSettings.FileSystemBasePath, "Attachments"),
-                ApplicationSettings.FileServiceSettings.NetworkUsername,
-                ApplicationSettings.FileServiceSettings.NetworkDomain,
-                ApplicationSettings.FileServiceSettings.NetworkPassword
-            ));
-        break;
-
-    case FileServiceConstants.AzureBlobStorage:
-        builder.Services.AddSingleton<IFileService, AzureBlobStorage>(_ =>
-            new AzureBlobStorage(
-                ApplicationSettings.FileServiceSettings.AzureAccountName,
-                ApplicationSettings.FileServiceSettings.BlobContainer,
-                ApplicationSettings.FileServiceSettings.BlobBasePath
-            ));
-        break;
-}
 
 // Configure the database contexts, data repositories, and services
 if (builder.Environment.IsLocalEnv())
