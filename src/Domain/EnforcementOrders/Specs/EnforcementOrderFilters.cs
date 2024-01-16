@@ -72,7 +72,7 @@ public static class EnforcementOrderFilters
         bool withAttachments) =>
         withAttachments switch
         {
-            true => query.Where(e => e.Attachments != null && e.Attachments.Count > 0),
+            true => query.Where(e => e.Attachments != null && e.Attachments.Any(a => !a.Deleted)),
             false => query,
         };
 
