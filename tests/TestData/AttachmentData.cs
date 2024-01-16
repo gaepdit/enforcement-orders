@@ -4,8 +4,8 @@ namespace EnfoTests.TestData;
 
 public static class AttachmentData
 {
-    internal static readonly List<Attachment> Attachments = new()
-    {
+    internal static readonly List<Attachment> Attachments =
+    [
         new Attachment
         {
             Id = new Guid("00000000-0000-0000-0000-000000000001"),
@@ -15,6 +15,7 @@ public static class AttachmentData
             EnforcementOrder = EnforcementOrderData.EnforcementOrders.Single(e => e.Id == 1),
             DateUploaded = DateTime.Today.AddDays(-2),
         },
+
         new Attachment
         {
             Id = new Guid("00000000-0000-0000-0000-000000000002"),
@@ -24,6 +25,7 @@ public static class AttachmentData
             EnforcementOrder = EnforcementOrderData.EnforcementOrders.Single(e => e.Id == 1),
             DateUploaded = DateTime.Today.AddDays(-1),
         },
+
         new Attachment
         {
             Id = new Guid("00000000-0000-0000-0000-000000000003"),
@@ -33,6 +35,7 @@ public static class AttachmentData
             EnforcementOrder = EnforcementOrderData.EnforcementOrders.Single(e => e.Id == 2),
             DateUploaded = DateTime.Today.AddDays(-1),
         },
+
         new Attachment
         {
             Id = new Guid("00000000-0000-0000-0000-000000000004"),
@@ -44,6 +47,7 @@ public static class AttachmentData
             Deleted = true,
             DateDeleted = DateTime.Today.AddDays(-1),
         },
+
         new Attachment
         {
             Id = new Guid("00000000-0000-0000-0000-000000000005"),
@@ -53,6 +57,7 @@ public static class AttachmentData
             EnforcementOrder = EnforcementOrderData.EnforcementOrders.Single(e => e.Id == 3),
             DateUploaded = DateTime.Today.AddDays(-2),
         },
+
         new Attachment
         {
             Id = new Guid("00000000-0000-0000-0000-000000000006"),
@@ -62,7 +67,8 @@ public static class AttachmentData
             EnforcementOrder = EnforcementOrderData.EnforcementOrders.Single(e => e.Id == 4),
             DateUploaded = DateTime.Today.AddDays(-2),
         },
-    };
+
+    ];
 
     public record AttachmentFile(string FileName, string? Base64EncodedFile);
 
@@ -75,15 +81,15 @@ public static class AttachmentData
         return _attachmentFiles;
     }
 
-    private static List<AttachmentFile> SeedAttachmentFiles => new()
-    {
+    private static List<AttachmentFile> SeedAttachmentFiles =>
+    [
         new AttachmentFile("00000000-0000-0000-0000-000000000001.pdf", EncodedPdfFile),
         new AttachmentFile("00000000-0000-0000-0000-000000000002.pdf", EncodedPdfFile),
         new AttachmentFile("00000000-0000-0000-0000-000000000003.pdf", EncodedPdfFile),
         new AttachmentFile("00000000-0000-0000-0000-000000000004.pdf", Base64EncodedFile: null),
         new AttachmentFile("00000000-0000-0000-0000-000000000005.pdf", EncodedPdfFile),
         new AttachmentFile("00000000-0000-0000-0000-000000000006.pdf", EncodedPdfFile),
-    };
+    ];
 
 
     private const string EncodedPdfFile =
