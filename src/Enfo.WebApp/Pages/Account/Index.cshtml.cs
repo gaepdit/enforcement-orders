@@ -16,7 +16,7 @@ public class Index : PageModel
     [UsedImplicitly]
     public async Task OnGetAsync([FromServices] IUserService userService)
     {
-        DisplayUser = await userService.GetCurrentUserAsync() ?? throw new Exception("Current user not found");
+        DisplayUser = await userService.GetCurrentUserAsync();
         Roles = await userService.GetCurrentUserRolesAsync();
     }
 }
