@@ -4,7 +4,7 @@
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <UserSecretsId>aspnet-Enfo.WebApp-A834A848-D8DF-4E5F-B1E2-7EE74113BF3E</UserSecretsId>
-        <AssemblyVersion>2024.1.16</AssemblyVersion>
+        <AssemblyVersion>2024.1.17</AssemblyVersion>
     </PropertyGroup>
 
     <ItemGroup>
