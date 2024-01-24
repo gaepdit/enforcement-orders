@@ -15,7 +15,7 @@ public class AttachmentStore(IFileService fileService) : IAttachmentStore
     public async Task<byte[]> GetFileAttachmentAsync(string fileName)
     {
         await using var response = await fileService.TryGetFileAsync(fileName);
-        if (!response.Success) return Array.Empty<byte>();
+        if (!response.Success) return [];
 
         using var ms = new MemoryStream();
         await response.Value.CopyToAsync(ms);
