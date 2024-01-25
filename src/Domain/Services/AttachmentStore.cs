@@ -9,16 +9,17 @@ public class AttachmentStore(IFileService fileService) : IAttachmentStore
     {
         if (file.Length == 0 || string.IsNullOrWhiteSpace(file.FileName)) return;
         var fileName = string.Concat(fileId.ToString(), Path.GetExtension(file.FileName));
-        await fileService.SaveFileAsync(file.OpenReadStream(), fileName);
+        await fileService.SaveFileAsync(file.OpenReadStream(), fileName).ConfigureAwait(false);
     }
 
     public async Task<byte[]> GetFileAttachmentAsync(string fileName)
     {
-        await using var response = await fileService.TryGetFileAsync(fileName);
+        var response = await fileService.TryGetFileAsync(fileName).ConfigureAwait(false);
+        await using var _ = response.ConfigureAwait(false);
         if (!response.Success) return [];
 
         using var ms = new MemoryStream();
-        await response.Value.CopyToAsync(ms);
+        await response.Value.CopyToAsync(ms).ConfigureAwait(false);
         return ms.ToArray();
     }
 

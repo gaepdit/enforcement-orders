@@ -8,7 +8,7 @@ public class EnforcementOrderCreateValidator : BaseEnforcementOrderValidator<Enf
     public EnforcementOrderCreateValidator(IEnforcementOrderRepository repository) : base(repository)
     {
         RuleFor(e => e.OrderNumber)
-            .MustAsync(async (orderNumber, _) => await NotDuplicateOrderNumber(orderNumber))
+            .MustAsync(async (orderNumber, _) => await NotDuplicateOrderNumber(orderNumber).ConfigureAwait(false))
             .WithMessage(e => $"An Order with the same number ({e.OrderNumber.Trim()}) already exists.");
 
         RuleFor(e => e.CreateAs)

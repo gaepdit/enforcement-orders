@@ -24,17 +24,17 @@ public class UserService : IUserService
     private async Task<ApplicationUser> GetCurrentApplicationUserAsync()
     {
         var principal = _httpContextAccessor?.HttpContext?.User;
-        return principal == null ? null : await _userManager.GetUserAsync(principal);
+        return principal == null ? null : await _userManager.GetUserAsync(principal).ConfigureAwait(false);
     }
 
     public async Task<UserView> GetCurrentUserAsync()
     {
-        var user = await GetCurrentApplicationUserAsync();
+        var user = await GetCurrentApplicationUserAsync().ConfigureAwait(false);
         return user == null ? null : new UserView(user);
     }
 
     public async Task<IList<string>> GetCurrentUserRolesAsync() =>
-        await _userManager.GetRolesAsync(await GetCurrentApplicationUserAsync());
+        await _userManager.GetRolesAsync(await GetCurrentApplicationUserAsync().ConfigureAwait(false)).ConfigureAwait(false);
 
     private Task<List<UserView>> GetUsersAsync(string nameFilter, string emailFilter) =>
         _context.Users.AsNoTracking()
@@ -48,9 +48,9 @@ public class UserService : IUserService
 
     public async Task<List<UserView>> GetUsersAsync(string nameFilter, string emailFilter, string role)
     {
-        if (string.IsNullOrEmpty(role)) return await GetUsersAsync(nameFilter, emailFilter);
+        if (string.IsNullOrEmpty(role)) return await GetUsersAsync(nameFilter, emailFilter).ConfigureAwait(false);
 
-        return (await _userManager.GetUsersInRoleAsync(role))
+        return (await _userManager.GetUsersInRoleAsync(role).ConfigureAwait(false))
             .Where(m => string.IsNullOrEmpty(nameFilter)
                 || m.GivenName.Contains(nameFilter)
                 || m.FamilyName.Contains(nameFilter))
@@ -62,21 +62,21 @@ public class UserService : IUserService
 
     public async Task<UserView> GetUserByIdAsync(Guid id)
     {
-        var user = await _userManager.FindByIdAsync(id.ToString());
+        var user = await _userManager.FindByIdAsync(id.ToString()).ConfigureAwait(false);
         return user == null ? null : new UserView(user);
     }
 
     public async Task<IList<string>> GetUserRolesAsync(Guid id)
     {
-        var user = await _userManager.FindByIdAsync(id.ToString());
-        return user == null ? null : await _userManager.GetRolesAsync(user);
+        var user = await _userManager.FindByIdAsync(id.ToString()).ConfigureAwait(false);
+        return user == null ? null : await _userManager.GetRolesAsync(user).ConfigureAwait(false);
     }
 
     public async Task<IdentityResult> UpdateUserRolesAsync(Guid id, Dictionary<string, bool> roleUpdates)
     {
         foreach (var (key, value) in roleUpdates)
         {
-            var result = await UpdateUserRoleAsync(id, key, value);
+            var result = await UpdateUserRoleAsync(id, key, value).ConfigureAwait(false);
             if (result != IdentityResult.Success) return result;
         }
 
@@ -85,16 +85,16 @@ public class UserService : IUserService
 
     private async Task<IdentityResult> UpdateUserRoleAsync(Guid id, string role, bool addToRole)
     {
-        var user = await _userManager.FindByIdAsync(id.ToString());
+        var user = await _userManager.FindByIdAsync(id.ToString()).ConfigureAwait(false);
         if (user == null) return IdentityResult.Failed(_userManager.ErrorDescriber.DefaultError());
 
-        var isInRole = await _userManager.IsInRoleAsync(user, role);
+        var isInRole = await _userManager.IsInRoleAsync(user, role).ConfigureAwait(false);
         if (addToRole == isInRole) return IdentityResult.Success;
 
         return addToRole switch
         {
-            true => await _userManager.AddToRoleAsync(user, role),
-            false => await _userManager.RemoveFromRoleAsync(user, role),
+            true => await _userManager.AddToRoleAsync(user, role).ConfigureAwait(false),
+            false => await _userManager.RemoveFromRoleAsync(user, role).ConfigureAwait(false),
         };
     }
 }

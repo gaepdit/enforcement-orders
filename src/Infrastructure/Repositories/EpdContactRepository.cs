@@ -47,10 +47,10 @@ public sealed class EpdContactRepository : IEpdContactRepository
 
     public async Task UpdateStatusAsync(int id, bool newActiveStatus)
     {
-        var item = await _context.EpdContacts.FindAsync(id)
+        var item = await _context.EpdContacts.FindAsync(id).ConfigureAwait(false)
             ?? throw new ArgumentException($"ID ({id}) not found.", nameof(id));
         item.Active = newActiveStatus;
-        await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync().ConfigureAwait(false);
     }
 
     public Task<bool> ExistsAsync(int id) => _context.EpdContacts.AnyAsync(e => e.Id == id);
