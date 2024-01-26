@@ -166,7 +166,7 @@ public sealed class LocalEnforcementOrderRepository : IEnforcementOrderRepositor
             : EpdContactData.GetEpdContact(item.HearingContactId.Value);
 
         EnforcementOrderData.EnforcementOrders.Add(item);
-        if (resource.Attachment is not null) await AddAttachmentInternalAsync(resource.Attachment, item);
+        if (resource.Attachment is not null) await AddAttachmentInternalAsync(resource.Attachment, item).ConfigureAwait(false);
         return id;
     }
 
@@ -211,7 +211,7 @@ public sealed class LocalEnforcementOrderRepository : IEnforcementOrderRepositor
         if (file.Length == 0 || !FileTypes.FileUploadAllowed(extension)) return;
 
         var attachmentId = Guid.NewGuid();
-        await _attachmentStore.SaveFileAttachmentAsync(file, attachmentId);
+        await _attachmentStore.SaveFileAttachmentAsync(file, attachmentId).ConfigureAwait(false);
 
         var attachment = new Attachment
         {

@@ -188,7 +188,7 @@ public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
         var item = new EnforcementOrder(resource);
         await _context.EnforcementOrders.AddAsync(item).ConfigureAwait(false);
         await _context.SaveChangesAsync().ConfigureAwait(false);
-        if (resource.Attachment is not null) await AddAttachmentAsync(item.Id, resource.Attachment);
+        if (resource.Attachment is not null) await AddAttachmentAsync(item.Id, resource.Attachment).ConfigureAwait(false);
 
         return item.Id;
     }
@@ -217,7 +217,7 @@ public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
         if (order.Deleted)
             throw new ArgumentException($"Order ID {orderId} has been deleted and cannot be edited.", nameof(orderId));
 
-        await SaveAttachmentAsync(file, order);
+        await SaveAttachmentAsync(file, order).ConfigureAwait(false);
     }
 
     private async Task SaveAttachmentAsync(IFormFile file, EnforcementOrder order)
@@ -236,7 +236,7 @@ public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
             EnforcementOrder = order,
         };
 
-        await _attachmentStore.SaveFileAttachmentAsync(file, attachmentId);
+        await _attachmentStore.SaveFileAttachmentAsync(file, attachmentId).ConfigureAwait(false);
         await _context.Attachments.AddAsync(attachment).ConfigureAwait(false);
         await _context.SaveChangesAsync().ConfigureAwait(false);
     }
@@ -265,7 +265,7 @@ public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
 
         try
         {
-            await _attachmentStore.TryDeleteFileAttachmentAsync(attachment.AttachmentFileName);
+            await _attachmentStore.TryDeleteFileAttachmentAsync(attachment.AttachmentFileName).ConfigureAwait(false);
         }
         catch (Exception e)
         {
@@ -276,7 +276,7 @@ public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
                 { "File Name", attachment.FileName },
                 { "Attachment ID", attachment.Id },
             };
-            await _errorLogger.LogErrorAsync(e, customData);
+            await _errorLogger.LogErrorAsync(e, customData).ConfigureAwait(false);
         }
     }
 

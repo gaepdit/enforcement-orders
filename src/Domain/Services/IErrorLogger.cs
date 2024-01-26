@@ -23,7 +23,7 @@ public interface IErrorLogger
     ///   }
     ///   catch (Exception e)
     ///   {
-    ///       await _errorLogger.LogErrorAsync(e);
+    ///       await _errorLogger.LogErrorAsync(e).ConfigureAwait(false);
     ///   }
     /// </code>
     /// </example>

@@ -14,10 +14,10 @@ public class LegalAuthorityValidator : AbstractValidator<LegalAuthorityCommand>
         RuleFor(e => e.AuthorityName)
             .Cascade(CascadeMode.Stop)
             .NotNull()
-            .MustAsync(async (authorityName, _) => await NotDuplicateName(authorityName))
+            .MustAsync(async (authorityName, _) => await NotDuplicateName(authorityName).ConfigureAwait(false))
             .WithMessage(e => $"The authority name entered ({e.AuthorityName}) already exists.");
     }
 
     private async Task<bool> NotDuplicateName(string authorityName) =>
-        !await _repository.NameExistsAsync(authorityName);
+        !await _repository.NameExistsAsync(authorityName).ConfigureAwait(false);
 }
