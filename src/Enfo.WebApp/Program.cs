@@ -21,7 +21,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Web;
 using Microsoft.OpenApi.Models;
+using Mindscape.Raygun4Net;
 using Mindscape.Raygun4Net.AspNetCore;
+using System.Reflection;
 using System.Runtime.InteropServices;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -84,8 +86,20 @@ builder.Services.AddHsts(opts => opts.MaxAge = TimeSpan.FromDays(730));
 
 // Configure application monitoring
 builder.Services.AddTransient<IErrorLogger, ErrorLogger>();
-builder.Services.AddRaygun(builder.Configuration,
-    new RaygunMiddlewareSettings { ClientProvider = new RaygunClientProvider() });
+builder.Services.AddSingleton(provider =>
+{
+    var client = new RaygunClient(provider.GetService<RaygunSettings>()!, provider.GetService<IRaygunUserProvider>()!);
+    client.SendingMessage += (_, eventArgs) => eventArgs.Message.Details.Tags.Add(builder.Environment.EnvironmentName);
+    return client;
+});
+builder.Services.AddRaygun(opts =>
+{
+    opts.ApiKey = ApplicationSettings.RaygunClientSettings.ApiKey;
+    opts.ApplicationVersion = Assembly.GetEntryAssembly()?.GetName().Version?.ToString(3);
+    opts.ExcludeErrorsFromLocal = true;
+    opts.IgnoreFormFieldNames = ["*Password"];
+});
+builder.Services.AddRaygunUserProvider();
 builder.Services.AddHttpContextAccessor(); // needed by RaygunScriptPartial
 
 // Configure the attachments store
