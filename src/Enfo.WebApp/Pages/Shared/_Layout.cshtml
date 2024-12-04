@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -19,7 +19,16 @@
 
 <a class="usa-skipnav" href="#main-content">Skip to main content</a>
 
-<partial name="_MenuPartial" />
+@if (DateTime.Now < new DateTime(2024, 12, 9, 6, 0, 0, DateTimeKind.Local))
+{
+    <div class="usa-grid usa-section banner">
+        <h3>Planned Maintenance Outage</h3>
+        <p>There will be a scheduled major system maintenance outage for all EPD applications from
+            11 AM Saturday, 12/7/2024 until 6 AM Monday, 12/9/2024.</p>
+    </div>
+}
+
+<partial name="_MenuPartial"/>
 
 <main class="usa-grid usa-section usa-content usa-layout-docs" id="main-content">
     @RenderBody()
