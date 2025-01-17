@@ -10,11 +10,4 @@
         <AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
     </PropertyGroup>
 
-    <PropertyGroup>
-        <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory).sonarlint\gaepdit_enforcement-orderscsharp.ruleset</CodeAnalysisRuleSet>
-    </PropertyGroup>
-
-    <ItemGroup>
-        <AdditionalFiles Include="$(MSBuildThisFileDirectory).sonarlint\gaepdit_enforcement-orders\CSharp\SonarLint.xml" Link="SonarLint.xml" />
-    </ItemGroup>
 </Project>
