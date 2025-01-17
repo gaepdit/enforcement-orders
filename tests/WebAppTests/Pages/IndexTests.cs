@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using NSubstitute;
 using NUnit.Framework;
 using System.Threading.Tasks;
+using Index = Enfo.WebApp.Pages.Index;
 
 namespace EnfoTests.WebApp.Pages;
 

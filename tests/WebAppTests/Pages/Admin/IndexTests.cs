@@ -15,6 +15,7 @@ using NSubstitute;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Index = Enfo.WebApp.Pages.Admin.Index;
 
 namespace EnfoTests.WebApp.Pages.Admin;
 

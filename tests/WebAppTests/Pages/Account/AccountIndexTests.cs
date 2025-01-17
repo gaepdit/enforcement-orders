@@ -8,6 +8,7 @@ using NSubstitute;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Index = Enfo.WebApp.Pages.Account.Index;
 
 namespace EnfoTests.WebApp.Pages.Account;
 
