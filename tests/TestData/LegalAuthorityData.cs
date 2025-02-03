@@ -6,7 +6,7 @@ namespace EnfoTests.TestData;
 
 internal static class LegalAuthorityData
 {
-    public static LegalAuthority? GetLegalAuthority(int id) =>
+    public static LegalAuthority GetLegalAuthority(int id) =>
         LegalAuthorities.SingleOrDefault(e => e.Id == id);
 
     public static readonly List<LegalAuthority> LegalAuthorities = new()

@@ -16,13 +16,13 @@ internal static class EnforcementOrderData
         return EnforcementOrders;
     }
 
-    public static EnforcementOrderAdminView? GetEnforcementOrderAdminView(int id)
+    public static EnforcementOrderAdminView GetEnforcementOrderAdminView(int id)
     {
         var item = GetEnforcementOrdersIncludeAttachments().Find(e => e.Id == id);
         return item is null ? null : new EnforcementOrderAdminView(item);
     }
 
-    public static EnforcementOrderDetailedView? GetEnforcementOrderDetailedView(int id)
+    public static EnforcementOrderDetailedView GetEnforcementOrderDetailedView(int id)
     {
         var item = GetEnforcementOrdersIncludeAttachments().Find(e => e.Id == id);
         return item is null ? null : new EnforcementOrderDetailedView(item);
