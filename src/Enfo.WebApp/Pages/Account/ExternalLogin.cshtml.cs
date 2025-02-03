@@ -2,7 +2,6 @@ using Enfo.Domain.Users.Entities;
 using Enfo.Domain.Users.Services;
 using Enfo.WebApp.Models;
 using Enfo.WebApp.Platform.Local;
-using Enfo.WebApp.Platform.Logging;
 using Enfo.WebApp.Platform.RazorHelpers;
 using Enfo.WebApp.Platform.Settings;
 using JetBrains.Annotations;
@@ -109,17 +108,17 @@ public class ExternalLogin(
 
         if (!userEmail.IsValidEmailDomain())
         {
-            logger.LogWarning("User {Email} with invalid email domain attempted signin", userEmail.MaskEmail());
+            logger.LogWarning("User with invalid email domain attempted signin");
             return RedirectToPage("./Unavailable");
         }
 
-        logger.LogInformation("User {Email} in tenant {TenantID} successfully authenticated",
-            userEmail.MaskEmail(), userTenant);
+        logger.LogInformation("User with object ID {ObjectId} in tenant {TenantID} successfully authenticated",
+            externalLoginInfo.Principal.GetObjectId(), userTenant);
 
         // Determine if a user account already exists with the Object ID.
         // If not, then determine if a user account already exists with the given username.
         var user = await userManager.Users
-                       .SingleOrDefaultAsync(u => u.ObjectId == externalLoginInfo.Principal.GetObjectId()) ??
+                       .SingleOrDefaultAsync(au => au.ObjectId == externalLoginInfo.Principal.GetObjectId()) ??
                    await userManager.FindByNameAsync(userEmail);
 
         // If the user does not have an account yet, then create one and sign in.
@@ -171,12 +170,11 @@ public class ExternalLogin(
         var createUserResult = await userManager.CreateAsync(user);
         if (!createUserResult.Succeeded)
         {
-            logger.LogWarning("Failed to create new user {Email}", user.Email.MaskEmail());
+            logger.LogWarning("Failed to create new user with object ID {ObjectId}", user.ObjectId);
             return await FailedLogin(createUserResult, user);
         }
 
-        logger.LogInformation("Created new user {Email} with object ID {ObjectId}",
-            user.Email.MaskEmail(), user.ObjectId);
+        logger.LogInformation("Created new user with object ID {ObjectId}", user.ObjectId);
 
         await SeedRoles(user);
 
@@ -200,8 +198,8 @@ public class ExternalLogin(
     // Update local store with from external provider. 
     private async Task<IActionResult> RefreshUserInfoAndSignInAsync(ApplicationUser user, ExternalLoginInfo info)
     {
-        logger.LogInformation("Existing user {Email} logged in with {LoginProvider} provider",
-            user.Email.MaskEmail(), info.LoginProvider);
+        logger.LogInformation("Existing user with object ID {ObjectId} logged in with {LoginProvider} provider",
+            user.ObjectId, info.LoginProvider);
 
         var externalValues = new ApplicationUser
         {
@@ -233,8 +231,8 @@ public class ExternalLogin(
 
         if (!addLoginResult.Succeeded)
         {
-            logger.LogWarning("Failed to add login provider {LoginProvider} for user {Email}",
-                info.LoginProvider, user.Email.MaskEmail());
+            logger.LogWarning("Failed to add login provider {LoginProvider} for user with object ID {ObjectId}",
+                info.LoginProvider, user.ObjectId);
             return await FailedLogin(addLoginResult, user);
         }
 

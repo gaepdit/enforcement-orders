@@ -1,23 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
     <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
-        <ImplicitUsings>true</ImplicitUsings>
         <RootNamespace>Enfo.Domain</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="FluentValidation" />
-        <PackageReference Include="GaEpd.FileService" />
-        <PackageReference Include="GaEpd.GuardClauses" />
-        <PackageReference Include="JetBrains.Annotations" />
-        <PackageReference Include="Microsoft.Extensions.Identity.Stores" />
-        <PackageReference Include="SonarAnalyzer.CSharp">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-        <PackageReference Include="Swashbuckle.AspNetCore.Annotations" />
-        <PackageReference Include="System.ComponentModel.Annotations" />
+        <PackageReference Include="FluentValidation"/>
+        <PackageReference Include="GaEpd.FileService"/>
+        <PackageReference Include="GaEpd.GuardClauses"/>
+        <PackageReference Include="JetBrains.Annotations"/>
+        <PackageReference Include="Microsoft.Extensions.Identity.Stores"/>
+        <PackageReference Include="Swashbuckle.AspNetCore.Annotations"/>
+        <PackageReference Include="System.ComponentModel.Annotations"/>
     </ItemGroup>
-
 </Project>

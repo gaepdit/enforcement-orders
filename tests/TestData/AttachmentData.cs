@@ -70,9 +70,9 @@ public static class AttachmentData
 
     ];
 
-    public record AttachmentFile(string FileName, string? Base64EncodedFile);
+    public record AttachmentFile(string FileName, string Base64EncodedFile);
 
-    private static List<AttachmentFile>? _attachmentFiles;
+    private static List<AttachmentFile> _attachmentFiles;
 
     public static List<AttachmentFile> GetAttachmentFiles()
     {
