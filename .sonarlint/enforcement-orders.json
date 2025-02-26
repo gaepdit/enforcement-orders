@@ -1,4 +1,5 @@
 {
     "sonarCloudOrganization": "gaepdit",
-    "projectKey": "gaepdit_enforcement-orders"
+    "projectKey": "gaepdit_enforcement-orders",
+    "region": "EU"
 }
