@@ -9,6 +9,8 @@ public static class ApplicationSettings
 
     public const string LocalDevSettingsSection = "LocalDevSettings";
     public static LocalDevSettings LocalDevSettings { get; } = new();
+
+    public static string OrgNotificationsApiUrl { get; set; }
 }
 
 public class RaygunClientSettings
