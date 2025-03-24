@@ -12,6 +12,7 @@ using Enfo.LocalRepository;
 using Enfo.WebApp.Platform.Local;
 using Enfo.WebApp.Platform.Logging;
 using Enfo.WebApp.Platform.Migrator;
+using Enfo.WebApp.Platform.OrgNotifications;
 using Enfo.WebApp.Platform.SecurityHeaders;
 using Enfo.WebApp.Platform.Settings;
 using FluentValidation;
@@ -40,6 +41,8 @@ builder.Configuration.GetSection(ApplicationSettings.RaygunSettingsSection)
     .Bind(ApplicationSettings.RaygunClientSettings);
 builder.Configuration.GetSection(ApplicationSettings.LocalDevSettingsSection)
     .Bind(ApplicationSettings.LocalDevSettings);
+ApplicationSettings.OrgNotificationsApiUrl =
+    builder.Configuration.GetValue<string>(nameof(ApplicationSettings.OrgNotificationsApiUrl));
 
 // Configure Identity
 builder.Services
@@ -141,6 +144,9 @@ else
     builder.Services.AddScoped<IEpdContactRepository, EpdContactRepository>();
     builder.Services.AddScoped<ILegalAuthorityRepository, LegalAuthorityRepository>();
 }
+
+// Add organizational notifications
+builder.Services.AddOrgNotifications();
 
 // Initialize database
 builder.Services.AddHostedService<MigratorHostedService>();

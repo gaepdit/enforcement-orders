@@ -4,7 +4,7 @@ using System.Text.Json;
 
 namespace Enfo.WebApp.Platform.RazorHelpers;
 
-public static class TempDataExtensions
+public static class TempDataDictionaryExtensions
 {
     private static void Set<T>(this ITempDataDictionary tempData, string key, T value) where T : class
     {
@@ -14,7 +14,7 @@ public static class TempDataExtensions
     private static T Get<T>(this ITempDataDictionary tempData, string key) where T : class
     {
         tempData.TryGetValue(key, out var o);
-        return o == null ? null : JsonSerializer.Deserialize<T>((string) o);
+        return o == null ? null : JsonSerializer.Deserialize<T>((string)o);
     }
 
     public static void SetDisplayMessage(this ITempDataDictionary tempData, Context context, string message)
