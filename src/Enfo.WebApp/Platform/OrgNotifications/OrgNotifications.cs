@@ -35,7 +35,7 @@ public class OrgNotifications(
 
     public async Task<List<OrgNotification>> GetOrgNotificationsAsync()
     {
-        if (ApplicationSettings.OrgNotificationsApiUrl is null) return [];
+        if (string.IsNullOrEmpty(ApplicationSettings.OrgNotificationsApiUrl)) return [];
 
         if (cache.TryGetValue(CacheKey, out List<OrgNotification> notifications) && notifications != null)
             return notifications;
@@ -43,17 +43,16 @@ public class OrgNotifications(
         try
         {
             notifications = await httpClientFactory.FetchApiDataAsync<List<OrgNotification>>(
-                ApplicationSettings.OrgNotificationsApiUrl, ApiEndpoint, "NotificationsClient");
-            if (notifications is null) return [];
-            cache.Set(CacheKey, notifications, new TimeSpan(hours: 1, minutes: 0, seconds: 0));
+                ApplicationSettings.OrgNotificationsApiUrl, ApiEndpoint, "NotificationsClient") ?? [];
         }
         catch (Exception ex)
         {
             // If the API is unresponsive or other error occurs, no notifications will be displayed.
             logger.LogError(ex, "Failed to fetch organizational notifications.");
-            return [];
+            notifications = [];
         }
 
+        cache.Set(CacheKey, notifications, new TimeSpan(hours: 1, minutes: 0, seconds: 0));
         return notifications;
     }
 }
