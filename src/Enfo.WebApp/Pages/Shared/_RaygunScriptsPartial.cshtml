@@ -1,19 +1,18 @@
 ﻿@using Enfo.WebApp.Platform.Settings
-@addTagHelper NetEscapades.AspNetCore.SecurityHeaders.TagHelpers.HashTagHelper, NetEscapades.AspNetCore.SecurityHeaders.TagHelpers
 @inject IConfiguration Configuration
 @inject IHttpContextAccessor ContextAccessor
 @{
     var identity = ContextAccessor.HttpContext?.User.Identity;
 }
 
-<script>
+<script asp-add-content-to-csp>
   !function(a,b,c,d,e,f,g,h){a.RaygunObject=e,a[e]=a[e]||function(){
   (a[e].o=a[e].o||[]).push(arguments)},f=b.createElement(c),g=b.getElementsByTagName(c)[0],
   f.async=1,f.src=d,g.parentNode.insertBefore(f,g),h=a.onerror,a.onerror=function(b,c,d,f,g){
   h&&h(b,c,d,f,g),g||(g=new Error(b)),a[e].q=a[e].q||[],a[e].q.push({
   e:g})}}(window,document,"script","//cdn.raygun.io/raygun4js/raygun.min.js","rg4js");
 </script>
-<script asp-add-content-to-csp>
+<script asp-add-nonce>
     rg4js('apiKey', '@Configuration[$"{ApplicationSettings.RaygunSettingsSection}:ApiKey"]');
     rg4js('enableCrashReporting', true);
     rg4js('withTags', ['@Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")']);
@@ -22,4 +21,6 @@
         @:rg4js('setUser', {isAnonymous: false, identifier: '@identity.Name'});
     }
 </script>
-<environment names="Production"><script>rg4js('enablePulse', true);</script></environment>
+<environment names="Production">
+    <script asp-add-content-to-csp>rg4js('enablePulse', true);</script>
+</environment>
