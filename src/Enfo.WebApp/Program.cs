@@ -137,7 +137,7 @@ else
     // When running on the server, requires a deployed database (configured in the app settings file)
     builder.Services.AddDbContext<EnfoDbContext>(opts =>
         opts.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
-            options => options.MigrationsAssembly("Infrastructure")));
+            options => options.EnableRetryOnFailure().MigrationsAssembly("Infrastructure")));
 
     builder.Services.AddScoped<IUserService, UserService>();
     builder.Services.AddScoped<IEnforcementOrderRepository, EnforcementOrderRepository>();
