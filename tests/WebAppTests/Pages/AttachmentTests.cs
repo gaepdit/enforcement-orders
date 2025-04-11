@@ -12,16 +12,12 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Routing;
 using NSubstitute;
 using NUnit.Framework;
-using System;
 using System.Security.Claims;
 using System.Security.Principal;
 using System.Text;
-using System.Threading.Tasks;
 using Attachment = Enfo.WebApp.Pages.Attachment;
 
 namespace EnfoTests.WebApp.Pages;
-
-// TODO: Improve test coverage for Attachments page
 
 [TestFixture]
 public class AttachmentTests

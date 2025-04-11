@@ -29,6 +29,10 @@ using System.Runtime.InteropServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Set default timeout for regular expressions.
+// https://learn.microsoft.com/en-us/dotnet/standard/base-types/best-practices-regex#use-time-out-values
+AppDomain.CurrentDomain.SetData("REGEX_DEFAULT_MATCH_TIMEOUT", TimeSpan.FromMilliseconds(100));
+
 // Persist data protection keys
 var directory =
     Directory.CreateDirectory(builder.Configuration["DataProtectionKeysPath"]!);

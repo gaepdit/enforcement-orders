@@ -44,7 +44,7 @@ public static class ResourceHelper
 
         return order;
     }
-        
+
     // Maintenance
 
     public static List<EpdContactView> GetEpdContactViewList() =>

@@ -9,6 +9,6 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\src\Infrastructure\Infrastructure.csproj"/>
-        <ProjectReference Include="..\TestData\TestData.csproj"/>
+        <ProjectReference Include="..\..\src\TestData\TestData.csproj" />
     </ItemGroup>
 </Project>
