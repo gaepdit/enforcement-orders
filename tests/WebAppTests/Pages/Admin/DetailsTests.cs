@@ -13,13 +13,9 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Routing;
 using NSubstitute;
 using NUnit.Framework;
-using System.Collections.Generic;
 using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace EnfoTests.WebApp.Pages.Admin;
-
-// TODO: Improve test coverage for Details page
 
 [TestFixture]
 public class DetailsTests

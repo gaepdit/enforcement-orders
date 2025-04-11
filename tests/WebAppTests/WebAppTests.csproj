@@ -5,6 +5,5 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\src\Enfo.WebApp\Enfo.WebApp.csproj"/>
-        <ProjectReference Include="..\..\src\LocalRepository\LocalRepository.csproj"/>
     </ItemGroup>
 </Project>

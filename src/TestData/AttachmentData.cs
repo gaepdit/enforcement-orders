@@ -67,7 +67,6 @@ public static class AttachmentData
             EnforcementOrder = EnforcementOrderData.EnforcementOrders.Single(e => e.Id == 4),
             DateUploaded = DateTime.Today.AddDays(-2),
         },
-
     ];
 
     public record AttachmentFile(string FileName, string Base64EncodedFile);
