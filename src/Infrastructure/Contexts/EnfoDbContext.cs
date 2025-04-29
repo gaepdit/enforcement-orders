@@ -47,7 +47,9 @@ public class EnfoDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Gui
             builder.Entity(entityType).Property<string>(AuditProperties.UpdatedBy);
         }
 
-        // Performance indexes
+        // Performance-related indexes
+        // See https://learn.microsoft.com/en-us/ef/core/modeling/indexes?tabs=fluent-api#included-columns
+        // and https://github.com/gaepdit/EPDDatabases/blob/16e12d19ae063a8df96226f55ba78107170bd86e/Troubleshooting_Scripts/ImprovePerformance/Microsoft/EnforcementOrders.sql 
         var orders = builder.Entity<EnforcementOrder>();
         orders.HasIndex(e => new { e.Deleted, e.OrderNumber }, "missing_index_345_344");
         orders.HasIndex(e => new { e.Deleted }, "missing_index_561_560")
