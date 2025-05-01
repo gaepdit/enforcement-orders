@@ -1,18 +1,18 @@
 ﻿using Enfo.Domain.Users.Entities;
 using Enfo.Infrastructure.Contexts;
-using Enfo.WebApp.Platform.Local;
+using Enfo.WebApp.Platform.Utilities;
 using EnfoTests.TestData;
 using GaEpd.FileService;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-namespace Enfo.WebApp.Platform.Migrator;
+namespace Enfo.WebApp.Platform.AppConfiguration;
 
 /// <summary>
 /// Sets up the database. 
 /// ref: https://andrewlock.net/running-async-tasks-on-app-startup-in-asp-net-core-3/
 /// </summary>
-public class MigratorHostedService : IHostedService
+internal class MigratorHostedService : IHostedService
 {
     // We need to inject the IServiceProvider so we can create the DbContext scoped service
     private readonly IServiceProvider _serviceProvider;

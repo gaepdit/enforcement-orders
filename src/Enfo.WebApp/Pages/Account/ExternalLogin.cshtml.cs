@@ -1,9 +1,9 @@
 using Enfo.Domain.Users.Entities;
 using Enfo.Domain.Users.Services;
 using Enfo.WebApp.Models;
-using Enfo.WebApp.Platform.Local;
 using Enfo.WebApp.Platform.RazorHelpers;
 using Enfo.WebApp.Platform.Settings;
+using Enfo.WebApp.Platform.Utilities;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;

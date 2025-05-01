@@ -1,4 +1,4 @@
-﻿namespace Enfo.WebApp.Platform.Constants;
+﻿namespace Enfo.WebApp.Platform.AppConfiguration;
 
 // App-wide global variables
 internal static class GlobalConstants

@@ -1,7 +1,8 @@
 ﻿using Enfo.Domain.Users.Entities;
-using Enfo.WebApp.Platform.Local;
 using Enfo.WebApp.Platform.Settings;
+using Enfo.WebApp.Platform.Utilities;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;

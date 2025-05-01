@@ -58,4 +58,8 @@
             <AbsolutePath>web.config</AbsolutePath>
         </MsDeploySkipRules>
     </ItemGroup>
+
+    <ItemGroup>
+        <None Include="../../README.md" />
+    </ItemGroup>
 </Project>

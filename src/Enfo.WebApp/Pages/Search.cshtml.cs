@@ -4,7 +4,7 @@ using Enfo.Domain.EnforcementOrders.Specs;
 using Enfo.Domain.LegalAuthorities.Repositories;
 using Enfo.Domain.LegalAuthorities.Resources;
 using Enfo.Domain.Pagination;
-using Enfo.WebApp.Platform.Constants;
+using Enfo.WebApp.Platform.AppConfiguration;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;

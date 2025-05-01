@@ -1,4 +1,4 @@
-﻿namespace Enfo.WebApp.Platform.Local;
+﻿namespace Enfo.WebApp.Platform.Utilities;
 
 internal static class WebHostEnvironmentExtensions
 {

@@ -1,6 +1,6 @@
 using Enfo.WebApp.Platform.Settings;
 
-namespace Enfo.WebApp.Platform.SecurityHeaders;
+namespace Enfo.WebApp.Platform.AppConfiguration;
 
 internal static class SecurityHeaders
 {
