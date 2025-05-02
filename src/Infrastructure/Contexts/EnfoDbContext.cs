@@ -1,4 +1,4 @@
-﻿using Enfo.Domain.BaseEntities;
+using Enfo.Domain.BaseEntities;
 using Enfo.Domain.EnforcementOrders.Entities;
 using Enfo.Domain.EpdContacts.Entities;
 using Enfo.Domain.LegalAuthorities.Entities;
@@ -46,73 +46,6 @@ public class EnfoDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Gui
             builder.Entity(entityType).Property<string>(AuditProperties.CreatedBy);
             builder.Entity(entityType).Property<string>(AuditProperties.UpdatedBy);
         }
-
-        // Performance-related indexes
-        // See https://learn.microsoft.com/en-us/ef/core/modeling/indexes?tabs=fluent-api#included-columns
-        // and https://github.com/gaepdit/EPDDatabases/blob/16e12d19ae063a8df96226f55ba78107170bd86e/Troubleshooting_Scripts/ImprovePerformance/Microsoft/EnforcementOrders.sql 
-        var orders = builder.Entity<EnforcementOrder>();
-        orders.HasIndex(e => new { e.Deleted, e.OrderNumber }, "missing_index_345_344");
-        orders.HasIndex(e => new { e.Deleted }, "missing_index_561_560")
-            .IncludeProperties(e => new { e.OrderNumber });
-        orders.HasIndex(e => new { e.Deleted, e.OrderNumber, e.Id }, "missing_index_617_616");
-        orders.HasIndex(e => new { e.Deleted, e.PublicationStatus }, "missing_index_699_698")
-            .IncludeProperties(e => new
-            {
-                e.ExecutedOrderPostedDate,
-                e.IsExecutedOrder,
-                e.IsProposedOrder,
-                e.OrderNumber,
-                e.ProposedOrderPostedDate,
-            });
-        orders.HasIndex(e => new { e.Deleted, e.LegalAuthorityId, e.PublicationStatus }, "missing_index_737_736")
-            .IncludeProperties(e => new
-            {
-                e.ExecutedOrderPostedDate, e.IsExecutedOrder, e.IsProposedOrder, e.ProposedOrderPostedDate
-            });
-        orders.HasIndex(e => new { e.Deleted, e.PublicationStatus }, "missing_index_741_740")
-            .IncludeProperties(e => new
-            {
-                e.ExecutedOrderPostedDate, e.IsExecutedOrder, e.IsProposedOrder, e.ProposedOrderPostedDate
-            });
-        orders.HasIndex(e => new { e.Deleted, e.LegalAuthorityId, e.PublicationStatus, e.County },
-                "missing_index_898_897")
-            .IncludeProperties(e => new
-            {
-                e.ExecutedOrderPostedDate, e.IsExecutedOrder, e.IsProposedOrder, e.ProposedOrderPostedDate
-            });
-        orders.HasIndex(e => new { e.Deleted, e.LegalAuthorityId, e.PublicationStatus }, "missing_index_1099_1098")
-            .IncludeProperties(e => new
-            {
-                e.ExecutedDate,
-                e.ExecutedOrderPostedDate,
-                e.IsExecutedOrder,
-                e.IsProposedOrder,
-                e.ProposedOrderPostedDate,
-            });
-        orders.HasIndex(e => new { e.Deleted, e.LegalAuthorityId, e.PublicationStatus }, "missing_index_1102_1101")
-            .IncludeProperties(e => new
-            {
-                e.ExecutedDate,
-                e.ExecutedOrderPostedDate,
-                e.FacilityName,
-                e.IsExecutedOrder,
-                e.IsProposedOrder,
-                e.ProposedOrderPostedDate,
-            });
-        orders.HasIndex(e => new { e.Deleted, e.PublicationStatus, e.County }, "missing_index_1176_1175")
-            .IncludeProperties(e => new
-            {
-                e.ExecutedDate,
-                e.ExecutedOrderPostedDate,
-                e.IsExecutedOrder,
-                e.IsProposedOrder,
-                e.ProposedOrderPostedDate,
-            });
-        orders.HasIndex(e => new { e.Deleted, e.PublicationStatus, e.County }, "missing_index_1271_1270")
-            .IncludeProperties(e => new
-            {
-                e.ExecutedOrderPostedDate, e.IsExecutedOrder, e.IsProposedOrder, e.ProposedOrderPostedDate
-            });
     }
 
     public override int SaveChanges()
