@@ -22,7 +22,7 @@ public sealed class LocalEnforcementOrderRepository : IEnforcementOrderRepositor
     {
         if (!EnforcementOrderData.EnforcementOrders.AsQueryable()
                 .FilterForOnlyPublic().Any(e => e.Id == id))
-            return Task.FromResult(null as EnforcementOrderDetailedView);
+            return Task.FromResult<EnforcementOrderDetailedView>(null);
 
         var order = EnforcementOrderData.GetEnforcementOrderDetailedView(id);
 
@@ -32,7 +32,7 @@ public sealed class LocalEnforcementOrderRepository : IEnforcementOrderRepositor
     public Task<EnforcementOrderAdminView> GetAdminViewAsync(int id)
     {
         if (!EnforcementOrderData.EnforcementOrders.AsQueryable().Any(e => e.Id == id))
-            return Task.FromResult(null as EnforcementOrderAdminView);
+            return Task.FromResult<EnforcementOrderAdminView>(null);
 
         var order = EnforcementOrderData.GetEnforcementOrderAdminView(id);
 
@@ -43,7 +43,7 @@ public sealed class LocalEnforcementOrderRepository : IEnforcementOrderRepositor
         AttachmentData.Attachments.Exists(a => a.Id == id && !a.Deleted)
             ? Task.FromResult(new AttachmentView(
                 AttachmentData.Attachments.Single(a => a.Id == id)!))
-            : Task.FromResult(null as AttachmentView);
+            : Task.FromResult<AttachmentView>(null);
 
     public Task<PaginatedResult<EnforcementOrderSummaryView>> ListAsync(
         EnforcementOrderSpec spec, PaginationSpec paging)
@@ -113,11 +113,12 @@ public sealed class LocalEnforcementOrderRepository : IEnforcementOrderRepositor
     public Task<bool> OrderNumberExistsAsync(string orderNumber, int? ignoreId = null) =>
         Task.FromResult(
             EnforcementOrderData.EnforcementOrders
-                .Exists(e => string.Equals(e.OrderNumber, orderNumber, StringComparison.CurrentCultureIgnoreCase) && !e.Deleted && e.Id != ignoreId));
+                .Exists(e =>
+                    string.Equals(e.OrderNumber, orderNumber, StringComparison.CurrentCultureIgnoreCase) &&
+                    !e.Deleted && e.Id != ignoreId));
 
     public Task<IReadOnlyList<EnforcementOrderDetailedView>> ListCurrentProposedEnforcementOrdersAsync() =>
-        Task.FromResult(
-            (IReadOnlyList<EnforcementOrderDetailedView>)
+        Task.FromResult<IReadOnlyList<EnforcementOrderDetailedView>>(
             EnforcementOrderData.GetEnforcementOrdersIncludeAttachments().AsQueryable()
                 .FilterForCurrentProposed()
                 .ApplySorting(OrderSorting.DateAsc)
@@ -125,8 +126,7 @@ public sealed class LocalEnforcementOrderRepository : IEnforcementOrderRepositor
                 .ToList());
 
     public Task<IReadOnlyList<EnforcementOrderDetailedView>> ListRecentlyExecutedEnforcementOrdersAsync() =>
-        Task.FromResult(
-            (IReadOnlyList<EnforcementOrderDetailedView>)
+        Task.FromResult<IReadOnlyList<EnforcementOrderDetailedView>>(
             EnforcementOrderData.GetEnforcementOrdersIncludeAttachments().AsQueryable()
                 .FilterForRecentlyExecuted()
                 .ApplySorting(OrderSorting.DateAsc)
@@ -134,8 +134,7 @@ public sealed class LocalEnforcementOrderRepository : IEnforcementOrderRepositor
                 .ToList());
 
     public Task<IReadOnlyList<EnforcementOrderAdminSummaryView>> ListDraftEnforcementOrdersAsync() =>
-        Task.FromResult(
-            (IReadOnlyList<EnforcementOrderAdminSummaryView>)
+        Task.FromResult<IReadOnlyList<EnforcementOrderAdminSummaryView>>(
             EnforcementOrderData.GetEnforcementOrdersIncludeAttachments().AsQueryable()
                 .FilterForDrafts()
                 .ApplySorting(OrderSorting.DateAsc)
@@ -143,8 +142,7 @@ public sealed class LocalEnforcementOrderRepository : IEnforcementOrderRepositor
                 .ToList());
 
     public Task<IReadOnlyList<EnforcementOrderAdminSummaryView>> ListPendingEnforcementOrdersAsync() =>
-        Task.FromResult(
-            (IReadOnlyList<EnforcementOrderAdminSummaryView>)
+        Task.FromResult<IReadOnlyList<EnforcementOrderAdminSummaryView>>(
             EnforcementOrderData.GetEnforcementOrdersIncludeAttachments().AsQueryable()
                 .FilterForPending()
                 .ApplySorting(OrderSorting.DateAsc)
@@ -166,7 +164,8 @@ public sealed class LocalEnforcementOrderRepository : IEnforcementOrderRepositor
             : EpdContactData.GetEpdContact(item.HearingContactId.Value);
 
         EnforcementOrderData.EnforcementOrders.Add(item);
-        if (resource.Attachment is not null) await AddAttachmentInternalAsync(resource.Attachment, item).ConfigureAwait(false);
+        if (resource.Attachment is not null)
+            await AddAttachmentInternalAsync(resource.Attachment, item).ConfigureAwait(false);
         return id;
     }
 
@@ -175,7 +174,7 @@ public sealed class LocalEnforcementOrderRepository : IEnforcementOrderRepositor
         Guard.NotNull(resource);
 
         var item = EnforcementOrderData.EnforcementOrders.SingleOrDefault(e => e.Id == resource.Id)
-            ?? throw new ArgumentException($"ID ({resource.Id}) not found.", nameof(resource));
+                   ?? throw new ArgumentException($"ID ({resource.Id}) not found.", nameof(resource));
 
         if (item.Deleted)
             throw new ArgumentException("A deleted Enforcement Order cannot be modified.", nameof(resource));
@@ -259,7 +258,7 @@ public sealed class LocalEnforcementOrderRepository : IEnforcementOrderRepositor
     private static Task SetWhetherDeleted(int id, bool deleted)
     {
         var item = EnforcementOrderData.EnforcementOrders.SingleOrDefault(e => e.Id == id)
-            ?? throw new ArgumentException($"ID ({id}) not found.", nameof(id));
+                   ?? throw new ArgumentException($"ID ({id}) not found.", nameof(id));
 
         item.Deleted = deleted;
         return Task.CompletedTask;

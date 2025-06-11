@@ -7,10 +7,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Enfo.Infrastructure.Repositories;
 
-public sealed class EpdContactRepository : IEpdContactRepository
+public sealed class EpdContactRepository(EnfoDbContext context) : IEpdContactRepository
 {
-    private readonly EnfoDbContext _context;
-    public EpdContactRepository(EnfoDbContext context) => _context = Guard.NotNull(context);
+    private readonly EnfoDbContext _context = Guard.NotNull(context);
 
     public async Task<EpdContactView> GetAsync(int id)
     {
@@ -38,7 +37,7 @@ public sealed class EpdContactRepository : IEpdContactRepository
     public async Task UpdateAsync(EpdContactCommand resource)
     {
         var item = (await _context.EpdContacts.FindAsync(resource.Id).ConfigureAwait(false))
-            ?? throw new ArgumentException($"ID ({resource.Id}) not found.", nameof(resource));
+                   ?? throw new ArgumentException($"ID ({resource.Id}) not found.", nameof(resource));
 
         resource.TrimAll();
         item.ApplyUpdate(resource);
@@ -48,7 +47,7 @@ public sealed class EpdContactRepository : IEpdContactRepository
     public async Task UpdateStatusAsync(int id, bool newActiveStatus)
     {
         var item = await _context.EpdContacts.FindAsync(id).ConfigureAwait(false)
-            ?? throw new ArgumentException($"ID ({id}) not found.", nameof(id));
+                   ?? throw new ArgumentException($"ID ({id}) not found.", nameof(id));
         item.Active = newActiveStatus;
         await _context.SaveChangesAsync().ConfigureAwait(false);
     }

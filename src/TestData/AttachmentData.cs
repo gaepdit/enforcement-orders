@@ -4,9 +4,9 @@ namespace EnfoTests.TestData;
 
 public static class AttachmentData
 {
-    internal static readonly List<Attachment> Attachments =
+    internal static List<Attachment> Attachments { get; } =
     [
-        new Attachment
+        new()
         {
             Id = new Guid("00000000-0000-0000-0000-000000000001"),
             FileName = "FileOne.pdf",
@@ -16,7 +16,7 @@ public static class AttachmentData
             DateUploaded = DateTime.Today.AddDays(-2),
         },
 
-        new Attachment
+        new()
         {
             Id = new Guid("00000000-0000-0000-0000-000000000002"),
             FileName = "File Two.pdf",
@@ -26,7 +26,7 @@ public static class AttachmentData
             DateUploaded = DateTime.Today.AddDays(-1),
         },
 
-        new Attachment
+        new()
         {
             Id = new Guid("00000000-0000-0000-0000-000000000003"),
             FileName = "File-Three-💻.pdf",
@@ -36,7 +36,7 @@ public static class AttachmentData
             DateUploaded = DateTime.Today.AddDays(-1),
         },
 
-        new Attachment
+        new()
         {
             Id = new Guid("00000000-0000-0000-0000-000000000004"),
             FileName = "FileFourDeleted.pdf",
@@ -48,7 +48,7 @@ public static class AttachmentData
             DateDeleted = DateTime.Today.AddDays(-1),
         },
 
-        new Attachment
+        new()
         {
             Id = new Guid("00000000-0000-0000-0000-000000000005"),
             FileName = "FileFive-OrderNotPublic.pdf",
@@ -58,7 +58,7 @@ public static class AttachmentData
             DateUploaded = DateTime.Today.AddDays(-2),
         },
 
-        new Attachment
+        new()
         {
             Id = new Guid("00000000-0000-0000-0000-000000000006"),
             FileName = "FileSix-OrderDeleted.pdf",
@@ -82,12 +82,12 @@ public static class AttachmentData
 
     private static List<AttachmentFile> SeedAttachmentFiles =>
     [
-        new AttachmentFile("00000000-0000-0000-0000-000000000001.pdf", EncodedPdfFile),
-        new AttachmentFile("00000000-0000-0000-0000-000000000002.pdf", EncodedPdfFile),
-        new AttachmentFile("00000000-0000-0000-0000-000000000003.pdf", EncodedPdfFile),
-        new AttachmentFile("00000000-0000-0000-0000-000000000004.pdf", Base64EncodedFile: null),
-        new AttachmentFile("00000000-0000-0000-0000-000000000005.pdf", EncodedPdfFile),
-        new AttachmentFile("00000000-0000-0000-0000-000000000006.pdf", EncodedPdfFile),
+        new("00000000-0000-0000-0000-000000000001.pdf", EncodedPdfFile),
+        new("00000000-0000-0000-0000-000000000002.pdf", EncodedPdfFile),
+        new("00000000-0000-0000-0000-000000000003.pdf", EncodedPdfFile),
+        new("00000000-0000-0000-0000-000000000004.pdf", Base64EncodedFile: null),
+        new("00000000-0000-0000-0000-000000000005.pdf", EncodedPdfFile),
+        new("00000000-0000-0000-0000-000000000006.pdf", EncodedPdfFile),
     ];
 
 

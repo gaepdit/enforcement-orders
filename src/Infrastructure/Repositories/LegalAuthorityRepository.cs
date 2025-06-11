@@ -7,10 +7,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Enfo.Infrastructure.Repositories;
 
-public sealed class LegalAuthorityRepository : ILegalAuthorityRepository
+public sealed class LegalAuthorityRepository(EnfoDbContext context) : ILegalAuthorityRepository
 {
-    private readonly EnfoDbContext _context;
-    public LegalAuthorityRepository(EnfoDbContext context) => _context = Guard.NotNull(context);
+    private readonly EnfoDbContext _context = Guard.NotNull(context);
 
     public async Task<LegalAuthorityView> GetAsync(int id)
     {
@@ -40,7 +39,7 @@ public sealed class LegalAuthorityRepository : ILegalAuthorityRepository
     public async Task UpdateAsync(LegalAuthorityCommand resource)
     {
         var item = (await _context.LegalAuthorities.FindAsync(resource.Id).ConfigureAwait(false))
-            ?? throw new ArgumentException($"ID ({resource.Id}) not found.", nameof(resource));
+                   ?? throw new ArgumentException($"ID ({resource.Id}) not found.", nameof(resource));
 
         if (!item.Active) throw new ArgumentException("Only active items can be edited.", nameof(resource));
 
@@ -52,7 +51,7 @@ public sealed class LegalAuthorityRepository : ILegalAuthorityRepository
     public async Task UpdateStatusAsync(int id, bool newActiveStatus)
     {
         var item = await _context.LegalAuthorities.FindAsync(id).ConfigureAwait(false)
-            ?? throw new ArgumentException($"ID ({id}) not found.", nameof(id));
+                   ?? throw new ArgumentException($"ID ({id}) not found.", nameof(id));
         item.Active = newActiveStatus;
         await _context.SaveChangesAsync().ConfigureAwait(false);
     }

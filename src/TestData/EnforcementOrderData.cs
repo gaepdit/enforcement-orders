@@ -28,9 +28,9 @@ internal static class EnforcementOrderData
         return item is null ? null : new EnforcementOrderDetailedView(item);
     }
 
-    public static readonly List<EnforcementOrder> EnforcementOrders = new()
-    {
-        new EnforcementOrder
+    public static List<EnforcementOrder> EnforcementOrders { get; } =
+    [
+        new()
         {
             Id = 1,
             Cause = "abc1-" + Guid.NewGuid(),
@@ -56,7 +56,8 @@ internal static class EnforcementOrderData
             Requirements = "abc1-" + Guid.NewGuid(),
             SettlementAmount = 1800,
         },
-        new EnforcementOrder
+
+        new()
         {
             Id = 2,
             Cause = "bcd2-" + Guid.NewGuid(),
@@ -81,7 +82,8 @@ internal static class EnforcementOrderData
             Requirements = "bcd2-" + Guid.NewGuid(),
             SettlementAmount = 1.5m,
         },
-        new EnforcementOrder
+
+        new()
         {
             Id = 3,
             Cause = "ūrbǣnitas3-" + Guid.NewGuid(),
@@ -106,7 +108,8 @@ internal static class EnforcementOrderData
             Requirements = "ūrbǣnitas3-" + Guid.NewGuid(),
             SettlementAmount = 5000,
         },
-        new EnforcementOrder
+
+        new()
         {
             Id = 4,
             Cause = "efg4-" + Guid.NewGuid(),
@@ -134,7 +137,8 @@ internal static class EnforcementOrderData
             Requirements = "efg4-" + Guid.NewGuid(),
             SettlementAmount = 25000,
         },
-        new EnforcementOrder
+
+        new()
         {
             Id = 5,
             Cause = "fgh5-" + Guid.NewGuid(),
@@ -162,7 +166,8 @@ internal static class EnforcementOrderData
             Requirements = "fgh5-" + Guid.NewGuid(),
             SettlementAmount = 25000,
         },
-        new EnforcementOrder
+
+        new()
         {
             Id = 6,
             Cause = "ghi6-" + Guid.NewGuid(),
@@ -190,7 +195,8 @@ internal static class EnforcementOrderData
             Requirements = "ghi6-" + Guid.NewGuid(),
             SettlementAmount = 25000,
         },
-        new EnforcementOrder
+
+        new()
         {
             Id = 7,
             Cause = "hij7-" + Guid.NewGuid(),
@@ -216,7 +222,8 @@ internal static class EnforcementOrderData
             Requirements = "hij7-" + Guid.NewGuid(),
             SettlementAmount = 1800,
         },
-        new EnforcementOrder
+
+        new()
         {
             Id = 11,
             Cause = "abc11-" + Guid.NewGuid(),
@@ -242,7 +249,8 @@ internal static class EnforcementOrderData
             Requirements = "abc11-" + Guid.NewGuid(),
             SettlementAmount = 1800,
         },
-        new EnforcementOrder
+
+        new()
         {
             Id = 12,
             Cause = "bcd12-" + Guid.NewGuid(),
@@ -267,7 +275,8 @@ internal static class EnforcementOrderData
             Requirements = "bcd12-" + Guid.NewGuid(),
             SettlementAmount = 1.5m,
         },
-        new EnforcementOrder
+
+        new()
         {
             Id = 13,
             Cause = "ūrbǣnitas13-" + Guid.NewGuid(),
@@ -292,7 +301,8 @@ internal static class EnforcementOrderData
             Requirements = "ūrbǣnitas13-" + Guid.NewGuid(),
             SettlementAmount = 5000,
         },
-        new EnforcementOrder
+
+        new()
         {
             Id = 14,
             Cause = "efg14-" + Guid.NewGuid(),
@@ -320,7 +330,8 @@ internal static class EnforcementOrderData
             Requirements = "efg14-" + Guid.NewGuid(),
             SettlementAmount = 25000,
         },
-        new EnforcementOrder
+
+        new()
         {
             Id = 15,
             Cause = "fgh15-" + Guid.NewGuid(),
@@ -348,7 +359,8 @@ internal static class EnforcementOrderData
             Requirements = "fgh15-" + Guid.NewGuid(),
             SettlementAmount = 25000,
         },
-        new EnforcementOrder
+
+        new()
         {
             Id = 16,
             Cause = "ghi16-" + Guid.NewGuid(),
@@ -376,7 +388,8 @@ internal static class EnforcementOrderData
             Requirements = "ghi16-" + Guid.NewGuid(),
             SettlementAmount = 25000,
         },
-        new EnforcementOrder
+
+        new()
         {
             Id = 17,
             Cause = "hij17-" + Guid.NewGuid(),
@@ -402,7 +415,8 @@ internal static class EnforcementOrderData
             Requirements = "hij17-" + Guid.NewGuid(),
             SettlementAmount = 1800,
         },
-        new EnforcementOrder
+
+        new()
         {
             Id = 21,
             Cause = "abc21-" + Guid.NewGuid(),
@@ -428,7 +442,8 @@ internal static class EnforcementOrderData
             Requirements = "abc21-" + Guid.NewGuid(),
             SettlementAmount = 1800,
         },
-        new EnforcementOrder
+
+        new()
         {
             Id = 22,
             Cause = "bcd22-" + Guid.NewGuid(),
@@ -455,7 +470,8 @@ internal static class EnforcementOrderData
             Requirements = "bcd22-" + Guid.NewGuid(),
             SettlementAmount = 1.5m,
         },
-        new EnforcementOrder
+
+        new()
         {
             Id = 23,
             Cause = "ūrbǣnitas23-" + Guid.NewGuid(),
@@ -480,7 +496,8 @@ internal static class EnforcementOrderData
             Requirements = "ūrbǣnitas23-" + Guid.NewGuid(),
             SettlementAmount = 5000,
         },
-        new EnforcementOrder
+
+        new()
         {
             Id = 24,
             Cause = "efg24-" + Guid.NewGuid(),
@@ -508,7 +525,8 @@ internal static class EnforcementOrderData
             Requirements = "efg24-" + Guid.NewGuid(),
             SettlementAmount = 25000,
         },
-        new EnforcementOrder
+
+        new()
         {
             Id = 25,
             Cause = "fgh25-" + Guid.NewGuid(),
@@ -536,7 +554,8 @@ internal static class EnforcementOrderData
             Requirements = "fgh25-" + Guid.NewGuid(),
             SettlementAmount = 25000,
         },
-        new EnforcementOrder
+
+        new()
         {
             Id = 26,
             Cause = "ghi26-" + Guid.NewGuid(),
@@ -564,7 +583,8 @@ internal static class EnforcementOrderData
             Requirements = "ghi26-" + Guid.NewGuid(),
             SettlementAmount = 25000,
         },
-        new EnforcementOrder
+
+        new()
         {
             Id = 27,
             Cause = "hij27-" + Guid.NewGuid(),
@@ -590,7 +610,8 @@ internal static class EnforcementOrderData
             Requirements = "hij27-" + Guid.NewGuid(),
             SettlementAmount = 1800,
         },
-        new EnforcementOrder
+
+        new()
         {
             Id = 28,
             CommentContactId = 2000,
@@ -611,5 +632,5 @@ internal static class EnforcementOrderData
             ExecutedOrderPostedDate = new DateTime(999, 5, 1, 0, 0, 0, DateTimeKind.Local),
             Requirements = "",
         },
-    };
+    ];
 }
