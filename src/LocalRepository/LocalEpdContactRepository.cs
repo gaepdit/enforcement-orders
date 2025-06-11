@@ -11,14 +11,12 @@ public sealed class LocalEpdContactRepository : IEpdContactRepository
         EpdContactData.EpdContacts.Exists(e => e.Id == id)
             ? Task.FromResult(new EpdContactView(
                 EpdContactData.EpdContacts.SingleOrDefault(e => e.Id == id)!))
-            : Task.FromResult(null as EpdContactView);
+            : Task.FromResult<EpdContactView>(null);
 
     public Task<IReadOnlyList<EpdContactView>> ListAsync(bool includeInactive = false) =>
-        Task.FromResult(
-            (IReadOnlyList<EpdContactView>)
-            EpdContactData.EpdContacts
-                .Where(e => e.Active || includeInactive)
-                .Select(e => new EpdContactView(e)).ToList());
+        Task.FromResult<IReadOnlyList<EpdContactView>>(EpdContactData.EpdContacts
+            .Where(e => e.Active || includeInactive)
+            .Select(e => new EpdContactView(e)).ToList());
 
     public Task<int> CreateAsync(EpdContactCommand resource)
     {

@@ -11,14 +11,12 @@ public sealed class LocalLegalAuthorityRepository : ILegalAuthorityRepository
         LegalAuthorityData.LegalAuthorities.Exists(e => e.Id == id)
             ? Task.FromResult(new LegalAuthorityView(
                 LegalAuthorityData.LegalAuthorities.SingleOrDefault(e => e.Id == id)!))
-            : Task.FromResult(null as LegalAuthorityView);
+            : Task.FromResult<LegalAuthorityView>(null);
 
     public Task<IReadOnlyList<LegalAuthorityView>> ListAsync(bool includeInactive = false) =>
-        Task.FromResult(
-            (IReadOnlyList<LegalAuthorityView>)
-            LegalAuthorityData.LegalAuthorities
-                .Where(e => e.Active || includeInactive)
-                .Select(e => new LegalAuthorityView(e)).ToList());
+        Task.FromResult<IReadOnlyList<LegalAuthorityView>>(LegalAuthorityData.LegalAuthorities
+            .Where(e => e.Active || includeInactive)
+            .Select(e => new LegalAuthorityView(e)).ToList());
 
     public Task<int> CreateAsync(LegalAuthorityCommand resource)
     {

@@ -6,23 +6,24 @@ using Enfo.Infrastructure.Contexts;
 using Enfo.Infrastructure.Repositories;
 using EnfoTests.TestData;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using NSubstitute;
-using System;
-using System.Linq;
 using TestSupport.EfHelpers;
 
 namespace EnfoTests.Infrastructure.Helpers;
 
 public sealed class RepositoryHelper : IDisposable
 {
-    private readonly DbContextOptions<EnfoDbContext> _options = SqliteInMemory.CreateOptions<EnfoDbContext>();
+    private readonly DbContextOptions<EnfoDbContext> _options = SqliteInMemory.CreateOptions<EnfoDbContext>(builder =>
+        builder.LogTo(Console.WriteLine, events: [RelationalEventId.CommandExecuted]));
+
     private readonly EnfoDbContext _context;
     public EnfoDbContext DbContext { get; private set; }
 
     private RepositoryHelper()
     {
         _context = new EnfoDbContext(_options, null);
-        _context.Database.EnsureCreated();
+        _context.Database.EnsureClean();
     }
 
     public static RepositoryHelper CreateRepositoryHelper() => new();
@@ -73,9 +74,7 @@ public sealed class RepositoryHelper : IDisposable
     {
         SeedEnforcementOrderData();
         DbContext = new EnfoDbContext(_options, null);
-        return new EnforcementOrderRepository(
-            DbContext,
-            Substitute.For<IAttachmentStore>(),
+        return new EnforcementOrderRepository(DbContext, Substitute.For<IAttachmentStore>(),
             Substitute.For<IErrorLogger>()
         );
     }

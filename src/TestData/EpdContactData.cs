@@ -9,9 +9,9 @@ internal static class EpdContactData
     public static EpdContact GetEpdContact(int id) =>
         EpdContacts.SingleOrDefault(e => e.Id == id);
 
-    public static readonly List<EpdContact> EpdContacts = new()
-    {
-        new EpdContact
+    public static List<EpdContact> EpdContacts { get; } =
+    [
+        new()
         {
             Id = 2000,
             Active = true,
@@ -26,7 +26,8 @@ internal static class EpdContactData
             Street = "4244 International Parkway",
             Street2 = "Suite 120",
         },
-        new EpdContact
+
+        new()
         {
             Id = 2001,
             Active = false,
@@ -41,7 +42,8 @@ internal static class EpdContactData
             Street = "4244 International Parkway",
             Street2 = "Suite 120",
         },
-        new EpdContact
+
+        new()
         {
             Id = 2002,
             Active = true,
@@ -55,5 +57,5 @@ internal static class EpdContactData
             State = "GA",
             Street = "123 New Street",
         },
-    };
+    ];
 }

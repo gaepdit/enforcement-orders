@@ -12,22 +12,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Enfo.Infrastructure.Repositories;
 
-public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
+public sealed class EnforcementOrderRepository(
+    EnfoDbContext context,
+    IAttachmentStore attachmentStore,
+    IErrorLogger errorLogger)
+    : IEnforcementOrderRepository
 {
-    private readonly EnfoDbContext _context;
-    private readonly IAttachmentStore _attachmentStore;
-    private readonly IErrorLogger _errorLogger;
-
-    public EnforcementOrderRepository(EnfoDbContext context, IAttachmentStore attachmentStore, IErrorLogger errorLogger)
-    {
-        _context = context;
-        _attachmentStore = attachmentStore;
-        _errorLogger = errorLogger;
-    }
-
     public async Task<EnforcementOrderDetailedView> GetAsync(int id)
     {
-        var item = await _context.EnforcementOrders.AsNoTracking()
+        var item = await context.EnforcementOrders.AsNoTracking()
             .FilterForOnlyPublic()
             .Include(e => e.CommentContact)
             .Include(e => e.HearingContact)
@@ -40,7 +33,7 @@ public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
 
     public async Task<EnforcementOrderAdminView> GetAdminViewAsync(int id)
     {
-        var item = (await _context.EnforcementOrders.AsNoTracking()
+        var item = (await context.EnforcementOrders.AsNoTracking()
             .Include(e => e.CommentContact)
             .Include(e => e.HearingContact)
             .Include(e => e.LegalAuthority)
@@ -52,7 +45,7 @@ public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
 
     public async Task<AttachmentView> GetAttachmentAsync(Guid id)
     {
-        var item = await _context.Attachments.AsNoTracking()
+        var item = await context.Attachments.AsNoTracking()
             .Include(a => a.EnforcementOrder)
             .SingleOrDefaultAsync(a => a.Id == id && !a.Deleted).ConfigureAwait(false);
 
@@ -65,7 +58,7 @@ public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
         Guard.NotNull(spec);
         Guard.NotNull(paging);
 
-        var filteredItems = _context.EnforcementOrders.AsNoTracking()
+        var filteredItems = context.EnforcementOrders.AsNoTracking()
             .ApplySpecFilter(spec);
 
         var items = await filteredItems
@@ -86,7 +79,7 @@ public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
         Guard.NotNull(spec);
         Guard.NotNull(paging);
 
-        var filteredItems = _context.EnforcementOrders.AsNoTracking()
+        var filteredItems = context.EnforcementOrders.AsNoTracking()
             .ApplySpecFilter(spec);
 
         var items = await filteredItems
@@ -110,7 +103,7 @@ public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
         Guard.NotNull(spec);
         Guard.NotNull(paging);
 
-        var filteredItems = _context.EnforcementOrders.AsNoTracking()
+        var filteredItems = context.EnforcementOrders.AsNoTracking()
             .ApplyAdminSpecFilter(spec);
 
         var items = await filteredItems
@@ -127,20 +120,20 @@ public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
 
     public async Task<bool> ExistsAsync(int id, bool onlyPublic = true)
     {
-        var item = await _context.EnforcementOrders.AsNoTracking()
+        var item = await context.EnforcementOrders.AsNoTracking()
             .SingleOrDefaultAsync(e => e.Id == id).ConfigureAwait(false);
 
         return item != null && (!onlyPublic || item.GetIsPublic);
     }
 
     public Task<bool> OrderNumberExistsAsync(string orderNumber, int? ignoreId = null) =>
-        _context.EnforcementOrders.AsNoTracking()
+        context.EnforcementOrders.AsNoTracking()
             .AnyAsync(e => e.OrderNumber == orderNumber && !e.Deleted && e.Id != ignoreId);
 
     // Current Proposed are public proposed orders (publication date in the past)
     // with comment close date in the future
     public async Task<IReadOnlyList<EnforcementOrderDetailedView>> ListCurrentProposedEnforcementOrdersAsync() =>
-        await _context.EnforcementOrders.AsNoTracking()
+        await context.EnforcementOrders.AsNoTracking()
             .FilterForCurrentProposed()
             .ApplySorting(OrderSorting.DateAsc)
             .Include(e => e.CommentContact)
@@ -153,7 +146,7 @@ public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
     // Recently Executed are public executed orders with 
     // publication date within current week
     public async Task<IReadOnlyList<EnforcementOrderDetailedView>> ListRecentlyExecutedEnforcementOrdersAsync() =>
-        await _context.EnforcementOrders.AsNoTracking()
+        await context.EnforcementOrders.AsNoTracking()
             .FilterForRecentlyExecuted()
             .ApplySorting(OrderSorting.DateAsc)
             .Include(e => e.CommentContact)
@@ -165,7 +158,7 @@ public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
 
     // Draft are orders with publication status set to Draft
     public async Task<IReadOnlyList<EnforcementOrderAdminSummaryView>> ListDraftEnforcementOrdersAsync() =>
-        await _context.EnforcementOrders.AsNoTracking()
+        await context.EnforcementOrders.AsNoTracking()
             .FilterForDrafts()
             .ApplySorting(OrderSorting.DateAsc)
             .Include(e => e.LegalAuthority)
@@ -175,7 +168,7 @@ public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
     // Pending are public proposed or executed orders with 
     // publication date after the current week
     public async Task<IReadOnlyList<EnforcementOrderAdminSummaryView>> ListPendingEnforcementOrdersAsync() =>
-        await _context.EnforcementOrders.AsNoTracking()
+        await context.EnforcementOrders.AsNoTracking()
             .FilterForPending()
             .ApplySorting(OrderSorting.DateAsc)
             .Include(e => e.LegalAuthority)
@@ -186,9 +179,10 @@ public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
     {
         resource.TrimAll();
         var item = new EnforcementOrder(resource);
-        await _context.EnforcementOrders.AddAsync(item).ConfigureAwait(false);
-        await _context.SaveChangesAsync().ConfigureAwait(false);
-        if (resource.Attachment is not null) await AddAttachmentAsync(item.Id, resource.Attachment).ConfigureAwait(false);
+        await context.EnforcementOrders.AddAsync(item).ConfigureAwait(false);
+        await context.SaveChangesAsync().ConfigureAwait(false);
+        if (resource.Attachment is not null)
+            await AddAttachmentAsync(item.Id, resource.Attachment).ConfigureAwait(false);
 
         return item.Id;
     }
@@ -197,22 +191,22 @@ public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
     {
         Guard.NotNull(resource);
 
-        var item = await _context.EnforcementOrders.FindAsync(resource.Id).ConfigureAwait(false)
-            ?? throw new ArgumentException($"ID ({resource.Id}) not found.", nameof(resource));
+        var item = await context.EnforcementOrders.FindAsync(resource.Id).ConfigureAwait(false)
+                   ?? throw new ArgumentException($"ID ({resource.Id}) not found.", nameof(resource));
 
         if (item.Deleted)
             throw new ArgumentException("A deleted Enforcement Order cannot be modified.", nameof(resource));
 
         item.ApplyUpdate(resource);
-        await _context.SaveChangesAsync().ConfigureAwait(false);
+        await context.SaveChangesAsync().ConfigureAwait(false);
     }
 
     public async Task AddAttachmentAsync(int orderId, IFormFile file)
     {
-        var order = await _context.EnforcementOrders
-                .Include(e => e.Attachments)
-                .SingleOrDefaultAsync(e => e.Id == orderId).ConfigureAwait(false)
-            ?? throw new ArgumentException($"Order ID {orderId} does not exist.", nameof(orderId));
+        var order = await context.EnforcementOrders
+                        .Include(e => e.Attachments)
+                        .SingleOrDefaultAsync(e => e.Id == orderId).ConfigureAwait(false)
+                    ?? throw new ArgumentException($"Order ID {orderId} does not exist.", nameof(orderId));
 
         if (order.Deleted)
             throw new ArgumentException($"Order ID {orderId} has been deleted and cannot be edited.", nameof(orderId));
@@ -236,24 +230,25 @@ public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
             EnforcementOrder = order,
         };
 
-        await _attachmentStore.SaveFileAttachmentAsync(file, attachmentId).ConfigureAwait(false);
-        await _context.Attachments.AddAsync(attachment).ConfigureAwait(false);
-        await _context.SaveChangesAsync().ConfigureAwait(false);
+        await attachmentStore.SaveFileAttachmentAsync(file, attachmentId).ConfigureAwait(false);
+        await context.Attachments.AddAsync(attachment).ConfigureAwait(false);
+        await context.SaveChangesAsync().ConfigureAwait(false);
     }
 
     public async Task DeleteAttachmentAsync(int orderId, Guid attachmentId)
     {
-        var order = await _context.EnforcementOrders.AsNoTracking()
-                .SingleOrDefaultAsync(e => e.Id == orderId).ConfigureAwait(false)
-            ?? throw new ArgumentException($"Order ID {orderId} does not exist.", nameof(orderId));
+        var order = await context.EnforcementOrders.AsNoTracking()
+                        .SingleOrDefaultAsync(e => e.Id == orderId).ConfigureAwait(false)
+                    ?? throw new ArgumentException($"Order ID {orderId} does not exist.", nameof(orderId));
 
         if (order.Deleted)
             throw new ArgumentException($"Order ID {orderId} has been deleted and cannot be edited.", nameof(orderId));
 
-        var attachment = await _context.Attachments
-                .Include(a => a.EnforcementOrder)
-                .SingleOrDefaultAsync(a => a.Id == attachmentId).ConfigureAwait(false)
-            ?? throw new ArgumentException($"Attachment ID {attachmentId} does not exist.", nameof(attachmentId));
+        var attachment = await context.Attachments
+                             .Include(a => a.EnforcementOrder)
+                             .SingleOrDefaultAsync(a => a.Id == attachmentId).ConfigureAwait(false)
+                         ?? throw new ArgumentException($"Attachment ID {attachmentId} does not exist.",
+                             nameof(attachmentId));
 
         if (attachment.EnforcementOrder.Id != orderId)
             throw new ArgumentException($"Order ID {orderId} does not include Attachment ID {attachmentId}.",
@@ -261,11 +256,11 @@ public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
 
         attachment.Deleted = true;
         attachment.DateDeleted = DateTime.Today;
-        await _context.SaveChangesAsync().ConfigureAwait(false);
+        await context.SaveChangesAsync().ConfigureAwait(false);
 
         try
         {
-            await _attachmentStore.TryDeleteFileAttachmentAsync(attachment.AttachmentFileName).ConfigureAwait(false);
+            await attachmentStore.TryDeleteFileAttachmentAsync(attachment.AttachmentFileName).ConfigureAwait(false);
         }
         catch (Exception e)
         {
@@ -276,27 +271,27 @@ public sealed class EnforcementOrderRepository : IEnforcementOrderRepository
                 { "File Name", attachment.FileName },
                 { "Attachment ID", attachment.Id },
             };
-            await _errorLogger.LogErrorAsync(e, customData).ConfigureAwait(false);
+            await errorLogger.LogErrorAsync(e, customData).ConfigureAwait(false);
         }
     }
 
     public async Task DeleteAsync(int id)
     {
-        var item = await _context.EnforcementOrders.FindAsync(id).ConfigureAwait(false)
-            ?? throw new ArgumentException($"ID ({id}) not found.", nameof(id));
+        var item = await context.EnforcementOrders.FindAsync(id).ConfigureAwait(false)
+                   ?? throw new ArgumentException($"ID ({id}) not found.", nameof(id));
 
         item.Deleted = true;
-        await _context.SaveChangesAsync().ConfigureAwait(false);
+        await context.SaveChangesAsync().ConfigureAwait(false);
     }
 
     public async Task RestoreAsync(int id)
     {
-        var item = await _context.EnforcementOrders.FindAsync(id).ConfigureAwait(false)
-            ?? throw new ArgumentException($"ID ({id}) not found.", nameof(id));
+        var item = await context.EnforcementOrders.FindAsync(id).ConfigureAwait(false)
+                   ?? throw new ArgumentException($"ID ({id}) not found.", nameof(id));
 
         item.Deleted = false;
-        await _context.SaveChangesAsync().ConfigureAwait(false);
+        await context.SaveChangesAsync().ConfigureAwait(false);
     }
 
-    public void Dispose() => _context.Dispose();
+    public void Dispose() => context.Dispose();
 }

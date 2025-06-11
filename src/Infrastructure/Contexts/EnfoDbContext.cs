@@ -11,14 +11,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Enfo.Infrastructure.Contexts;
 
-public class EnfoDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>
+public class EnfoDbContext(
+    DbContextOptions<EnfoDbContext> options,
+    IHttpContextAccessor httpContextAccessor)
+    : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>(options)
 {
-    private readonly IHttpContextAccessor _httpContextAccessor;
-
-    public EnfoDbContext(DbContextOptions<EnfoDbContext> options,
-        IHttpContextAccessor httpContextAccessor) : base(options) =>
-        _httpContextAccessor = httpContextAccessor;
-
     public DbSet<EnforcementOrder> EnforcementOrders { get; [UsedImplicitly] set; }
     public DbSet<Attachment> Attachments { get; [UsedImplicitly] set; }
     public DbSet<EpdContact> EpdContacts { get; [UsedImplicitly] set; }
@@ -129,7 +126,7 @@ public class EnfoDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Gui
 
     private void SetAuditProperties()
     {
-        var currentUser = _httpContextAccessor?.HttpContext?.User.Identity?.Name;
+        var currentUser = httpContextAccessor?.HttpContext?.User.Identity?.Name;
 
         var entries = ChangeTracker.Entries()
             .Where(e => (e.State is EntityState.Added or EntityState.Modified) && e.Entity is IAuditable);

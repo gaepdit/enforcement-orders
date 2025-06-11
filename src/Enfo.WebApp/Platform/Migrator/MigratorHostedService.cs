@@ -45,7 +45,6 @@ public class MigratorHostedService : IHostedService
         foreach (var role in UserRole.AllRoles.Keys)
             if (!await context.Roles.AnyAsync(e => e.Name == role, cancellationToken))
                 await roleManager.CreateAsync(new IdentityRole<Guid>(role));
-
     }
 
     private static async Task SeedFileStore(IServiceScope scope, CancellationToken cancellationToken)
@@ -55,7 +54,7 @@ public class MigratorHostedService : IHostedService
         foreach (var attachment in AttachmentData.GetAttachmentFiles())
         {
             var fileBytes = attachment.Base64EncodedFile == null
-                ? Array.Empty<byte>()
+                ? []
                 : Convert.FromBase64String(attachment.Base64EncodedFile);
 
             await using var fileStream = new MemoryStream(fileBytes);

@@ -4,7 +4,7 @@ namespace EnfoTests.TestData;
 
 internal static class UsersData
 {
-    public static readonly List<ApplicationUser> Users =
+    public static List<ApplicationUser> Users { get; } =
     [
         new()
         {

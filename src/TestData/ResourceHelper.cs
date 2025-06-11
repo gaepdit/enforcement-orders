@@ -18,7 +18,7 @@ public static class ResourceHelper
         new(FillNavigationProperties(EnforcementOrderData.EnforcementOrders.Single(e => e.Id == id)));
 
     public static List<EnforcementOrderSummaryView> GetEnforcementOrderSummaryViewListOfOne() =>
-        new() { GetEnforcementOrderSummaryView(EnforcementOrderData.EnforcementOrders[0].Id) };
+        [GetEnforcementOrderSummaryView(EnforcementOrderData.EnforcementOrders[0].Id)];
 
     public static EnforcementOrderAdminView GetEnforcementOrderAdminView(int id) =>
         new(FillNavigationProperties(EnforcementOrderData.EnforcementOrders.Single(e => e.Id == id)));
@@ -33,7 +33,7 @@ public static class ResourceHelper
         EnforcementOrderData.EnforcementOrders.Select(e => GetEnforcementOrderAdminView(e.Id)).ToList();
 
     public static List<EnforcementOrderAdminSummaryView> GetEnforcementOrderAdminSummaryViewListOfOne() =>
-        new() { GetEnforcementOrderAdminSummaryView(EnforcementOrderData.EnforcementOrders[0].Id) };
+        [GetEnforcementOrderAdminSummaryView(EnforcementOrderData.EnforcementOrders[0].Id)];
 
     public static EnforcementOrder FillNavigationProperties(EnforcementOrder order)
     {
