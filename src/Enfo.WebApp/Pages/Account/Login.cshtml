@@ -1,7 +1,9 @@
 ﻿@page
-@model Enfo.WebApp.Pages.Account.Login
+@using Enfo.AppServices.AuthenticationServices
+@using Enfo.WebApp.Platform.Settings
+@model LoginModel
 @{
-    ViewData["Title"] = "Agency Login";
+    ViewData["Title"] = Model.DisplayFailedLogin ? "Agency Login" : "Agency Login Failed";
 }
 
 <h1>@ViewData["Title"]</h1>
@@ -13,13 +15,57 @@
 
 <partial name="_AlertPartial" for="Message" />
 
-<div class="gaepd-container-light">
-    <h2>Sign in using your work account</h2>
+@if (Model.DisplayFailedLogin)
+{
+    <p class="lead">
+        There was an error logging in. If you need assistance related to this error, please contact EPD IT support.
+    </p>
+    <div asp-validation-summary="All" class="usa-alert usa-alert-error" role="alert"></div>
+}
 
-    <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post">
-        <div asp-validation-summary="ModelOnly" class="usa-alert usa-alert-error" role="alert"></div>
-        <button type="submit" class="usa-button-secondary gaepd-button-extra-large gaepd-button-image" title="Sign in using your work account">
-            <img src="~/images/ms-symbol.svg" alt="" /> Sign in
-        </button>
-    </form>
-</div>
+@if (AppSettings.DevSettings.EnableTestUser)
+{
+    <div class="gaepd-container-light">
+        <h2>Sign in as a test user</h2>
+
+        <form asp-page-handler="@LoginProviders.TestUserScheme" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+            <button type="submit" class="usa-button-secondary gaepd-button-extra-large gaepd-button-image" title="Sign in as a test user">
+                <svg xmlns="http://www.w3.org/2000/svg" width="2rem" height="2rem" viewBox="0 0 16 16">
+                    <path d="M6.5 2a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1zM11 8a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
+                    <path d="M4.5 0A2.5 2.5 0 0 0 2 2.5V14a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2.5A2.5 2.5 0 0 0 11.5 0zM3 2.5A1.5 1.5 0 0 1 4.5 1h7A1.5 1.5 0 0 1 13 2.5v10.795a4.2 4.2 0 0 0-.776-.492C11.392 12.387 10.063 12 8 12s-3.392.387-4.224.803a4.2 4.2 0 0 0-.776.492z" />
+                </svg>
+                Sign in
+            </button>
+        </form>
+    </div>
+}
+
+@if (Model.LoginProviderNames.Contains(LoginProviders.OktaScheme))
+{
+    <div class="gaepd-container-light">
+        <h2>Sign in using Okta</h2>
+
+        <form asp-route-scheme="@LoginProviders.OktaScheme" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+            <button type="submit" class="usa-button-secondary gaepd-button-extra-large gaepd-button-image" title="Sign in using Okta">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="#00297A" width="3rem" height="3rem" viewBox="0 0 48 48" role="img">
+                    <path fill-rule="evenodd" d="M32.872 22.853a8.947 8.947 0 1 1-2.288-4.91L24 24.498l-3.205-3.19c-.482-.48-1.322-.48-1.804 0a1.26 1.26 0 0 0-.374.898c0 .34.133.659.374.898l4.107 4.09c.24.239.561.371.902.371.336 0 .664-.136.902-.372L38.636 13.52a18.089 18.089 0 0 0-1.634-1.967A17.947 17.947 0 0 0 24 6C14.059 6 6 14.059 6 24s8.059 18 18 18 18-8.059 18-18c0-2.972-.722-5.775-1.998-8.245l-7.13 7.098Z" clip-rule="evenodd"></path>
+                </svg>
+                Sign in
+            </button>
+        </form>
+    </div>
+}
+
+@if (Model.LoginProviderNames.Contains(LoginProviders.EntraIdScheme))
+{
+    <div class="gaepd-container-light">
+        <h2>Sign in using your SOG work account</h2>
+
+        <form asp-route-scheme="@LoginProviders.EntraIdScheme" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+            <div asp-validation-summary="ModelOnly" class="usa-alert usa-alert-error" role="alert"></div>
+            <button type="submit" class="usa-button-secondary gaepd-button-extra-large gaepd-button-image" title="Sign in using your work account">
+                <img src="~/images/ms-symbol.svg" alt="" /> Sign in
+            </button>
+        </form>
+    </div>
+}

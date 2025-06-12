@@ -548,6 +548,10 @@ hr {
     line-height: 2;
 }
 
+.gaepd-button-image svg {
+    vertical-align: middle;
+}
+
 .usa-nav-primary .gaepd-nav-button {
     color: #212121;
     padding-right: 1.8rem;

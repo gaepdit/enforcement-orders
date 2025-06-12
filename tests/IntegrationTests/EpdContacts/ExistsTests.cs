@@ -1,8 +1,7 @@
+using EnfoTests.Infrastructure.Helpers;
 using EnfoTests.TestData;
 using FluentAssertions;
 using NUnit.Framework;
-using System.Threading.Tasks;
-using static EnfoTests.Infrastructure.Helpers.RepositoryHelper;
 
 namespace EnfoTests.Infrastructure.EpdContacts;
 
@@ -12,7 +11,8 @@ public class ExistsTests
     [Test]
     public async Task Exists_GivenExists_ReturnsTrue()
     {
-        using var repository = CreateRepositoryHelper().GetEpdContactRepository();
+        await using var repositoryHelper = await RepositoryHelper.CreateRepositoryHelperAsync();
+        using var repository = repositoryHelper.GetEpdContactRepository();
         var result = await repository.ExistsAsync(EpdContactData.EpdContacts[0].Id);
         result.Should().BeTrue();
     }
@@ -20,7 +20,8 @@ public class ExistsTests
     [Test]
     public async Task Exists_GivenNotExists_ReturnsFalse()
     {
-        using var repository = CreateRepositoryHelper().GetEpdContactRepository();
+        await using var repositoryHelper = await RepositoryHelper.CreateRepositoryHelperAsync();
+        using var repository = repositoryHelper.GetEpdContactRepository();
         var result = await repository.ExistsAsync(-1);
         result.Should().BeFalse();
     }

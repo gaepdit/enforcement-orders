@@ -1,5 +1,5 @@
 ﻿@page "{id}"
-@using Enfo.Domain.Users.Entities
+@using Enfo.Domain.Users
 @using Enfo.WebApp.Models
 @model Details
 @{
@@ -141,7 +141,7 @@ else
                         <th scope="col">File</th>
                         <th scope="col">Size</th>
                         <th scope="col">Date Uploaded</th>
-                        @if (User.IsInRole(UserRole.OrderAdministrator) && !Model.Item.Deleted)
+                        @if (User.IsInRole(AppRole.OrderAdministrator) && !Model.Item.Deleted)
                         {
                             <th scope="col">Actions</th>
                         }
@@ -158,7 +158,7 @@ else
                             </td>
                             <td>@Html.DisplayFor(m => item.Size)</td>
                             <td>@Html.DisplayFor(m => item.DateUploaded)</td>
-                            @if (User.IsInRole(UserRole.OrderAdministrator) && !Model.Item.Deleted)
+                            @if (User.IsInRole(AppRole.OrderAdministrator) && !Model.Item.Deleted)
                             {
                                 <td>
                                     <form method="post" asp-page-handler="DeleteAttachment" enctype="multipart/form-data">
@@ -174,7 +174,7 @@ else
             }
         </td>
     </tr>
-    @if (User.IsInRole(UserRole.OrderAdministrator) && !Model.Item.Deleted)
+    @if (User.IsInRole(AppRole.OrderAdministrator) && !Model.Item.Deleted)
     {
         <tr>
             <td colspan="2">
@@ -193,7 +193,7 @@ else
     </tbody>
 </table>
 
-@if (User.IsInRole(UserRole.OrderAdministrator))
+@if (User.IsInRole(AppRole.OrderAdministrator))
 {
     <div>
         @if (Model.Item.Deleted)

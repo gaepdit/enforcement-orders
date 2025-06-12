@@ -1,11 +1,9 @@
 using Enfo.Domain.Services;
-using Enfo.LocalRepository;
+using Enfo.LocalRepository.Repositories;
 using EnfoTests.TestData;
 using FluentAssertions;
 using NSubstitute;
 using NUnit.Framework;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace EnfoTests.LocalRepositoryTests.EnforcementOrderTests;
 

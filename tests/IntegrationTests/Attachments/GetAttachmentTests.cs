@@ -3,9 +3,6 @@ using EnfoTests.Infrastructure.Helpers;
 using EnfoTests.TestData;
 using FluentAssertions;
 using NUnit.Framework;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace EnfoTests.Infrastructure.Attachments;
 
@@ -15,7 +12,8 @@ public class GetAttachmentTests
     [Test]
     public async Task WhenItemExists_ReturnsItem()
     {
-        using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
+        await using var repositoryHelper = await RepositoryHelper.CreateRepositoryHelperAsync();
+        using var repository = repositoryHelper.GetEnforcementOrderRepository();
         var item = new AttachmentView(AttachmentData.Attachments.First(a => !a.Deleted));
 
         var result = await repository.GetAttachmentAsync(item.Id);
@@ -26,7 +24,8 @@ public class GetAttachmentTests
     [Test]
     public async Task WhenNotExists_ReturnsNull()
     {
-        using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
+        await using var repositoryHelper = await RepositoryHelper.CreateRepositoryHelperAsync();
+        using var repository = repositoryHelper.GetEnforcementOrderRepository();
         var result = await repository.GetAttachmentAsync(Guid.Empty);
         result.Should().BeNull();
     }

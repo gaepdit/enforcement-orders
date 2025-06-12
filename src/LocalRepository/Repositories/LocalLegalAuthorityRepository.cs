@@ -3,7 +3,7 @@ using Enfo.Domain.LegalAuthorities.Repositories;
 using Enfo.Domain.LegalAuthorities.Resources;
 using EnfoTests.TestData;
 
-namespace Enfo.LocalRepository;
+namespace Enfo.LocalRepository.Repositories;
 
 public sealed class LocalLegalAuthorityRepository : ILegalAuthorityRepository
 {

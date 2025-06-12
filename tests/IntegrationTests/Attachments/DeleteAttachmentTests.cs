@@ -3,9 +3,6 @@ using EnfoTests.TestData;
 using FluentAssertions;
 using FluentAssertions.Execution;
 using NUnit.Framework;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace EnfoTests.Infrastructure.Attachments;
 
@@ -19,16 +16,16 @@ public class DeleteAttachmentTests
         var initialFileCount = AttachmentData.Attachments.Count;
         var attachment = AttachmentData.Attachments.First(a => !a.Deleted);
 
-        using var repositoryHelper = RepositoryHelper.CreateRepositoryHelper();
+        await using var repositoryHelper = await RepositoryHelper.CreateRepositoryHelperAsync();
         using var repository = repositoryHelper.GetEnforcementOrderRepository();
-        
+
         // Act
         await repository.DeleteAttachmentAsync(attachment.EnforcementOrder.Id, attachment.Id).ConfigureAwait(false);
 
         // Assert
         repositoryHelper.ClearChangeTracker();
 
-        await using var context = repositoryHelper.DbContext;
+        await using var context = repositoryHelper.Context;
         var updatedAttachment = context.Attachments.Single(a => a.Id == attachment.Id);
 
         using (new AssertionScope())
@@ -51,7 +48,8 @@ public class DeleteAttachmentTests
 
         var action = async () =>
         {
-            using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
+            await using var repositoryHelper = await RepositoryHelper.CreateRepositoryHelperAsync();
+            using var repository = repositoryHelper.GetEnforcementOrderRepository();
             await repository.DeleteAttachmentAsync(orderId, Guid.Empty);
         };
 
@@ -67,7 +65,8 @@ public class DeleteAttachmentTests
 
         var action = async () =>
         {
-            using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
+            await using var repositoryHelper = await RepositoryHelper.CreateRepositoryHelperAsync();
+            using var repository = repositoryHelper.GetEnforcementOrderRepository();
             await repository.DeleteAttachmentAsync(orderId, Guid.Empty);
         };
 
@@ -84,7 +83,8 @@ public class DeleteAttachmentTests
 
         var action = async () =>
         {
-            using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
+            await using var repositoryHelper = await RepositoryHelper.CreateRepositoryHelperAsync();
+            using var repository = repositoryHelper.GetEnforcementOrderRepository();
             await repository.DeleteAttachmentAsync(orderId, attachmentId);
         };
 
@@ -103,7 +103,8 @@ public class DeleteAttachmentTests
 
         var action = async () =>
         {
-            using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
+            await using var repositoryHelper = await RepositoryHelper.CreateRepositoryHelperAsync();
+            using var repository = repositoryHelper.GetEnforcementOrderRepository();
             await repository.DeleteAttachmentAsync(orderId, attachment.Id);
         };
 

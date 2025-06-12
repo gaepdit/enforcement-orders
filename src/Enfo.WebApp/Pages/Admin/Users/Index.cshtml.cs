@@ -1,7 +1,5 @@
-﻿using Enfo.Domain.Users.Entities;
-using Enfo.Domain.Users.Resources;
-using Enfo.Domain.Users.Services;
-using JetBrains.Annotations;
+﻿using Enfo.AppServices.Staff;
+using Enfo.Domain.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -21,23 +19,21 @@ public class Index : PageModel
     public string Role { get; init; }
 
     public IEnumerable<SelectListItem> RoleItems { get; } =
-        UserRole.AllRoles.Select(d => new SelectListItem(d.Value.DisplayName, d.Key));
+        AppRole.AllRoles.Select(d => new SelectListItem(d.Value.DisplayName, d.Key));
 
     public bool ShowResults { get; private set; }
-    public List<UserView> SearchResults { get; private set; }
+    public List<StaffView> SearchResults { get; private set; }
 
-    [UsedImplicitly]
     public static void OnGet()
     {
         // Method intentionally left empty.
     }
 
-    [UsedImplicitly]
-    public async Task<IActionResult> OnGetSearchAsync([FromServices] IUserService userService,
+    public async Task<IActionResult> OnGetSearchAsync([FromServices] IStaffService staffService,
         string name, string email, string role)
     {
         if (!ModelState.IsValid) return Page();
-        SearchResults = await userService.GetUsersAsync(name, email, role);
+        SearchResults = await staffService.SearchUsersAsync(name, email, role);
         ShowResults = true;
         return Page();
     }

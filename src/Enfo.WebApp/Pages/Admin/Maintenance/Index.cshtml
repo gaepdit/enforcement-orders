@@ -1,13 +1,13 @@
 ﻿@page
-@using Enfo.Domain.Users.Entities
-@model Enfo.WebApp.Pages.Admin.Maintenance.Index
+@using Enfo.Domain.Users
+@model Index
 @{
     ViewData["Title"] = "Site Maintenance";
 }
 
 <h1>@ViewData["Title"]</h1>
 <p>These lists are used to populate the drop-down lists when adding or editing Enforcement Orders.</p>
-<p>Select a list to view. The @UserRole.SiteMaintenanceRole.DisplayName role is needed to edit a list.</p>
+<p>Select a list to view. The @AppRole.SiteMaintenanceRole.DisplayName role is needed to edit a list.</p>
 
 <div class="usa-grid-full">
     <nav aria-label="Secondary navigation" class="usa-sidenav-list usa-width-one-third">

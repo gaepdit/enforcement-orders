@@ -2,7 +2,6 @@
 using Enfo.Domain.EnforcementOrders.Resources;
 using Enfo.WebApp.Models;
 using Enfo.WebApp.Platform.RazorHelpers;
-using JetBrains.Annotations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -14,7 +13,6 @@ public class Index : PageModel
     public IReadOnlyList<EnforcementOrderSummaryView> RecentExecutedOrders { get; private set; }
     public DisplayMessage Message { get; private set; }
 
-    [UsedImplicitly]
     public async Task OnGetAsync([FromServices] IEnforcementOrderRepository repository)
     {
         CurrentProposedOrders = await repository.ListCurrentProposedEnforcementOrdersAsync();

@@ -1,9 +1,8 @@
-﻿using Enfo.Domain.Users.Entities;
-using Enfo.WebApp.Platform.Settings;
-using Enfo.WebApp.Platform.Utilities;
+using Enfo.AppServices.AuthenticationServices;
+using Enfo.AppServices.AuthenticationServices.Claims;
+using Enfo.Domain.Users;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -12,31 +11,27 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 namespace Enfo.WebApp.Pages.Account;
 
 [AllowAnonymous]
-public class Logout : PageModel
+public class LogoutModel(SignInManager<ApplicationUser> signInManager) : PageModel
 {
-    private readonly SignInManager<ApplicationUser> _signInManager;
-    private readonly IWebHostEnvironment _environment;
+    public Task<SignOutResult> OnGetAsync() => SignOut();
+    public Task<SignOutResult> OnPostAsync() => SignOut();
 
-    public Logout(SignInManager<ApplicationUser> signInManager, IWebHostEnvironment environment)
+    private async Task<SignOutResult> SignOut()
     {
-        _signInManager = signInManager;
-        _environment = environment;
-    }
+        var authenticationProperties = new AuthenticationProperties { RedirectUri = "/Index" };
+        var userAuthenticationScheme = User.GetAuthenticationMethod();
 
-    public Task<IActionResult> OnGetAsync() => LogOutAndRedirectToIndex();
+        if (userAuthenticationScheme == LoginProviders.TestUserScheme)
+        {
+            await signInManager.SignOutAsync();
+            return SignOut(authenticationProperties);
+        }
 
-    public Task<IActionResult> OnPostAsync() => LogOutAndRedirectToIndex();
+        List<string> authenticationSchemes = [CookieAuthenticationDefaults.AuthenticationScheme];
 
-    private async Task<IActionResult> LogOutAndRedirectToIndex()
-    {
-        // If Azure AD is enabled, sign out all authentication schemes.
-        if (!_environment.IsLocalEnv() || ApplicationSettings.LocalDevSettings.UseAzureAd)
-            return SignOut(new AuthenticationProperties { RedirectUri = "/Index" },
-                IdentityConstants.ApplicationScheme,
-                OpenIdConnectDefaults.AuthenticationScheme);
+        if (userAuthenticationScheme != null)
+            authenticationSchemes.AddRange([IdentityConstants.ApplicationScheme, userAuthenticationScheme]);
 
-        // If a local user is enabled instead, sign out locally and redirect to home page.
-        await _signInManager.SignOutAsync();
-        return RedirectToPage("/Index");
+        return SignOut(authenticationProperties, authenticationSchemes.ToArray());
     }
 }

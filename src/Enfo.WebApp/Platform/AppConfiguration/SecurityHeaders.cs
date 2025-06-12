@@ -5,7 +5,7 @@ namespace Enfo.WebApp.Platform.AppConfiguration;
 internal static class SecurityHeaders
 {
     private static readonly string ReportUri =
-        $"https://report-to-api.raygun.com/reports?apikey={ApplicationSettings.RaygunClientSettings.ApiKey}";
+        $"https://report-to-api.raygun.com/reports?apikey={AppSettings.RaygunSettings.ApiKey}";
 
     internal static void AddSecurityHeaderPolicies(this HeaderPolicyCollection policies)
     {
@@ -18,7 +18,7 @@ internal static class SecurityHeaders
         policies.AddCrossOriginEmbedderPolicy(builder => builder.Credentialless());
         policies.AddCrossOriginResourcePolicy(builder => builder.SameSite());
 
-        if (string.IsNullOrEmpty(ApplicationSettings.RaygunClientSettings.ApiKey)) return;
+        if (string.IsNullOrEmpty(AppSettings.RaygunSettings.ApiKey)) return;
         policies.AddReportingEndpoints(builder => builder.AddEndpoint("csp-endpoint", ReportUri));
     }
 
@@ -27,6 +27,7 @@ internal static class SecurityHeaders
     {
         builder.AddDefaultSrc().None();
         builder.AddBaseUri().None();
+        builder.AddObjectSrc().None();
         builder.AddScriptSrc().Self()
             .From("https://cdn.raygun.io/raygun4js/raygun.min.js")
             .WithHash256("Tui7QoFlnLXkJCSl1/JvEZdIXTmBttnWNxzJpXomQjg=") // Swagger UI inline script
@@ -43,11 +44,12 @@ internal static class SecurityHeaders
             .From("https://api.raygun.io");
         builder.AddFontSrc().Self();
         builder.AddFormAction().Self()
+            .From("https://*.okta.com")
             .From("https://login.microsoftonline.com");
         builder.AddManifestSrc().Self();
         builder.AddFrameAncestors().None();
 
-        if (string.IsNullOrEmpty(ApplicationSettings.RaygunClientSettings.ApiKey)) return;
+        if (string.IsNullOrEmpty(AppSettings.RaygunSettings.ApiKey)) return;
         builder.AddReportUri().To(ReportUri);
         builder.AddReportTo("csp-endpoint");
     }

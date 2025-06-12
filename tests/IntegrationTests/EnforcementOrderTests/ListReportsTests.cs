@@ -6,9 +6,6 @@ using EnfoTests.TestData;
 using FluentAssertions;
 using FluentAssertions.Execution;
 using NUnit.Framework;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace EnfoTests.Infrastructure.EnforcementOrderTests;
 
@@ -20,7 +17,8 @@ public class ListReportsTests
         var order = EnforcementOrderData.EnforcementOrders.First(e => e.GetIsPublic && e.IsProposedOrder);
         order.CommentPeriodClosesDate = DateTime.Today.AddDays(1);
 
-        using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
+        await using var repositoryHelper = await RepositoryHelper.CreateRepositoryHelperAsync();
+        using var repository = repositoryHelper.GetEnforcementOrderRepository();
         var result = await repository.ListCurrentProposedEnforcementOrdersAsync();
 
         using (new AssertionScope())
@@ -40,15 +38,16 @@ public class ListReportsTests
             .First(e => e.GetIsPublicExecutedOrder);
         order.ExecutedOrderPostedDate = DateUtils.MostRecentMonday();
 
-        using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
+        await using var repositoryHelper = await RepositoryHelper.CreateRepositoryHelperAsync();
+        using var repository = repositoryHelper.GetEnforcementOrderRepository();
         var result = await repository.ListRecentlyExecutedEnforcementOrdersAsync();
 
         using (new AssertionScope())
         {
             result.Count.Should().Be(EnforcementOrderData.EnforcementOrders
                 .Count(e => e.GetIsPublicExecutedOrder
-                    && e.ExecutedOrderPostedDate >= DateUtils.MostRecentMonday()
-                    && e.ExecutedOrderPostedDate <= DateTime.Today));
+                            && e.ExecutedOrderPostedDate >= DateUtils.MostRecentMonday()
+                            && e.ExecutedOrderPostedDate <= DateTime.Today));
             result[0].Should().BeEquivalentTo(ResourceHelper.GetEnforcementOrderSummaryView(order.Id));
         }
     }
@@ -56,7 +55,8 @@ public class ListReportsTests
     [Test]
     public async Task ListDraftEnforcementOrders_ReturnsCorrectly()
     {
-        using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
+        await using var repositoryHelper = await RepositoryHelper.CreateRepositoryHelperAsync();
+        using var repository = repositoryHelper.GetEnforcementOrderRepository();
         var result = await repository.ListDraftEnforcementOrdersAsync();
 
         using (new AssertionScope())
@@ -77,7 +77,8 @@ public class ListReportsTests
         var order = EnforcementOrderData.EnforcementOrders
             .AsQueryable().FilterForPending().ApplySorting(OrderSorting.DateAsc).First();
 
-        using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
+        await using var repositoryHelper = await RepositoryHelper.CreateRepositoryHelperAsync();
+        using var repository = repositoryHelper.GetEnforcementOrderRepository();
         var result = await repository.ListPendingEnforcementOrdersAsync();
 
         using (new AssertionScope())

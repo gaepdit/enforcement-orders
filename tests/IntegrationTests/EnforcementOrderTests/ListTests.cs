@@ -6,9 +6,6 @@ using EnfoTests.TestData;
 using FluentAssertions;
 using FluentAssertions.Execution;
 using NUnit.Framework;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace EnfoTests.Infrastructure.EnforcementOrderTests;
 
@@ -17,7 +14,8 @@ public class ListTests
     [Test]
     public async Task List_ByDefault_ReturnsOnlyPublic()
     {
-        using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
+        await using var repositoryHelper = await RepositoryHelper.CreateRepositoryHelperAsync();
+        using var repository = repositoryHelper.GetEnforcementOrderRepository();
 
         var result = await repository.ListAsync(new EnforcementOrderSpec(), new PaginationSpec(1, 50));
 
@@ -43,7 +41,8 @@ public class ListTests
             Facility = EnforcementOrderData.EnforcementOrders.First(e => !e.Deleted).FacilityName,
         };
 
-        using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
+        await using var repositoryHelper = await RepositoryHelper.CreateRepositoryHelperAsync();
+        using var repository = repositoryHelper.GetEnforcementOrderRepository();
         var result = await repository.ListAsync(spec, new PaginationSpec(1, 50));
 
         var expectedList = EnforcementOrderData.EnforcementOrders
@@ -74,7 +73,8 @@ public class ListTests
             TillDate = new DateTime(999, 4, 1),
         };
 
-        using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
+        await using var repositoryHelper = await RepositoryHelper.CreateRepositoryHelperAsync();
+        using var repository = repositoryHelper.GetEnforcementOrderRepository();
         var result = await repository.ListAsync(spec, new PaginationSpec(1, 50));
 
         using (new AssertionScope())
@@ -94,7 +94,8 @@ public class ListTests
             FromDate = new DateTime(999, 1, 1),
         };
 
-        using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
+        await using var repositoryHelper = await RepositoryHelper.CreateRepositoryHelperAsync();
+        using var repository = repositoryHelper.GetEnforcementOrderRepository();
         var result = await repository.ListAsync(spec, new PaginationSpec(1, 50));
 
         var expectedList = EnforcementOrderData.EnforcementOrders
@@ -122,7 +123,8 @@ public class ListTests
             TillDate = new DateTime(999, 6, 1),
         };
 
-        using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
+        await using var repositoryHelper = await RepositoryHelper.CreateRepositoryHelperAsync();
+        using var repository = repositoryHelper.GetEnforcementOrderRepository();
         var result = await repository.ListAsync(spec, new PaginationSpec(1, 50));
 
         var expectedList = EnforcementOrderData.EnforcementOrders
@@ -144,7 +146,8 @@ public class ListTests
     [Test]
     public async Task ListDetailed_ByDefault_ReturnsOnlyPublic()
     {
-        using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
+        await using var repositoryHelper = await RepositoryHelper.CreateRepositoryHelperAsync();
+        using var repository = repositoryHelper.GetEnforcementOrderRepository();
         var result = await repository.ListDetailedAsync(new EnforcementOrderSpec(), new PaginationSpec(1, 50));
 
         using (new AssertionScope())
@@ -167,7 +170,8 @@ public class ListTests
         var spec = new EnforcementOrderSpec
             { Facility = EnforcementOrderData.EnforcementOrders.First(e => !e.Deleted).FacilityName };
 
-        using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
+        await using var repositoryHelper = await RepositoryHelper.CreateRepositoryHelperAsync();
+        using var repository = repositoryHelper.GetEnforcementOrderRepository();
         var result = await repository.ListDetailedAsync(spec, new PaginationSpec(1, 50));
 
         var expectedList = EnforcementOrderData.EnforcementOrders
@@ -198,13 +202,14 @@ public class ListTests
             TillDate = new DateTime(999, 4, 1),
         };
 
-        using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
+        await using var repositoryHelper = await RepositoryHelper.CreateRepositoryHelperAsync();
+        using var repository = repositoryHelper.GetEnforcementOrderRepository();
         var result = await repository.ListDetailedAsync(spec, new PaginationSpec(1, 50));
 
         using (new AssertionScope())
         {
             result.TotalCount.Should().Be(0);
-            result.Items.Should().HaveCount(0);
+            result.Items.Should().BeEmpty();
             result.PageNumber.Should().Be(1);
         }
     }
@@ -218,7 +223,8 @@ public class ListTests
             FromDate = new DateTime(999, 1, 1),
         };
 
-        using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
+        await using var repositoryHelper = await RepositoryHelper.CreateRepositoryHelperAsync();
+        using var repository = repositoryHelper.GetEnforcementOrderRepository();
         var result = await repository.ListDetailedAsync(spec, new PaginationSpec(1, 50));
 
         var expectedList = EnforcementOrderData.EnforcementOrders
@@ -244,7 +250,8 @@ public class ListTests
             TillDate = new DateTime(999, 6, 1),
         };
 
-        using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
+        await using var repositoryHelper = await RepositoryHelper.CreateRepositoryHelperAsync();
+        using var repository = repositoryHelper.GetEnforcementOrderRepository();
         var result = await repository.ListDetailedAsync(spec, new PaginationSpec(1, 50));
 
         var expectedList = EnforcementOrderData.EnforcementOrders
@@ -263,7 +270,8 @@ public class ListTests
     [Test]
     public async Task ListAdmin_ByDefault_ReturnsNonDeleted()
     {
-        using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
+        await using var repositoryHelper = await RepositoryHelper.CreateRepositoryHelperAsync();
+        using var repository = repositoryHelper.GetEnforcementOrderRepository();
         var result = await repository.ListAdminAsync(new EnforcementOrderAdminSpec(), new PaginationSpec(1, 50));
 
         using (new AssertionScope())
@@ -285,7 +293,8 @@ public class ListTests
     {
         var spec = new EnforcementOrderAdminSpec { ShowDeleted = true };
 
-        using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
+        await using var repositoryHelper = await RepositoryHelper.CreateRepositoryHelperAsync();
+        using var repository = repositoryHelper.GetEnforcementOrderRepository();
         var result = await repository.ListAdminAsync(spec, new PaginationSpec(1, 50));
 
         using (new AssertionScope())
@@ -310,14 +319,15 @@ public class ListTests
             Facility = EnforcementOrderData.EnforcementOrders.First(e => !e.Deleted).FacilityName,
         };
 
-        using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
+        await using var repositoryHelper = await RepositoryHelper.CreateRepositoryHelperAsync();
+        using var repository = repositoryHelper.GetEnforcementOrderRepository();
         var result = await repository.ListAdminAsync(spec, new PaginationSpec(1, 50));
 
         var expectedList = EnforcementOrderData.EnforcementOrders
             .OrderByDescending(e => e.ExecutedDate ?? e.ProposedOrderPostedDate)
             .ThenBy(e => e.FacilityName)
             .Where(e => !e.Deleted
-                && string.Equals(e.FacilityName, spec.Facility, StringComparison.Ordinal))
+                        && string.Equals(e.FacilityName, spec.Facility, StringComparison.Ordinal))
             .ToList();
 
         using (new AssertionScope())
@@ -338,7 +348,8 @@ public class ListTests
             Facility = "none",
         };
 
-        using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
+        await using var repositoryHelper = await RepositoryHelper.CreateRepositoryHelperAsync();
+        using var repository = repositoryHelper.GetEnforcementOrderRepository();
         var result = await repository.ListAdminAsync(spec, new PaginationSpec(1, 50));
 
         using (new AssertionScope())
@@ -357,7 +368,8 @@ public class ListTests
             Text = EnforcementOrderData.EnforcementOrders.First(e => !e.Deleted).Cause[..4].ToLowerInvariant(),
         };
 
-        using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
+        await using var repositoryHelper = await RepositoryHelper.CreateRepositoryHelperAsync();
+        using var repository = repositoryHelper.GetEnforcementOrderRepository();
         var result = await repository.ListAdminAsync(spec, new PaginationSpec(1, 50));
 
         var expectedList = EnforcementOrderData.EnforcementOrders
@@ -365,7 +377,7 @@ public class ListTests
             .ThenBy(e => e.FacilityName)
             .Where(e => !e.Deleted)
             .Where(e => e.Cause != null && e.Cause.Contains(spec.Text) ||
-                e.Requirements != null && e.Requirements.Contains(spec.Text))
+                        e.Requirements != null && e.Requirements.Contains(spec.Text))
             .ToList();
 
         using (new AssertionScope())

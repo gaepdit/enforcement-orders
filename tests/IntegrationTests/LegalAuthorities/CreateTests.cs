@@ -3,8 +3,6 @@ using Enfo.Domain.LegalAuthorities.Resources;
 using EnfoTests.Infrastructure.Helpers;
 using FluentAssertions;
 using NUnit.Framework;
-using System;
-using System.Threading.Tasks;
 
 namespace EnfoTests.Infrastructure.LegalAuthorities;
 
@@ -15,7 +13,7 @@ public class CreateTests
     {
         var resource = new LegalAuthorityCommand { AuthorityName = "New Item" };
 
-        using var repositoryHelper = RepositoryHelper.CreateRepositoryHelper();
+        await using var repositoryHelper = await RepositoryHelper.CreateRepositoryHelperAsync();
         using var repository = repositoryHelper.GetLegalAuthorityRepository();
 
         var itemId = await repository.CreateAsync(resource);
@@ -34,7 +32,8 @@ public class CreateTests
 
         var action = async () =>
         {
-            using var repository = RepositoryHelper.CreateRepositoryHelper().GetLegalAuthorityRepository();
+            await using var repositoryHelper = await RepositoryHelper.CreateRepositoryHelperAsync();
+            using var repository = repositoryHelper.GetLegalAuthorityRepository();
             await repository.CreateAsync(resource);
         };
 

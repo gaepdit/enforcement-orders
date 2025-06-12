@@ -2,15 +2,12 @@ using Enfo.Domain.EnforcementOrders.Resources;
 using Enfo.Domain.EnforcementOrders.Specs;
 using Enfo.Domain.Pagination;
 using Enfo.Domain.Services;
-using Enfo.LocalRepository;
+using Enfo.LocalRepository.Repositories;
 using EnfoTests.TestData;
 using FluentAssertions;
 using FluentAssertions.Execution;
 using NSubstitute;
 using NUnit.Framework;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace EnfoTests.LocalRepositoryTests.EnforcementOrderTests;
 
@@ -116,7 +113,7 @@ public class ListAdminTests
         var expectedList = EnforcementOrderData.EnforcementOrders
             .Where(e => !e.Deleted)
             .Where(e => e.Cause != null && e.Cause.Contains(spec.Text) ||
-                e.Requirements != null && e.Requirements.Contains(spec.Text))
+                        e.Requirements != null && e.Requirements.Contains(spec.Text))
             .Select(e => new EnforcementOrderAdminSummaryView(e))
             .ToList();
 

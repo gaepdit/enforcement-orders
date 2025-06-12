@@ -1,26 +1,26 @@
 ﻿@page
-@using Enfo.Domain.Users.Entities
-@model Enfo.WebApp.Pages.Account.Index
+@using Enfo.Domain.Users
+@model IndexModel
 @{
     ViewData["Title"] = "Account Profile";
 }
 
 <h1>@ViewData["Title"]</h1>
-<h2>@Model.DisplayUser.Name</h2>
+<h2>@Model.DisplayStaff?.Name</h2>
 <p>
-    <strong>Email:</strong> @Model.DisplayUser.Email
+    <strong>Email:</strong> @Model.DisplayStaff?.Email
 </p>
 
 <h3>Roles</h3>
 <p>Your account has the following application roles:</p>
 
 <div class="gaepd-container-light">
-    @if (Model.Roles is {Count: > 0 })
+    @if (Model.Roles is { Count: > 0 })
     {
         <dl>
             @foreach (var role in Model.Roles)
             {
-                if (UserRole.AllRoles.TryGetValue(role, out var userRole))
+                if (AppRole.AllRoles.TryGetValue(role, out var userRole))
                 {
                     <dt>@userRole?.DisplayName</dt>
                     <dd>
@@ -41,3 +41,16 @@
 <form asp-page="./Logout" asp-route-returnUrl="@Url.Page("/")" method="post">
     <button type="submit" class="usa-button-red">Sign out</button>
 </form>
+
+<environment include="Local,Development">
+    <h3>Claims</h3>
+    <div class="gaepd-container-light">
+        <dl>
+            @foreach (var claim in Model.Claims)
+            {
+                <dt>@claim.Type</dt>
+                <dd class="gaepd-text-muted">@claim.Value</dd>
+            }
+        </dl>
+    </div>
+</environment>

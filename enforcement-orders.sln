@@ -22,6 +22,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LocalRepositoryTests", "tes
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestData", "src\TestData\TestData.csproj", "{352ECCAA-16C5-41EF-B3DF-D770576AA87F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppServices", "src\AppServices\AppServices.csproj", "{A5D3F7B9-7B0C-4674-9F23-FFA34FB3A912}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -64,6 +66,10 @@ Global
 		{352ECCAA-16C5-41EF-B3DF-D770576AA87F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{352ECCAA-16C5-41EF-B3DF-D770576AA87F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{352ECCAA-16C5-41EF-B3DF-D770576AA87F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A5D3F7B9-7B0C-4674-9F23-FFA34FB3A912}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A5D3F7B9-7B0C-4674-9F23-FFA34FB3A912}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A5D3F7B9-7B0C-4674-9F23-FFA34FB3A912}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A5D3F7B9-7B0C-4674-9F23-FFA34FB3A912}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

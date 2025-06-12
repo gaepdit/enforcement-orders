@@ -1,7 +1,7 @@
 ﻿@page
-@using Enfo.Domain.Users.Entities
+@using Enfo.Domain.Users
 @using Enfo.Domain.Utils
-@model Enfo.WebApp.Pages.Admin.Index
+@model Index
 @{
     ViewData["Title"] = "Admin Dashboard";
 }
@@ -115,7 +115,7 @@
     </div>
 </section>
 
-@if (User.IsInRole(UserRole.OrderAdministrator))
+@if (User.IsInRole(AppRole.OrderAdministrator))
 {
     <section>
         <h2>Unpublished Orders</h2>

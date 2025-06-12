@@ -12,72 +12,57 @@ using TestSupport.EfHelpers;
 
 namespace EnfoTests.Infrastructure.Helpers;
 
-public sealed class RepositoryHelper : IDisposable
+public sealed class RepositoryHelper : IDisposable, IAsyncDisposable
 {
-    private readonly DbContextOptions<EnfoDbContext> _options = SqliteInMemory.CreateOptions<EnfoDbContext>(builder =>
-        builder.LogTo(Console.WriteLine, events: [RelationalEventId.CommandExecuted]));
+    private DbContextOptions<EnfoDbContext> Options { get; set; }
+    public EnfoDbContext Context { get; private set; }
+    private RepositoryHelper() { }
 
-    private readonly EnfoDbContext _context;
-    public EnfoDbContext DbContext { get; private set; }
-
-    private RepositoryHelper()
+    public static async Task<RepositoryHelper> CreateRepositoryHelperAsync()
     {
-        _context = new EnfoDbContext(_options, null);
-        _context.Database.EnsureClean();
+        var helper = GetRepositoryHelper();
+        await helper.Context.Database.EnsureDeletedAsync();
+        await helper.Context.Database.EnsureCreatedAsync();
+        return helper;
     }
 
-    public static RepositoryHelper CreateRepositoryHelper() => new();
-
-    public void ClearChangeTracker() => _context.ChangeTracker.Clear();
-
-    private void SeedLegalAuthorityData()
+    private static RepositoryHelper GetRepositoryHelper()
     {
-        if (_context.LegalAuthorities.Any()) return;
-        _context.LegalAuthorities.AddRange(LegalAuthorityData.LegalAuthorities);
-        _context.SaveChanges();
+        var helper = new RepositoryHelper();
+        helper.Options = SqliteInMemory.CreateOptions<EnfoDbContext>(builder => builder
+            .UseAsyncSeeding((context, _, token) => SeedDataHelper.SeedAllDataAsync(context, token))
+            .LogTo(Console.WriteLine, events: [RelationalEventId.CommandExecuted]));
+        helper.Context = new EnfoDbContext(helper.Options, null);
+        return helper;
     }
 
-    private void SeedEpdContactData()
-    {
-        if (_context.EpdContacts.Any()) return;
-        _context.EpdContacts.AddRange(EpdContactData.EpdContacts);
-        _context.SaveChanges();
-    }
+    public void ClearChangeTracker() => Context.ChangeTracker.Clear();
 
-    private void SeedEnforcementOrderData()
-    {
-        if (_context.EnforcementOrders.Any()) return;
-        if (!_context.EpdContacts.Any()) _context.EpdContacts.AddRange(EpdContactData.EpdContacts);
-        if (!_context.LegalAuthorities.Any())
-            _context.LegalAuthorities.AddRange(LegalAuthorityData.LegalAuthorities);
-        _context.SaveChanges();
-        _context.Attachments.AddRange(AttachmentData.Attachments);
-        _context.EnforcementOrders.AddRange(EnforcementOrderData.EnforcementOrders);
-        _context.SaveChanges();
-    }
 
     public ILegalAuthorityRepository GetLegalAuthorityRepository()
     {
-        SeedLegalAuthorityData();
-        DbContext = new EnfoDbContext(_options, null);
-        return new LegalAuthorityRepository(DbContext);
+        Context = new EnfoDbContext(Options, null);
+        return new LegalAuthorityRepository(Context);
     }
 
     public IEpdContactRepository GetEpdContactRepository()
     {
-        SeedEpdContactData();
-        DbContext = new EnfoDbContext(_options, null);
-        return new EpdContactRepository(DbContext);
+        Context = new EnfoDbContext(Options, null);
+        return new EpdContactRepository(Context);
     }
 
     public IEnforcementOrderRepository GetEnforcementOrderRepository()
     {
-        SeedEnforcementOrderData();
-        DbContext = new EnfoDbContext(_options, null);
-        return new EnforcementOrderRepository(DbContext, Substitute.For<IAttachmentStore>(),
+        Context = new EnfoDbContext(Options, null);
+        return new EnforcementOrderRepository(Context, Substitute.For<IAttachmentStore>(),
             Substitute.For<IErrorLogger>()
         );
     }
 
-    public void Dispose() => _context.Dispose();
+    public void Dispose() => Context?.Dispose();
+
+    public async ValueTask DisposeAsync()
+    {
+        if (Context != null) await Context.DisposeAsync();
+    }
 }

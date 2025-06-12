@@ -4,12 +4,11 @@ using Enfo.Domain.EpdContacts.Repositories;
 using Enfo.Domain.EpdContacts.Resources;
 using Enfo.Domain.LegalAuthorities.Repositories;
 using Enfo.Domain.LegalAuthorities.Resources;
-using Enfo.Domain.Users.Entities;
+using Enfo.Domain.Users;
 using Enfo.WebApp.Models;
 using Enfo.WebApp.Platform.RazorHelpers;
 using FluentValidation;
 using FluentValidation.AspNetCore;
-using JetBrains.Annotations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -18,7 +17,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Enfo.WebApp.Pages.Admin;
 
-[Authorize(Roles = UserRole.OrderAdministrator)]
+[Authorize(Roles = AppRole.OrderAdministrator)]
 public class Edit : PageModel
 {
     [BindProperty]
@@ -44,7 +43,6 @@ public class Edit : PageModel
         _contactRepository = contactRepository;
     }
 
-    [UsedImplicitly]
     public async Task<IActionResult> OnGetAsync(int? id)
     {
         if (id == null) return NotFound();
@@ -63,7 +61,6 @@ public class Edit : PageModel
         return Page();
     }
 
-    [UsedImplicitly]
     public async Task<IActionResult> OnPostAsync([FromServices] IValidator<EnforcementOrderUpdate> validator)
     {
         var originalItem = await _orderRepository.GetAdminViewAsync(Item.Id);

@@ -1,9 +1,7 @@
+using EnfoTests.Infrastructure.Helpers;
 using EnfoTests.TestData;
 using FluentAssertions;
 using NUnit.Framework;
-using System;
-using System.Threading.Tasks;
-using static EnfoTests.Infrastructure.Helpers.RepositoryHelper;
 
 namespace EnfoTests.Infrastructure.LegalAuthorities;
 
@@ -14,14 +12,16 @@ public class NameExistsTests
     public async Task NameExists_WhenNameExists_ReturnsTrue()
     {
         var item = LegalAuthorityData.LegalAuthorities[0];
-        using var repository = CreateRepositoryHelper().GetLegalAuthorityRepository();
+        await using var repositoryHelper = await RepositoryHelper.CreateRepositoryHelperAsync();
+        using var repository = repositoryHelper.GetLegalAuthorityRepository();
         (await repository.NameExistsAsync(item.AuthorityName)).Should().BeTrue();
     }
 
     [Test]
     public async Task NameExists_WhenNameNotExists_ReturnsFalse()
     {
-        using var repository = CreateRepositoryHelper().GetLegalAuthorityRepository();
+        await using var repositoryHelper = await RepositoryHelper.CreateRepositoryHelperAsync();
+        using var repository = repositoryHelper.GetLegalAuthorityRepository();
         (await repository.NameExistsAsync(Guid.NewGuid().ToString())).Should().BeFalse();
     }
 }

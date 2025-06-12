@@ -1,16 +1,15 @@
 ﻿using Enfo.Domain.EpdContacts.Repositories;
 using Enfo.Domain.EpdContacts.Resources;
-using Enfo.Domain.Users.Entities;
+using Enfo.Domain.Users;
 using Enfo.WebApp.Models;
 using Enfo.WebApp.Platform.RazorHelpers;
-using JetBrains.Annotations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Enfo.WebApp.Pages.Admin.Maintenance.Contacts;
 
-[Authorize(Roles = UserRole.SiteMaintenance)]
+[Authorize(Roles = AppRole.SiteMaintenance)]
 public class Add : PageModel
 {
     [BindProperty]
@@ -19,15 +18,13 @@ public class Add : PageModel
     public static MaintenanceOption ThisOption => MaintenanceOption.EpdContact;
 
     [TempData]
-    public int HighlightId { get; [UsedImplicitly] set; }
+    public int HighlightId { get; set; }
 
-    [UsedImplicitly]
     public static void OnGet()
     {
         // Method intentionally left empty.
     }
 
-    [UsedImplicitly]
     public async Task<IActionResult> OnPostAsync([FromServices] IEpdContactRepository repository)
     {
         Item.TrimAll();

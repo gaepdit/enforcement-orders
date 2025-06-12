@@ -1,54 +1,50 @@
-﻿using Enfo.Domain.Users.Entities;
-using Enfo.Domain.Users.Resources;
-using Enfo.Domain.Users.Services;
+﻿using Enfo.AppServices.Staff;
+using Enfo.Domain.Users;
 using Enfo.WebApp.Models;
 using Enfo.WebApp.Platform.RazorHelpers;
-using JetBrains.Annotations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Enfo.WebApp.Pages.Admin.Users;
 
-[Authorize(Roles = UserRole.UserMaintenance)]
+[Authorize(Roles = AppRole.UserMaintenance)]
 public class Edit : PageModel
 {
     [BindProperty, HiddenInput]
     public Guid UserId { get; set; }
 
     [BindProperty]
-    public List<UserRoleSetting> UserRoleSettings { get; [UsedImplicitly] set; }
+    public List<UserRoleSetting> UserRoleSettings { get; set; }
 
-    public UserView DisplayUser { get; private set; }
+    public StaffView DisplayStaff { get; private set; }
 
-    private readonly IUserService _userService;
-    public Edit(IUserService userService) => _userService = userService;
+    private readonly IStaffService _staffService;
+    public Edit(IStaffService staffService) => _staffService = staffService;
 
-    [UsedImplicitly]
     public async Task<IActionResult> OnGetAsync(Guid? id)
     {
         if (id == null) return NotFound();
-        DisplayUser = await _userService.GetUserByIdAsync(id.Value);
-        if (DisplayUser == null) return NotFound();
+        DisplayStaff = await _staffService.FindUserAsync(id.Value);
+        if (DisplayStaff == null) return NotFound();
         UserId = id.Value;
 
         await PopulateRoleSettingsAsync();
         return Page();
     }
 
-    [UsedImplicitly]
     public async Task<IActionResult> OnPostAsync()
     {
         if (!ModelState.IsValid)
         {
-            DisplayUser = await _userService.GetUserByIdAsync(UserId);
-            if (DisplayUser == null) return NotFound();
+            DisplayStaff = await _staffService.FindUserAsync(UserId);
+            if (DisplayStaff == null) return NotFound();
             await PopulateRoleSettingsAsync();
             return Page();
         }
 
         var roleUpdates = UserRoleSettings.ToDictionary(r => r.Name, r => r.IsSelected);
-        var result = await _userService.UpdateUserRolesAsync(UserId, roleUpdates);
+        var result = await _staffService.UpdateUserRolesAsync(UserId, roleUpdates);
 
         if (result.Succeeded)
         {
@@ -59,17 +55,17 @@ public class Edit : PageModel
         foreach (var err in result.Errors)
             ModelState.AddModelError(string.Empty, string.Concat(err.Code, ": ", err.Description));
 
-        DisplayUser = await _userService.GetUserByIdAsync(UserId);
-        if (DisplayUser == null) return NotFound();
+        DisplayStaff = await _staffService.FindUserAsync(UserId);
+        if (DisplayStaff == null) return NotFound();
         await PopulateRoleSettingsAsync();
         return Page();
     }
 
     private async Task PopulateRoleSettingsAsync()
     {
-        var roles = await _userService.GetUserRolesAsync(UserId);
+        var roles = await _staffService.GetUserRolesAsync(UserId);
 
-        UserRoleSettings = UserRole.AllRoles.Select(r => new UserRoleSetting
+        UserRoleSettings = AppRole.AllRoles.Select(r => new UserRoleSetting
         {
             Name = r.Key,
             Description = r.Value.Description,

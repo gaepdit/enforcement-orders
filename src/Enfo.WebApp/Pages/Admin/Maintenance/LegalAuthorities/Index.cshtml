@@ -1,6 +1,6 @@
 ﻿@page
-@using Enfo.Domain.Users.Entities
-@model Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthorities.Index
+@using Enfo.Domain.Users
+@model Index
 @{
     ViewData["Title"] = $"Site Maintenance: {Index.ThisOption.PluralName}";
 }
@@ -11,7 +11,7 @@
 
 <h2>
     @Index.ThisOption.PluralName
-    @if (User.IsInRole(UserRole.SiteMaintenance))
+    @if (User.IsInRole(AppRole.SiteMaintenance))
     {
         <a asp-page="Add" class="usa-button usa-button-secondary">Add New</a>
     }
@@ -20,7 +20,7 @@
 <p id="table-description">
     The @Index.ThisOption.PluralName listed below are available for selection when adding or editing Enforcement Orders.
     Removing one from use makes it unavailable for future Orders but does not affect any existing Orders.
-    The @UserRole.SiteMaintenanceRole.DisplayName role is needed to edit the list.
+    The @AppRole.SiteMaintenanceRole.DisplayName role is needed to edit the list.
 </p>
 
 
@@ -40,7 +40,7 @@
                 @Html.DisplayFor(m => item.AuthorityName)
             </th>
             <td class="gaepd-tablecell-nolabel">
-                @if (User.IsInRole(UserRole.SiteMaintenance))
+                @if (User.IsInRole(AppRole.SiteMaintenance))
                 {
                     @if (item.Active)
                     {

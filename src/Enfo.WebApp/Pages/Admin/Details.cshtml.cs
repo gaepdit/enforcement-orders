@@ -1,10 +1,9 @@
 ﻿using Enfo.Domain.EnforcementOrders.Repositories;
 using Enfo.Domain.EnforcementOrders.Resources;
-using Enfo.Domain.Users.Entities;
+using Enfo.Domain.Users;
 using Enfo.Domain.Utils;
 using Enfo.WebApp.Models;
 using Enfo.WebApp.Platform.RazorHelpers;
-using JetBrains.Annotations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -26,7 +25,6 @@ public class Details : PageModel
     private readonly IEnforcementOrderRepository _repository;
     public Details(IEnforcementOrderRepository repository) => _repository = repository;
 
-    [UsedImplicitly]
     public async Task<IActionResult> OnGetAsync(int? id)
     {
         if (id == null) return NotFound();
@@ -36,14 +34,14 @@ public class Details : PageModel
         // TempData might be null when called from unit test
         // ReSharper disable once ConstantConditionalAccessQualifier
         Message = TempData?.GetDisplayMessage();
-        
+
         Id = id.Value;
         return Page();
     }
 
     public async Task<IActionResult> OnPostAddAttachmentAsync()
     {
-        if (!User.IsInRole(UserRole.OrderAdministrator)) return Forbid();
+        if (!User.IsInRole(AppRole.OrderAdministrator)) return Forbid();
 
         Item = await _repository.GetAdminViewAsync(Id);
         if (Item == null) return NotFound("ID not found.");
@@ -80,7 +78,7 @@ public class Details : PageModel
 
     public async Task<IActionResult> OnPostDeleteAttachmentAsync(Guid attachmentId)
     {
-        if (!User.IsInRole(UserRole.OrderAdministrator)) return Forbid();
+        if (!User.IsInRole(AppRole.OrderAdministrator)) return Forbid();
 
         Item = await _repository.GetAdminViewAsync(Id);
         if (Item == null) return NotFound("ID not found.");

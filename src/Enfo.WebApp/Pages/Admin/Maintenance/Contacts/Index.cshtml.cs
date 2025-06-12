@@ -2,7 +2,6 @@
 using Enfo.Domain.EpdContacts.Resources;
 using Enfo.WebApp.Models;
 using Enfo.WebApp.Platform.RazorHelpers;
-using JetBrains.Annotations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -18,19 +17,17 @@ public class Index : PageModel
     public DisplayMessage Message { get; private set; }
 
     [TempData]
-    public int HighlightId { get; [UsedImplicitly] set; }
+    public int HighlightId { get; set; }
 
     private readonly IEpdContactRepository _repository;
     public Index(IEpdContactRepository repository) => _repository = repository;
 
-    [UsedImplicitly]
     public async Task OnGetAsync()
     {
         Items = await _repository.ListAsync(true);
         Message = TempData?.GetDisplayMessage();
     }
 
-    [UsedImplicitly]
     public async Task<IActionResult> OnPostAsync(int? id)
     {
         if (id == null) return BadRequest();

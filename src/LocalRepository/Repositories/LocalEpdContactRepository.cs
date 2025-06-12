@@ -3,7 +3,7 @@ using Enfo.Domain.EpdContacts.Repositories;
 using Enfo.Domain.EpdContacts.Resources;
 using EnfoTests.TestData;
 
-namespace Enfo.LocalRepository;
+namespace Enfo.LocalRepository.Repositories;
 
 public sealed class LocalEpdContactRepository : IEpdContactRepository
 {

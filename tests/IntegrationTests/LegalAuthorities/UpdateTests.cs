@@ -3,9 +3,6 @@ using EnfoTests.Infrastructure.Helpers;
 using EnfoTests.TestData;
 using FluentAssertions;
 using NUnit.Framework;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace EnfoTests.Infrastructure.LegalAuthorities;
 
@@ -17,7 +14,7 @@ public class UpdateTests
         var itemId = LegalAuthorityData.LegalAuthorities.First(e => e.Active).Id;
         var resource = new LegalAuthorityCommand { Id = itemId, AuthorityName = "New Name" };
 
-        using var repositoryHelper = RepositoryHelper.CreateRepositoryHelper();
+        await using var repositoryHelper = await RepositoryHelper.CreateRepositoryHelperAsync();
         using var repository = repositoryHelper.GetLegalAuthorityRepository();
 
         await repository.UpdateAsync(resource);
@@ -33,7 +30,7 @@ public class UpdateTests
         var original = LegalAuthorityData.LegalAuthorities.First(e => e.Active);
         var resource = new LegalAuthorityCommand { Id = original.Id, AuthorityName = original.AuthorityName };
 
-        using var repositoryHelper = RepositoryHelper.CreateRepositoryHelper();
+        await using var repositoryHelper = await RepositoryHelper.CreateRepositoryHelperAsync();
         using var repository = repositoryHelper.GetLegalAuthorityRepository();
 
         await repository.UpdateAsync(resource);
@@ -51,7 +48,8 @@ public class UpdateTests
 
         var action = async () =>
         {
-            using var repository = RepositoryHelper.CreateRepositoryHelper().GetLegalAuthorityRepository();
+            await using var repositoryHelper = await RepositoryHelper.CreateRepositoryHelperAsync();
+            using var repository = repositoryHelper.GetLegalAuthorityRepository();
             await repository.UpdateAsync(resource);
         };
 
@@ -66,7 +64,8 @@ public class UpdateTests
 
         var action = async () =>
         {
-            using var repository = RepositoryHelper.CreateRepositoryHelper().GetLegalAuthorityRepository();
+            await using var repositoryHelper = await RepositoryHelper.CreateRepositoryHelperAsync();
+            using var repository = repositoryHelper.GetLegalAuthorityRepository();
             await repository.UpdateAsync(itemUpdate);
         };
 

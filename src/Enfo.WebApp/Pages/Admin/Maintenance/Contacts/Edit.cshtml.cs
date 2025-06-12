@@ -1,9 +1,8 @@
 ﻿using Enfo.Domain.EpdContacts.Repositories;
 using Enfo.Domain.EpdContacts.Resources;
-using Enfo.Domain.Users.Entities;
+using Enfo.Domain.Users;
 using Enfo.WebApp.Models;
 using Enfo.WebApp.Platform.RazorHelpers;
-using JetBrains.Annotations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -11,21 +10,20 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Enfo.WebApp.Pages.Admin.Maintenance.Contacts;
 
-[Authorize(Roles = UserRole.SiteMaintenance)]
+[Authorize(Roles = AppRole.SiteMaintenance)]
 public class Edit : PageModel
 {
     [BindProperty]
     public EpdContactCommand Item { get; set; }
 
-    [TempData, UsedImplicitly]
-    public int HighlightId { [UsedImplicitly] get; set; }
+    [TempData]
+    public int HighlightId { get; set; }
 
     public static MaintenanceOption ThisOption => MaintenanceOption.EpdContact;
 
     private readonly IEpdContactRepository _repository;
     public Edit(IEpdContactRepository repository) => _repository = repository;
 
-    [UsedImplicitly]
     public async Task<IActionResult> OnGetAsync(int? id)
     {
         if (id == null) return NotFound();
@@ -42,7 +40,6 @@ public class Edit : PageModel
         return Page();
     }
 
-    [UsedImplicitly]
     public async Task<IActionResult> OnPostAsync()
     {
         if (Item.Id is null) return BadRequest();

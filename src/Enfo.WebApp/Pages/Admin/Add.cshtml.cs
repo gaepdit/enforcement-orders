@@ -4,12 +4,11 @@ using Enfo.Domain.EpdContacts.Repositories;
 using Enfo.Domain.EpdContacts.Resources;
 using Enfo.Domain.LegalAuthorities.Repositories;
 using Enfo.Domain.LegalAuthorities.Resources;
-using Enfo.Domain.Users.Entities;
+using Enfo.Domain.Users;
 using Enfo.WebApp.Models;
 using Enfo.WebApp.Platform.RazorHelpers;
 using FluentValidation;
 using FluentValidation.AspNetCore;
-using JetBrains.Annotations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -17,7 +16,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Enfo.WebApp.Pages.Admin;
 
-[Authorize(Roles = UserRole.OrderAdministrator)]
+[Authorize(Roles = AppRole.OrderAdministrator)]
 public class Add : PageModel
 {
     [BindProperty]
@@ -40,14 +39,12 @@ public class Add : PageModel
         _contact = contact;
     }
 
-    [UsedImplicitly]
     public async Task OnGetAsync()
     {
         await PopulateSelectListsAsync();
         Item = new EnforcementOrderCreate();
     }
 
-    [UsedImplicitly]
     public async Task<IActionResult> OnPostAsync([FromServices] IValidator<EnforcementOrderCreate> validator)
     {
         var validationResult = await validator.ValidateAsync(Item);

@@ -3,9 +3,6 @@ using EnfoTests.Infrastructure.Helpers;
 using EnfoTests.TestData;
 using FluentAssertions;
 using NUnit.Framework;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace EnfoTests.Infrastructure.EpdContacts;
 
@@ -29,7 +26,7 @@ public class UpdateTests
             PostalCode = "00000",
         };
 
-        using var repositoryHelper = RepositoryHelper.CreateRepositoryHelper();
+        await using var repositoryHelper = await RepositoryHelper.CreateRepositoryHelperAsync();
         using var repository = repositoryHelper.GetEpdContactRepository();
 
         await repository.UpdateAsync(resource);
@@ -58,7 +55,7 @@ public class UpdateTests
             PostalCode = "00000",
         };
 
-        using var repositoryHelper = RepositoryHelper.CreateRepositoryHelper();
+        await using var repositoryHelper = await RepositoryHelper.CreateRepositoryHelperAsync();
         using var repository = repositoryHelper.GetEpdContactRepository();
 
         await repository.UpdateAsync(resource);
@@ -89,7 +86,8 @@ public class UpdateTests
 
         var action = async () =>
         {
-            using var repository = RepositoryHelper.CreateRepositoryHelper().GetEpdContactRepository();
+            await using var repositoryHelper = await RepositoryHelper.CreateRepositoryHelperAsync();
+            using var repository = repositoryHelper.GetEpdContactRepository();
             await repository.UpdateAsync(resource);
         };
 
@@ -116,7 +114,8 @@ public class UpdateTests
 
         var action = async () =>
         {
-            using var repository = RepositoryHelper.CreateRepositoryHelper().GetEpdContactRepository();
+            await using var repositoryHelper = await RepositoryHelper.CreateRepositoryHelperAsync();
+            using var repository = repositoryHelper.GetEpdContactRepository();
             await repository.UpdateAsync(resource);
         };
 
@@ -143,7 +142,8 @@ public class UpdateTests
 
         var action = async () =>
         {
-            using var repository = RepositoryHelper.CreateRepositoryHelper().GetEpdContactRepository();
+            await using var repositoryHelper = await RepositoryHelper.CreateRepositoryHelperAsync();
+            using var repository = repositoryHelper.GetEpdContactRepository();
             await repository.UpdateAsync(resource);
         };
 
@@ -170,7 +170,8 @@ public class UpdateTests
 
         var action = async () =>
         {
-            using var repository = RepositoryHelper.CreateRepositoryHelper().GetEpdContactRepository();
+            await using var repositoryHelper = await RepositoryHelper.CreateRepositoryHelperAsync();
+            using var repository = repositoryHelper.GetEpdContactRepository();
             await repository.UpdateAsync(resource);
         };
 
@@ -197,7 +198,8 @@ public class UpdateTests
 
         var action = async () =>
         {
-            using var repository = RepositoryHelper.CreateRepositoryHelper().GetEpdContactRepository();
+            await using var repositoryHelper = await RepositoryHelper.CreateRepositoryHelperAsync();
+            using var repository = repositoryHelper.GetEpdContactRepository();
             await repository.UpdateAsync(resource);
         };
 
@@ -224,7 +226,8 @@ public class UpdateTests
 
         var action = async () =>
         {
-            using var repository = RepositoryHelper.CreateRepositoryHelper().GetEpdContactRepository();
+            await using var repositoryHelper = await RepositoryHelper.CreateRepositoryHelperAsync();
+            using var repository = repositoryHelper.GetEpdContactRepository();
             await repository.UpdateAsync(resource);
         };
 

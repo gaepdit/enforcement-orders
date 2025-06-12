@@ -1,6 +1,6 @@
 ﻿@page
 @using Enfo.Domain.EnforcementOrders.Specs
-@using Enfo.Domain.Users.Entities
+@using Enfo.Domain.Users
 @using Enfo.WebApp.Models
 @using Enfo.WebApp.Platform.RazorHelpers
 @model Search
@@ -130,7 +130,7 @@
             <input type="hidden" name="handler" value="search" />
             <button id="SearchButton" type="submit">Search</button>
             <a asp-page="Search" class="usa-button usa-button-secondary">Clear Form</a>
-            @if (User.IsInRole(UserRole.OrderAdministrator))
+            @if (User.IsInRole(AppRole.OrderAdministrator))
             {
                 <input type="checkbox" id="Spec_ShowDeleted" name="ShowDeleted" value="true" checked="@Model.Spec.ShowDeleted">
                 <label asp-for="Spec.ShowDeleted"></label>

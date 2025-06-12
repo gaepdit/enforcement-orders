@@ -1,11 +1,11 @@
 ﻿@page "{id}"
-@model Enfo.WebApp.Pages.Admin.Users.Edit
+@model Edit
 @{
     ViewData["Title"] = "Edit Application Roles";
 }
 
 <h1>@ViewData["Title"] For:</h1>
-<h2>@Model.DisplayUser.Name (@Model.DisplayUser.Email)</h2>
+<h2>@Model.DisplayStaff.Name (@Model.DisplayStaff.Email)</h2>
 
 <form method="post" class="usa-form-large">
     <div asp-validation-summary="ModelOnly" class="usa-input-error-message" role="alert">

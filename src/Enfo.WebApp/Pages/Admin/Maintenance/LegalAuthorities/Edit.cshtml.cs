@@ -1,11 +1,10 @@
 ﻿using Enfo.Domain.LegalAuthorities.Repositories;
 using Enfo.Domain.LegalAuthorities.Resources;
-using Enfo.Domain.Users.Entities;
+using Enfo.Domain.Users;
 using Enfo.WebApp.Models;
 using Enfo.WebApp.Platform.RazorHelpers;
 using FluentValidation;
 using FluentValidation.AspNetCore;
-using JetBrains.Annotations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -13,14 +12,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthorities;
 
-[Authorize(Roles = UserRole.SiteMaintenance)]
+[Authorize(Roles = AppRole.SiteMaintenance)]
 public class Edit : PageModel
 {
     [BindProperty]
     public LegalAuthorityCommand Item { get; set; }
 
-    [TempData, UsedImplicitly]
-    public int HighlightId { [UsedImplicitly] get; set; }
+    [TempData]
+    public int HighlightId { get; set; }
 
     [BindProperty, HiddenInput]
     public string OriginalName { get; set; }
@@ -30,7 +29,6 @@ public class Edit : PageModel
     private readonly ILegalAuthorityRepository _repository;
     public Edit(ILegalAuthorityRepository repository) => _repository = repository;
 
-    [UsedImplicitly]
     public async Task<IActionResult> OnGetAsync(int? id)
     {
         if (id == null) return NotFound();
@@ -48,7 +46,6 @@ public class Edit : PageModel
         return Page();
     }
 
-    [UsedImplicitly]
     public async Task<IActionResult> OnPostAsync([FromServices] IValidator<LegalAuthorityCommand> validator)
     {
         if (Item.Id is null) return BadRequest();

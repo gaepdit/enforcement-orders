@@ -1,6 +1,6 @@
 ﻿@page "{id}"
-@using Enfo.Domain.Users.Entities
-@model Enfo.WebApp.Pages.Admin.Users.Details
+@using Enfo.Domain.Users
+@model Details
 @{
     ViewData["Title"] = "User Profile";
 }
@@ -8,8 +8,8 @@
 <partial name="_AlertPartial" for="Message" />
 
 <h1>@ViewData["Title"]</h1>
-<h2>@Model.DisplayUser.Name</h2>
-<p>@Model.DisplayUser.Email</p>
+<h2>@Model.DisplayStaff.Name</h2>
+<p>@Model.DisplayStaff.Email</p>
 
 <h3>Roles</h3>
 <p>This account has the following application roles:</p>
@@ -20,7 +20,7 @@
         <dl>
             @foreach (var role in Model.Roles)
             {
-                if (UserRole.AllRoles.TryGetValue(role, out var userRole))
+                if (AppRole.AllRoles.TryGetValue(role, out var userRole))
                 {
                     <dt>@userRole?.DisplayName</dt>
                     <dd>
@@ -39,8 +39,9 @@
 </div>
 
 <div>
-    @if (User.IsInRole(UserRole.UserMaintenance))
+    @if (User.IsInRole(AppRole.UserMaintenance))
     {
-        <a asp-page="Edit" asp-route-id="@Model.DisplayUser.Id.ToString()" class="usa-button usa-button-secondary">Edit Roles</a>
+        <a asp-page="Edit" asp-route-id="@Model.DisplayStaff.Id.ToString()" class="usa-button usa-button-secondary">Edit
+            Roles</a>
     }
 </div>

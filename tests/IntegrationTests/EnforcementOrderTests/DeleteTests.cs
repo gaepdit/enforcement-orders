@@ -2,8 +2,6 @@
 using EnfoTests.TestData;
 using FluentAssertions;
 using NUnit.Framework;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace EnfoTests.Infrastructure.EnforcementOrderTests;
 
@@ -14,7 +12,7 @@ public class DeleteTests
     {
         var itemId = EnforcementOrderData.EnforcementOrders.First(e => !e.Deleted).Id;
 
-        using var repositoryHelper = RepositoryHelper.CreateRepositoryHelper();
+        await using var repositoryHelper = await RepositoryHelper.CreateRepositoryHelperAsync();
         using var repository = repositoryHelper.GetEnforcementOrderRepository();
 
         await repository.DeleteAsync(itemId);
@@ -29,7 +27,7 @@ public class DeleteTests
     {
         var itemId = EnforcementOrderData.EnforcementOrders.First(e => e.Deleted).Id;
 
-        using var repositoryHelper = RepositoryHelper.CreateRepositoryHelper();
+        await using var repositoryHelper = await RepositoryHelper.CreateRepositoryHelperAsync();
         using var repository = repositoryHelper.GetEnforcementOrderRepository();
 
         await repository.DeleteAsync(itemId);

@@ -6,10 +6,6 @@ using FluentAssertions;
 using FluentAssertions.Execution;
 using Microsoft.AspNetCore.Http;
 using NUnit.Framework;
-using System;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace EnfoTests.Infrastructure.EnforcementOrderTests;
 
@@ -34,7 +30,7 @@ public class CreateTests
             ProposedOrderPostedDate = DateTime.Today,
         };
 
-        using var repositoryHelper = RepositoryHelper.CreateRepositoryHelper();
+        await using var repositoryHelper = await RepositoryHelper.CreateRepositoryHelperAsync();
         using var repository = repositoryHelper.GetEnforcementOrderRepository();
 
         // Act
@@ -70,7 +66,8 @@ public class CreateTests
 
         var action = async () =>
         {
-            using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
+            await using var repositoryHelper = await RepositoryHelper.CreateRepositoryHelperAsync();
+            using var repository = repositoryHelper.GetEnforcementOrderRepository();
             await repository.CreateAsync(resource);
         };
 
@@ -97,7 +94,7 @@ public class CreateTests
             Attachment = new FormFile(Stream.Null, 0, 1, "test1", "test1.pdf"),
         };
 
-        using var repositoryHelper = RepositoryHelper.CreateRepositoryHelper();
+        await using var repositoryHelper = await RepositoryHelper.CreateRepositoryHelperAsync();
         using var repository = repositoryHelper.GetEnforcementOrderRepository();
 
         // Act

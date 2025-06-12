@@ -1,15 +1,11 @@
 using Enfo.Domain.Services;
-using Enfo.LocalRepository;
+using Enfo.LocalRepository.Repositories;
 using EnfoTests.TestData;
 using FluentAssertions;
 using FluentAssertions.Execution;
 using Microsoft.AspNetCore.Http;
 using NSubstitute;
 using NUnit.Framework;
-using System;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace EnfoTests.LocalRepositoryTests.Attachments;
 

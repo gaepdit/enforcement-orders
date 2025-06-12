@@ -1,5 +1,5 @@
 ﻿using Enfo.Domain.EnforcementOrders.Repositories;
-using Enfo.Domain.Users.Entities;
+using Enfo.Domain.Users;
 using Enfo.WebApp.Models;
 using Enfo.WebApp.Pages.Admin;
 using Enfo.WebApp.Platform.RazorHelpers;
@@ -91,7 +91,7 @@ public class DetailsTests
     public async Task AddAttachments_ReturnsRedirect()
     {
         // Stub user & page context
-        var claims = new List<Claim> { new(ClaimTypes.Role, UserRole.OrderAdministrator) };
+        var claims = new List<Claim> { new(ClaimTypes.Role, AppRole.OrderAdministrator) };
         var httpContext = new DefaultHttpContext { User = new ClaimsPrincipal(new ClaimsIdentity(claims)) };
         var actionContext = new ActionContext(httpContext, new RouteData(), new PageActionDescriptor());
         var pageContext = new PageContext(actionContext);

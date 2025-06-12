@@ -4,7 +4,7 @@ using Enfo.Domain.EnforcementOrders.Specs;
 using Enfo.Domain.LegalAuthorities.Repositories;
 using Enfo.Domain.LegalAuthorities.Resources;
 using Enfo.Domain.Services;
-using Enfo.LocalRepository;
+using Enfo.LocalRepository.Repositories;
 using Enfo.WebApp.Api;
 using EnfoTests.TestData;
 using FluentAssertions;
@@ -13,9 +13,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using NSubstitute;
 using NUnit.Framework;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace EnfoTests.WebApp.Api;
 
@@ -118,7 +115,7 @@ public class ApiTests
 
         var controller = new ApiController();
         var response = await controller.ListLegalAuthoritiesAsync(repository, true);
-        response.Should().HaveCount(LegalAuthorityData.LegalAuthorities.Count);
+        response.Should().HaveSameCount(LegalAuthorityData.LegalAuthorities);
     }
 
     [Test]

@@ -35,7 +35,7 @@ public class OrgNotifications(
 
     public async Task<List<OrgNotification>> GetOrgNotificationsAsync()
     {
-        if (string.IsNullOrEmpty(ApplicationSettings.OrgNotificationsApiUrl)) return [];
+        if (string.IsNullOrEmpty(AppSettings.OrgNotificationsApiUrl)) return [];
 
         if (cache.TryGetValue(CacheKey, out List<OrgNotification> notifications) && notifications != null)
             return notifications;
@@ -43,7 +43,7 @@ public class OrgNotifications(
         try
         {
             notifications = await httpClientFactory.FetchApiDataAsync<List<OrgNotification>>(
-                ApplicationSettings.OrgNotificationsApiUrl, ApiEndpoint, "NotificationsClient") ?? [];
+                AppSettings.OrgNotificationsApiUrl, ApiEndpoint, "NotificationsClient") ?? [];
         }
         catch (Exception ex)
         {

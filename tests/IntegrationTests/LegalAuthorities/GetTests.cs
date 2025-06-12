@@ -1,10 +1,8 @@
 using Enfo.Domain.LegalAuthorities.Resources;
+using EnfoTests.Infrastructure.Helpers;
 using EnfoTests.TestData;
 using FluentAssertions;
 using NUnit.Framework;
-using System.Linq;
-using System.Threading.Tasks;
-using static EnfoTests.Infrastructure.Helpers.RepositoryHelper;
 
 namespace EnfoTests.Infrastructure.LegalAuthorities;
 
@@ -16,7 +14,8 @@ public class GetTests
     [TestCase(2)]
     public async Task Get_WhenItemExists_ReturnsItem(int id)
     {
-        using var repository = CreateRepositoryHelper().GetLegalAuthorityRepository();
+        await using var repositoryHelper = await RepositoryHelper.CreateRepositoryHelperAsync();
+        using var repository = repositoryHelper.GetLegalAuthorityRepository();
         var item = new LegalAuthorityView(LegalAuthorityData.LegalAuthorities.Single(e => e.Id == id));
 
         var result = await repository.GetAsync(id);
@@ -27,7 +26,8 @@ public class GetTests
     [Test]
     public async Task Get_WhenNotExists_ReturnsNull()
     {
-        using var repository = CreateRepositoryHelper().GetLegalAuthorityRepository();
+        await using var repositoryHelper = await RepositoryHelper.CreateRepositoryHelperAsync();
+        using var repository = repositoryHelper.GetLegalAuthorityRepository();
         var item = await repository.GetAsync(-1);
         item.Should().BeNull();
     }

@@ -1,4 +1,4 @@
-﻿@using Enfo.Domain.Users.Entities
+﻿@using Enfo.Domain.Users
 @{
     var showAdminMenu = User?.Identity?.IsAuthenticated ?? false;
 }
@@ -53,7 +53,7 @@
                 @if (showAdminMenu)
                 {
                     // Admin
-                    @if (User.IsInRole(UserRole.OrderAdministrator))
+                    @if (User.IsInRole(AppRole.OrderAdministrator))
                     {
                         <li>
                             <a asp-page="/Admin/Add">+ New Order</a>

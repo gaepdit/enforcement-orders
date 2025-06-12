@@ -4,9 +4,6 @@ using EnfoTests.Infrastructure.Helpers;
 using EnfoTests.TestData;
 using FluentAssertions;
 using NUnit.Framework;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace EnfoTests.Infrastructure.EnforcementOrderTests;
 
@@ -47,7 +44,7 @@ public class UpdateTests
         var itemUpdate = NewSampleUpdate(existingOrder);
         itemUpdate.Cause = "abc";
 
-        using var repositoryHelper = RepositoryHelper.CreateRepositoryHelper();
+        await using var repositoryHelper = await RepositoryHelper.CreateRepositoryHelperAsync();
         using var repository = repositoryHelper.GetEnforcementOrderRepository();
 
         await repository.UpdateAsync(itemUpdate);
@@ -64,7 +61,8 @@ public class UpdateTests
 
         var action = async () =>
         {
-            using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
+            await using var repositoryHelper = await RepositoryHelper.CreateRepositoryHelperAsync();
+            using var repository = repositoryHelper.GetEnforcementOrderRepository();
             await repository.UpdateAsync(itemUpdate);
         };
 
@@ -83,7 +81,8 @@ public class UpdateTests
 
         var action = async () =>
         {
-            using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
+            await using var repositoryHelper = await RepositoryHelper.CreateRepositoryHelperAsync();
+            using var repository = repositoryHelper.GetEnforcementOrderRepository();
             await repository.UpdateAsync(itemUpdate);
         };
 

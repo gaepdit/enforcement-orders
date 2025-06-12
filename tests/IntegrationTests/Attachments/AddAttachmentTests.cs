@@ -4,10 +4,6 @@ using FluentAssertions;
 using FluentAssertions.Execution;
 using Microsoft.AspNetCore.Http;
 using NUnit.Framework;
-using System;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace EnfoTests.Infrastructure.Attachments;
 
@@ -22,7 +18,7 @@ public class AddAttachmentTests
         var orderId = EnforcementOrderData.EnforcementOrders.First(e => !e.Deleted).Id;
         var initialCount = AttachmentData.Attachments.Count(a => a.EnforcementOrder.Id == orderId);
 
-        using var repositoryHelper = RepositoryHelper.CreateRepositoryHelper();
+        await using var repositoryHelper = await RepositoryHelper.CreateRepositoryHelperAsync();
         using var repository = repositoryHelper.GetEnforcementOrderRepository();
 
         // Act
@@ -51,7 +47,8 @@ public class AddAttachmentTests
 
         var action = async () =>
         {
-            using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
+            await using var repositoryHelper = await RepositoryHelper.CreateRepositoryHelperAsync();
+            using var repository = repositoryHelper.GetEnforcementOrderRepository();
             await repository.AddAttachmentAsync(orderId, file);
         };
 
@@ -68,7 +65,8 @@ public class AddAttachmentTests
 
         var action = async () =>
         {
-            using var repository = RepositoryHelper.CreateRepositoryHelper().GetEnforcementOrderRepository();
+            await using var repositoryHelper = await RepositoryHelper.CreateRepositoryHelperAsync();
+            using var repository = repositoryHelper.GetEnforcementOrderRepository();
             await repository.AddAttachmentAsync(orderId, file);
         };
 

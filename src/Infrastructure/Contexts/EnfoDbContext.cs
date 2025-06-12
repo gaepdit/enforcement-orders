@@ -2,7 +2,7 @@
 using Enfo.Domain.EnforcementOrders.Entities;
 using Enfo.Domain.EpdContacts.Entities;
 using Enfo.Domain.LegalAuthorities.Entities;
-using Enfo.Domain.Users.Entities;
+using Enfo.Domain.Users;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -11,9 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Enfo.Infrastructure.Contexts;
 
-public class EnfoDbContext(
-    DbContextOptions<EnfoDbContext> options,
-    IHttpContextAccessor httpContextAccessor)
+public class EnfoDbContext(DbContextOptions<EnfoDbContext> options, IHttpContextAccessor httpContextAccessor)
     : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>(options)
 {
     public DbSet<EnforcementOrder> EnforcementOrders { get; [UsedImplicitly] set; }

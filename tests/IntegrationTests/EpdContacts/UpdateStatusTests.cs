@@ -2,9 +2,6 @@
 using EnfoTests.TestData;
 using FluentAssertions;
 using NUnit.Framework;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace EnfoTests.Infrastructure.EpdContacts;
 
@@ -17,7 +14,7 @@ public class UpdateStatusTests
     {
         var itemId = EpdContactData.EpdContacts.First(e => e.Active != newActiveStatus).Id;
 
-        using var repositoryHelper = RepositoryHelper.CreateRepositoryHelper();
+        await using var repositoryHelper = await RepositoryHelper.CreateRepositoryHelperAsync();
         using var repository = repositoryHelper.GetEpdContactRepository();
 
         await repository.UpdateStatusAsync(itemId, newActiveStatus);
@@ -34,7 +31,7 @@ public class UpdateStatusTests
     {
         var itemId = EpdContactData.EpdContacts.First(e => e.Active == newActiveStatus).Id;
 
-        using var repositoryHelper = RepositoryHelper.CreateRepositoryHelper();
+        await using var repositoryHelper = await RepositoryHelper.CreateRepositoryHelperAsync();
         using var repository = repositoryHelper.GetEpdContactRepository();
 
         await repository.UpdateStatusAsync(itemId, newActiveStatus);
@@ -51,7 +48,8 @@ public class UpdateStatusTests
 
         var action = async () =>
         {
-            using var repository = RepositoryHelper.CreateRepositoryHelper().GetEpdContactRepository();
+            await using var repositoryHelper = await RepositoryHelper.CreateRepositoryHelperAsync();
+            using var repository = repositoryHelper.GetEpdContactRepository();
             await repository.UpdateStatusAsync(itemId, true);
         };
 

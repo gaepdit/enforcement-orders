@@ -8,7 +8,7 @@ namespace Enfo.WebApp.Platform.Logging;
 public class ErrorLogger(IServiceProvider serviceProvider) : IErrorLogger
 {
     public Task LogErrorAsync(Exception exception, Dictionary<string, object> customData = null) =>
-        string.IsNullOrEmpty(ApplicationSettings.RaygunClientSettings.ApiKey)
+        string.IsNullOrEmpty(AppSettings.RaygunSettings.ApiKey)
             ? Task.CompletedTask
             : serviceProvider.GetService<RaygunClient>()!.SendInBackground(exception, null, customData);
 }

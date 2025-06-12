@@ -1,13 +1,9 @@
-﻿using Enfo.Domain.Users.Resources;
-using Enfo.Domain.Users.Services;
-using Enfo.WebApp.Pages.Admin.Users;
+﻿using Enfo.AppServices.Staff;
 using FluentAssertions;
 using FluentAssertions.Execution;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using NSubstitute;
 using NUnit.Framework;
-using System.Linq;
-using System.Threading.Tasks;
 using Index = Enfo.WebApp.Pages.Admin.Users.Index;
 
 namespace EnfoTests.WebApp.Pages.Admin.Users;
@@ -21,10 +17,10 @@ public class UserIndexTests
     public async Task OnSearch_IfValidModel_ReturnPage(string name, string email, string role)
     {
         var users = UserTestData.ApplicationUsers;
-        var searchResults = users.Select(e => new UserView(e)).ToList();
+        var searchResults = users.Select(e => new StaffView(e)).ToList();
 
-        var userService = Substitute.For<IUserService>();
-        userService.GetUsersAsync(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>()).Returns(searchResults);
+        var userService = Substitute.For<IStaffService>();
+        userService.SearchUsersAsync(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>()).Returns(searchResults);
         var pageModel = new Index();
 
         var result = await pageModel.OnGetSearchAsync(userService, name, email, role);
@@ -41,7 +37,7 @@ public class UserIndexTests
     [Test]
     public async Task OnSearch_IfInvalidModel_ReturnPageWithInvalidModelState()
     {
-        var userService = Substitute.For<IUserService>();
+        var userService = Substitute.For<IStaffService>();
         var pageModel = new Index();
         pageModel.ModelState.AddModelError("Error", "Sample error description");
 

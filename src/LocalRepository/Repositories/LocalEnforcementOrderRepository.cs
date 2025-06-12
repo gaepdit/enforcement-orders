@@ -9,15 +9,10 @@ using EnfoTests.TestData;
 using GaEpd.GuardClauses;
 using Microsoft.AspNetCore.Http;
 
-namespace Enfo.LocalRepository;
+namespace Enfo.LocalRepository.Repositories;
 
-public sealed class LocalEnforcementOrderRepository : IEnforcementOrderRepository
+public sealed class LocalEnforcementOrderRepository(IAttachmentStore attachmentStore) : IEnforcementOrderRepository
 {
-    private readonly IAttachmentStore _attachmentStore;
-
-    public LocalEnforcementOrderRepository(IAttachmentStore attachmentStore) =>
-        _attachmentStore = attachmentStore;
-
     public Task<EnforcementOrderDetailedView> GetAsync(int id)
     {
         if (!EnforcementOrderData.EnforcementOrders.AsQueryable()
@@ -210,7 +205,7 @@ public sealed class LocalEnforcementOrderRepository : IEnforcementOrderRepositor
         if (file.Length == 0 || !FileTypes.FileUploadAllowed(extension)) return;
 
         var attachmentId = Guid.NewGuid();
-        await _attachmentStore.SaveFileAttachmentAsync(file, attachmentId).ConfigureAwait(false);
+        await attachmentStore.SaveFileAttachmentAsync(file, attachmentId).ConfigureAwait(false);
 
         var attachment = new Attachment
         {
@@ -247,7 +242,7 @@ public sealed class LocalEnforcementOrderRepository : IEnforcementOrderRepositor
         attachment.Deleted = true;
         attachment.DateDeleted = DateTime.Today;
 
-        _attachmentStore.TryDeleteFileAttachmentAsync(attachment.AttachmentFileName);
+        attachmentStore.TryDeleteFileAttachmentAsync(attachment.AttachmentFileName);
         return Task.CompletedTask;
     }
 
