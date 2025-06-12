@@ -13,7 +13,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthorities;
 
 [Authorize(Roles = AppRole.SiteMaintenance)]
-public class Edit : PageModel
+public class Edit(ILegalAuthorityRepository repository) : PageModel
 {
     [BindProperty]
     public LegalAuthorityCommand Item { get; set; }
@@ -26,13 +26,10 @@ public class Edit : PageModel
 
     public static MaintenanceOption ThisOption => MaintenanceOption.LegalAuthority;
 
-    private readonly ILegalAuthorityRepository _repository;
-    public Edit(ILegalAuthorityRepository repository) => _repository = repository;
-
     public async Task<IActionResult> OnGetAsync(int? id)
     {
         if (id == null) return NotFound();
-        var originalItem = await _repository.GetAsync(id.Value);
+        var originalItem = await repository.GetAsync(id.Value);
         if (originalItem == null) return NotFound("ID not found.");
 
         if (!originalItem.Active)
@@ -50,7 +47,7 @@ public class Edit : PageModel
     {
         if (Item.Id is null) return BadRequest();
 
-        var originalItem = await _repository.GetAsync(Item.Id.Value);
+        var originalItem = await repository.GetAsync(Item.Id.Value);
         if (originalItem == null) return NotFound();
 
         if (!originalItem.Active)
@@ -65,11 +62,11 @@ public class Edit : PageModel
 
         try
         {
-            await _repository.UpdateAsync(Item);
+            await repository.UpdateAsync(Item);
         }
         catch (DbUpdateConcurrencyException)
         {
-            if (!await _repository.ExistsAsync(Item.Id.Value)) return NotFound();
+            if (!await repository.ExistsAsync(Item.Id.Value)) return NotFound();
             throw;
         }
 

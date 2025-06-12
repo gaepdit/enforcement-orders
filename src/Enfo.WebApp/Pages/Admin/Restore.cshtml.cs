@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 namespace Enfo.WebApp.Pages.Admin;
 
 [Authorize(Roles = AppRole.OrderAdministrator)]
-public class Restore : PageModel
+public class Restore(IEnforcementOrderRepository repository) : PageModel
 {
     [BindProperty]
     [HiddenInput]
@@ -18,13 +18,10 @@ public class Restore : PageModel
 
     public EnforcementOrderAdminView Item { get; set; }
 
-    private readonly IEnforcementOrderRepository _repository;
-    public Restore(IEnforcementOrderRepository repository) => _repository = repository;
-
     public async Task<IActionResult> OnGetAsync(int? id)
     {
         if (id == null) return NotFound();
-        Item = await _repository.GetAdminViewAsync(id.Value);
+        Item = await repository.GetAdminViewAsync(id.Value);
         if (Item == null) return NotFound("ID not found.");
         if (!Item.Deleted) return RedirectToPage("Details", new { Id });
         Id = id.Value;
@@ -33,7 +30,7 @@ public class Restore : PageModel
 
     public async Task<IActionResult> OnPostAsync()
     {
-        await _repository.RestoreAsync(Id);
+        await repository.RestoreAsync(Id);
         TempData?.SetDisplayMessage(Context.Success, "The Order has been successfully restored.");
         return RedirectToPage("Details", new { Id });
     }

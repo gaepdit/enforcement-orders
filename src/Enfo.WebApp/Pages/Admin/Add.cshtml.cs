@@ -17,7 +17,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 namespace Enfo.WebApp.Pages.Admin;
 
 [Authorize(Roles = AppRole.OrderAdministrator)]
-public class Add : PageModel
+public class Add(
+    IEnforcementOrderRepository order,
+    ILegalAuthorityRepository legalAuthority,
+    IEpdContactRepository contact)
+    : PageModel
 {
     [BindProperty]
     public EnforcementOrderCreate Item { get; set; }
@@ -25,19 +29,6 @@ public class Add : PageModel
     // Select Lists
     public SelectList EpdContactsSelectList { get; private set; }
     public SelectList LegalAuthoritiesSelectList { get; private set; }
-
-    private readonly IEnforcementOrderRepository _order;
-    private readonly ILegalAuthorityRepository _legalAuthority;
-    private readonly IEpdContactRepository _contact;
-
-    public Add(IEnforcementOrderRepository order,
-        ILegalAuthorityRepository legalAuthority,
-        IEpdContactRepository contact)
-    {
-        _order = order;
-        _legalAuthority = legalAuthority;
-        _contact = contact;
-    }
 
     public async Task OnGetAsync()
     {
@@ -56,16 +47,16 @@ public class Add : PageModel
             return Page();
         }
 
-        var id = await _order.CreateAsync(Item);
+        var id = await order.CreateAsync(Item);
         TempData.SetDisplayMessage(Context.Success, "The new Enforcement Order has been successfully added.");
         return RedirectToPage("Details", new { id });
     }
 
     private async Task PopulateSelectListsAsync()
     {
-        LegalAuthoritiesSelectList = new SelectList(await _legalAuthority.ListAsync(),
+        LegalAuthoritiesSelectList = new SelectList(await legalAuthority.ListAsync(),
             nameof(LegalAuthorityView.Id), nameof(LegalAuthorityView.AuthorityName));
-        EpdContactsSelectList = new SelectList(await _contact.ListAsync(),
+        EpdContactsSelectList = new SelectList(await contact.ListAsync(),
             nameof(EpdContactView.Id), nameof(EpdContactView.AsLinearString));
     }
 }

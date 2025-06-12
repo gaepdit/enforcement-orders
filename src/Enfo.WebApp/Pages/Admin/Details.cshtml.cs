@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 namespace Enfo.WebApp.Pages.Admin;
 
 [Authorize]
-public class Details : PageModel
+public class Details(IEnforcementOrderRepository repository) : PageModel
 {
     [BindProperty]
     public int Id { get; set; }
@@ -22,13 +22,10 @@ public class Details : PageModel
     public EnforcementOrderAdminView Item { get; private set; }
     public DisplayMessage Message { get; private set; }
 
-    private readonly IEnforcementOrderRepository _repository;
-    public Details(IEnforcementOrderRepository repository) => _repository = repository;
-
     public async Task<IActionResult> OnGetAsync(int? id)
     {
         if (id == null) return NotFound();
-        Item = await _repository.GetAdminViewAsync(id.Value);
+        Item = await repository.GetAdminViewAsync(id.Value);
         if (Item == null) return NotFound("ID not found.");
 
         // TempData might be null when called from unit test
@@ -43,7 +40,7 @@ public class Details : PageModel
     {
         if (!User.IsInRole(AppRole.OrderAdministrator)) return Forbid();
 
-        Item = await _repository.GetAdminViewAsync(Id);
+        Item = await repository.GetAdminViewAsync(Id);
         if (Item == null) return NotFound("ID not found.");
 
         if (Item.Deleted)
@@ -72,7 +69,7 @@ public class Details : PageModel
             return Page();
         }
 
-        await _repository.AddAttachmentAsync(Id, Attachment);
+        await repository.AddAttachmentAsync(Id, Attachment);
         return RedirectToPage("Details", null, new { Id }, "attachments");
     }
 
@@ -80,7 +77,7 @@ public class Details : PageModel
     {
         if (!User.IsInRole(AppRole.OrderAdministrator)) return Forbid();
 
-        Item = await _repository.GetAdminViewAsync(Id);
+        Item = await repository.GetAdminViewAsync(Id);
         if (Item == null) return NotFound("ID not found.");
 
         if (Item.Deleted)
@@ -89,7 +86,7 @@ public class Details : PageModel
             return Page();
         }
 
-        await _repository.DeleteAttachmentAsync(Id, attachmentId);
+        await repository.DeleteAttachmentAsync(Id, attachmentId);
         return RedirectToPage("Details", null, new { Id }, "attachments");
     }
 }

@@ -7,26 +7,18 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Enfo.WebApp.Pages;
 
-public class Attachment : PageModel
+public class Attachment(IEnforcementOrderRepository repository, IAttachmentStore attachmentStore)
+    : PageModel
 {
-    private readonly IEnforcementOrderRepository _repository;
-    private readonly IAttachmentStore _attachmentStore;
-
-    public Attachment(IEnforcementOrderRepository repository, IAttachmentStore attachmentStore)
-    {
-        _repository = repository;
-        _attachmentStore = attachmentStore;
-    }
-
     public async Task<IActionResult> OnGetAsync(Guid? id, [CanBeNull] string fileName)
     {
         if (id == null) return NotFound();
 
-        var item = await _repository.GetAttachmentAsync(id.Value);
+        var item = await repository.GetAttachmentAsync(id.Value);
         if (item == null || string.IsNullOrWhiteSpace(item.FileName))
             return NotFound($"Attachment ID not found: {id.Value.ToString()}");
 
-        var order = await _repository.GetAdminViewAsync(item.EnforcementOrderId);
+        var order = await repository.GetAdminViewAsync(item.EnforcementOrderId);
 
         if ((User.Identity is null || !User.Identity.IsAuthenticated) && (order.Deleted || !order.IsPublic))
             return NotFound($"Attachment ID not found: {id.Value.ToString()}");
@@ -34,7 +26,7 @@ public class Attachment : PageModel
         if (fileName != item.FileName)
             return RedirectToPage("Attachment", new { id, item.FileName });
 
-        var fileBytes = await _attachmentStore.GetFileAttachmentAsync(item.AttachmentFileName);
+        var fileBytes = await attachmentStore.GetFileAttachmentAsync(item.AttachmentFileName);
 
         return fileBytes.Length == 0
             ? NotFound($"File not available: {item.FileName}")

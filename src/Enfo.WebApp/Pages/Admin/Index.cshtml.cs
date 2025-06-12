@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 namespace Enfo.WebApp.Pages.Admin;
 
 [Authorize]
-public class Index : PageModel
+public class Index(IEnforcementOrderRepository repository) : PageModel
 {
     public IReadOnlyList<EnforcementOrderSummaryView> CurrentProposedOrders { get; private set; }
     public IReadOnlyList<EnforcementOrderSummaryView> RecentExecutedOrders { get; private set; }
@@ -19,15 +19,12 @@ public class Index : PageModel
     public IReadOnlyList<EnforcementOrderAdminSummaryView> DraftOrders { get; private set; }
     public DisplayMessage Message { get; private set; }
 
-    private readonly IEnforcementOrderRepository _repository;
-    public Index(IEnforcementOrderRepository repository) => _repository = repository;
-
     public async Task OnGetAsync()
     {
-        CurrentProposedOrders = await _repository.ListCurrentProposedEnforcementOrdersAsync();
-        RecentExecutedOrders = await _repository.ListRecentlyExecutedEnforcementOrdersAsync();
-        PendingOrders = await _repository.ListPendingEnforcementOrdersAsync();
-        DraftOrders = await _repository.ListDraftEnforcementOrdersAsync();
+        CurrentProposedOrders = await repository.ListCurrentProposedEnforcementOrdersAsync();
+        RecentExecutedOrders = await repository.ListRecentlyExecutedEnforcementOrdersAsync();
+        PendingOrders = await repository.ListPendingEnforcementOrdersAsync();
+        DraftOrders = await repository.ListDraftEnforcementOrdersAsync();
         Message = TempData?.GetDisplayMessage();
     }
 
@@ -36,7 +33,7 @@ public class Index : PageModel
         if (string.IsNullOrWhiteSpace(find)) return RedirectToPage("Index");
 
         var spec = new EnforcementOrderAdminSpec { OrderNumber = find };
-        var orders = await _repository.ListAdminAsync(spec, new PaginationSpec(1, 1));
+        var orders = await repository.ListAdminAsync(spec, new PaginationSpec(1, 1));
 
         if (orders.TotalCount == 1 && orders.Items[0] != null)
         {

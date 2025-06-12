@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 namespace Enfo.WebApp.Pages.Admin;
 
 [Authorize(Roles = AppRole.OrderAdministrator)]
-public class Delete : PageModel
+public class Delete(IEnforcementOrderRepository repository) : PageModel
 {
     [BindProperty]
     [HiddenInput]
@@ -18,13 +18,10 @@ public class Delete : PageModel
 
     public EnforcementOrderAdminView Item { get; set; }
 
-    private readonly IEnforcementOrderRepository _repository;
-    public Delete(IEnforcementOrderRepository repository) => _repository = repository;
-
     public async Task<IActionResult> OnGetAsync(int? id)
     {
         if (id == null) return NotFound();
-        Item = await _repository.GetAdminViewAsync(id.Value);
+        Item = await repository.GetAdminViewAsync(id.Value);
         if (Item == null) return NotFound("ID not found.");
         if (Item.Deleted) return RedirectToPage("Details", new { Id });
         Id = id.Value;
@@ -33,7 +30,7 @@ public class Delete : PageModel
 
     public async Task<IActionResult> OnPostAsync()
     {
-        await _repository.DeleteAsync(Id);
+        await repository.DeleteAsync(Id);
         TempData?.SetDisplayMessage(Context.Success, "The Order has been successfully deleted.");
         return RedirectToPage("Details", new { Id });
     }

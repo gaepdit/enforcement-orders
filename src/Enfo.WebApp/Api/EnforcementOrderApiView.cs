@@ -59,22 +59,12 @@ public class EnforcementOrderApiView
     public List<AttachmentApiView> Attachments { get; }
 
     [PublicAPI]
-    public class AttachmentApiView
+    public class AttachmentApiView(AttachmentView a, Uri baseUrl)
     {
-        public AttachmentApiView(AttachmentView a, Uri baseUrl)
-        {
-            _baseUrl = baseUrl;
-            Id = a.Id;
-            FileName = a.FileName;
-            Size = a.Size;
-            DateUploaded = a.DateUploaded;
-        }
-
-        private readonly Uri _baseUrl;
-        public Guid Id { get; }
-        public string FileName { get; }
-        public long Size { get; }
-        public DateTime DateUploaded { get; }
-        public string Link => new Uri(_baseUrl, $"Attachment/{Id}/").AbsoluteUri;
+        public Guid Id { get; } = a.Id;
+        public string FileName { get; } = a.FileName;
+        public long Size { get; } = a.Size;
+        public DateTime DateUploaded { get; } = a.DateUploaded;
+        public string Link => new Uri(baseUrl, $"Attachment/{Id}/").AbsoluteUri;
     }
 }

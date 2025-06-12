@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 namespace Enfo.WebApp.Pages.Admin.Users;
 
 [Authorize(Roles = AppRole.UserMaintenance)]
-public class Edit : PageModel
+public class Edit(IStaffService staffService) : PageModel
 {
     [BindProperty, HiddenInput]
     public Guid UserId { get; set; }
@@ -19,13 +19,10 @@ public class Edit : PageModel
 
     public StaffView DisplayStaff { get; private set; }
 
-    private readonly IStaffService _staffService;
-    public Edit(IStaffService staffService) => _staffService = staffService;
-
     public async Task<IActionResult> OnGetAsync(Guid? id)
     {
         if (id == null) return NotFound();
-        DisplayStaff = await _staffService.FindUserAsync(id.Value);
+        DisplayStaff = await staffService.FindUserAsync(id.Value);
         if (DisplayStaff == null) return NotFound();
         UserId = id.Value;
 
@@ -37,14 +34,14 @@ public class Edit : PageModel
     {
         if (!ModelState.IsValid)
         {
-            DisplayStaff = await _staffService.FindUserAsync(UserId);
+            DisplayStaff = await staffService.FindUserAsync(UserId);
             if (DisplayStaff == null) return NotFound();
             await PopulateRoleSettingsAsync();
             return Page();
         }
 
         var roleUpdates = UserRoleSettings.ToDictionary(r => r.Name, r => r.IsSelected);
-        var result = await _staffService.UpdateUserRolesAsync(UserId, roleUpdates);
+        var result = await staffService.UpdateUserRolesAsync(UserId, roleUpdates);
 
         if (result.Succeeded)
         {
@@ -55,7 +52,7 @@ public class Edit : PageModel
         foreach (var err in result.Errors)
             ModelState.AddModelError(string.Empty, string.Concat(err.Code, ": ", err.Description));
 
-        DisplayStaff = await _staffService.FindUserAsync(UserId);
+        DisplayStaff = await staffService.FindUserAsync(UserId);
         if (DisplayStaff == null) return NotFound();
         await PopulateRoleSettingsAsync();
         return Page();
@@ -63,7 +60,7 @@ public class Edit : PageModel
 
     private async Task PopulateRoleSettingsAsync()
     {
-        var roles = await _staffService.GetUserRolesAsync(UserId);
+        var roles = await staffService.GetUserRolesAsync(UserId);
 
         UserRoleSettings = AppRole.AllRoles.Select(r => new UserRoleSetting
         {

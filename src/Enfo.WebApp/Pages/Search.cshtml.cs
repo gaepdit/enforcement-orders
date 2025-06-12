@@ -11,7 +11,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Enfo.WebApp.Pages;
 
-public class Search : PageModel
+public class Search(IEnforcementOrderRepository order, ILegalAuthorityRepository legalAuthority)
+    : PageModel
 {
     public EnforcementOrderSpec Spec { get; set; }
     public PaginatedResult<EnforcementOrderSummaryView> OrdersList { get; private set; }
@@ -19,15 +20,6 @@ public class Search : PageModel
 
     // Select Lists
     public SelectList LegalAuthoritiesSelectList { get; private set; }
-
-    private readonly IEnforcementOrderRepository _order;
-    private readonly ILegalAuthorityRepository _legalAuthority;
-
-    public Search(IEnforcementOrderRepository order, ILegalAuthorityRepository legalAuthority)
-    {
-        _order = order;
-        _legalAuthority = legalAuthority;
-    }
 
     public async Task OnGetAsync()
     {
@@ -39,13 +31,13 @@ public class Search : PageModel
     {
         spec.TrimAll();
         Spec = spec;
-        OrdersList = await _order.ListAsync(spec, new PaginationSpec(p, GlobalConstants.PageSize));
+        OrdersList = await order.ListAsync(spec, new PaginationSpec(p, GlobalConstants.PageSize));
         LegalAuthoritiesSelectList = await GetLegalAuthoritiesSelectList();
         ShowResults = true;
     }
 
     private async Task<SelectList> GetLegalAuthoritiesSelectList() =>
-        new(await _legalAuthority.ListAsync(),
+        new(await legalAuthority.ListAsync(),
             nameof(LegalAuthorityView.Id),
             nameof(LegalAuthorityView.AuthorityName));
 }

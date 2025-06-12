@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthorities;
 
 [Authorize]
-public class Index : PageModel
+public class Index(ILegalAuthorityRepository repository) : PageModel
 {
     public IReadOnlyList<LegalAuthorityView> Items { get; private set; }
     public static MaintenanceOption ThisOption => MaintenanceOption.LegalAuthority;
@@ -19,12 +19,9 @@ public class Index : PageModel
     [TempData]
     public int HighlightId { get; set; }
 
-    private readonly ILegalAuthorityRepository _repository;
-    public Index(ILegalAuthorityRepository repository) => _repository = repository;
-
     public async Task OnGetAsync()
     {
-        Items = await _repository.ListAsync(true);
+        Items = await repository.ListAsync(true);
         Message = TempData?.GetDisplayMessage();
     }
 
@@ -32,16 +29,16 @@ public class Index : PageModel
     {
         if (id == null) return BadRequest();
         if (!ModelState.IsValid) return Page();
-        var item = await _repository.GetAsync(id.Value);
+        var item = await repository.GetAsync(id.Value);
         if (item == null) return NotFound();
 
         try
         {
-            await _repository.UpdateStatusAsync(id.Value, !item.Active);
+            await repository.UpdateStatusAsync(id.Value, !item.Active);
         }
         catch (DbUpdateConcurrencyException)
         {
-            if (!await _repository.ExistsAsync(id.Value)) return NotFound();
+            if (!await repository.ExistsAsync(id.Value)) return NotFound();
             throw;
         }
 

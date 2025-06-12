@@ -1,19 +1,12 @@
 ﻿namespace Enfo.WebApp.Models;
 
-public class DisplayMessage
+public class DisplayMessage(Context context, string message, bool showCloseButton = true)
 {
     // ReSharper disable once MemberCanBePrivate.Global
     // Context must be public so it works with deserialization in TempDataExtensions class
-    public Context Context { get; }
-    public string Message { get; }
-    public bool ShowCloseButton { get; }
-
-    public DisplayMessage(Context context, string message, bool showCloseButton = true)
-    {
-        Context = context;
-        Message = message;
-        ShowCloseButton = showCloseButton;
-    }
+    public Context Context { get; } = context;
+    public string Message { get; } = message;
+    public bool ShowCloseButton { get; } = showCloseButton;
 
     public string AlertClass => Context switch
     {

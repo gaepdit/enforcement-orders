@@ -18,7 +18,11 @@ using Microsoft.EntityFrameworkCore;
 namespace Enfo.WebApp.Pages.Admin;
 
 [Authorize(Roles = AppRole.OrderAdministrator)]
-public class Edit : PageModel
+public class Edit(
+    IEnforcementOrderRepository orderRepository,
+    ILegalAuthorityRepository legalAuthorityRepository,
+    IEpdContactRepository contactRepository)
+    : PageModel
 {
     [BindProperty]
     public EnforcementOrderUpdate Item { get; set; }
@@ -30,23 +34,10 @@ public class Edit : PageModel
     public SelectList EpdContactsSelectList { get; private set; }
     public SelectList LegalAuthoritiesSelectList { get; private set; }
 
-    private readonly IEnforcementOrderRepository _orderRepository;
-    private readonly ILegalAuthorityRepository _legalAuthorityRepository;
-    private readonly IEpdContactRepository _contactRepository;
-
-    public Edit(IEnforcementOrderRepository orderRepository,
-        ILegalAuthorityRepository legalAuthorityRepository,
-        IEpdContactRepository contactRepository)
-    {
-        _orderRepository = orderRepository;
-        _legalAuthorityRepository = legalAuthorityRepository;
-        _contactRepository = contactRepository;
-    }
-
     public async Task<IActionResult> OnGetAsync(int? id)
     {
         if (id == null) return NotFound();
-        var originalItem = await _orderRepository.GetAdminViewAsync(id.Value);
+        var originalItem = await orderRepository.GetAdminViewAsync(id.Value);
         if (originalItem == null) return NotFound("ID not found.");
 
         if (originalItem.Deleted)
@@ -63,7 +54,7 @@ public class Edit : PageModel
 
     public async Task<IActionResult> OnPostAsync([FromServices] IValidator<EnforcementOrderUpdate> validator)
     {
-        var originalItem = await _orderRepository.GetAdminViewAsync(Item.Id);
+        var originalItem = await orderRepository.GetAdminViewAsync(Item.Id);
         if (originalItem == null) return NotFound();
 
         if (originalItem.Deleted)
@@ -83,11 +74,11 @@ public class Edit : PageModel
 
         try
         {
-            await _orderRepository.UpdateAsync(Item);
+            await orderRepository.UpdateAsync(Item);
         }
         catch (DbUpdateConcurrencyException)
         {
-            if (!await _orderRepository.ExistsAsync(Item.Id))
+            if (!await orderRepository.ExistsAsync(Item.Id))
             {
                 return NotFound();
             }
@@ -101,9 +92,9 @@ public class Edit : PageModel
 
     private async Task PopulateSelectListsAsync()
     {
-        LegalAuthoritiesSelectList = new SelectList(await _legalAuthorityRepository.ListAsync(),
+        LegalAuthoritiesSelectList = new SelectList(await legalAuthorityRepository.ListAsync(),
             nameof(LegalAuthorityView.Id), nameof(LegalAuthorityView.AuthorityName));
-        EpdContactsSelectList = new SelectList(await _contactRepository.ListAsync(),
+        EpdContactsSelectList = new SelectList(await contactRepository.ListAsync(),
             nameof(EpdContactView.Id), nameof(EpdContactView.AsLinearString));
     }
 }
