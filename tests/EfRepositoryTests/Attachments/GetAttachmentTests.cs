@@ -1,7 +1,7 @@
-﻿using Enfo.Domain.EnforcementOrders.Resources;
-using EnfoTests.EfRepository.Helpers;
+﻿using EfRepositoryTests.Helpers;
+using Enfo.Domain.EnforcementOrders.Resources;
 
-namespace EnfoTests.EfRepository.Attachments;
+namespace EfRepositoryTests.Attachments;
 
 [TestFixture]
 public class GetAttachmentTests

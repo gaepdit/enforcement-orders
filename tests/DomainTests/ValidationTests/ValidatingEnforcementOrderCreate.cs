@@ -3,7 +3,7 @@ using Enfo.Domain.EnforcementOrders.Resources;
 using Enfo.Domain.EnforcementOrders.Resources.Validation;
 using FluentValidation.TestHelper;
 
-namespace EnfoTests.Domain.ValidationTests;
+namespace DomainTests.ValidationTests;
 
 [TestFixture]
 public class ValidatingEnforcementOrderCreate

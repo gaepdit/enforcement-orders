@@ -1,8 +1,8 @@
-﻿using Enfo.Domain.EnforcementOrders.Entities;
+﻿using EfRepositoryTests.Helpers;
+using Enfo.Domain.EnforcementOrders.Entities;
 using Enfo.Domain.EnforcementOrders.Resources;
-using EnfoTests.EfRepository.Helpers;
 
-namespace EnfoTests.EfRepository.EnforcementOrderTests;
+namespace EfRepositoryTests.EnforcementOrderTests;
 
 public class UpdateTests
 {

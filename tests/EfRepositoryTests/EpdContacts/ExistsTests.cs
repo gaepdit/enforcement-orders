@@ -1,6 +1,6 @@
-using EnfoTests.EfRepository.Helpers;
+using EfRepositoryTests.Helpers;
 
-namespace EnfoTests.EfRepository.EpdContacts;
+namespace EfRepositoryTests.EpdContacts;
 
 [TestFixture]
 public class ExistsTests

@@ -1,6 +1,6 @@
 using Enfo.WebApp.Platform.Utilities;
 
-namespace EnfoTests.WebApp.Platform;
+namespace WebAppTests.Platform;
 
 [TestFixture]
 public class FileSizeTests

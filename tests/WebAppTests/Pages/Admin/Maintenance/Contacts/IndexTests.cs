@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Index = Enfo.WebApp.Pages.Admin.Maintenance.Contacts.Index;
 
-namespace EnfoTests.WebApp.Pages.Admin.Maintenance.Contacts;
+namespace WebAppTests.Pages.Admin.Maintenance.Contacts;
 
 [TestFixture]
 public class IndexTests

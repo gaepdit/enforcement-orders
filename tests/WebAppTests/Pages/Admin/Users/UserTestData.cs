@@ -1,6 +1,6 @@
 ﻿using Enfo.Domain.Users;
 
-namespace EnfoTests.WebApp.Pages.Admin.Users;
+namespace WebAppTests.Pages.Admin.Users;
 
 public static class UserTestData
 {

@@ -9,7 +9,7 @@ using Enfo.WebApp.Api;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 
-namespace EnfoTests.WebApp.Api;
+namespace WebAppTests.Api;
 
 [TestFixture]
 public class ApiTests

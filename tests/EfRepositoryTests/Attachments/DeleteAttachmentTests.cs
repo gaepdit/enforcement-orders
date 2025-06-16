@@ -1,6 +1,6 @@
-﻿using EnfoTests.EfRepository.Helpers;
+﻿using EfRepositoryTests.Helpers;
 
-namespace EnfoTests.EfRepository.Attachments;
+namespace EfRepositoryTests.Attachments;
 
 [TestFixture]
 public class DeleteAttachmentTests

@@ -1,6 +1,6 @@
 ﻿using Enfo.LocalRepository.Repositories;
 
-namespace EnfoTests.LocalRepositoryTests.EpdContacts;
+namespace LocalRepositoryTests.EpdContacts;
 
 [TestFixture]
 public class GetTests

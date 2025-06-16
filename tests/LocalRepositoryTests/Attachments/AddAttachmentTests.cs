@@ -2,7 +2,7 @@ using Enfo.Domain.Services;
 using Enfo.LocalRepository.Repositories;
 using Microsoft.AspNetCore.Http;
 
-namespace EnfoTests.LocalRepositoryTests.Attachments;
+namespace LocalRepositoryTests.Attachments;
 
 [TestFixture]
 public class AddAttachmentTests

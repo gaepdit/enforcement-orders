@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Routing;
 using System.Security.Claims;
 
-namespace EnfoTests.WebApp.Pages.Admin;
+namespace WebAppTests.Pages.Admin;
 
 [TestFixture]
 public class DetailsTests

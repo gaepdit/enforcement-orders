@@ -1,8 +1,8 @@
 ﻿using Enfo.AppServices.Staff;
 using Enfo.WebApp.Pages.Account;
-using EnfoTests.WebApp.Pages.Admin.Users;
+using WebAppTests.Pages.Admin.Users;
 
-namespace EnfoTests.WebApp.Pages.Account;
+namespace WebAppTests.Pages.Account;
 
 [TestFixture]
 public class AccountIndexTests

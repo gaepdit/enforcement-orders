@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
-namespace EnfoTests.WebApp.Pages.Admin;
+namespace WebAppTests.Pages.Admin;
 
 [TestFixture]
 public class AddTests

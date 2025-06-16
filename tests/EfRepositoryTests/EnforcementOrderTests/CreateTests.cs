@@ -1,9 +1,9 @@
-﻿using Enfo.Domain.EnforcementOrders.Entities;
+﻿using EfRepositoryTests.Helpers;
+using Enfo.Domain.EnforcementOrders.Entities;
 using Enfo.Domain.EnforcementOrders.Resources;
-using EnfoTests.EfRepository.Helpers;
 using Microsoft.AspNetCore.Http;
 
-namespace EnfoTests.EfRepository.EnforcementOrderTests;
+namespace EfRepositoryTests.EnforcementOrderTests;
 
 public class CreateTests
 {

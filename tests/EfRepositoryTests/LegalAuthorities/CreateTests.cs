@@ -1,8 +1,8 @@
-﻿using Enfo.Domain.LegalAuthorities.Entities;
+﻿using EfRepositoryTests.Helpers;
+using Enfo.Domain.LegalAuthorities.Entities;
 using Enfo.Domain.LegalAuthorities.Resources;
-using EnfoTests.EfRepository.Helpers;
 
-namespace EnfoTests.EfRepository.LegalAuthorities;
+namespace EfRepositoryTests.LegalAuthorities;
 
 public class CreateTests
 {

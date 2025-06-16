@@ -2,7 +2,7 @@
 using Enfo.Domain.EpdContacts.Resources;
 using Enfo.LocalRepository.Repositories;
 
-namespace EnfoTests.LocalRepositoryTests.EpdContacts;
+namespace LocalRepositoryTests.EpdContacts;
 
 [TestFixture]
 public class CreateTests

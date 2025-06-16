@@ -12,7 +12,7 @@ using System.Security.Principal;
 using System.Text;
 using Attachment = Enfo.WebApp.Pages.Attachment;
 
-namespace EnfoTests.WebApp.Pages;
+namespace WebAppTests.Pages;
 
 [TestFixture]
 public class AttachmentTests

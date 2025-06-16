@@ -1,6 +1,6 @@
 using Enfo.Domain.Pagination;
 
-namespace EnfoTests.Domain.PaginationTests;
+namespace DomainTests.PaginationTests;
 
 [TestFixture]
 public class ConstructingPaginationSpec

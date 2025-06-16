@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using TestSupport.EfHelpers;
 
-namespace EnfoTests.EfRepository.Helpers;
+namespace EfRepositoryTests.Helpers;
 
 public sealed class RepositoryHelper : IDisposable, IAsyncDisposable
 {

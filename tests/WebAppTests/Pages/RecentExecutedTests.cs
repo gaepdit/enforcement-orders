@@ -2,7 +2,7 @@ using Enfo.Domain.EnforcementOrders.Repositories;
 using Enfo.Domain.EnforcementOrders.Resources;
 using Enfo.WebApp.Pages;
 
-namespace EnfoTests.WebApp.Pages;
+namespace WebAppTests.Pages;
 
 [TestFixture]
 public class RecentExecutedTests

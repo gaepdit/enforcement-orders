@@ -1,8 +1,4 @@
 <Project Sdk="Microsoft.NET.Sdk">
-    <PropertyGroup>
-        <RootNamespace>EnfoTests.WebApp</RootNamespace>
-    </PropertyGroup>
-
     <ItemGroup>
         <ProjectReference Include="..\..\src\WebApp\WebApp.csproj" />
     </ItemGroup>

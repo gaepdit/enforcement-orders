@@ -1,7 +1,7 @@
-﻿using Enfo.Domain.LegalAuthorities.Resources;
-using EnfoTests.EfRepository.Helpers;
+﻿using EfRepositoryTests.Helpers;
+using Enfo.Domain.LegalAuthorities.Resources;
 
-namespace EnfoTests.EfRepository.LegalAuthorities;
+namespace EfRepositoryTests.LegalAuthorities;
 
 public class UpdateTests
 {

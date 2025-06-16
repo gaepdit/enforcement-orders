@@ -1,9 +1,9 @@
-﻿using Enfo.Domain.EnforcementOrders.Resources;
+﻿using EfRepositoryTests.Helpers;
+using Enfo.Domain.EnforcementOrders.Resources;
 using Enfo.Domain.EnforcementOrders.Specs;
 using Enfo.Domain.Pagination;
-using EnfoTests.EfRepository.Helpers;
 
-namespace EnfoTests.EfRepository.EnforcementOrderTests;
+namespace EfRepositoryTests.EnforcementOrderTests;
 
 public class ListTests
 {

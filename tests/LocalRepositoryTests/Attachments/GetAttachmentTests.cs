@@ -2,7 +2,7 @@ using Enfo.Domain.EnforcementOrders.Resources;
 using Enfo.Domain.Services;
 using Enfo.LocalRepository.Repositories;
 
-namespace EnfoTests.LocalRepositoryTests.Attachments;
+namespace LocalRepositoryTests.Attachments;
 
 [TestFixture]
 public class GetAttachmentTests

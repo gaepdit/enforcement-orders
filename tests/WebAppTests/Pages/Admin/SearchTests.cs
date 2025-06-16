@@ -7,7 +7,7 @@ using Enfo.Domain.Pagination;
 using Enfo.WebApp.Pages.Admin;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace EnfoTests.WebApp.Pages.Admin;
+namespace WebAppTests.Pages.Admin;
 
 [TestFixture]
 public class SearchTests

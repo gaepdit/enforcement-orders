@@ -1,8 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-    <PropertyGroup>
-        <RootNamespace>EnfoTests.EfRepository</RootNamespace>
-    </PropertyGroup>
-
     <ItemGroup>
         <PackageReference Include="EfCore.TestSupport"/>
     </ItemGroup>

@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
-namespace EnfoTests.WebApp.Pages.Admin.Maintenance.LegalAuthorities;
+namespace WebAppTests.Pages.Admin.Maintenance.LegalAuthorities;
 
 [TestFixture]
 public class AddTests

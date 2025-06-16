@@ -3,7 +3,7 @@ using Enfo.WebApp.Pages.Admin.Users;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace EnfoTests.WebApp.Pages.Admin.Users;
+namespace WebAppTests.Pages.Admin.Users;
 
 [TestFixture]
 public class UserDetailsTests

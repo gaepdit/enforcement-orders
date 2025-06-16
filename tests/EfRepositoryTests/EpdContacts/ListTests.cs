@@ -1,7 +1,7 @@
-﻿using Enfo.Domain.EpdContacts.Resources;
-using EnfoTests.EfRepository.Helpers;
+﻿using EfRepositoryTests.Helpers;
+using Enfo.Domain.EpdContacts.Resources;
 
-namespace EnfoTests.EfRepository.EpdContacts;
+namespace EfRepositoryTests.EpdContacts;
 
 public class ListTests
 {

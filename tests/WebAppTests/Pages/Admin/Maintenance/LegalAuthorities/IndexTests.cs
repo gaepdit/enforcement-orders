@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Index = Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthorities.Index;
 
-namespace EnfoTests.WebApp.Pages.Admin.Maintenance.LegalAuthorities;
+namespace WebAppTests.Pages.Admin.Maintenance.LegalAuthorities;
 
 [TestFixture]
 public class IndexTests

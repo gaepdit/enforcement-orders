@@ -1,7 +1,7 @@
 ﻿using Enfo.Domain.LegalAuthorities.Resources;
 using Enfo.LocalRepository.Repositories;
 
-namespace EnfoTests.LocalRepositoryTests.LegalAuthorities;
+namespace LocalRepositoryTests.LegalAuthorities;
 
 [TestFixture]
 public class UpdateTests

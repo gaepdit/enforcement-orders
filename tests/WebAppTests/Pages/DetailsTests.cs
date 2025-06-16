@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
-namespace EnfoTests.WebApp.Pages;
+namespace WebAppTests.Pages;
 
 [TestFixture]
 public class DetailsTests

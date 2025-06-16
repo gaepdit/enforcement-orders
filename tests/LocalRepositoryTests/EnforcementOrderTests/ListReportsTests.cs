@@ -4,7 +4,7 @@ using Enfo.Domain.Services;
 using Enfo.LocalRepository.Repositories;
 using static Enfo.Domain.Utils.DateUtils;
 
-namespace EnfoTests.LocalRepositoryTests.EnforcementOrderTests;
+namespace LocalRepositoryTests.EnforcementOrderTests;
 
 [TestFixture]
 public class ListReportsTests

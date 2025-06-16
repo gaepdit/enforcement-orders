@@ -1,6 +1,6 @@
 using Enfo.Domain.Utils;
 
-namespace EnfoTests.Domain.Utils;
+namespace DomainTests.Utils;
 
 [TestFixture]
 public class ConcatNonEmptyStrings

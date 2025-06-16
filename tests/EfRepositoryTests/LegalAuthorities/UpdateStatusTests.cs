@@ -1,6 +1,6 @@
-﻿using EnfoTests.EfRepository.Helpers;
+﻿using EfRepositoryTests.Helpers;
 
-namespace EnfoTests.EfRepository.LegalAuthorities;
+namespace EfRepositoryTests.LegalAuthorities;
 
 public class UpdateStatusTests
 {

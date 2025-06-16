@@ -1,6 +1,6 @@
 ﻿using Enfo.LocalRepository.Repositories;
 
-namespace EnfoTests.LocalRepositoryTests.LegalAuthorities;
+namespace LocalRepositoryTests.LegalAuthorities;
 
 [TestFixture]
 public class UpdateStatusTests

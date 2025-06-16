@@ -1,6 +1,6 @@
-﻿using EnfoTests.EfRepository.Helpers;
+﻿using EfRepositoryTests.Helpers;
 
-namespace EnfoTests.EfRepository.EnforcementOrderTests;
+namespace EfRepositoryTests.EnforcementOrderTests;
 
 public class GetTests
 {

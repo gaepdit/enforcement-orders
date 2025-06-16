@@ -1,7 +1,7 @@
+using EfRepositoryTests.Helpers;
 using Enfo.Domain.LegalAuthorities.Resources;
-using EnfoTests.EfRepository.Helpers;
 
-namespace EnfoTests.EfRepository.LegalAuthorities;
+namespace EfRepositoryTests.LegalAuthorities;
 
 [TestFixture]
 public class GetTests

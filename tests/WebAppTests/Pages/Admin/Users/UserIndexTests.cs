@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Index = Enfo.WebApp.Pages.Admin.Users.Index;
 
-namespace EnfoTests.WebApp.Pages.Admin.Users;
+namespace WebAppTests.Pages.Admin.Users;
 
 [TestFixture]
 public class UserIndexTests

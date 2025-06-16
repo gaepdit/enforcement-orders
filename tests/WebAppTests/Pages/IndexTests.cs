@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Index = Enfo.WebApp.Pages.Index;
 
-namespace EnfoTests.WebApp.Pages;
+namespace WebAppTests.Pages;
 
 [TestFixture]
 public class IndexTests

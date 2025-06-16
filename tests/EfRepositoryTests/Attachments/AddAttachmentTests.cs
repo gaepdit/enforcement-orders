@@ -1,7 +1,7 @@
-﻿using EnfoTests.EfRepository.Helpers;
+﻿using EfRepositoryTests.Helpers;
 using Microsoft.AspNetCore.Http;
 
-namespace EnfoTests.EfRepository.Attachments;
+namespace EfRepositoryTests.Attachments;
 
 [TestFixture]
 public class AddAttachmentTests

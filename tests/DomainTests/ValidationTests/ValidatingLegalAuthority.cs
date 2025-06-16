@@ -3,7 +3,7 @@ using Enfo.Domain.LegalAuthorities.Resources;
 using Enfo.Domain.LegalAuthorities.Resources.Validation;
 using FluentValidation.TestHelper;
 
-namespace EnfoTests.Domain.ValidationTests;
+namespace DomainTests.ValidationTests;
 
 [TestFixture]
 public class ValidatingLegalAuthority

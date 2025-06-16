@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Index = Enfo.WebApp.Pages.Admin.Index;
 
-namespace EnfoTests.WebApp.Pages.Admin;
+namespace WebAppTests.Pages.Admin;
 
 [TestFixture]
 public class IndexTests

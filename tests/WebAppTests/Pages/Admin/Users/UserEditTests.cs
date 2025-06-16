@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
-namespace EnfoTests.WebApp.Pages.Admin.Users;
+namespace WebAppTests.Pages.Admin.Users;
 
 [TestFixture]
 public class UserEditTests
