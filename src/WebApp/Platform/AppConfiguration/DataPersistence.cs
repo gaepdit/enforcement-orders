@@ -2,8 +2,8 @@
 using Enfo.Domain.EpdContacts.Repositories;
 using Enfo.Domain.LegalAuthorities.Repositories;
 using Enfo.Domain.Users;
-using Enfo.Infrastructure.Contexts;
-using Enfo.Infrastructure.Repositories;
+using Enfo.EfRepository.Contexts;
+using Enfo.EfRepository.Repositories;
 using Enfo.LocalRepository.Repositories;
 using Enfo.WebApp.Platform.Settings;
 using EnfoTests.TestData;
@@ -56,7 +56,7 @@ public static class DataPersistence
             throw new InvalidOperationException("No migration connection string found.");
 
         return new DbContextOptionsBuilder<EnfoDbContext>()
-            .UseSqlServer(migConnString, sqlServerOpts => sqlServerOpts.MigrationsAssembly(nameof(Infrastructure)));
+            .UseSqlServer(migConnString, sqlServerOpts => sqlServerOpts.MigrationsAssembly(nameof(EfRepository)));
     }
 
     private static async Task CreateMissingRolesAsync(this EnfoDbContext migrationContext, IServiceCollection services)

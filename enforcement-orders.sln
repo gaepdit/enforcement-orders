@@ -4,13 +4,13 @@ VisualStudioVersion = 17.3.32901.215
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "src\Domain\Domain.csproj", "{5E358292-D59C-4A6A-9867-7266BE6396E4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "src\Infrastructure\Infrastructure.csproj", "{21A5F34B-7AE6-47CD-86D7-B0D6E19337BE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EfRepository", "src\EfRepository\EfRepository.csproj", "{21A5F34B-7AE6-47CD-86D7-B0D6E19337BE}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{D402A373-A352-4299-A872-613290FAD949}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DomainTests", "tests\DomainTests\DomainTests.csproj", "{6F3D811B-3C85-4243-9DF4-5D8025766377}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IntegrationTests", "tests\IntegrationTests\IntegrationTests.csproj", "{9D9AED72-FBB1-4337-A635-2DC991DEFBAE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EfRepositoryTests", "tests\EfRepositoryTests\EfRepositoryTests.csproj", "{9D9AED72-FBB1-4337-A635-2DC991DEFBAE}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApp", "src\WebApp\WebApp.csproj", "{7FC28873-402B-4FB1-BC21-45C9EC26EE6F}"
 EndProject
