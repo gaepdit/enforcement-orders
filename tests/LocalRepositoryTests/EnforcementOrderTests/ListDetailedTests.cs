@@ -61,8 +61,8 @@ public class ListDetailedTests
         var spec = new EnforcementOrderSpec
         {
             Facility = "Date Range Test",
-            FromDate = new DateTime(999, 3, 1),
-            TillDate = new DateTime(999, 4, 1),
+            FromDate = new DateTime(999, 3, 1,0,0,0,DateTimeKind.Local),
+            TillDate = new DateTime(999, 4, 1,0,0,0,DateTimeKind.Local),
         };
         using var repository = new LocalEnforcementOrderRepository(Substitute.For<IAttachmentStore>());
 
@@ -82,7 +82,7 @@ public class ListDetailedTests
         var spec = new EnforcementOrderSpec
         {
             Facility = "Date Range Test",
-            FromDate = new DateTime(999, 1, 1),
+            FromDate = new DateTime(999, 1, 1,0,0,0,DateTimeKind.Local),
         };
         using var repository = new LocalEnforcementOrderRepository(Substitute.For<IAttachmentStore>());
 
@@ -108,7 +108,7 @@ public class ListDetailedTests
         var spec = new EnforcementOrderSpec
         {
             Facility = "Date Range Test",
-            TillDate = new DateTime(999, 6, 1),
+            TillDate = new DateTime(999, 6, 1,0,0,0,DateTimeKind.Local),
         };
         using var repository = new LocalEnforcementOrderRepository(Substitute.For<IAttachmentStore>());
 

@@ -7,9 +7,24 @@ public class DateUtilsGetNextWeekday
 {
     public static IEnumerable<object[]> WeekdayTestData => new List<object[]>
     {
-        new object[] { new DateTime(2019, 11, 18), DayOfWeek.Monday, new DateTime(2019, 11, 18) },
-        new object[] { new DateTime(2019, 11, 18), DayOfWeek.Tuesday, new DateTime(2019, 11, 19) },
-        new object[] { new DateTime(2019, 11, 18), DayOfWeek.Sunday, new DateTime(2019, 11, 24) },
+        new object[]
+        {
+            new DateTime(2019, 11, 18, 0, 0, 0, DateTimeKind.Local),
+            DayOfWeek.Monday,
+            new DateTime(2019, 11, 18, 0, 0, 0, DateTimeKind.Local),
+        },
+        new object[]
+        {
+            new DateTime(2019, 11, 18, 0, 0, 0, DateTimeKind.Local),
+            DayOfWeek.Tuesday,
+            new DateTime(2019, 11, 19, 0, 0, 0, DateTimeKind.Local),
+        },
+        new object[]
+        {
+            new DateTime(2019, 11, 18, 0, 0, 0, DateTimeKind.Local),
+            DayOfWeek.Sunday,
+            new DateTime(2019, 11, 24, 0, 0, 0, DateTimeKind.Local),
+        },
     };
 
     [TestCaseSource(nameof(WeekdayTestData))]

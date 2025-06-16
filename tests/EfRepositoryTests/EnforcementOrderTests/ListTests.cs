@@ -65,8 +65,8 @@ public class ListTests
         var spec = new EnforcementOrderSpec
         {
             Facility = "Date Range Test",
-            FromDate = new DateTime(999, 3, 1),
-            TillDate = new DateTime(999, 4, 1),
+            FromDate = new DateTime(999, 3, 1, 0, 0, 0, DateTimeKind.Local),
+            TillDate = new DateTime(999, 4, 1, 0, 0, 0, DateTimeKind.Local),
         };
 
         await using var repositoryHelper = await RepositoryHelper.CreateRepositoryHelperAsync();
@@ -87,7 +87,7 @@ public class ListTests
         var spec = new EnforcementOrderSpec
         {
             Facility = "Date Range Test",
-            FromDate = new DateTime(999, 1, 1),
+            FromDate = new DateTime(999, 1, 1, 0, 0, 0, DateTimeKind.Local),
         };
 
         await using var repositoryHelper = await RepositoryHelper.CreateRepositoryHelperAsync();
@@ -116,7 +116,7 @@ public class ListTests
         var spec = new EnforcementOrderSpec
         {
             Facility = "Date Range Test",
-            TillDate = new DateTime(999, 6, 1),
+            TillDate = new DateTime(999, 6, 1, 0, 0, 0, DateTimeKind.Local),
         };
 
         await using var repositoryHelper = await RepositoryHelper.CreateRepositoryHelperAsync();
@@ -194,8 +194,8 @@ public class ListTests
         var spec = new EnforcementOrderSpec
         {
             Facility = "Date Range Test",
-            FromDate = new DateTime(999, 3, 1),
-            TillDate = new DateTime(999, 4, 1),
+            FromDate = new DateTime(999, 3, 1, 0, 0, 0, DateTimeKind.Local),
+            TillDate = new DateTime(999, 4, 1, 0, 0, 0, DateTimeKind.Local),
         };
 
         await using var repositoryHelper = await RepositoryHelper.CreateRepositoryHelperAsync();
@@ -216,7 +216,7 @@ public class ListTests
         var spec = new EnforcementOrderSpec
         {
             Facility = "Date Range Test",
-            FromDate = new DateTime(999, 1, 1),
+            FromDate = new DateTime(999, 1, 1, 0, 0, 0, DateTimeKind.Local),
         };
 
         await using var repositoryHelper = await RepositoryHelper.CreateRepositoryHelperAsync();
@@ -243,7 +243,7 @@ public class ListTests
         var spec = new EnforcementOrderSpec
         {
             Facility = "Date Range Test",
-            TillDate = new DateTime(999, 6, 1),
+            TillDate = new DateTime(999, 6, 1, 0, 0, 0, DateTimeKind.Local),
         };
 
         await using var repositoryHelper = await RepositoryHelper.CreateRepositoryHelperAsync();
