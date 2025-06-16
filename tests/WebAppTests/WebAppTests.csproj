@@ -4,6 +4,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\src\Enfo.WebApp\Enfo.WebApp.csproj"/>
+        <ProjectReference Include="..\..\src\WebApp\WebApp.csproj" />
     </ItemGroup>
 </Project>
