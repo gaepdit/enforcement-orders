@@ -1,8 +1,4 @@
-using FluentAssertions;
-using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using static Enfo.Domain.Utils.DateUtils;
+using Enfo.Domain.Utils;
 
 namespace EnfoTests.Domain.Utils;
 
@@ -19,6 +15,6 @@ public class DateUtilsGetNextWeekday
     [TestCaseSource(nameof(WeekdayTestData))]
     public void ReturnsCorrectDay(DateTime start, DayOfWeek day, DateTime expected)
     {
-        GetNextWeekday(start, day).Should().Be(expected);
+        DateUtils.GetNextWeekday(start, day).Should().Be(expected);
     }
 }

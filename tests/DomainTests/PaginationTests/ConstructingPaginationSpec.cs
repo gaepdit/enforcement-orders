@@ -1,14 +1,7 @@
 using Enfo.Domain.Pagination;
-using FluentAssertions;
-using FluentAssertions.Execution;
-using NUnit.Framework;
-using System;
-using System.Diagnostics.CodeAnalysis;
 
 namespace EnfoTests.Domain.PaginationTests;
 
-[SuppressMessage("ReSharper", "ObjectCreationAsStatement")]
-[SuppressMessage("ReSharper", "CA1806")]
 [TestFixture]
 public class ConstructingPaginationSpec
 {

@@ -6,13 +6,8 @@ using Enfo.Domain.LegalAuthorities.Resources;
 using Enfo.Domain.Services;
 using Enfo.LocalRepository.Repositories;
 using Enfo.WebApp.Api;
-using EnfoTests.TestData;
-using FluentAssertions;
-using FluentAssertions.Execution;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using NSubstitute;
-using NUnit.Framework;
 
 namespace EnfoTests.WebApp.Api;
 

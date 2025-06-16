@@ -1,11 +1,6 @@
 ﻿using Enfo.Domain.EnforcementOrders.Resources;
 using Enfo.Domain.EnforcementOrders.Specs;
 using Enfo.Domain.Pagination;
-using EnfoTests.Infrastructure.Helpers;
-using EnfoTests.TestData;
-using FluentAssertions;
-using FluentAssertions.Execution;
-using NUnit.Framework;
 
 namespace EnfoTests.Infrastructure.EnforcementOrderTests;
 

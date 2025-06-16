@@ -1,12 +1,7 @@
 using Enfo.Domain.LegalAuthorities.Repositories;
 using Enfo.Domain.LegalAuthorities.Resources;
 using Enfo.Domain.LegalAuthorities.Resources.Validation;
-using FluentAssertions;
-using FluentAssertions.Execution;
 using FluentValidation.TestHelper;
-using NSubstitute;
-using NUnit.Framework;
-using System.Threading.Tasks;
 
 namespace EnfoTests.Domain.ValidationTests;
 

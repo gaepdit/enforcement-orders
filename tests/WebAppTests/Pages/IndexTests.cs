@@ -1,15 +1,8 @@
 using Enfo.Domain.EnforcementOrders.Repositories;
 using Enfo.WebApp.Models;
-using Enfo.WebApp.Pages;
 using Enfo.WebApp.Platform.RazorHelpers;
-using EnfoTests.TestData;
-using FluentAssertions;
-using FluentAssertions.Execution;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using NSubstitute;
-using NUnit.Framework;
-using System.Threading.Tasks;
 using Index = Enfo.WebApp.Pages.Index;
 
 namespace EnfoTests.WebApp.Pages;

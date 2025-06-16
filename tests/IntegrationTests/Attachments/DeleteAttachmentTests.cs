@@ -1,10 +1,4 @@
-﻿using EnfoTests.Infrastructure.Helpers;
-using EnfoTests.TestData;
-using FluentAssertions;
-using FluentAssertions.Execution;
-using NUnit.Framework;
-
-namespace EnfoTests.Infrastructure.Attachments;
+﻿namespace EnfoTests.Infrastructure.Attachments;
 
 [TestFixture]
 public class DeleteAttachmentTests

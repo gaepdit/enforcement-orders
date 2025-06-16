@@ -1,8 +1,4 @@
 using Enfo.Domain.LegalAuthorities.Resources;
-using EnfoTests.Infrastructure.Helpers;
-using EnfoTests.TestData;
-using FluentAssertions;
-using NUnit.Framework;
 
 namespace EnfoTests.Infrastructure.LegalAuthorities;
 

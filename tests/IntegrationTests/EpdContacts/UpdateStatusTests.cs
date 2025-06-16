@@ -1,9 +1,4 @@
-﻿using EnfoTests.Infrastructure.Helpers;
-using EnfoTests.TestData;
-using FluentAssertions;
-using NUnit.Framework;
-
-namespace EnfoTests.Infrastructure.EpdContacts;
+﻿namespace EnfoTests.Infrastructure.EpdContacts;
 
 public class UpdateStatusTests
 {

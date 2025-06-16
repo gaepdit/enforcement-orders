@@ -7,21 +7,12 @@ using Enfo.Domain.LegalAuthorities.Resources;
 using Enfo.WebApp.Models;
 using Enfo.WebApp.Pages.Admin;
 using Enfo.WebApp.Platform.RazorHelpers;
-using FluentAssertions;
-using FluentAssertions.Execution;
 using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using NSubstitute;
-using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace EnfoTests.WebApp.Pages.Admin;
 
@@ -75,9 +66,11 @@ public class AddTests
         orderRepo.OrderNumberExistsAsync(Arg.Any<string>(), Arg.Any<int?>()).Returns(false);
         orderRepo.CreateAsync(item).Returns(9);
         var validator = Substitute.For<IValidator<EnforcementOrderCreate>>();
-        validator.ValidateAsync(Arg.Any<EnforcementOrderCreate>(), CancellationToken.None).Returns(new ValidationResult());
+        validator.ValidateAsync(Arg.Any<EnforcementOrderCreate>(), CancellationToken.None)
+            .Returns(new ValidationResult());
         // Construct Page
-        var page = new Add(orderRepo, Substitute.For<ILegalAuthorityRepository>(), Substitute.For<IEpdContactRepository>())
+        var page = new Add(orderRepo, Substitute.For<ILegalAuthorityRepository>(),
+                Substitute.For<IEpdContactRepository>())
             { TempData = tempData, Item = item };
 
         var result = await page.OnPostAsync(validator);
@@ -129,9 +122,11 @@ public class AddTests
         orderRepo.OrderNumberExistsAsync(Arg.Any<string>(), Arg.Any<int?>()).Returns(false);
         orderRepo.CreateAsync(item).Returns(9);
         var validator = Substitute.For<IValidator<EnforcementOrderCreate>>();
-        validator.ValidateAsync(Arg.Any<EnforcementOrderCreate>(), CancellationToken.None).Returns(new ValidationResult());
+        validator.ValidateAsync(Arg.Any<EnforcementOrderCreate>(), CancellationToken.None)
+            .Returns(new ValidationResult());
         // Construct Page
-        var page = new Add(orderRepo, Substitute.For<ILegalAuthorityRepository>(), Substitute.For<IEpdContactRepository>())
+        var page = new Add(orderRepo, Substitute.For<ILegalAuthorityRepository>(),
+                Substitute.For<IEpdContactRepository>())
             { TempData = tempData, Item = item };
 
         var result = await page.OnPostAsync(validator);
@@ -160,7 +155,8 @@ public class AddTests
         var orderRepo = Substitute.For<IEnforcementOrderRepository>();
         orderRepo.OrderNumberExistsAsync(Arg.Any<string>(), Arg.Any<int?>()).Returns(false);
         var validator = Substitute.For<IValidator<EnforcementOrderCreate>>();
-        validator.ValidateAsync(Arg.Any<EnforcementOrderCreate>(), CancellationToken.None).Returns(new ValidationResult());
+        validator.ValidateAsync(Arg.Any<EnforcementOrderCreate>(), CancellationToken.None)
+            .Returns(new ValidationResult());
         // Construct Page
         var page = new Add(orderRepo, legalRepo, contactRepo)
             { Item = item };

@@ -1,8 +1,5 @@
 ﻿using Enfo.Domain.EpdContacts.Entities;
 using Enfo.Domain.EpdContacts.Resources;
-using EnfoTests.Infrastructure.Helpers;
-using FluentAssertions;
-using NUnit.Framework;
 
 namespace EnfoTests.Infrastructure.EpdContacts;
 

@@ -1,9 +1,4 @@
-﻿using EnfoTests.Infrastructure.Helpers;
-using EnfoTests.TestData;
-using FluentAssertions;
-using FluentAssertions.Execution;
-using Microsoft.AspNetCore.Http;
-using NUnit.Framework;
+﻿using Microsoft.AspNetCore.Http;
 
 namespace EnfoTests.Infrastructure.Attachments;
 

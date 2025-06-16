@@ -1,10 +1,6 @@
 ﻿using Enfo.Domain.EpdContacts.Entities;
 using Enfo.Domain.EpdContacts.Resources;
 using Enfo.LocalRepository.Repositories;
-using EnfoTests.TestData;
-using FluentAssertions;
-using FluentAssertions.Execution;
-using NUnit.Framework;
 
 namespace EnfoTests.LocalRepositoryTests.EpdContacts;
 
