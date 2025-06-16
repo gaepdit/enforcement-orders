@@ -1,7 +1,7 @@
-﻿using Enfo.Domain.EnforcementOrders.Entities;
+﻿using Enfo.Domain.Attachments;
+using Enfo.Domain.EnforcementOrders.Entities;
 using Enfo.Domain.EnforcementOrders.Repositories;
 using Enfo.Domain.EnforcementOrders.Resources;
-using Enfo.Domain.Services;
 using Enfo.Domain.Utils;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -90,7 +90,7 @@ public class AttachmentTests
         var actionContext = new ActionContext(httpContext, new RouteData(), new PageActionDescriptor());
         var pageContext = new PageContext(actionContext);
 
-        var view = new AttachmentView(new Enfo.Domain.EnforcementOrders.Entities.Attachment
+        var view = new AttachmentView(new Enfo.Domain.Attachments.Attachment
         {
             Id = Guid.Empty,
             FileName = null,
@@ -118,7 +118,7 @@ public class AttachmentTests
         var actionContext = new ActionContext(httpContext, new RouteData(), new PageActionDescriptor());
         var pageContext = new PageContext(actionContext);
 
-        var view = new AttachmentView(new Enfo.Domain.EnforcementOrders.Entities.Attachment
+        var view = new AttachmentView(new Enfo.Domain.Attachments.Attachment
         {
             Id = Guid.Empty,
             FileName = "right",
@@ -149,7 +149,7 @@ public class AttachmentTests
         var actionContext = new ActionContext(httpContext, new RouteData(), new PageActionDescriptor());
         var pageContext = new PageContext(actionContext);
 
-        var view = new AttachmentView(new Enfo.Domain.EnforcementOrders.Entities.Attachment
+        var view = new AttachmentView(new Enfo.Domain.Attachments.Attachment
         {
             Id = Guid.Empty,
             FileName = "abc",

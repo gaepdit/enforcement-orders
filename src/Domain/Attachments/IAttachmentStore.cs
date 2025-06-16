@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace Enfo.Domain.Services;
+namespace Enfo.Domain.Attachments;
 
 public interface IAttachmentStore
 {

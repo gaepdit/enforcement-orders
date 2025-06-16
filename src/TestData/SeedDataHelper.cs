@@ -1,4 +1,5 @@
-﻿using Enfo.Domain.EnforcementOrders.Entities;
+﻿using Enfo.Domain.Attachments;
+using Enfo.Domain.EnforcementOrders.Entities;
 using Enfo.Domain.EpdContacts.Entities;
 using Enfo.Domain.LegalAuthorities.Entities;
 using Microsoft.EntityFrameworkCore;

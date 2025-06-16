@@ -1,3 +1,4 @@
+using Enfo.Domain.Attachments;
 using Enfo.Domain.EnforcementOrders.Entities;
 
 namespace EnfoTests.TestData;

@@ -1,4 +1,5 @@
-﻿using Enfo.Domain.EnforcementOrders.Resources;
+﻿using Enfo.Domain.Attachments;
+using Enfo.Domain.EnforcementOrders.Resources;
 using Enfo.Domain.EpdContacts.Resources;
 using Enfo.Domain.LegalAuthorities.Resources;
 using JetBrains.Annotations;

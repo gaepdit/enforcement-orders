@@ -1,7 +1,6 @@
-﻿using Enfo.Domain.EnforcementOrders.Entities;
-using Enfo.Domain.Utils;
+﻿using Enfo.Domain.Utils;
 
-namespace Enfo.Domain.EnforcementOrders.Resources;
+namespace Enfo.Domain.Attachments;
 
 public class AttachmentView
 {

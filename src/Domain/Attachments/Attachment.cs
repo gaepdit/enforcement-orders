@@ -1,6 +1,7 @@
 ﻿using Enfo.Domain.BaseEntities;
+using Enfo.Domain.EnforcementOrders.Entities;
 
-namespace Enfo.Domain.EnforcementOrders.Entities;
+namespace Enfo.Domain.Attachments;
 
 public class Attachment : IdentifiedEntity<Guid>, IAuditable
 {

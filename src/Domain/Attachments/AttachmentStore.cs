@@ -1,7 +1,7 @@
 using GaEpd.FileService;
 using Microsoft.AspNetCore.Http;
 
-namespace Enfo.Domain.Services;
+namespace Enfo.Domain.Attachments;
 
 public class AttachmentStore(IFileService fileService) : IAttachmentStore
 {

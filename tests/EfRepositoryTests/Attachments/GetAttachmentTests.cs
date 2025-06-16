@@ -1,4 +1,5 @@
 ﻿using EfRepositoryTests.Helpers;
+using Enfo.Domain.Attachments;
 using Enfo.Domain.EnforcementOrders.Resources;
 
 namespace EfRepositoryTests.Attachments;

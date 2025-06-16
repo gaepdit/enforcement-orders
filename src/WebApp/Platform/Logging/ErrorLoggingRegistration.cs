@@ -1,4 +1,4 @@
-﻿using Enfo.Domain.Services;
+﻿using Enfo.Domain.ErrorLogging;
 using Enfo.WebApp.Platform.Settings;
 using Mindscape.Raygun4Net;
 using Mindscape.Raygun4Net.AspNetCore;

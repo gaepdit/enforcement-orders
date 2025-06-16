@@ -1,4 +1,4 @@
-﻿namespace Enfo.Domain.Services;
+﻿namespace Enfo.Domain.ErrorLogging;
 
 public interface IErrorLogger
 {
