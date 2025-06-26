@@ -65,8 +65,8 @@ public class AuthenticationManager(
             return await RefreshUserInfoAndSignInAsync(user, externalLoginInfo).ConfigureAwait(false);
 
         // If the ExternalLoginInfo successfully returned from the external provider, and the user account already
-        // exists, but ExternalLoginSignInAsync failed (`Succeeded == false`), then add the external provider info
-        // to the user.
+        // exists, but ExternalLoginSignInAsync failed (`Succeeded == false`), then the user is likely using a new
+        // external provider. Add the new provider info to the user account.
         return await AddLoginProviderAndSignInAsync(user, externalLoginInfo).ConfigureAwait(false);
     }
 
@@ -148,6 +148,11 @@ public class AuthenticationManager(
         user.AccountUpdatedAt = DateTimeOffset.Now;
         await userManager.UpdateAsync(user).ConfigureAwait(false);
 
+        return await FinalSignInAsync(user, info).ConfigureAwait(false);
+    }
+
+    private async Task<IdentityResult> FinalSignInAsync(ApplicationUser user, ExternalLoginInfo info)
+    {
         // Include the access token in the properties.
         var props = new AuthenticationProperties();
         if (info.AuthenticationTokens is not null) props.StoreTokens(info.AuthenticationTokens);
@@ -174,7 +179,6 @@ public class AuthenticationManager(
         user.Email = info.Principal.GetEmail();
         user.GivenName = info.Principal.GetGivenName();
         user.FamilyName = info.Principal.GetFamilyName();
-        user.MostRecentLogin = DateTimeOffset.Now;
 
         if (user.UserName != previousValues.UserName || user.Email != previousValues.Email ||
             user.GivenName != previousValues.GivenName || user.FamilyName != previousValues.FamilyName)
@@ -182,9 +186,9 @@ public class AuthenticationManager(
             user.AccountUpdatedAt = DateTimeOffset.Now;
         }
 
+        user.MostRecentLogin = DateTimeOffset.Now;
         await userManager.UpdateAsync(user).ConfigureAwait(false);
-        await signInManager.RefreshSignInAsync(user).ConfigureAwait(false);
-        return IdentityResult.Success;
+        return await FinalSignInAsync(user, info).ConfigureAwait(false);
     }
 
     // Identity Manager errors
