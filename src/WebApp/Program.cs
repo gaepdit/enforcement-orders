@@ -1,11 +1,9 @@
 using Enfo.Domain.LegalAuthorities.Resources.Validation;
 using Enfo.WebApp.Platform.AppConfiguration;
-using Enfo.WebApp.Platform.Logging;
 using Enfo.WebApp.Platform.OrgNotifications;
 using Enfo.WebApp.Platform.Settings;
 using FluentValidation;
 using Microsoft.AspNetCore.DataProtection;
-using Mindscape.Raygun4Net.AspNetCore;
 using System.Runtime.InteropServices;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,7 +13,8 @@ var builder = WebApplication.CreateBuilder(args);
 AppDomain.CurrentDomain.SetData("REGEX_DEFAULT_MATCH_TIMEOUT", TimeSpan.FromMilliseconds(100));
 
 // Bind application settings.
-BindingsConfiguration.BindSettings(builder);
+builder.BindAppSettings();
+builder.AddErrorLogging();
 
 // Persist data protection keys
 var directory =
@@ -67,17 +66,8 @@ else
     builder.Services.AddWebOptimizer();
 }
 
-// Configure application crash monitoring.
-builder.Services.ConfigureErrorLogging(builder.Environment.EnvironmentName);
-
 // Build the application.
 var app = builder.Build();
-
-// Configure error handling.
-if (app.Environment.IsDevelopment()) app.UseDeveloperExceptionPage(); // Development
-else app.UseExceptionHandler("/Error"); // Production or Staging
-
-if (!string.IsNullOrEmpty(AppSettings.RaygunSettings.ApiKey)) app.UseRaygun();
 
 // Configure security HTTP headers
 if (!app.Environment.IsDevelopment() || AppSettings.DevSettings.UseSecurityHeadersInDev)
@@ -88,6 +78,7 @@ if (!app.Environment.IsDevelopment() || AppSettings.DevSettings.UseSecurityHeade
 
 // Configure the application pipeline.
 app
+    .UseErrorHandling()
     .UseStatusCodePages()
     .UseHttpsRedirection()
     .UseWebOptimizer()

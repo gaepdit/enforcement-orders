@@ -1,12 +1,12 @@
 ﻿using Enfo.Domain.Attachments;
 using Enfo.Domain.EnforcementOrders.Repositories;
 using Enfo.Domain.EpdContacts.Repositories;
-using Enfo.Domain.ErrorLogging;
 using Enfo.Domain.LegalAuthorities.Repositories;
 using Enfo.EfRepository.Contexts;
 using Enfo.EfRepository.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.Extensions.Logging;
 using TestSupport.EfHelpers;
 
 namespace EfRepositoryTests.Helpers;
@@ -54,8 +54,7 @@ public sealed class RepositoryHelper : IDisposable, IAsyncDisposable
     {
         Context = new EnfoDbContext(Options, null);
         return new EnforcementOrderRepository(Context, Substitute.For<IAttachmentStore>(),
-            Substitute.For<IErrorLogger>()
-        );
+            Substitute.For<ILogger<EnforcementOrderRepository>>());
     }
 
     public void Dispose() => Context?.Dispose();

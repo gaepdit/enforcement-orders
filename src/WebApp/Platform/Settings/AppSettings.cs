@@ -1,29 +1,31 @@
 using JetBrains.Annotations;
+using System.Reflection;
 
 namespace Enfo.WebApp.Platform.Settings;
 
 internal static partial class AppSettings
 {
-    // Support settings
-    public static SupportSettingsSection SupportSettings { get; } = new();
+    public static string Version { get; } = GetVersion();
+    public static Support SupportSettings { get; } = new();
+    public static Raygun RaygunSettings { get; } = new();
+    public static string OrgNotificationsApiUrl { get; set; }
 
-    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public record SupportSettingsSection
+    public record Support
     {
         public string TechnicalSupportEmail { get; init; }
         public string TechnicalSupportSite { get; init; }
-        public string InformationalVersion { get; set; }
-        public string InformationalBuild { get; set; }
     }
 
-    // Organizational notifications
-    public static string OrgNotificationsApiUrl { get; set; }
-
-    // Raygun client settings
-    public static RaygunClientSettings RaygunSettings { get; } = new();
-
-    public record RaygunClientSettings
+    public record Raygun
     {
         public string ApiKey { get; [UsedImplicitly] init; }
+    }
+
+    private static string GetVersion()
+    {
+        var entryAssembly = Assembly.GetEntryAssembly();
+        var segments = (entryAssembly?.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?
+            .InformationalVersion ?? entryAssembly?.GetName().Version?.ToString() ?? "").Split('+');
+        return segments[0] + (segments.Length > 0 ? $"+{segments[1][..Math.Min(7, segments[1].Length)]}" : "");
     }
 }
