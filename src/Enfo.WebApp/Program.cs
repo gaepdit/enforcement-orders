@@ -17,7 +17,6 @@ using Enfo.WebApp.Platform.SecurityHeaders;
 using Enfo.WebApp.Platform.Settings;
 using FluentValidation;
 using GaEpd.FileService;
-using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Web;
@@ -25,7 +24,6 @@ using Microsoft.OpenApi.Models;
 using Mindscape.Raygun4Net;
 using Mindscape.Raygun4Net.AspNetCore;
 using System.Reflection;
-using System.Runtime.InteropServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,11 +32,7 @@ var builder = WebApplication.CreateBuilder(args);
 AppDomain.CurrentDomain.SetData("REGEX_DEFAULT_MATCH_TIMEOUT", TimeSpan.FromMilliseconds(100));
 
 // Persist data protection keys
-var directory =
-    Directory.CreateDirectory(builder.Configuration["DataProtectionKeysPath"]!);
-var dataProtectionBuilder = builder.Services.AddDataProtection().PersistKeysToFileSystem(directory);
-if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-    dataProtectionBuilder.ProtectKeysWithDpapi(protectToLocalMachine: true);
+builder.Services.AddDataProtection();
 
 // Bind Application Settings
 builder.Configuration.GetSection(ApplicationSettings.RaygunSettingsSection)
