@@ -4,6 +4,7 @@ using Enfo.EfRepository.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Enfo.EfRepository.Migrations
 {
     [DbContext(typeof(EnfoDbContext))]
-    partial class EnfoDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250714201705_UpdateUserAuditing")]
+    partial class UpdateUserAuditing
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
