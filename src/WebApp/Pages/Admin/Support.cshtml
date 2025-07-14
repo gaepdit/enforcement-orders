@@ -1,15 +1,16 @@
 ﻿@page
+@using Enfo.WebApp.Platform.Settings
 @model Enfo.WebApp.Pages.Admin.Support
 @{
     ViewData["Title"] = "Support";
-    var supportMailto = $"mailto:{Model.SupportEmail}?subject=ENFO Support Request";
+    var supportMailto = $"mailto:{AppSettings.SupportSettings.TechnicalSupportEmail}?subject=ENFO Support Request";
 
     var v = System.Reflection.Assembly.GetEntryAssembly()?.GetName().Version;
     var version = v is null ? string.Empty : new Version(v.Major, v.Minor, v.Build).ToString();
 }
 
 <h1>@ViewData["Title"]</h1>
-<p>For technical support, contact <a href="@supportMailto">@Model.SupportEmail</a>.</p>
+<p>For technical support, contact <a href="@supportMailto">@AppSettings.SupportSettings.TechnicalSupportEmail</a>.</p>
 <p>
     Copyright © 2017 – @DateTime.Now.Year.ToString(), State of Georgia.<br />
     ENFO was developed by Georgia EPD-IT.<br />
