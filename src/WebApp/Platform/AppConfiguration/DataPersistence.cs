@@ -62,10 +62,10 @@ public static class DataPersistence
     private static async Task CreateMissingRolesAsync(this EnfoDbContext migrationContext, IServiceCollection services)
     {
         // Initialize any new roles.
-        var roleManager = services.BuildServiceProvider().GetRequiredService<RoleManager<IdentityRole>>();
+        var roleManager = services.BuildServiceProvider().GetRequiredService<RoleManager<IdentityRole<Guid>>>();
         foreach (var role in AppRole.AllRoles.Keys)
             if (!await migrationContext.Roles.AnyAsync(idRole => idRole.Name == role))
-                await roleManager.CreateAsync(new IdentityRole(role));
+                await roleManager.CreateAsync(new IdentityRole<Guid>(role));
     }
 
     private static async Task ConfigureDevDataPersistence(this IHostApplicationBuilder builder)
@@ -76,9 +76,7 @@ public static class DataPersistence
             builder.ConfigureDatabaseServices();
 
             await using var migrationContext =
-                new EnfoDbContext(GetMigrationDbOpts(builder.Configuration)
-                    .UseAsyncSeeding((context, _, token) => SeedDataHelper.SeedAllDataAsync(context, token))
-                    .Options, null);
+                new EnfoDbContext(GetMigrationDbOpts(builder.Configuration).Options, null);
 
             await migrationContext.Database.EnsureDeletedAsync();
 
@@ -86,6 +84,8 @@ public static class DataPersistence
                 await migrationContext.Database.MigrateAsync();
             else
                 await migrationContext.Database.EnsureCreatedAsync();
+
+            SeedDataHelper.SeedAllData(migrationContext);
         }
         else
         {
