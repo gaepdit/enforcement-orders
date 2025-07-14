@@ -3,8 +3,6 @@ using Enfo.WebApp.Platform.AppConfiguration;
 using Enfo.WebApp.Platform.OrgNotifications;
 using Enfo.WebApp.Platform.Settings;
 using FluentValidation;
-using Microsoft.AspNetCore.DataProtection;
-using System.Runtime.InteropServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,11 +15,7 @@ builder.BindAppSettings();
 builder.AddErrorLogging();
 
 // Persist data protection keys
-var directory =
-    Directory.CreateDirectory(builder.Configuration["DataProtectionKeysPath"]!);
-var dataProtectionBuilder = builder.Services.AddDataProtection().PersistKeysToFileSystem(directory);
-if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-    dataProtectionBuilder.ProtectKeysWithDpapi(protectToLocalMachine: true);
+builder.Services.AddDataProtection();
 
 // Configure Identity stores.
 builder.Services.AddIdentityStores();
