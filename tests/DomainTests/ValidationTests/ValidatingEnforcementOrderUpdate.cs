@@ -1,15 +1,9 @@
 using Enfo.Domain.EnforcementOrders.Repositories;
 using Enfo.Domain.EnforcementOrders.Resources;
 using Enfo.Domain.EnforcementOrders.Resources.Validation;
-using FluentAssertions;
-using FluentAssertions.Execution;
 using FluentValidation.TestHelper;
-using NSubstitute;
-using NUnit.Framework;
-using System;
-using System.Threading.Tasks;
 
-namespace EnfoTests.Domain.ValidationTests;
+namespace DomainTests.ValidationTests;
 
 [TestFixture]
 public class ValidatingEnforcementOrderUpdate
@@ -21,14 +15,14 @@ public class ValidatingEnforcementOrderUpdate
         {
             Cause = "uvw-" + Guid.NewGuid(),
             CommentContactId = 2000,
-            CommentPeriodClosesDate = new DateTime(2012, 11, 15),
+            CommentPeriodClosesDate = new DateTime(2012, 11, 15, 0, 0, 0, DateTimeKind.Local),
             County = "Liberty",
-            ExecutedDate = new DateTime(1998, 06, 29),
-            ExecutedOrderPostedDate = new DateTime(1998, 07, 06),
+            ExecutedDate = new DateTime(1998, 06, 29, 0, 0, 0, DateTimeKind.Local),
+            ExecutedOrderPostedDate = new DateTime(1998, 07, 06, 0, 0, 0, DateTimeKind.Local),
             FacilityName = "uvw-" + Guid.NewGuid(),
-            HearingCommentPeriodClosesDate = new DateTime(2012, 11, 21),
+            HearingCommentPeriodClosesDate = new DateTime(2012, 11, 21, 0, 0, 0, DateTimeKind.Local),
             HearingContactId = 2000,
-            HearingDate = new DateTime(2012, 11, 15),
+            HearingDate = new DateTime(2012, 11, 15, 0, 0, 0, DateTimeKind.Local),
             HearingLocation = "uvw-" + Guid.NewGuid(),
             IsExecutedOrder = true,
             IsHearingScheduled = true,
@@ -36,7 +30,7 @@ public class ValidatingEnforcementOrderUpdate
             LegalAuthorityId = 1,
             OrderNumber = "EPD-ACQ-7936",
             Progress = PublicationProgress.Published,
-            ProposedOrderPostedDate = new DateTime(2012, 10, 16),
+            ProposedOrderPostedDate = new DateTime(2012, 10, 16, 0, 0, 0, DateTimeKind.Local),
             Requirements = "uvw-" + Guid.NewGuid(),
             SettlementAmount = 2000,
         };
@@ -59,7 +53,7 @@ public class ValidatingEnforcementOrderUpdate
         {
             Cause = "uvw-" + Guid.NewGuid(),
             CommentContactId = 2000,
-            CommentPeriodClosesDate = new DateTime(2012, 11, 15),
+            CommentPeriodClosesDate = new DateTime(2012, 11, 15, 0, 0, 0, DateTimeKind.Local),
             County = "Liberty",
             ExecutedDate = null,
             ExecutedOrderPostedDate = null,
@@ -68,7 +62,7 @@ public class ValidatingEnforcementOrderUpdate
             IsProposedOrder = true,
             OrderNumber = "EPD-ACQ-7936",
             Progress = PublicationProgress.Published,
-            ProposedOrderPostedDate = new DateTime(2012, 10, 16),
+            ProposedOrderPostedDate = new DateTime(2012, 10, 16, 0, 0, 0, DateTimeKind.Local),
             Requirements = "uvw-" + Guid.NewGuid(),
             SettlementAmount = 2000,
         };
@@ -142,8 +136,8 @@ public class ValidatingEnforcementOrderUpdate
         {
             Cause = "uvw-" + Guid.NewGuid(),
             County = "Liberty",
-            ExecutedDate = new DateTime(1998, 06, 29),
-            ExecutedOrderPostedDate = new DateTime(1998, 07, 06),
+            ExecutedDate = new DateTime(1998, 06, 29, 0, 0, 0, DateTimeKind.Local),
+            ExecutedOrderPostedDate = new DateTime(1998, 07, 06, 0, 0, 0, DateTimeKind.Local),
             FacilityName = "uvw-" + Guid.NewGuid(),
             IsExecutedOrder = true,
             IsHearingScheduled = true,

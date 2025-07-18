@@ -7,23 +7,14 @@ using Enfo.Domain.LegalAuthorities.Resources;
 using Enfo.WebApp.Models;
 using Enfo.WebApp.Pages.Admin;
 using Enfo.WebApp.Platform.RazorHelpers;
-using FluentAssertions;
-using FluentAssertions.Execution;
 using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using NSubstitute;
-using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
 
-namespace EnfoTests.WebApp.Pages.Admin;
+namespace WebAppTests.Pages.Admin;
 
 [TestFixture]
 public class AddTests
@@ -32,19 +23,19 @@ public class AddTests
     {
         Cause = "xyz-" + Guid.NewGuid(),
         CommentContactId = 2000,
-        CommentPeriodClosesDate = new DateTime(2012, 11, 15),
+        CommentPeriodClosesDate = new DateTime(2012, 11, 15, 0, 0, 0, DateTimeKind.Local),
         County = "Liberty",
-        ExecutedDate = new DateTime(1998, 06, 29),
-        ExecutedOrderPostedDate = new DateTime(1998, 07, 06),
+        ExecutedDate = new DateTime(1998, 06, 29, 0, 0, 0, DateTimeKind.Local),
+        ExecutedOrderPostedDate = new DateTime(1998, 07, 06, 0, 0, 0, DateTimeKind.Local),
         FacilityName = "xyz-" + Guid.NewGuid(),
-        HearingCommentPeriodClosesDate = new DateTime(2012, 11, 21),
+        HearingCommentPeriodClosesDate = new DateTime(2012, 11, 21, 0, 0, 0, DateTimeKind.Local),
         HearingContactId = 2000,
-        HearingDate = new DateTime(2012, 11, 15),
+        HearingDate = new DateTime(2012, 11, 15, 0, 0, 0, DateTimeKind.Local),
         HearingLocation = "xyz-" + Guid.NewGuid(),
         IsHearingScheduled = true,
         LegalAuthorityId = 1,
         OrderNumber = "EPD-ACQ-7936",
-        ProposedOrderPostedDate = new DateTime(2012, 10, 16),
+        ProposedOrderPostedDate = new DateTime(2012, 10, 16, 0, 0, 0, DateTimeKind.Local),
         Progress = PublicationProgress.Published,
         Requirements = "xyz-" + Guid.NewGuid(),
         SettlementAmount = 2000,
@@ -75,9 +66,11 @@ public class AddTests
         orderRepo.OrderNumberExistsAsync(Arg.Any<string>(), Arg.Any<int?>()).Returns(false);
         orderRepo.CreateAsync(item).Returns(9);
         var validator = Substitute.For<IValidator<EnforcementOrderCreate>>();
-        validator.ValidateAsync(Arg.Any<EnforcementOrderCreate>(), CancellationToken.None).Returns(new ValidationResult());
+        validator.ValidateAsync(Arg.Any<EnforcementOrderCreate>(), CancellationToken.None)
+            .Returns(new ValidationResult());
         // Construct Page
-        var page = new Add(orderRepo, Substitute.For<ILegalAuthorityRepository>(), Substitute.For<IEpdContactRepository>())
+        var page = new Add(orderRepo, Substitute.For<ILegalAuthorityRepository>(),
+                Substitute.For<IEpdContactRepository>())
             { TempData = tempData, Item = item };
 
         var result = await page.OnPostAsync(validator);
@@ -102,19 +95,19 @@ public class AddTests
         {
             Cause = "xyz-" + Guid.NewGuid(),
             CommentContactId = 2000,
-            CommentPeriodClosesDate = new DateTime(2012, 11, 15),
+            CommentPeriodClosesDate = new DateTime(2012, 11, 15, 0, 0, 0, DateTimeKind.Local),
             County = "Liberty",
-            ExecutedDate = new DateTime(1998, 06, 29),
-            ExecutedOrderPostedDate = new DateTime(1998, 07, 06),
+            ExecutedDate = new DateTime(1998, 06, 29, 0, 0, 0, DateTimeKind.Local),
+            ExecutedOrderPostedDate = new DateTime(1998, 07, 06, 0, 0, 0, DateTimeKind.Local),
             FacilityName = "xyz-" + Guid.NewGuid(),
-            HearingCommentPeriodClosesDate = new DateTime(2012, 11, 21),
+            HearingCommentPeriodClosesDate = new DateTime(2012, 11, 21, 0, 0, 0, DateTimeKind.Local),
             HearingContactId = 2000,
-            HearingDate = new DateTime(2012, 11, 15),
+            HearingDate = new DateTime(2012, 11, 15, 0, 0, 0, DateTimeKind.Local),
             HearingLocation = "xyz-" + Guid.NewGuid(),
             IsHearingScheduled = true,
             LegalAuthorityId = 1,
             OrderNumber = "EPD-ACQ-7936",
-            ProposedOrderPostedDate = new DateTime(2012, 10, 16),
+            ProposedOrderPostedDate = new DateTime(2012, 10, 16, 0, 0, 0, DateTimeKind.Local),
             Progress = PublicationProgress.Published,
             Requirements = "xyz-" + Guid.NewGuid(),
             SettlementAmount = 2000,
@@ -129,9 +122,11 @@ public class AddTests
         orderRepo.OrderNumberExistsAsync(Arg.Any<string>(), Arg.Any<int?>()).Returns(false);
         orderRepo.CreateAsync(item).Returns(9);
         var validator = Substitute.For<IValidator<EnforcementOrderCreate>>();
-        validator.ValidateAsync(Arg.Any<EnforcementOrderCreate>(), CancellationToken.None).Returns(new ValidationResult());
+        validator.ValidateAsync(Arg.Any<EnforcementOrderCreate>(), CancellationToken.None)
+            .Returns(new ValidationResult());
         // Construct Page
-        var page = new Add(orderRepo, Substitute.For<ILegalAuthorityRepository>(), Substitute.For<IEpdContactRepository>())
+        var page = new Add(orderRepo, Substitute.For<ILegalAuthorityRepository>(),
+                Substitute.For<IEpdContactRepository>())
             { TempData = tempData, Item = item };
 
         var result = await page.OnPostAsync(validator);
@@ -160,7 +155,8 @@ public class AddTests
         var orderRepo = Substitute.For<IEnforcementOrderRepository>();
         orderRepo.OrderNumberExistsAsync(Arg.Any<string>(), Arg.Any<int?>()).Returns(false);
         var validator = Substitute.For<IValidator<EnforcementOrderCreate>>();
-        validator.ValidateAsync(Arg.Any<EnforcementOrderCreate>(), CancellationToken.None).Returns(new ValidationResult());
+        validator.ValidateAsync(Arg.Any<EnforcementOrderCreate>(), CancellationToken.None)
+            .Returns(new ValidationResult());
         // Construct Page
         var page = new Add(orderRepo, legalRepo, contactRepo)
             { Item = item };

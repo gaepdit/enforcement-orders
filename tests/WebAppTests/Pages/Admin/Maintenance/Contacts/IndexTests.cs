@@ -1,20 +1,13 @@
 ﻿using Enfo.Domain.EpdContacts.Repositories;
 using Enfo.Domain.EpdContacts.Resources;
 using Enfo.WebApp.Models;
-using Enfo.WebApp.Pages.Admin.Maintenance.Contacts;
 using Enfo.WebApp.Platform.RazorHelpers;
-using EnfoTests.TestData;
-using FluentAssertions;
-using FluentAssertions.Execution;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using NSubstitute;
-using NUnit.Framework;
-using System.Threading.Tasks;
 using Index = Enfo.WebApp.Pages.Admin.Maintenance.Contacts.Index;
 
-namespace EnfoTests.WebApp.Pages.Admin.Maintenance.Contacts;
+namespace WebAppTests.Pages.Admin.Maintenance.Contacts;
 
 [TestFixture]
 public class IndexTests
@@ -72,7 +65,7 @@ public class IndexTests
 
         using (new AssertionScope())
         {
-            page.TempData?.GetDisplayMessage().Should().BeEquivalentTo(expected);
+            page.TempData.GetDisplayMessage().Should().BeEquivalentTo(expected);
             result.Should().BeOfType<RedirectToPageResult>();
             ((RedirectToPageResult)result).PageName.Should().Be("Index");
         }
