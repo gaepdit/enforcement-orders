@@ -12,7 +12,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DomainTests", "tests\Domain
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EfRepositoryTests", "tests\EfRepositoryTests\EfRepositoryTests.csproj", "{9D9AED72-FBB1-4337-A635-2DC991DEFBAE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApp", "src\WebApp\Enfo.WebApp.csproj", "{7FC28873-402B-4FB1-BC21-45C9EC26EE6F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApp", "src\WebApp\WebApp.csproj", "{7FC28873-402B-4FB1-BC21-45C9EC26EE6F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebAppTests", "tests\WebAppTests\WebAppTests.csproj", "{CA58B5AE-895D-4443-A0E4-876DAFAF5654}"
 EndProject
