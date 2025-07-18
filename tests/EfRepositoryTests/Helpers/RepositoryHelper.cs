@@ -29,7 +29,7 @@ public sealed class RepositoryHelper : IDisposable, IAsyncDisposable
     {
         var helper = new RepositoryHelper();
         helper.Options = SqliteInMemory.CreateOptions<EnfoDbContext>(builder => builder
-            .UseSeeding((context, _) => SeedDataHelper.SeedAllData(context))
+            .UseAsyncSeeding((context, _, token) => SeedDataHelper.SeedAllDataAsync(context, token))
             .LogTo(Console.WriteLine, events: [RelationalEventId.CommandExecuted]));
         helper.Context = new EnfoDbContext(helper.Options, null);
         return helper;

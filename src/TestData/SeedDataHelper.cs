@@ -17,7 +17,7 @@ public static class SeedDataHelper
         context.Set<ApplicationUser>().AddRange(UserData.GetUsers);
         context.Set<IdentityRole<Guid>>().AddRange(UserData.GetRoles);
         context.SaveChanges();
-        
+
         if (context.Database.ProviderName == SqlServerProvider)
         {
             context.Database.BeginTransaction();
@@ -47,6 +47,7 @@ public static class SeedDataHelper
             context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT EpdContacts OFF");
             context.Database.CommitTransaction();
         }
+
         if (context.Database.ProviderName == SqlServerProvider)
         {
             context.Database.BeginTransaction();
@@ -64,5 +65,16 @@ public static class SeedDataHelper
 
         context.Set<Attachment>().AddRange(AttachmentData.Attachments);
         context.SaveChanges();
+    }
+
+    public static async Task SeedAllDataAsync(DbContext context, CancellationToken token = default)
+    {
+        context.Set<ApplicationUser>().AddRange(UserData.GetUsers);
+        context.Set<IdentityRole<Guid>>().AddRange(UserData.GetRoles);
+        context.Set<LegalAuthority>().AddRange(LegalAuthorityData.LegalAuthorities);
+        context.Set<EpdContact>().AddRange(EpdContactData.EpdContacts);
+        context.Set<EnforcementOrder>().AddRange(EnforcementOrderData.EnforcementOrders);
+        context.Set<Attachment>().AddRange(AttachmentData.Attachments);
+        await context.SaveChangesAsync(token);
     }
 }
