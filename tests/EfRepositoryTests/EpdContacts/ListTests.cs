@@ -11,7 +11,7 @@ public class ListTests
         await using var repositoryHelper = await RepositoryHelper.CreateRepositoryHelperAsync();
         using var repository = repositoryHelper.GetEpdContactRepository();
         var items = await repository.ListAsync();
-        items.Should().HaveCount(EpdContactData.EpdContacts.Count(e => e.Active));
+        items.Should().HaveSameCount(EpdContactData.EpdContacts.Where(e => e.Active));
 
         var epdContact = EpdContactData.EpdContacts.First(e => e.Active);
         var expected = new EpdContactView(epdContact);

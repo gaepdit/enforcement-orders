@@ -85,7 +85,7 @@ public static class DataPersistence
             else
                 await migrationContext.Database.EnsureCreatedAsync();
 
-            SeedDataHelper.SeedAllData(migrationContext);
+            migrationContext.SeedAllData();
         }
         else
         {

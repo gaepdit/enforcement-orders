@@ -18,8 +18,7 @@ public class ListTests
         using (new AssertionScope())
         {
             result.TotalCount.Should().Be(EnforcementOrderData.EnforcementOrders.Count(e => e.GetIsPublic));
-            result.Items.Should()
-                .HaveCount(EnforcementOrderData.EnforcementOrders.Count(e => e.GetIsPublic));
+            result.Items.Should().HaveSameCount(EnforcementOrderData.EnforcementOrders.Where(e => e.GetIsPublic));
             result.PageNumber.Should().Be(1);
             result.Items[0].Should().BeEquivalentTo(
                 ResourceHelper.GetEnforcementOrderSummaryView(EnforcementOrderData.EnforcementOrders
@@ -149,8 +148,7 @@ public class ListTests
         using (new AssertionScope())
         {
             result.TotalCount.Should().Be(EnforcementOrderData.EnforcementOrders.Count(e => e.GetIsPublic));
-            result.Items.Should()
-                .HaveCount(EnforcementOrderData.EnforcementOrders.Count(e => e.GetIsPublic));
+            result.Items.Should().HaveSameCount(EnforcementOrderData.EnforcementOrders.Where(e => e.GetIsPublic));
             result.PageNumber.Should().Be(1);
             result.Items[0].Should().BeEquivalentTo(
                 ResourceHelper.GetEnforcementOrderDetailedView(EnforcementOrderData.EnforcementOrders
@@ -273,8 +271,7 @@ public class ListTests
         using (new AssertionScope())
         {
             result.TotalCount.Should().Be(EnforcementOrderData.EnforcementOrders.Count(e => !e.Deleted));
-            result.Items.Should()
-                .HaveCount(EnforcementOrderData.EnforcementOrders.Count(e => !e.Deleted));
+            result.Items.Should().HaveSameCount(EnforcementOrderData.EnforcementOrders.Where(e => !e.Deleted));
             result.PageNumber.Should().Be(1);
             result.Items[0].Should().BeEquivalentTo(
                 ResourceHelper.GetEnforcementOrderAdminSummaryView(EnforcementOrderData.EnforcementOrders
@@ -296,8 +293,7 @@ public class ListTests
         using (new AssertionScope())
         {
             result.TotalCount.Should().Be(EnforcementOrderData.EnforcementOrders.Count(e => e.Deleted));
-            result.Items.Should()
-                .HaveCount(EnforcementOrderData.EnforcementOrders.Count(e => e.Deleted));
+            result.Items.Should().HaveSameCount(EnforcementOrderData.EnforcementOrders.Where(e => e.Deleted));
             result.PageNumber.Should().Be(1);
             result.Items[0].Should().BeEquivalentTo(
                 ResourceHelper.GetEnforcementOrderAdminSummaryView(EnforcementOrderData.EnforcementOrders

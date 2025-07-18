@@ -15,7 +15,7 @@ public class ListTests
 
         using (new AssertionScope())
         {
-            items.Should().HaveCount(LegalAuthorityData.LegalAuthorities.Count(e => e.Active));
+            items.Should().HaveSameCount(LegalAuthorityData.LegalAuthorities.Where(e => e.Active));
             items[0].Should()
                 .BeEquivalentTo(new LegalAuthorityView(LegalAuthorityData.LegalAuthorities.First(e => e.Active)));
         }

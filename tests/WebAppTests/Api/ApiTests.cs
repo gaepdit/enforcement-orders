@@ -23,15 +23,15 @@ public class ApiTests
             .Build();
 
         using var repository = new LocalEnforcementOrderRepository(Substitute.For<IAttachmentStore>());
-
         var controller = new ApiController();
+        var expectedCount = EnforcementOrderData.EnforcementOrders.Count(e => e.GetIsPublic);
+
         var result = await controller.ListOrdersAsync(repository, config, new EnforcementOrderSpec(), 1, 100);
 
         using (new AssertionScope())
         {
-            result.TotalCount.Should().Be(EnforcementOrderData.EnforcementOrders.Count(e => e.GetIsPublic));
-            result.Items.Should()
-                .HaveCount(EnforcementOrderData.EnforcementOrders.Count(e => e.GetIsPublic));
+            result.TotalCount.Should().Be(expectedCount);
+            result.Items.Should().HaveCount(expectedCount);
             result.PageNumber.Should().Be(1);
             var order = result.Items[0];
             order.Should().BeEquivalentTo(
@@ -61,7 +61,7 @@ public class ApiTests
         {
             response.Result.Should().BeOfType<ObjectResult>();
             var result = response.Result as ObjectResult;
-            result?.StatusCode.Should().Be(404);
+            result!.StatusCode.Should().Be(404);
         }
     }
 
@@ -100,7 +100,7 @@ public class ApiTests
 
         var controller = new ApiController();
         var response = await controller.ListLegalAuthoritiesAsync(repository);
-        response.Should().HaveCount(LegalAuthorityData.LegalAuthorities.Count(e => e.Active));
+        response.Should().HaveSameCount(LegalAuthorityData.LegalAuthorities.Where(e => e.Active));
     }
 
     [Test]
@@ -126,7 +126,7 @@ public class ApiTests
         {
             response.Result.Should().BeOfType<ObjectResult>();
             var result = response.Result as ObjectResult;
-            result?.StatusCode.Should().Be(404);
+            result!.StatusCode.Should().Be(404);
         }
     }
 
@@ -146,7 +146,7 @@ public class ApiTests
             var result = response.Result as OkObjectResult;
 
             result.Should().NotBeNull();
-            result?.Value.Should().Be(item);
+            result!.Value.Should().Be(item);
         }
     }
 }

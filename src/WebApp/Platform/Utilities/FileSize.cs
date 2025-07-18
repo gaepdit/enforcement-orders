@@ -20,10 +20,11 @@ public static class FileSize
 
     public static string ToFileSizeString(this long value, int precision = 1)
     {
-        var pow = Math.Min(Math.Floor((value > 0 ? Math.Log(value) : 0) / Math.Log(1024)),
-            Enum.GetNames(typeof(FileSizeUnits)).Length); // Total number of FileSizeUnits available
+        if (value == 0) return "0 bytes";
+        var pow = Math.Min((int)Math.Floor(Math.Log(Math.Abs(value)) / Math.Log(1024)),
+            Enum.GetNames<FileSizeUnits>().Length); // Total number of FileSizeUnits available
         var valueString = (value / Math.Pow(1024, pow)).ToString(pow == 0 ? "N0" : "N" + precision);
-        var unitString = ((FileSizeUnits)(int)pow).ToString();
-        return valueString + " " + unitString;
+        var unitString = ((FileSizeUnits)pow).ToString();
+        return $"{valueString} {unitString}";
     }
 }

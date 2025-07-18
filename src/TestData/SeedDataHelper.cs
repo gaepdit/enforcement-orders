@@ -12,7 +12,7 @@ public static class SeedDataHelper
 {
     private const string SqlServerProvider = "Microsoft.EntityFrameworkCore.SqlServer";
 
-    public static void SeedAllData(DbContext context)
+    public static void SeedAllData(this DbContext context)
     {
         context.Set<ApplicationUser>().AddRange(UserData.GetUsers);
         context.Set<IdentityRole<Guid>>().AddRange(UserData.GetRoles);
