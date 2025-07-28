@@ -4,10 +4,10 @@ namespace Enfo.WebApp.Platform.Settings;
 
 internal static partial class AppSettings
 {
-    public static DevSettingsSection DevSettings { get; set; } = new();
+    public static DevSettingsSection DevSettings { get; private set; } = new();
 
     // PROD configuration settings
-    public static readonly DevSettingsSection ProductionDefault = new()
+    private static readonly DevSettingsSection ProductionDefault = new()
     {
         UseDevSettings = false,
         BuildDatabase = true,
@@ -20,7 +20,6 @@ internal static partial class AppSettings
     };
 
     // DEV configuration settings
-    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public record DevSettingsSection
     {
         /// <summary>
