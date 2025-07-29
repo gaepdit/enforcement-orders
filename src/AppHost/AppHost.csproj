@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <Sdk Name="Aspire.AppHost.Sdk" Version="9.3.1" />
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <UserSecretsId>25c41f87-7815-485e-a3b1-244a7721cd93</UserSecretsId>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Aspire.Hosting.AppHost" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Enfo.WebApp\Enfo.WebApp.csproj" />
+    </ItemGroup>
+
+</Project>
