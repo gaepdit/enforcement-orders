@@ -20,7 +20,8 @@ public static class ApiDocumentation
                     Contact = new OpenApiContact
                     {
                         Name = "Enforcement Orders Application Technical Support",
-                        Email = AppSettings.SupportSettings.TechnicalSupportEmail,
+                        Email = AppSettings.Support.TechnicalSupportEmail,
+                        Url = new Uri(AppSettings.Support.TechnicalSupportSite),
                     },
                 });
             });

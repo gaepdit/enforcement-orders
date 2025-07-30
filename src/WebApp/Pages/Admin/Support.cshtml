@@ -1,39 +1,26 @@
 ﻿@page
 @using Enfo.WebApp.Platform.Settings
-@model Enfo.WebApp.Pages.Admin.Support
+@model Support
 @{
     ViewData["Title"] = "Support";
-    var supportMailto = $"mailto:{AppSettings.SupportSettings.TechnicalSupportEmail}?subject=ENFO Support Request";
-
-    var v = System.Reflection.Assembly.GetEntryAssembly()?.GetName().Version;
-    var version = v is null ? string.Empty : new Version(v.Major, v.Minor, v.Build).ToString();
 }
 
 <h1>@ViewData["Title"]</h1>
-<p>For technical support, contact <a href="@supportMailto">@AppSettings.SupportSettings.TechnicalSupportEmail</a>.</p>
+
 <p>
-    Copyright © 2017 – @DateTime.Now.Year.ToString(), State of Georgia.<br />
-    ENFO was developed by Georgia EPD-IT.<br />
-    @if (version != "")
-    {
-        @:Current version: <em>@version</em>.
-    }
+    For technical support, contact
+    <a href="@AppSettings.Support.TechnicalSupportSite" target="_blank" rel="noopener">EPD IT support</a>.
 </p>
 
-<details>
-    <summary>
-        <h2>Open Source Licenses</h2>
-    </summary>
-
-    <p>ENFO gratefully uses the following open source components.</p>
-    <ul>
-        <li><a href="https://dotnet.microsoft.com/apps/aspnet" rel="noopener">ASP.NET</a> (<a href="https://github.com/dotnet/aspnetcore/blob/main/LICENSE.txt">MIT License</a>)</li>
-        <li><a href="https://docs.microsoft.com/en-us/ef/" rel="noopener">Entity Framework</a> (<a href="https://github.com/dotnet/efcore/blob/main/LICENSE.txt">MIT License</a>)</li>
-        <li><a href="https://designsystem.digital.gov/" rel="noopener">U.S. Web Design System</a> (<a href="https://github.com/uswds/uswds/blob/develop/LICENSE.md">License</a>)</li>
-        <li><a href="https://jquery.com/" rel="noopener">jQuery</a> (<a href="https://jquery.org/license/">MIT License</a>)</li>
-        <li><a href="https://jqueryvalidation.org/" rel="noopener">jQuery Validation</a> (<a href="https://github.com/jquery-validation/jquery-validation/blob/master/LICENSE.md">MIT License</a>)</li>
-        <li><a href="https://timepicker.co/" rel="noopener">jQuery Timepicker</a> (<a href="https://github.com/wvega/timepicker#license">MIT, GPL License</a>)</li>
-        <li><a href="https://github.com/MindscapeHQ/raygun4net" rel="noopener">Raygun4Net</a> (<a href="https://github.com/MindscapeHQ/raygun4net/blob/master/LICENSE">MIT License</a>)</li>
-        <li><a href="https://github.com/andrewlock/NetEscapades.AspNetCore.SecurityHeaders" rel="noopener">NetEscapades.AspNetCore.SecurityHeaders</a> (<a href="https://github.com/andrewlock/NetEscapades.AspNetCore.SecurityHeaders/blob/master/LICENSE">MIT License</a>)</li>
-    </ul>
-</details>
+<div class="callout callout-info">
+    <small>
+        The Enforcement Orders site was developed by Georgia EPD-IT.<br />
+        @if (!string.IsNullOrEmpty(AppSettings.Version))
+        {
+            @:Current version: <em>@AppSettings.Version</em>
+        }
+        <br />
+        Source code available on
+        <a href="https://github.com/gaepdit/enforcement-orders" target="_blank" rel="noopener" class="text-decoration-hover link-offset-2">GitHub</a>.
+    </small>
+</div>
