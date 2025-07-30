@@ -4,7 +4,7 @@ namespace Enfo.WebApp.Platform.Settings;
 
 internal static partial class AppSettings
 {
-    public static void BindAppSettings(this WebApplicationBuilder builder)
+    public static IHostApplicationBuilder BindAppSettings(this IHostApplicationBuilder builder)
     {
         Version = GetVersion();
 
@@ -12,18 +12,14 @@ internal static partial class AppSettings
         builder.Configuration.GetSection(nameof(RaygunSettings)).Bind(RaygunSettings);
         OrgNotificationsApiUrl = builder.Configuration.GetValue<string>(nameof(OrgNotificationsApiUrl));
 
-        // Dev settings should only be used in the development environment and when explicitly enabled.
-        var devConfig = builder.Configuration.GetSection(nameof(DevSettings));
-        var useDevConfig = builder.Environment.IsDevelopment() && devConfig.Exists() &&
-                           Convert.ToBoolean(devConfig[nameof(DevSettings.UseDevSettings)]);
-
-        if (useDevConfig) devConfig.Bind(DevSettings);
-        else DevSettings = ProductionDefault;
+        return builder.BindDevAppSettings();
     }
+
     private static string GetVersion()
     {
         var entryAssembly = Assembly.GetEntryAssembly();
         var segments = (entryAssembly?.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?
             .InformationalVersion ?? entryAssembly?.GetName().Version?.ToString() ?? "").Split('+');
         return segments[0] + (segments.Length > 0 ? $"+{segments[1][..Math.Min(7, segments[1].Length)]}" : "");
-    }}
+    }
+}

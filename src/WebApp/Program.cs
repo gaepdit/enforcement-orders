@@ -11,8 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 AppDomain.CurrentDomain.SetData("REGEX_DEFAULT_MATCH_TIMEOUT", TimeSpan.FromMilliseconds(100));
 
 // Bind application settings.
-builder.BindAppSettings();
-builder.AddErrorLogging();
+builder.BindAppSettings().AddErrorLogging();
 
 // Persist data protection keys
 builder.Services.AddDataProtection();
