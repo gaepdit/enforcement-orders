@@ -26,6 +26,7 @@
         <ProjectReference Include="..\Domain\Domain.csproj" />
         <ProjectReference Include="..\EfRepository\EfRepository.csproj" />
         <ProjectReference Include="..\LocalRepository\LocalRepository.csproj" />
+        <ProjectReference Include="..\ServiceDefaults\ServiceDefaults.csproj" />
     </ItemGroup>
 
     <ItemGroup>
