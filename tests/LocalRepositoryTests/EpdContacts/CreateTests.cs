@@ -1,15 +1,8 @@
 ﻿using Enfo.Domain.EpdContacts.Entities;
 using Enfo.Domain.EpdContacts.Resources;
-using Enfo.LocalRepository;
-using EnfoTests.TestData;
-using FluentAssertions;
-using FluentAssertions.Execution;
-using NUnit.Framework;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
+using Enfo.LocalRepository.Repositories;
 
-namespace EnfoTests.LocalRepositoryTests.EpdContacts;
+namespace LocalRepositoryTests.EpdContacts;
 
 [TestFixture]
 public class CreateTests
@@ -39,7 +32,7 @@ public class CreateTests
         var expected = new EpdContactView(epdContact);
 
         var newItem = await repository.GetAsync(itemId);
-        
+
         using (new AssertionScope())
         {
             itemId.Should().Be(expectedId);

@@ -1,15 +1,8 @@
 ﻿using Enfo.Domain.LegalAuthorities.Entities;
 using Enfo.Domain.LegalAuthorities.Resources;
-using Enfo.LocalRepository;
-using EnfoTests.TestData;
-using FluentAssertions;
-using FluentAssertions.Execution;
-using NUnit.Framework;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
+using Enfo.LocalRepository.Repositories;
 
-namespace EnfoTests.LocalRepositoryTests.LegalAuthorities;
+namespace LocalRepositoryTests.LegalAuthorities;
 
 [TestFixture]
 public class CreateTests

@@ -1,3 +1,4 @@
+using Enfo.Domain.Attachments;
 using Enfo.Domain.EnforcementOrders.Entities;
 
 namespace EnfoTests.TestData;
@@ -8,7 +9,7 @@ public static class AttachmentData
     [
         new()
         {
-            Id = new Guid("00000000-0000-0000-0000-000000000001"),
+            Id = new Guid("10000000-0000-0000-0000-000000000001"),
             FileName = "FileOne.pdf",
             FileExtension = ".pdf",
             Size = 1,
@@ -18,7 +19,7 @@ public static class AttachmentData
 
         new()
         {
-            Id = new Guid("00000000-0000-0000-0000-000000000002"),
+            Id = new Guid("10000000-0000-0000-0000-000000000002"),
             FileName = "File Two.pdf",
             FileExtension = ".pdf",
             Size = 10,
@@ -28,7 +29,7 @@ public static class AttachmentData
 
         new()
         {
-            Id = new Guid("00000000-0000-0000-0000-000000000003"),
+            Id = new Guid("10000000-0000-0000-0000-000000000003"),
             FileName = "File-Three-💻.pdf",
             FileExtension = ".pdf",
             Size = 100,
@@ -38,7 +39,7 @@ public static class AttachmentData
 
         new()
         {
-            Id = new Guid("00000000-0000-0000-0000-000000000004"),
+            Id = new Guid("10000000-0000-0000-0000-000000000004"),
             FileName = "FileFourDeleted.pdf",
             FileExtension = ".pdf",
             Size = 1000,
@@ -50,7 +51,7 @@ public static class AttachmentData
 
         new()
         {
-            Id = new Guid("00000000-0000-0000-0000-000000000005"),
+            Id = new Guid("10000000-0000-0000-0000-000000000005"),
             FileName = "FileFive-OrderNotPublic.pdf",
             FileExtension = ".pdf",
             Size = 1000000,
@@ -60,7 +61,7 @@ public static class AttachmentData
 
         new()
         {
-            Id = new Guid("00000000-0000-0000-0000-000000000006"),
+            Id = new Guid("10000000-0000-0000-0000-000000000006"),
             FileName = "FileSix-OrderDeleted.pdf",
             FileExtension = ".pdf",
             Size = 1000000,
@@ -82,12 +83,12 @@ public static class AttachmentData
 
     private static List<AttachmentFile> SeedAttachmentFiles =>
     [
-        new("00000000-0000-0000-0000-000000000001.pdf", EncodedPdfFile),
-        new("00000000-0000-0000-0000-000000000002.pdf", EncodedPdfFile),
-        new("00000000-0000-0000-0000-000000000003.pdf", EncodedPdfFile),
-        new("00000000-0000-0000-0000-000000000004.pdf", Base64EncodedFile: null),
-        new("00000000-0000-0000-0000-000000000005.pdf", EncodedPdfFile),
-        new("00000000-0000-0000-0000-000000000006.pdf", EncodedPdfFile),
+        new("10000000-0000-0000-0000-000000000001.pdf", EncodedPdfFile),
+        new("10000000-0000-0000-0000-000000000002.pdf", EncodedPdfFile),
+        new("10000000-0000-0000-0000-000000000003.pdf", EncodedPdfFile),
+        new("10000000-0000-0000-0000-000000000004.pdf", Base64EncodedFile: null),
+        new("10000000-0000-0000-0000-000000000005.pdf", EncodedPdfFile),
+        new("10000000-0000-0000-0000-000000000006.pdf", EncodedPdfFile),
     ];
 
 

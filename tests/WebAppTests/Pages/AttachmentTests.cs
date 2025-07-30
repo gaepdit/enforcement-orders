@@ -1,23 +1,18 @@
-﻿using Enfo.Domain.EnforcementOrders.Entities;
+﻿using Enfo.Domain.Attachments;
+using Enfo.Domain.EnforcementOrders.Entities;
 using Enfo.Domain.EnforcementOrders.Repositories;
 using Enfo.Domain.EnforcementOrders.Resources;
-using Enfo.Domain.Services;
 using Enfo.Domain.Utils;
-using EnfoTests.TestData;
-using FluentAssertions;
-using FluentAssertions.Execution;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Routing;
-using NSubstitute;
-using NUnit.Framework;
 using System.Security.Claims;
 using System.Security.Principal;
 using System.Text;
 using Attachment = Enfo.WebApp.Pages.Attachment;
 
-namespace EnfoTests.WebApp.Pages;
+namespace WebAppTests.Pages;
 
 [TestFixture]
 public class AttachmentTests
@@ -95,7 +90,7 @@ public class AttachmentTests
         var actionContext = new ActionContext(httpContext, new RouteData(), new PageActionDescriptor());
         var pageContext = new PageContext(actionContext);
 
-        var view = new AttachmentView(new Enfo.Domain.EnforcementOrders.Entities.Attachment
+        var view = new AttachmentView(new Enfo.Domain.Attachments.Attachment
         {
             Id = Guid.Empty,
             FileName = null,
@@ -123,7 +118,7 @@ public class AttachmentTests
         var actionContext = new ActionContext(httpContext, new RouteData(), new PageActionDescriptor());
         var pageContext = new PageContext(actionContext);
 
-        var view = new AttachmentView(new Enfo.Domain.EnforcementOrders.Entities.Attachment
+        var view = new AttachmentView(new Enfo.Domain.Attachments.Attachment
         {
             Id = Guid.Empty,
             FileName = "right",
@@ -154,7 +149,7 @@ public class AttachmentTests
         var actionContext = new ActionContext(httpContext, new RouteData(), new PageActionDescriptor());
         var pageContext = new PageContext(actionContext);
 
-        var view = new AttachmentView(new Enfo.Domain.EnforcementOrders.Entities.Attachment
+        var view = new AttachmentView(new Enfo.Domain.Attachments.Attachment
         {
             Id = Guid.Empty,
             FileName = "abc",

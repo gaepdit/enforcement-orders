@@ -1,19 +1,10 @@
+using Enfo.Domain.Attachments;
 using Enfo.Domain.EnforcementOrders.Entities;
 using Enfo.Domain.EnforcementOrders.Resources;
-using Enfo.Domain.Services;
-using Enfo.LocalRepository;
-using EnfoTests.TestData;
-using FluentAssertions;
-using FluentAssertions.Execution;
+using Enfo.LocalRepository.Repositories;
 using Microsoft.AspNetCore.Http;
-using NSubstitute;
-using NUnit.Framework;
-using System;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace EnfoTests.LocalRepositoryTests.EnforcementOrderTests;
+namespace LocalRepositoryTests.EnforcementOrderTests;
 
 [TestFixture]
 public class CreateTests

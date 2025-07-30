@@ -1,23 +1,15 @@
-﻿using Enfo.Domain.Users.Entities;
-using Enfo.Domain.Users.Resources;
-using Enfo.Domain.Users.Services;
+﻿using Enfo.AppServices.Staff;
+using Enfo.Domain.Users;
 using Enfo.WebApp.Models;
 using Enfo.WebApp.Pages.Admin.Users;
 using Enfo.WebApp.Platform.RazorHelpers;
-using FluentAssertions;
-using FluentAssertions.Execution;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using NSubstitute;
-using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
-namespace EnfoTests.WebApp.Pages.Admin.Users;
+namespace WebAppTests.Pages.Admin.Users;
 
 [TestFixture]
 public class UserEditTests
@@ -26,23 +18,23 @@ public class UserEditTests
     {
         new Edit.UserRoleSetting
         {
-            Name = UserRole.OrderAdministrator,
-            Description = UserRole.OrderAdministratorRole.Description,
-            DisplayName = UserRole.OrderAdministratorRole.DisplayName,
+            Name = AppRole.OrderAdministrator,
+            Description = AppRole.OrderAdministratorRole.Description,
+            DisplayName = AppRole.OrderAdministratorRole.DisplayName,
             IsSelected = true,
         },
         new Edit.UserRoleSetting
         {
-            Name = UserRole.SiteMaintenance,
-            Description = UserRole.SiteMaintenanceRole.Description,
-            DisplayName = UserRole.SiteMaintenanceRole.DisplayName,
+            Name = AppRole.SiteMaintenance,
+            Description = AppRole.SiteMaintenanceRole.Description,
+            DisplayName = AppRole.SiteMaintenanceRole.DisplayName,
             IsSelected = false,
         },
         new Edit.UserRoleSetting
         {
-            Name = UserRole.UserMaintenance,
-            Description = UserRole.UserMaintenanceRole.Description,
-            DisplayName = UserRole.UserMaintenanceRole.DisplayName,
+            Name = AppRole.UserMaintenance,
+            Description = AppRole.UserMaintenanceRole.Description,
+            DisplayName = AppRole.UserMaintenanceRole.DisplayName,
             IsSelected = false,
         },
     };
@@ -50,10 +42,10 @@ public class UserEditTests
     [Test]
     public async Task OnGet_WithoutRoles_PopulatesThePageModel()
     {
-        var userView = new UserView(UserTestData.ApplicationUsers[0]);
+        var userView = new StaffView(UserTestData.ApplicationUsers[0]);
 
-        var userService = Substitute.For<IUserService>();
-        userService.GetUserByIdAsync(Arg.Any<Guid>()).Returns(userView);
+        var userService = Substitute.For<IStaffService>();
+        userService.FindUserAsync(Arg.Any<Guid>()).Returns(userView);
         userService.GetUserRolesAsync(Arg.Any<Guid>()).Returns(new List<string>());
         var pageModel = new Edit(userService);
 
@@ -63,7 +55,7 @@ public class UserEditTests
         {
             result.Should().BeOfType<PageResult>();
             pageModel.UserId.Should().Be(Guid.Empty);
-            pageModel.DisplayUser.Should().Be(userView);
+            pageModel.DisplayStaff.Should().Be(userView);
             pageModel.UserRoleSettings.Should().NotBeEmpty();
             pageModel.UserRoleSettings.Count.Should().Be(3);
         }
@@ -72,11 +64,11 @@ public class UserEditTests
     [Test]
     public async Task OnGet_WithRoles_PopulatesThePageModel()
     {
-        var userView = new UserView(UserTestData.ApplicationUsers[0]);
-        var roles = new List<string> { UserRole.OrderAdministrator };
+        var userView = new StaffView(UserTestData.ApplicationUsers[0]);
+        var roles = new List<string> { AppRole.OrderAdministrator };
 
-        var userService = Substitute.For<IUserService>();
-        userService.GetUserByIdAsync(Arg.Any<Guid>()).Returns(userView);
+        var userService = Substitute.For<IStaffService>();
+        userService.FindUserAsync(Arg.Any<Guid>()).Returns(userView);
         userService.GetUserRolesAsync(Arg.Any<Guid>()).Returns(roles);
         var pageModel = new Edit(userService);
 
@@ -86,7 +78,7 @@ public class UserEditTests
         {
             result.Should().BeOfType<PageResult>();
             pageModel.UserId.Should().Be(Guid.Empty);
-            pageModel.DisplayUser.Should().Be(userView);
+            pageModel.DisplayStaff.Should().Be(userView);
             pageModel.UserRoleSettings.Should().BeEquivalentTo(_roleSettings);
         }
     }
@@ -94,7 +86,7 @@ public class UserEditTests
     [Test]
     public async Task OnGet_MissingId_ReturnsNotFound()
     {
-        var userService = Substitute.For<IUserService>();
+        var userService = Substitute.For<IStaffService>();
         var pageModel = new Edit(userService);
 
         var result = await pageModel.OnGetAsync(null);
@@ -103,7 +95,7 @@ public class UserEditTests
         {
             result.Should().BeOfType<NotFoundResult>();
             pageModel.UserId.Should().Be(Guid.Empty);
-            pageModel.DisplayUser.Should().BeNull();
+            pageModel.DisplayStaff.Should().BeNull();
             pageModel.UserRoleSettings.Should().BeNull();
         }
     }
@@ -111,8 +103,8 @@ public class UserEditTests
     [Test]
     public async Task OnGet_NonexistentId_ReturnsNotFound()
     {
-        var userService = Substitute.For<IUserService>();
-        userService.GetUserByIdAsync(Arg.Any<Guid>()).Returns((UserView)null);
+        var userService = Substitute.For<IStaffService>();
+        userService.FindUserAsync(Arg.Any<Guid>()).Returns((StaffView)null);
         var pageModel = new Edit(userService);
 
         var result = await pageModel.OnGetAsync(Guid.Empty);
@@ -121,7 +113,7 @@ public class UserEditTests
         {
             result.Should().BeOfType<NotFoundResult>();
             pageModel.UserId.Should().Be(Guid.Empty);
-            pageModel.DisplayUser.Should().BeNull();
+            pageModel.DisplayStaff.Should().BeNull();
             pageModel.UserRoleSettings.Should().BeNull();
         }
     }
@@ -129,7 +121,7 @@ public class UserEditTests
     [Test]
     public async Task OnPost_GivenSuccess_ReturnsRedirectWithDisplayMessage()
     {
-        var userService = Substitute.For<IUserService>();
+        var userService = Substitute.For<IStaffService>();
         userService.UpdateUserRolesAsync(Arg.Any<Guid>(), Arg.Any<Dictionary<string, bool>>())
             .Returns(IdentityResult.Success);
         // Initialize Page TempData
@@ -158,8 +150,8 @@ public class UserEditTests
     [Test]
     public async Task OnPost_InvalidModel_ReturnsPageWithInvalidModelState()
     {
-        var userService = Substitute.For<IUserService>();
-        userService.GetUserByIdAsync(Arg.Any<Guid>()).Returns(new UserView(UserTestData.ApplicationUsers[0]));
+        var userService = Substitute.For<IStaffService>();
+        userService.FindUserAsync(Arg.Any<Guid>()).Returns(new StaffView(UserTestData.ApplicationUsers[0]));
         userService.GetUserRolesAsync(Arg.Any<Guid>()).Returns(new List<string>());
 
         var pageModel = new Edit(userService) { UserRoleSettings = new List<Edit.UserRoleSetting>() };
@@ -178,12 +170,12 @@ public class UserEditTests
     [Test]
     public async Task OnPost_UpdateRolesFails_ReturnsPageWithInvalidModelState()
     {
-        var userView = new UserView(UserTestData.ApplicationUsers[0]);
+        var userView = new StaffView(UserTestData.ApplicationUsers[0]);
         var identityResult = IdentityResult.Failed(new IdentityError { Code = "CODE", Description = "DESCRIPTION" });
 
-        var userService = Substitute.For<IUserService>();
+        var userService = Substitute.For<IStaffService>();
         userService.UpdateUserRolesAsync(Arg.Any<Guid>(), Arg.Any<Dictionary<string, bool>>()).Returns(identityResult);
-        userService.GetUserByIdAsync(Arg.Any<Guid>()).Returns(userView);
+        userService.FindUserAsync(Arg.Any<Guid>()).Returns(userView);
         var pageModel = new Edit(userService) { UserRoleSettings = _roleSettings };
 
         var result = await pageModel.OnPostAsync();

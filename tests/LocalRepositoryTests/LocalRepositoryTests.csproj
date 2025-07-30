@@ -1,8 +1,4 @@
 <Project Sdk="Microsoft.NET.Sdk">
-    <PropertyGroup>
-        <RootNamespace>EnfoTests.LocalRepositoryTests</RootNamespace>
-    </PropertyGroup>
-
     <ItemGroup>
         <ProjectReference Include="..\..\src\LocalRepository\LocalRepository.csproj"/>
     </ItemGroup>

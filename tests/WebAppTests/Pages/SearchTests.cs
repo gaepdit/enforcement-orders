@@ -5,16 +5,9 @@ using Enfo.Domain.LegalAuthorities.Repositories;
 using Enfo.Domain.LegalAuthorities.Resources;
 using Enfo.Domain.Pagination;
 using Enfo.WebApp.Pages;
-using EnfoTests.TestData;
-using FluentAssertions;
-using FluentAssertions.Execution;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using NSubstitute;
-using NUnit.Framework;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
-namespace EnfoTests.WebApp.Pages;
+namespace WebAppTests.Pages;
 
 [TestFixture]
 public class SearchTests

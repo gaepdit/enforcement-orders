@@ -1,17 +1,9 @@
-﻿using Enfo.Domain.Users.Resources;
-using Enfo.Domain.Users.Services;
+﻿using Enfo.AppServices.Staff;
 using Enfo.WebApp.Pages.Admin.Users;
-using FluentAssertions;
-using FluentAssertions.Execution;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using NSubstitute;
-using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
-namespace EnfoTests.WebApp.Pages.Admin.Users;
+namespace WebAppTests.Pages.Admin.Users;
 
 [TestFixture]
 public class UserDetailsTests
@@ -19,11 +11,11 @@ public class UserDetailsTests
     [Test]
     public async Task OnGet_PopulatesThePageModel()
     {
-        var userView = new UserView(UserTestData.ApplicationUsers[0]);
+        var userView = new StaffView(UserTestData.ApplicationUsers[0]);
         var roles = new List<string> { "abc" };
 
-        var userService = Substitute.For<IUserService>();
-        userService.GetUserByIdAsync(Arg.Any<Guid>()).Returns(userView);
+        var userService = Substitute.For<IStaffService>();
+        userService.FindUserAsync(Arg.Any<Guid>()).Returns(userView);
         userService.GetUserRolesAsync(Arg.Any<Guid>()).Returns(roles);
         var pageModel = new Details();
 
@@ -32,7 +24,7 @@ public class UserDetailsTests
         using (new AssertionScope())
         {
             result.Should().BeOfType<PageResult>();
-            pageModel.DisplayUser.Should().Be(userView);
+            pageModel.DisplayStaff.Should().Be(userView);
             pageModel.Roles.Should().BeEquivalentTo(roles);
         }
     }
@@ -40,7 +32,7 @@ public class UserDetailsTests
     [Test]
     public async Task OnGet_NonexistentIdReturnsNotFound()
     {
-        var userService = Substitute.For<IUserService>();
+        var userService = Substitute.For<IStaffService>();
         var pageModel = new Details();
 
         var result = await pageModel.OnGetAsync(userService, Guid.Empty);
@@ -48,7 +40,7 @@ public class UserDetailsTests
         using (new AssertionScope())
         {
             result.Should().BeOfType<NotFoundResult>();
-            pageModel.DisplayUser.Should().BeNull();
+            pageModel.DisplayStaff.Should().BeNull();
             pageModel.Roles.Should().BeNull();
         }
     }
@@ -56,7 +48,7 @@ public class UserDetailsTests
     [Test]
     public async Task OnGet_MissingIdReturnsNotFound()
     {
-        var userService = Substitute.For<IUserService>();
+        var userService = Substitute.For<IStaffService>();
         var pageModel = new Details();
 
         var result = await pageModel.OnGetAsync(userService, null);
@@ -64,7 +56,7 @@ public class UserDetailsTests
         using (new AssertionScope())
         {
             result.Should().BeOfType<NotFoundResult>();
-            pageModel.DisplayUser.Should().BeNull();
+            pageModel.DisplayStaff.Should().BeNull();
             pageModel.Roles.Should().BeNull();
         }
     }
