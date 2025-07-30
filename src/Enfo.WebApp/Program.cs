@@ -23,6 +23,7 @@ using Microsoft.Identity.Web;
 using Microsoft.OpenApi.Models;
 using Mindscape.Raygun4Net;
 using Mindscape.Raygun4Net.AspNetCore;
+using ServiceDefaults;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -155,6 +156,9 @@ builder.Services.AddValidatorsFromAssemblyContaining<LegalAuthorityValidator>();
 // Configure bundling and minification
 builder.Services.AddWebOptimizer();
 
+// Configure Aspire.
+builder.AddServiceDefaults();
+
 // Build the application
 var app = builder.Build();
 var env = app.Environment;
@@ -196,6 +200,7 @@ app.UseSwaggerUI(c =>
 });
 
 // Map endpoints
+app.MapDefaultEndpoints();
 app.MapRazorPages();
 app.MapControllers();
 
