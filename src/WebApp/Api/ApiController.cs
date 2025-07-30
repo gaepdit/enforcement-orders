@@ -5,7 +5,6 @@ using Enfo.Domain.LegalAuthorities.Entities;
 using Enfo.Domain.LegalAuthorities.Repositories;
 using Enfo.Domain.LegalAuthorities.Resources;
 using Enfo.Domain.Pagination;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Enfo.WebApp.Api;
 

@@ -1,6 +1,3 @@
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Diagnostics;
 
 namespace Enfo.WebApp.Pages;
@@ -34,7 +31,7 @@ public class ErrorTestModel(ILogger<ErrorTestModel> logger) : PageModel
     {
         const string message = "Testing unhandled exception.";
         Console.WriteLine(message);
-        
+
         throw new NotImplementedException(message);
     }
 

@@ -3,10 +3,7 @@ using Enfo.Domain.Users;
 using Enfo.WebApp.Models;
 using Enfo.WebApp.Platform.RazorHelpers;
 using Enfo.WebApp.Platform.Settings;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Enfo.WebApp.Pages.Account;
 

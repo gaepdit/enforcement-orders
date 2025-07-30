@@ -1,6 +1,4 @@
 using Enfo.AppServices.Staff;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Security.Claims;
 
 namespace Enfo.WebApp.Pages.Account;

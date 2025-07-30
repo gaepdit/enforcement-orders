@@ -5,9 +5,6 @@ using Enfo.Domain.LegalAuthorities.Repositories;
 using Enfo.Domain.LegalAuthorities.Resources;
 using Enfo.Domain.Pagination;
 using Enfo.WebApp.Platform.AppConfiguration;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Enfo.WebApp.Pages.Admin;

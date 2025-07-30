@@ -2,9 +2,6 @@
 using Enfo.Domain.EpdContacts.Resources;
 using Enfo.WebApp.Models;
 using Enfo.WebApp.Platform.RazorHelpers;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
 namespace Enfo.WebApp.Pages.Admin.Maintenance.Contacts;

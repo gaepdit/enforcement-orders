@@ -1,5 +1,4 @@
 ﻿using Enfo.WebApp.Platform.OrgNotifications;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Enfo.WebApp.Pages.Shared.Components.Notifications;
 

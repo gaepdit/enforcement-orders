@@ -9,9 +9,6 @@ using Enfo.WebApp.Models;
 using Enfo.WebApp.Platform.RazorHelpers;
 using FluentValidation;
 using FluentValidation.AspNetCore;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 

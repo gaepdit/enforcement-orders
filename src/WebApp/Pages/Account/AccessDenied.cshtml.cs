@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-
-namespace Enfo.WebApp.Pages.Account;
+﻿namespace Enfo.WebApp.Pages.Account;
 
 [AllowAnonymous]
 public class AccessDenied : PageModel

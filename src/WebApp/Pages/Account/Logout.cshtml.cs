@@ -3,10 +3,7 @@ using Enfo.AppServices.AuthenticationServices.Claims;
 using Enfo.Domain.Users;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Enfo.WebApp.Pages.Account;
 
