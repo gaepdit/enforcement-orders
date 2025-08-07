@@ -1,0 +1,18 @@
+﻿@page
+@model Enfo.WebApp.Pages.ErrorModel
+@{
+    ViewData["Title"] = "Error";
+}
+
+<h1 class="gaepd-text-danger">@ViewData["Title"]</h1>
+<p>
+    An error occurred while processing your request.
+    If you need assistance related to this error, please contact EPD IT support.
+</p>
+
+@if (Model.ShowRequestId)
+{
+    <p class="gaepd-container-light">
+        <small>Request ID: <code class="gaepd-text-danger">@Model.RequestId</code></small>
+    </p>
+}

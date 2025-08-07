@@ -1,15 +1,7 @@
-using Enfo.Domain.Services;
-using Enfo.LocalRepository;
-using EnfoTests.TestData;
-using FluentAssertions;
-using FluentAssertions.Execution;
-using NSubstitute;
-using NUnit.Framework;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
+using Enfo.Domain.Attachments;
+using Enfo.LocalRepository.Repositories;
 
-namespace EnfoTests.LocalRepositoryTests.Attachments;
+namespace LocalRepositoryTests.Attachments;
 
 [TestFixture]
 public class DeleteAttachmentTests

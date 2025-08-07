@@ -1,0 +1,70 @@
+﻿@page
+@using Enfo.Domain.Users
+@model Index
+@{
+    ViewData["Title"] = $"Site Maintenance: {Index.ThisOption.PluralName}";
+}
+
+<a asp-page="../Index">← Site Maintenance</a>
+
+<partial name="_AlertPartial" for="Message" />
+
+<h2>
+    @Index.ThisOption.PluralName
+    @if (User.IsInRole(AppRole.SiteMaintenance))
+    {
+        <a asp-page="Add" class="usa-button usa-button-secondary">Add New</a>
+    }
+</h2>
+
+<p id="table-description">
+    The @Index.ThisOption.PluralName listed below are available for selection when adding or editing Enforcement Orders.
+    Removing one from use makes it unavailable for future Orders but does not affect any existing Orders.
+    The @AppRole.SiteMaintenanceRole.DisplayName role is needed to edit the list.
+</p>
+
+<table class="usa-table-borderless gaepd-table-responsive" aria-describedby="table-description">
+    <thead>
+    <tr>
+        <th scope="col">Contact</th>
+        <th scope="col">Address</th>
+        <th scope="col">Communication</th>
+        <th scope="col">Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model.Items)
+    {
+        <tr class="@(item.Id == Model.HighlightId ? "gaepd-tablerow-highlight" : item.Active ? "" : "gaepd-tablerow-dimmed")">
+            <th scope="row" data-label="Contact">
+                @Html.DisplayFor(m => item.Active, "BoolInactive")
+                @Html.DisplayFor(m => item, "ContactPerson")
+            </th>
+            <td data-label="Address">
+                @Html.DisplayFor(m => item, "ContactAddress")
+            </td>
+            <td data-label="Communication">
+                @Html.DisplayFor(m => item, "ContactCommunication")
+            </td>
+            <td class="gaepd-tablecell-nolabel">
+                @if (User.IsInRole(AppRole.SiteMaintenance))
+                {
+                    @if (item.Active)
+                    {
+                        <a asp-page="Edit" asp-route-id="@item.Id.ToString()" class="gaepd-button-inline-action usa-button">Edit</a>
+                        <form method="post">
+                            <button type="submit" name="id" value="@item.Id.ToString()" class="gaepd-button-inline-action usa-button-secondary">Remove from use</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <form method="post">
+                            <button type="submit" name="id" value="@item.Id.ToString()" class="gaepd-button-inline-action usa-button-secondary">Restore</button>
+                        </form>
+                    }
+                }
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

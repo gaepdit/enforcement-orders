@@ -12,7 +12,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Enfo.WebApp\Enfo.WebApp.csproj" />
+        <ProjectReference Include="..\WebApp\WebApp.csproj" />
     </ItemGroup>
 
 </Project>

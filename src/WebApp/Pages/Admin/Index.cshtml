@@ -1,0 +1,209 @@
+﻿@page
+@using Enfo.Domain.Users
+@using Enfo.Domain.Utils
+@model Index
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<partial name="_AlertPartial" for="Message" />
+
+<h1>@ViewData["Title"]</h1>
+
+<form method="get" class="usa-search usa-search-big" asp-page="Find">
+    <div role="search">
+        <h3>Quick Search</h3>
+        <input type="hidden" name="handler" value="find" />
+        <input name="find" type="search" placeholder="Order Number" class="gaepd-input-medium-large" />
+        <button type="submit">
+            <span class="usa-search-submit-text">Find</span>
+        </button>
+    </div>
+</form>
+
+<section>
+    <h2>Currently Published Orders</h2>
+    <p>
+        <em>
+            These Enforcement Orders are currently displayed on the
+            <a asp-page="/Index">Public&nbsp;Website</a>.
+            <br />
+            Date of Posting: @DateUtils.MostRecentMonday().ToString(DisplayFormats.LongDate)
+        </em>
+    </p>
+
+    <div class="usa-grid-full">
+        <section class="usa-width-one-half">
+            <h3>Proposed Orders</h3>
+
+            @if (Model.CurrentProposedOrders == null || Model.CurrentProposedOrders.Count == 0)
+            {
+                <p>
+                    <strong>No Current Proposed Orders</strong>
+                </p>
+            }
+            else
+            {
+                <table class="gaepd-table-compact" aria-label="Current proposed orders">
+                    <thead>
+                    <tr>
+                        <th scope="col">Facility</th>
+                        <th scope="col" class="gaepd-tablecell-alignright">Date Comment Period Closes</th>
+                        <th scope="col"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var item in Model.CurrentProposedOrders)
+                    {
+                        <tr>
+                            <th scope="row">
+                                @item.FacilityName <br />
+                                <em>@item.County County</em>
+                            </th>
+                            <td data-label="Date Comment Period Closes" class="gaepd-tablecell-alignright">
+                                @(item.CommentPeriodClosesDate?.ToString(DisplayFormats.ShortDate) ?? "not entered")
+                            </td>
+                            <td class="gaepd-tablecell-nolabel">
+                                <a asp-page="Details" asp-route-id="@item.Id.ToString()">View</a>
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            }
+        </section>
+
+        <section class="usa-width-one-half">
+            <h3>Executed Orders</h3>
+
+            @if (Model.RecentExecutedOrders == null || Model.RecentExecutedOrders.Count == 0)
+            {
+                <p>
+                    <strong>No Current Executed Orders</strong>
+                </p>
+            }
+            else
+            {
+                <table class="gaepd-table-compact" aria-label="Current executed orders">
+                    <thead>
+                    <tr>
+                        <th scope="col">Facility</th>
+                        <th scope="col" class="gaepd-tablecell-alignright">Date Executed</th>
+                        <th scope="col"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var item in Model.RecentExecutedOrders)
+                    {
+                        <tr>
+                            <th scope="row">
+                                @item.FacilityName <br />
+                                <em>@item.County County</em>
+                            </th>
+                            <td class="gaepd-tablecell-alignright">
+                                @(item.ExecutedDate?.ToString(DisplayFormats.ShortDate) ?? "not entered")
+                            </td>
+                            <td class="gaepd-tablecell-nolabel">
+                                <a asp-page="Details" asp-route-id="@item.Id.ToString()">View</a>
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            }
+        </section>
+    </div>
+</section>
+
+@if (User.IsInRole(AppRole.OrderAdministrator))
+{
+    <section>
+        <h2>Unpublished Orders</h2>
+
+        <div class="usa-grid-full">
+            <section class="usa-width-one-half">
+                <h3>Pending Orders</h3>
+
+                <p>
+                    <em>These Enforcement Orders are scheduled to be published in the future. They are not <strong>yet</strong> accessible on the Public Website.</em>
+                </p>
+
+                @if (Model.PendingOrders == null || Model.PendingOrders.Count == 0)
+                {
+                    <p>
+                        <strong>No Pending Orders</strong>
+                    </p>
+                }
+                else
+                {
+                    <table class="gaepd-table-compact" aria-label="Pending orders">
+                        <thead>
+                        <tr>
+                            <th scope="col">Facility</th>
+                            <th scope="col" class="gaepd-tablecell-alignright">Pending Publication Date</th>
+                            <th scope="col"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach (var item in Model.PendingOrders)
+                        {
+                            <tr>
+                                <th scope="row">
+                                    @item.FacilityName <br />
+                                    <em>@item.County County</em>
+                                </th>
+                                <td class="gaepd-tablecell-alignright">
+                                    @(item.PendingPublicationDate?.ToString(DisplayFormats.ShortDate) ?? "error")
+                                </td>
+                                <td class="gaepd-tablecell-nolabel">
+                                    <a asp-page="Details" asp-route-id="@item.Id.ToString()">View</a>
+                                </td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                }
+            </section>
+
+            <section class="usa-width-one-half">
+                <h3>Draft Orders</h3>
+
+                <p>
+                    <em>These Enforcement Orders have been saved as draft. They are not accessible on the Public Website.</em>
+                </p>
+
+                @if (Model.DraftOrders == null || Model.DraftOrders.Count == 0)
+                {
+                    <p>
+                        <strong>No Draft Orders</strong>
+                    </p>
+                }
+                else
+                {
+                    <table class="gaepd-table-compact" aria-label="Draft orders">
+                        <thead>
+                        <tr>
+                            <th scope="col">Facility</th>
+                            <th scope="col"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach (var item in Model.DraftOrders)
+                        {
+                            <tr>
+                                <th scope="row">
+                                    @item.FacilityName <br />
+                                    <em>@item.County County</em>
+                                </th>
+                                <td class="gaepd-tablecell-nolabel">
+                                    <a asp-page="Edit" asp-route-id="@item.Id.ToString()">Edit</a>
+                                </td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                }
+            </section>
+        </div>
+    </section>
+}

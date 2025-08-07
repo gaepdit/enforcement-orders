@@ -1,17 +1,10 @@
+using Enfo.Domain.Attachments;
 using Enfo.Domain.EnforcementOrders.Entities;
 using Enfo.Domain.EnforcementOrders.Resources;
-using Enfo.Domain.Services;
-using Enfo.LocalRepository;
-using EnfoTests.TestData;
-using FluentAssertions;
-using NSubstitute;
-using NUnit.Framework;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
+using Enfo.LocalRepository.Repositories;
 using static Enfo.Domain.Utils.DateUtils;
 
-namespace EnfoTests.LocalRepositoryTests.EnforcementOrderTests;
+namespace LocalRepositoryTests.EnforcementOrderTests;
 
 [TestFixture]
 public class ListReportsTests

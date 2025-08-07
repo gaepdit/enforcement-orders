@@ -1,23 +1,15 @@
+using Enfo.Domain.Attachments;
 using Enfo.Domain.EnforcementOrders.Repositories;
 using Enfo.Domain.EnforcementOrders.Resources;
 using Enfo.Domain.EnforcementOrders.Specs;
 using Enfo.Domain.LegalAuthorities.Repositories;
 using Enfo.Domain.LegalAuthorities.Resources;
-using Enfo.Domain.Services;
-using Enfo.LocalRepository;
+using Enfo.LocalRepository.Repositories;
 using Enfo.WebApp.Api;
-using EnfoTests.TestData;
-using FluentAssertions;
-using FluentAssertions.Execution;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using NSubstitute;
-using NUnit.Framework;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace EnfoTests.WebApp.Api;
+namespace WebAppTests.Api;
 
 [TestFixture]
 public class ApiTests
@@ -31,15 +23,15 @@ public class ApiTests
             .Build();
 
         using var repository = new LocalEnforcementOrderRepository(Substitute.For<IAttachmentStore>());
-
         var controller = new ApiController();
+        var expectedCount = EnforcementOrderData.EnforcementOrders.Count(e => e.GetIsPublic);
+
         var result = await controller.ListOrdersAsync(repository, config, new EnforcementOrderSpec(), 1, 100);
 
         using (new AssertionScope())
         {
-            result.TotalCount.Should().Be(EnforcementOrderData.EnforcementOrders.Count(e => e.GetIsPublic));
-            result.Items.Should()
-                .HaveCount(EnforcementOrderData.EnforcementOrders.Count(e => e.GetIsPublic));
+            result.TotalCount.Should().Be(expectedCount);
+            result.Items.Should().HaveCount(expectedCount);
             result.PageNumber.Should().Be(1);
             var order = result.Items[0];
             order.Should().BeEquivalentTo(
@@ -69,7 +61,7 @@ public class ApiTests
         {
             response.Result.Should().BeOfType<ObjectResult>();
             var result = response.Result as ObjectResult;
-            result?.StatusCode.Should().Be(404);
+            result!.StatusCode.Should().Be(404);
         }
     }
 
@@ -108,7 +100,7 @@ public class ApiTests
 
         var controller = new ApiController();
         var response = await controller.ListLegalAuthoritiesAsync(repository);
-        response.Should().HaveCount(LegalAuthorityData.LegalAuthorities.Count(e => e.Active));
+        response.Should().HaveSameCount(LegalAuthorityData.LegalAuthorities.Where(e => e.Active));
     }
 
     [Test]
@@ -118,7 +110,7 @@ public class ApiTests
 
         var controller = new ApiController();
         var response = await controller.ListLegalAuthoritiesAsync(repository, true);
-        response.Should().HaveCount(LegalAuthorityData.LegalAuthorities.Count);
+        response.Should().HaveSameCount(LegalAuthorityData.LegalAuthorities);
     }
 
     [Test]
@@ -134,7 +126,7 @@ public class ApiTests
         {
             response.Result.Should().BeOfType<ObjectResult>();
             var result = response.Result as ObjectResult;
-            result?.StatusCode.Should().Be(404);
+            result!.StatusCode.Should().Be(404);
         }
     }
 
@@ -154,7 +146,7 @@ public class ApiTests
             var result = response.Result as OkObjectResult;
 
             result.Should().NotBeNull();
-            result?.Value.Should().Be(item);
+            result!.Value.Should().Be(item);
         }
     }
 }

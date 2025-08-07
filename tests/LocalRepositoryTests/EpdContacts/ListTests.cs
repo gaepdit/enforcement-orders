@@ -1,11 +1,6 @@
-﻿using Enfo.LocalRepository;
-using EnfoTests.TestData;
-using FluentAssertions;
-using NUnit.Framework;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Enfo.LocalRepository.Repositories;
 
-namespace EnfoTests.LocalRepositoryTests.EpdContacts;
+namespace LocalRepositoryTests.EpdContacts;
 
 [TestFixture]
 public class ListTests

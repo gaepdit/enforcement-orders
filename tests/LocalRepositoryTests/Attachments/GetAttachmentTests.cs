@@ -1,14 +1,8 @@
+using Enfo.Domain.Attachments;
 using Enfo.Domain.EnforcementOrders.Resources;
-using Enfo.Domain.Services;
-using Enfo.LocalRepository;
-using EnfoTests.TestData;
-using FluentAssertions;
-using NSubstitute;
-using NUnit.Framework;
-using System;
-using System.Threading.Tasks;
+using Enfo.LocalRepository.Repositories;
 
-namespace EnfoTests.LocalRepositoryTests.Attachments;
+namespace LocalRepositoryTests.Attachments;
 
 [TestFixture]
 public class GetAttachmentTests

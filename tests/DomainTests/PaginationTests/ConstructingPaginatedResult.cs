@@ -1,11 +1,6 @@
 using Enfo.Domain.Pagination;
-using FluentAssertions;
-using FluentAssertions.Execution;
-using NUnit.Framework;
-using System;
-using System.Diagnostics.CodeAnalysis;
 
-namespace EnfoTests.Domain.PaginationTests;
+namespace DomainTests.PaginationTests;
 
 [TestFixture]
 public class ConstructingPaginatedResult
@@ -55,8 +50,6 @@ public class ConstructingPaginatedResult
     }
 
     [Test]
-    [SuppressMessage("ReSharper", "ObjectCreationAsStatement")]
-    [SuppressMessage("ReSharper", "CA1806")]
     public void ThrowsExceptionGivenNegativeCount()
     {
         var action = () => new PaginatedResult<string>(_items, -1,
@@ -66,8 +59,6 @@ public class ConstructingPaginatedResult
     }
 
     [Test]
-    [SuppressMessage("ReSharper", "ObjectCreationAsStatement")]
-    [SuppressMessage("ReSharper", "CA1806")]
     public void ThrowsExceptionGivenZeroPageNum()
     {
         var action = () => new PaginatedResult<string>(_items, _items.Length,
@@ -77,8 +68,6 @@ public class ConstructingPaginatedResult
     }
 
     [Test]
-    [SuppressMessage("ReSharper", "ObjectCreationAsStatement")]
-    [SuppressMessage("ReSharper", "CA1806")]
     public void ThrowsExceptionGivenZeroPageSize()
     {
         var action = () => new PaginatedResult<string>(_items, _items.Length,

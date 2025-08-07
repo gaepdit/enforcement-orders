@@ -1,16 +1,8 @@
-﻿using Enfo.Domain.Users.Resources;
-using Enfo.Domain.Users.Services;
+﻿using Enfo.AppServices.Staff;
 using Enfo.WebApp.Pages.Account;
-using EnfoTests.WebApp.Pages.Admin.Users;
-using FluentAssertions;
-using FluentAssertions.Execution;
-using NSubstitute;
-using NUnit.Framework;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Index = Enfo.WebApp.Pages.Account.Index;
+using WebAppTests.Pages.Admin.Users;
 
-namespace EnfoTests.WebApp.Pages.Account;
+namespace WebAppTests.Pages.Account;
 
 [TestFixture]
 public class AccountIndexTests
@@ -18,19 +10,19 @@ public class AccountIndexTests
     [Test]
     public async Task OnGet_PopulatesThePageModel()
     {
-        var userView = new UserView(UserTestData.ApplicationUsers[0]);
+        var userView = new StaffView(UserTestData.ApplicationUsers[0]);
         var roles = new List<string> { "abc" };
 
-        var userService = Substitute.For<IUserService>();
+        var userService = Substitute.For<IStaffService>();
         userService.GetCurrentUserAsync().Returns(userView);
         userService.GetCurrentUserRolesAsync().Returns(roles);
-        var pageModel = new Index();
+        var pageModel = new IndexModel(userService);
 
-        await pageModel.OnGetAsync(userService);
+        await pageModel.OnGetAsync();
 
         using (new AssertionScope())
         {
-            pageModel.DisplayUser.Should().Be(userView);
+            pageModel.DisplayStaff.Should().Be(userView);
             pageModel.Roles.Should().BeEquivalentTo(roles);
         }
     }

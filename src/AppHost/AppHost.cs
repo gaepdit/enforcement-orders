@@ -2,6 +2,6 @@ using Projects;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
-builder.AddProject<Enfo_WebApp>("WebApp");
+builder.AddProject<WebApp>(nameof(WebApp));
 
 await builder.Build().RunAsync();

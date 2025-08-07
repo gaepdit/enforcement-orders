@@ -1,0 +1,41 @@
+﻿using EfRepositoryTests.Helpers;
+
+namespace EfRepositoryTests.EnforcementOrderTests;
+
+public class ExistsTests
+{
+    [Test]
+    public async Task Exists_GivenExists_ReturnsTrue()
+    {
+        var itemId = EnforcementOrderData.EnforcementOrders.First(e => e.GetIsPublic).Id;
+        await using var repositoryHelper = await RepositoryHelper.CreateRepositoryHelperAsync();
+        using var repository = repositoryHelper.GetEnforcementOrderRepository();
+        (await repository.ExistsAsync(itemId)).Should().BeTrue();
+    }
+
+    [Test]
+    public async Task Exists_GivenNotExists_ReturnsFalse()
+    {
+        await using var repositoryHelper = await RepositoryHelper.CreateRepositoryHelperAsync();
+        using var repository = repositoryHelper.GetEnforcementOrderRepository();
+        (await repository.ExistsAsync(-1)).Should().BeFalse();
+    }
+
+    [Test]
+    public async Task Exists_GivenNonpublic_ReturnsFalse()
+    {
+        var itemId = EnforcementOrderData.EnforcementOrders.First(e => !e.GetIsPublic).Id;
+        await using var repositoryHelper = await RepositoryHelper.CreateRepositoryHelperAsync();
+        using var repository = repositoryHelper.GetEnforcementOrderRepository();
+        (await repository.ExistsAsync(itemId)).Should().BeFalse();
+    }
+
+    [Test]
+    public async Task Exists_GivenNonpublicButAllowed_ReturnsTrue()
+    {
+        var itemId = EnforcementOrderData.EnforcementOrders.First(e => !e.GetIsPublic).Id;
+        await using var repositoryHelper = await RepositoryHelper.CreateRepositoryHelperAsync();
+        using var repository = repositoryHelper.GetEnforcementOrderRepository();
+        (await repository.ExistsAsync(itemId, false)).Should().BeTrue();
+    }
+}

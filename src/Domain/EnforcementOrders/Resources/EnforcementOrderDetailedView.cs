@@ -1,4 +1,5 @@
-﻿using Enfo.Domain.EnforcementOrders.Entities;
+﻿using Enfo.Domain.Attachments;
+using Enfo.Domain.EnforcementOrders.Entities;
 using Enfo.Domain.EpdContacts.Resources;
 using Enfo.Domain.Utils;
 

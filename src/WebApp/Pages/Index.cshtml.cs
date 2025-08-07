@@ -1,0 +1,20 @@
+﻿using Enfo.Domain.EnforcementOrders.Repositories;
+using Enfo.Domain.EnforcementOrders.Resources;
+using Enfo.WebApp.Models;
+using Enfo.WebApp.Platform.RazorHelpers;
+
+namespace Enfo.WebApp.Pages;
+
+public class Index : PageModel
+{
+    public IReadOnlyList<EnforcementOrderSummaryView> CurrentProposedOrders { get; private set; }
+    public IReadOnlyList<EnforcementOrderSummaryView> RecentExecutedOrders { get; private set; }
+    public DisplayMessage Message { get; private set; }
+
+    public async Task OnGetAsync([FromServices] IEnforcementOrderRepository repository)
+    {
+        CurrentProposedOrders = await repository.ListCurrentProposedEnforcementOrdersAsync();
+        RecentExecutedOrders = await repository.ListRecentlyExecutedEnforcementOrdersAsync();
+        Message = TempData?.GetDisplayMessage();
+    }
+}

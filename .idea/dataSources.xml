@@ -47,5 +47,53 @@
       </jdbc-additional-properties>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="ENFO Dev app_user" group="Other users" uuid="d051c22e-613f-4b9d-9fe1-ed7481aa1fc5">
+      <driver-ref>sqlserver.ms</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.microsoft.sqlserver.jdbc.SQLServerDriver</jdbc-driver>
+      <jdbc-url>jdbc:sqlserver://test-db.gaepd.org:1433;database=EnforcementOrders</jdbc-url>
+      <jdbc-additional-properties>
+        <property name="EXTERNAL_DATA_PATH" value="D:\projects\airbranch-db\external-data.xml" />
+      </jdbc-additional-properties>
+      <driver-properties>
+        <property name="appName" value="DataGrip" />
+      </driver-properties>
+    </data-source>
+    <data-source source="LOCAL" name="ENFO Dev migrations" group="Other users" uuid="a4e0d011-4a20-4ece-b4c2-00b4286fb4ad">
+      <driver-ref>sqlserver.ms</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.microsoft.sqlserver.jdbc.SQLServerDriver</jdbc-driver>
+      <jdbc-url>jdbc:sqlserver://test-db.gaepd.org:1433;database=EnforcementOrders</jdbc-url>
+      <jdbc-additional-properties>
+        <property name="EXTERNAL_DATA_PATH" value="D:\projects\airbranch-db\external-data.xml" />
+      </jdbc-additional-properties>
+      <driver-properties>
+        <property name="appName" value="DataGrip" />
+      </driver-properties>
+    </data-source>
+    <data-source source="LOCAL" name="ENFO UAT app_user" group="Other users" uuid="804dda05-dabd-4f01-8428-35fc4e9b07aa">
+      <driver-ref>sqlserver.ms</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.microsoft.sqlserver.jdbc.SQLServerDriver</jdbc-driver>
+      <jdbc-url>jdbc:sqlserver://test-db.gaepd.org:2433;database=EnforcementOrders</jdbc-url>
+      <jdbc-additional-properties>
+        <property name="EXTERNAL_DATA_PATH" value="D:\projects\airbranch-db\external-data.xml" />
+      </jdbc-additional-properties>
+      <driver-properties>
+        <property name="appName" value="DataGrip" />
+      </driver-properties>
+    </data-source>
+    <data-source source="LOCAL" name="ENFO UAT migrations" group="Other users" uuid="0bea1e5d-638a-4062-aec6-38b263cc848d">
+      <driver-ref>sqlserver.ms</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.microsoft.sqlserver.jdbc.SQLServerDriver</jdbc-driver>
+      <jdbc-url>jdbc:sqlserver://test-db.gaepd.org:2433;database=EnforcementOrders</jdbc-url>
+      <jdbc-additional-properties>
+        <property name="EXTERNAL_DATA_PATH" value="D:\projects\airbranch-db\external-data.xml" />
+      </jdbc-additional-properties>
+      <driver-properties>
+        <property name="appName" value="DataGrip" />
+      </driver-properties>
+    </data-source>
   </component>
 </project>

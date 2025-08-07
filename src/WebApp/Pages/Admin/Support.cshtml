@@ -1,0 +1,26 @@
+﻿@page
+@using Enfo.WebApp.Platform.Settings
+@model Support
+@{
+    ViewData["Title"] = "Support";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<p>
+    For technical support, contact
+    <a href="@AppSettings.Support.TechnicalSupportSite" target="_blank" rel="noopener">EPD IT support</a>.
+</p>
+
+<div class="callout callout-info">
+    <small>
+        The Enforcement Orders site was developed by Georgia EPD-IT.<br />
+        @if (!string.IsNullOrEmpty(AppSettings.Version))
+        {
+            @:Current version: <em>@AppSettings.Version</em>
+        }
+        <br />
+        Source code available on
+        <a href="https://github.com/gaepdit/enforcement-orders" target="_blank" rel="noopener" class="text-decoration-hover link-offset-2">GitHub</a>.
+    </small>
+</div>

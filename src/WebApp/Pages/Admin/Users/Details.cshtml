@@ -1,0 +1,47 @@
+﻿@page "{id}"
+@using Enfo.Domain.Users
+@model Details
+@{
+    ViewData["Title"] = "User Profile";
+}
+
+<partial name="_AlertPartial" for="Message" />
+
+<h1>@ViewData["Title"]</h1>
+<h2>@Model.DisplayStaff.Name</h2>
+<p>@Model.DisplayStaff.Email</p>
+
+<h3>Roles</h3>
+<p>This account has the following application roles:</p>
+
+<div class="gaepd-container-light">
+    @if (Model.Roles is {Count: > 0 })
+    {
+        <dl>
+            @foreach (var role in Model.Roles)
+            {
+                if (AppRole.AllRoles.TryGetValue(role, out var userRole))
+                {
+                    <dt>@userRole?.DisplayName</dt>
+                    <dd>
+                        <small class="gaepd-text-muted">@userRole?.Description</small>
+                    </dd>
+                }
+            }
+        </dl>
+    }
+    else
+    {
+        <p>
+            <strong>None (view only)</strong>
+        </p>
+    }
+</div>
+
+<div>
+    @if (User.IsInRole(AppRole.UserMaintenance))
+    {
+        <a asp-page="Edit" asp-route-id="@Model.DisplayStaff.Id.ToString()" class="usa-button usa-button-secondary">Edit
+            Roles</a>
+    }
+</div>
