@@ -21,9 +21,9 @@ public static class ValidationHelper
     public static async Task ApplyValidationAsync<T>(this IValidator<T> validator,
         T item,
         ModelStateDictionary modelState,
-        object? dataValue = null,
-        [CallerArgumentExpression(nameof(dataValue))] string? dataKey = null,
-        [CallerArgumentExpression(nameof(item))] string? prefix = null)
+        object dataValue = null,
+        [CallerArgumentExpression(nameof(dataValue))] string dataKey = null,
+        [CallerArgumentExpression(nameof(item))] string prefix = null)
     {
         var validationResult = dataValue == null || dataKey == null
             ? await validator.ValidateAsync(item)
