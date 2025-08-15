@@ -8,7 +8,6 @@ using Enfo.Domain.Users;
 using Enfo.WebApp.Models;
 using Enfo.WebApp.Platform.RazorHelpers;
 using FluentValidation;
-using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Enfo.WebApp.Pages.Admin;
@@ -35,8 +34,7 @@ public class Add(
 
     public async Task<IActionResult> OnPostAsync([FromServices] IValidator<EnforcementOrderCreate> validator)
     {
-        var validationResult = await validator.ValidateAsync(Item);
-        if (!validationResult.IsValid) validationResult.AddToModelState(ModelState, nameof(Item));
+        await validator.ApplyValidationAsync(Item, ModelState);
 
         if (!ModelState.IsValid)
         {

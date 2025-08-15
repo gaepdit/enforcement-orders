@@ -4,7 +4,6 @@ using Enfo.Domain.Users;
 using Enfo.WebApp.Models;
 using Enfo.WebApp.Platform.RazorHelpers;
 using FluentValidation;
-using FluentValidation.AspNetCore;
 
 namespace Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthorities;
 
@@ -28,8 +27,7 @@ public class Add : PageModel
         [FromServices] ILegalAuthorityRepository repository,
         [FromServices] IValidator<LegalAuthorityCommand> validator)
     {
-        var validationResult = await validator.ValidateAsync(Item);
-        if (!validationResult.IsValid) validationResult.AddToModelState(ModelState, nameof(Item));
+        await validator.ApplyValidationAsync(Item, ModelState);
         if (!ModelState.IsValid) return Page();
 
         var id = await repository.CreateAsync(Item);
