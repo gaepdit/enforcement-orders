@@ -8,7 +8,6 @@ using Enfo.Domain.Users;
 using Enfo.WebApp.Models;
 using Enfo.WebApp.Platform.RazorHelpers;
 using FluentValidation;
-using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
@@ -60,8 +59,7 @@ public class Edit(
             return RedirectToPage("Details", new { Item.Id });
         }
 
-        var validationResult = await validator.ValidateAsync(Item);
-        if (!validationResult.IsValid) validationResult.AddToModelState(ModelState, nameof(Item));
+        await validator.ApplyValidationAsync(Item, ModelState);
 
         if (!ModelState.IsValid)
         {

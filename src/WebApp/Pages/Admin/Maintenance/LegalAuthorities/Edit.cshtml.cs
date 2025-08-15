@@ -4,7 +4,6 @@ using Enfo.Domain.Users;
 using Enfo.WebApp.Models;
 using Enfo.WebApp.Platform.RazorHelpers;
 using FluentValidation;
-using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthorities;
@@ -53,8 +52,7 @@ public class Edit(ILegalAuthorityRepository repository) : PageModel
             return RedirectToPage("Index");
         }
 
-        var validationResult = await validator.ValidateAsync(Item);
-        if (!validationResult.IsValid) validationResult.AddToModelState(ModelState, nameof(Item));
+        await validator.ApplyValidationAsync(Item, ModelState);
         if (!ModelState.IsValid) return Page();
 
         try
