@@ -37,8 +37,8 @@ public class StaffService(UserManager<ApplicationUser> userManager, IHttpContext
         FilterUsers(IQueryable<ApplicationUser> users, string nameFilter, string emailFilter) =>
         users
             .Where(m => string.IsNullOrWhiteSpace(nameFilter)
-                        || m.GivenName.ToLowerInvariant().Contains(nameFilter.ToLowerInvariant())
-                        || m.FamilyName.ToLowerInvariant().Contains(nameFilter.ToLowerInvariant()))
+                        || m.GivenName.ToLower().Contains(nameFilter.ToLower())
+                        || m.FamilyName.ToLower().Contains(nameFilter.ToLower()))
             .Where(m => string.IsNullOrWhiteSpace(emailFilter) || m.Email == emailFilter)
             .OrderBy(m => m.FamilyName).ThenBy(m => m.GivenName)
             .Select(e => new StaffView(e))
