@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
     <PropertyGroup>
-        <InformationalVersion>2025.8.8</InformationalVersion>
+        <InformationalVersion>2025.9.2</InformationalVersion>
         <RootNamespace>Enfo.WebApp</RootNamespace>
         <AssemblyName>Enfo.WebApp</AssemblyName>
         <UserSecretsId>aspnet-Enfo.WebApp-A834A848-D8DF-4E5F-B1E2-7EE74113BF3E</UserSecretsId>
