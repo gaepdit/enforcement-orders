@@ -1,5 +1,5 @@
-﻿global using EnfoTests.TestData;
-global using FluentAssertions;
-global using FluentAssertions.Execution;
+﻿global using AwesomeAssertions;
+global using AwesomeAssertions.Execution;
+global using EnfoTests.TestData;
 global using NSubstitute;
 global using NUnit.Framework;
