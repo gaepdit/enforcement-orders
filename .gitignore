@@ -552,7 +552,7 @@ FodyWeavers.xsd
 appsettings.*.json
 
 # SonarLint Rider plugin
-.idea/**/sonarlint-state.xml
+.idea/
 
 # Code coverage report from ReportGenerator
 coveragereport/
