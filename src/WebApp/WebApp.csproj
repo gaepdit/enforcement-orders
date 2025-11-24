@@ -61,4 +61,13 @@
         </MsDeploySkipRules>
     </ItemGroup>
 
+    <ItemGroup>
+        <Compile Update="Platform\Settings\AppSettings.DevSettings.cs">
+            <DependentUpon>AppSettings.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Platform\Settings\AppSettings.Extensions.cs">
+            <DependentUpon>AppSettings.cs</DependentUpon>
+        </Compile>
+    </ItemGroup>
+
 </Project>

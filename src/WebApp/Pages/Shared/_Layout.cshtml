@@ -1,4 +1,3 @@
-@using Enfo.WebApp.Pages.Shared.Components.Notifications
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,7 +8,7 @@
     <link rel="stylesheet" href="~/lib/uswds/css/uswds.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
     @await RenderSectionAsync("Styles", required: false)
-    <partial name="_RaygunScriptsPartial" />
+    <partial name="_MonitoringScriptsPartial" />
 </head>
 <body>
 <environment exclude="Production">
@@ -21,7 +20,7 @@
 <a class="usa-skipnav" href="#main-content">Skip to main content</a>
 
 <vc:notifications />
-<partial name="_MenuPartial"/>
+<partial name="_MenuPartial" />
 
 <main class="usa-grid usa-section usa-content usa-layout-docs" id="main-content">
     @RenderBody()
