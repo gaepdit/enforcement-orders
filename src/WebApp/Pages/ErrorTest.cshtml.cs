@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using ZLogger;
 
 namespace Enfo.WebApp.Pages;
 
@@ -40,7 +41,7 @@ public class ErrorTestModel(ILogger<ErrorTestModel> logger) : PageModel
         const string message = "Testing logged error.";
         Console.WriteLine(message);
 
-        logger.LogError(message);
+        logger.ZLogError($"{message}");
     }
 
     public void OnGetLoggedException()
@@ -55,7 +56,7 @@ public class ErrorTestModel(ILogger<ErrorTestModel> logger) : PageModel
         catch (Exception e)
         {
             Console.WriteLine(e);
-            logger.LogError(e, message);
+            logger.ZLogError(e, $"{message}");
         }
     }
 }

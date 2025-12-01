@@ -10,6 +10,7 @@ using GaEpd.GuardClauses;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using ZLogger;
 
 namespace Enfo.EfRepository.Repositories;
 
@@ -269,9 +270,8 @@ public sealed class EnforcementOrderRepository(
         catch (Exception e)
         {
             // Log error but take no other action here
-            logger.LogError(EnforcementOrderRepositoryError, e,
-                "Error deleting file attachment {FileName} with ID {ID}.",
-                attachment.FileName, attachment.Id);
+            logger.ZLogError(EnforcementOrderRepositoryError, e,
+                $"Error deleting file attachment {attachment.FileName} with ID {attachment.Id}.");
         }
     }
 
