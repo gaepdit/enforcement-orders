@@ -45,7 +45,7 @@
 
     if (!string.IsNullOrEmpty(clientToken) && !string.IsNullOrEmpty(applicationId))
     {
-        <script>
+        <script asp-add-nonce>
             (function (h, o, u, n, d) {
                 h = h[d] = h[d] || {
                     q: [], onReady: function (c) {
