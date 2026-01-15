@@ -1,5 +1,5 @@
 ﻿using Enfo.WebApp.Platform.Settings;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 
 namespace Enfo.WebApp.Platform.AppConfiguration;
 

@@ -1,6 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
-    <Sdk Name="Aspire.AppHost.Sdk" Version="9.3.1" />
+<Project Sdk="Aspire.AppHost.Sdk/13.1">
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
@@ -8,11 +6,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Aspire.Hosting.AppHost" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <ProjectReference Include="..\WebApp\WebApp.csproj" />
+        <ProjectReference Include="..\WebApp\WebApp.csproj"/>
     </ItemGroup>
 
 </Project>
