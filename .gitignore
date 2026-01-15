@@ -542,11 +542,9 @@ FodyWeavers.xsd
 
 ## Build artifacts
 # MSBuild
-.artifacts/
+_artifacts/
 # Library Manager
 **/wwwroot/lib/
-# Webpack
-**/wwwroot/dist/
 
 # Environment settings files
 appsettings.*.json
