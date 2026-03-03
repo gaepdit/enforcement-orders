@@ -26,7 +26,7 @@ public class EnforcementOrderAdminSpec
     [DisplayName("Enforcement Order Status")]
     public ActivityState Status { get; set; } = ActivityState.All;
 
-    [DisplayName("Show orders with attachments")]
+    [DisplayName("Only show orders with attachments")]
     public bool WithAttachments { get; set; }
 
     [DisplayName("Progress")]

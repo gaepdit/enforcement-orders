@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Identity.Web;
 using System.Security.Claims;
+using ZLogger;
 
 namespace Enfo.AppServices.AuthenticationServices;
 
@@ -41,8 +42,7 @@ public class AuthenticationManager(
         if (!configuration.ValidateLoginProviderId(loginProvider, identityProviderId))
             return InvalidLoginProvider(loginProvider, identityProviderId);
 
-        logger.LogInformation("User with ID {ProviderKey} in provider {LoginProvider} successfully authenticated",
-            providerKey, loginProvider);
+        logger.ZLogInformation($"User with ID {providerKey} in provider {loginProvider} successfully authenticated");
 
         // Find a user account using the external login provider.
         // If none, then find an account with the given username.
@@ -75,7 +75,7 @@ public class AuthenticationManager(
         var user = await userManager.FindByIdAsync("00000000-0000-0000-0000-000000000001").ConfigureAwait(false);
         if (user is null) return IdentityResult.Failed();
 
-        logger.LogInformation("Local user with ID {StaffId} signed in", user.Id);
+        logger.ZLogInformation($"Local user with ID {user.Id:@StaffId} signed in");
 
         foreach (var pair in AppRole.AllRoles)
             await userManager.RemoveFromRoleAsync(user, pair.Value.Name).ConfigureAwait(false);
@@ -105,7 +105,7 @@ public class AuthenticationManager(
         if (!createUserResult.Succeeded)
             return UnableToCreateUser(info.ProviderKey);
 
-        logger.LogInformation("Created new user with ID {ProviderKey}", info.ProviderKey);
+        logger.ZLogInformation($"Created new user with ID {info.ProviderKey}");
         await SeedRolesAsync(user).ConfigureAwait(false);
 
         return await AddLoginProviderAndSignInAsync(user, info).ConfigureAwait(false);
@@ -121,7 +121,7 @@ public class AuthenticationManager(
 
         if (userRoles is null) return;
 
-        logger.LogInformation("Seeding roles for new user with ID {Id}", user.Id);
+        logger.ZLogInformation($"Seeding roles for new user with ID {user.Id}");
         foreach (var role in userRoles.Roles)
             await userManager.AddToRoleAsync(user, role).ConfigureAwait(false);
     }
@@ -140,8 +140,7 @@ public class AuthenticationManager(
         if (!addLoginResult.Succeeded)
             return UnableToAddLoginProvider(info.LoginProvider, info.ProviderKey);
 
-        logger.LogInformation("Login provider {LoginProvider} added for user with ID {ProviderKey}",
-            info.LoginProvider, info.ProviderKey);
+        logger.ZLogInformation($"Login provider {info.LoginProvider} added for user with ID {info.ProviderKey}");
 
         // Update auditing info.
         user.MostRecentLogin = DateTimeOffset.Now;
@@ -164,8 +163,8 @@ public class AuthenticationManager(
 
     private async Task<IdentityResult> RefreshUserInfoAndSignInAsync(ApplicationUser user, ExternalLoginInfo info)
     {
-        logger.LogInformation("Existing user with ID {ProviderKey} logged in with {LoginProvider} provider",
-            info.ProviderKey, info.LoginProvider);
+        logger.ZLogInformation(
+            $"Existing user with ID {info.ProviderKey} logged in with {info.LoginProvider} provider");
 
         var previousValues = new ApplicationUser
         {
@@ -201,7 +200,7 @@ public class AuthenticationManager(
             Code = nameof(MissingExternalLoginInfo),
             Description = $"{description}.",
         };
-        logger.LogWarning(description);
+        logger.ZLogWarning($"{description}");
         return IdentityResult.Failed(error);
     }
 
@@ -212,8 +211,7 @@ public class AuthenticationManager(
             Code = nameof(InvalidLoginProvider),
             Description = $"Invalid login provider '{loginProvider}' with ID '{identityProviderId}'.",
         };
-        logger.LogWarning("Invalid login provider '{LoginProvider}' with ID '{IdentityProviderId}'",
-            loginProvider, identityProviderId);
+        logger.ZLogWarning($"Invalid login provider '{loginProvider}' with ID '{identityProviderId}'");
         return IdentityResult.Failed(error);
     }
 
@@ -224,7 +222,7 @@ public class AuthenticationManager(
             Code = nameof(UnableToCreateUser),
             Description = $"Failed to create new user with subject ID {subjectId}.",
         };
-        logger.LogWarning("Failed to create new user with subject ID {SubjectId}", subjectId);
+        logger.ZLogWarning($"Failed to create new user with subject ID {subjectId}");
         return IdentityResult.Failed(error);
     }
 
@@ -235,8 +233,7 @@ public class AuthenticationManager(
             Code = nameof(UnableToAddLoginProvider),
             Description = $"Failed to add login provider {loginProvider} for user with ID {providerKey}.",
         };
-        logger.LogWarning("Failed to add login provider {LoginProvider} for user with ID {ProviderKey}", loginProvider,
-            providerKey);
+        logger.ZLogWarning($"Failed to add login provider {loginProvider} for user with ID {providerKey}");
         return IdentityResult.Failed(error);
     }
 
@@ -247,7 +244,7 @@ public class AuthenticationManager(
             Code = nameof(UserNotAllowed),
             Description = $"User with subject ID {subjectId} is not allowed.",
         };
-        logger.LogWarning("User with subject ID {SubjectId} is not allowed", subjectId);
+        logger.ZLogWarning($"User with subject ID {subjectId} is not allowed");
         return IdentityResult.Failed(error);
     }
 }

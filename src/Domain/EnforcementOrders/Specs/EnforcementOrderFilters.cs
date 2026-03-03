@@ -40,7 +40,7 @@ public static class EnforcementOrderFilters
                 query.Where(e => e.ProposedOrderPostedDate <= tillDate || e.ExecutedDate <= tillDate),
             ActivityState.All =>
                 query.Where(e => e.ProposedOrderPostedDate >= fromDate && e.ProposedOrderPostedDate <= tillDate
-                    || e.ExecutedDate >= fromDate && e.ExecutedDate <= tillDate),
+                                 || e.ExecutedDate >= fromDate && e.ExecutedDate <= tillDate),
             ActivityState.Executed when tillDate is null =>
                 query.Where(e => e.ExecutedDate >= fromDate),
             ActivityState.Executed when fromDate is null =>
@@ -72,7 +72,7 @@ public static class EnforcementOrderFilters
         bool withAttachments) =>
         withAttachments switch
         {
-            true => query.Where(e => e.Attachments != null && e.Attachments.Any(a => !a.Deleted)),
+            true => query.Where(e => e.Attachments.Any(a => !a.Deleted)),
             false => query,
         };
 
@@ -100,7 +100,8 @@ public static class EnforcementOrderFilters
         string text) =>
         string.IsNullOrWhiteSpace(text)
             ? query
-            : query.Where(e => e.Cause.ToLower().Contains(text.ToLower()) || e.Requirements.ToLower().Contains(text.ToLower()));
+            : query.Where(e =>
+                e.Cause.ToLower().Contains(text.ToLower()) || e.Requirements.ToLower().Contains(text.ToLower()));
 
     private static IQueryable<EnforcementOrder> FilterForOpenCommentPeriod(
         [NotNull] this IQueryable<EnforcementOrder> query) =>
@@ -112,9 +113,9 @@ public static class EnforcementOrderFilters
             !e.Deleted
             && e.PublicationStatus == EnforcementOrder.PublicationState.Published
             && (e.IsExecutedOrder && e.ExecutedOrderPostedDate.HasValue
-                && e.ExecutedOrderPostedDate.Value <= DateTime.Today
+                                  && e.ExecutedOrderPostedDate.Value <= DateTime.Today
                 || (e.IsProposedOrder && e.ProposedOrderPostedDate.HasValue
-                    && e.ProposedOrderPostedDate.Value <= DateTime.Today)));
+                                      && e.ProposedOrderPostedDate.Value <= DateTime.Today)));
 
     private static IQueryable<EnforcementOrder> FilterForPublicProposed(
         [NotNull] this IQueryable<EnforcementOrder> query) =>

@@ -11,5 +11,6 @@
         <PackageReference Include="Microsoft.Extensions.Identity.Stores"/>
         <PackageReference Include="Swashbuckle.AspNetCore.Annotations"/>
         <PackageReference Include="System.ComponentModel.Annotations"/>
+        <PackageReference Include="ZLogger"/>
     </ItemGroup>
 </Project>

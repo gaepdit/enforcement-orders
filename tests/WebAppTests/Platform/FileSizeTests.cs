@@ -17,9 +17,9 @@ public class FileSizeTests
     [TestCase(-1024, 2, "-1.00 KB")]
     [TestCase(-2048, 1, "-2.0 KB")]
     [TestCase(-99999999, 4, "-95.3674 MB")]
-    public void FileSize_ReturnsCorrectly(long value, int precision, string expected)
+    public void FileSize_ReturnsCorrectly(long input, int precision, string expected)
     {
-        var result = value.ToFileSizeString(precision);
+        var result = input.ToFileSizeString(precision);
         result.Should().Be(expected);
     }
 }

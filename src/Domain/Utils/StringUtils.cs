@@ -5,15 +5,18 @@ namespace Enfo.Domain.Utils;
 [DebuggerStepThrough]
 public static class StringUtils
 {
-    /// <summary>
-    /// Indicates whether this string is null or a System.String.Empty string.
-    /// </summary>
-    private static bool IsNullOrEmptyString(this string str) => string.IsNullOrEmpty(str);
+    extension(string str)
+    {
+        /// <summary>
+        /// Indicates whether this string is null or a System.String.Empty string.
+        /// </summary>
+        private bool IsNullOrEmptyString() => string.IsNullOrEmpty(str);
 
-    /// <summary>
-    /// indicates whether this string is null, empty, or consists only of white-space characters.
-    /// </summary>
-    public static bool IsNullOrWhiteSpaceString(this string str) => string.IsNullOrWhiteSpace(str);
+        /// <summary>
+        /// indicates whether this string is null, empty, or consists only of white-space characters.
+        /// </summary>
+        public bool IsNullOrWhiteSpaceString() => string.IsNullOrWhiteSpace(str);
+    }
 
     /// <summary>
     /// Implodes a String array to a single string, concatenating the items using the separator
@@ -24,5 +27,5 @@ public static class StringUtils
     /// <returns>A concatenated string separated by the specified separator.
     /// Null or empty strings are ignored.</returns>
     public static string ConcatNonEmptyStrings(this IEnumerable<string> items, string separator) =>
-        string.Join(separator, items.Where(s => !s.IsNullOrEmptyString()));
+        string.Join(separator, items.Where(s => !string.IsNullOrEmpty(s)));
 }
