@@ -33,7 +33,6 @@ internal static class SecurityHeaders
         builder.AddObjectSrc().None();
         builder.AddScriptSrc().Self()
             .From("https://www.datadoghq-browser-agent.com/us3/v6/")
-            .From("https://cdn.raygun.io/raygun4js/raygun.min.js")
             .WithHash256("Tui7QoFlnLXkJCSl1/JvEZdIXTmBttnWNxzJpXomQjg=") // Swagger UI inline script
             .WithHash256("ZfBxknfwMkoMSoaip4gXIEEtJwKW2s2WlmmCB03P704=") // Swagger UI inline script
             .WithHashTagHelper()
@@ -45,8 +44,7 @@ internal static class SecurityHeaders
         builder.AddImgSrc().Self().Data();
         builder.AddConnectSrc().Self()
             .From("https://browser-intake-us3-datadoghq.com")
-            .From("https://api.raygun.com")
-            .From("https://api.raygun.io");
+            ;
         builder.AddFontSrc().Self();
         builder.AddFormAction().Self()
             .From("https://*.okta.com")
