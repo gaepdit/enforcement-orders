@@ -28,7 +28,7 @@ builder.Services.AddRazorPages();
 if (!builder.Environment.IsDevelopment())
 {
     builder.Services
-        .AddHsts(options => options.MaxAge = TimeSpan.FromDays(360))
+        .AddHsts(options => options.MaxAge = TimeSpan.FromDays(730))
         .AddHttpsRedirection(options => options.RedirectStatusCode = StatusCodes.Status308PermanentRedirect);
 }
 
