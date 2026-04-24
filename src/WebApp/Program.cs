@@ -25,11 +25,21 @@ builder.ConfigureAuthentication();
 // Configure UI services.
 builder.Services.AddRazorPages();
 
-if (!builder.Environment.IsDevelopment())
+if (builder.Environment.IsDevelopment())
+{
+    builder.Services.AddHttpsRedirection(options =>
+        options.RedirectStatusCode = StatusCodes.Status307TemporaryRedirect);
+}
+else
 {
     builder.Services
         .AddHsts(options => options.MaxAge = TimeSpan.FromDays(730))
-        .AddHttpsRedirection(options => options.RedirectStatusCode = StatusCodes.Status308PermanentRedirect);
+        .AddHttpsRedirection(options =>
+        {
+            options.HttpsPort = 443;
+            options.RedirectStatusCode = StatusCodes.Status308PermanentRedirect;
+        })
+        .AddAntiforgery(options => options.Cookie.SecurePolicy = CookieSecurePolicy.Always);
 }
 
 // Add data stores and initialize the database.
