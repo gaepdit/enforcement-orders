@@ -43,14 +43,16 @@
 </form>
 
 <environment include="Local,Development">
-    <h3>Claims</h3>
-    <div class="gaepd-container-light">
-        <dl>
-            @foreach (var claim in Model.Claims)
-            {
-                <dt>@claim.Type</dt>
-                <dd class="gaepd-text-muted">@claim.Value</dd>
-            }
-        </dl>
-    </div>
+    <details>
+        <summary><h3>Claims</h3></summary>
+        <div class="gaepd-container-light">
+            <dl>
+                @foreach (var claim in Model.Claims)
+                {
+                    <dt>@claim.Type</dt>
+                    <dd class="gaepd-text-muted">@claim.Value</dd>
+                }
+            </dl>
+        </div>
+    </details>
 </environment>

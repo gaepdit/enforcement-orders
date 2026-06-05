@@ -43,11 +43,9 @@ internal static class SecurityHeaders
             .ReportSample();
         builder.AddImgSrc().Self().Data();
         builder.AddConnectSrc().Self()
-            .From("https://browser-intake-us3-datadoghq.com")
-            ;
+            .From("https://browser-intake-us3-datadoghq.com");
         builder.AddFontSrc().Self();
         builder.AddFormAction().Self()
-            .From("https://*.okta.com")
             .From("https://login.microsoftonline.com");
         builder.AddManifestSrc().Self();
         builder.AddFrameAncestors().None();

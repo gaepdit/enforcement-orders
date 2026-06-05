@@ -1,11 +1,9 @@
-﻿using Enfo.AppServices.AuthenticationServices.Claims;
-using Enfo.Domain.Users;
+﻿using Enfo.Domain.Users;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Microsoft.Identity.Web;
 using System.Security.Claims;
 using ZLogger;
 
@@ -32,12 +30,11 @@ public class AuthenticationManager(
             return MissingExternalLoginInfo();
 
         var loginProvider = externalLoginInfo.LoginProvider;
-        var identityProviderId = externalLoginInfo.Principal.GetIdentityProviderId();
+        var identityProviderId = externalLoginInfo.Principal.GetIdentityProviderId() ?? string.Empty;
         var userEmail = externalLoginInfo.Principal.GetEmail();
         var providerKey = externalLoginInfo.ProviderKey;
 
-        if (identityProviderId is null || userEmail is null)
-            return MissingExternalLoginInfo();
+        if (userEmail is null) return MissingExternalLoginInfo();
 
         if (!configuration.ValidateLoginProviderId(loginProvider, identityProviderId))
             return InvalidLoginProvider(loginProvider, identityProviderId);
@@ -92,7 +89,7 @@ public class AuthenticationManager(
     {
         var user = new ApplicationUser
         {
-            UserName = info.Principal.GetDisplayName(),
+            UserName = info.Principal.GetEmail(),
             Email = info.Principal.GetEmail(),
             GivenName = info.Principal.GetGivenName(),
             FamilyName = info.Principal.GetFamilyName(),
@@ -106,13 +103,16 @@ public class AuthenticationManager(
             return UnableToCreateUser(info.ProviderKey);
 
         logger.ZLogInformation($"Created new user with ID {info.ProviderKey}");
-        await SeedRolesAsync(user).ConfigureAwait(false);
+        await SeedRolesAsync(user, info.LoginProvider).ConfigureAwait(false);
 
         return await AddLoginProviderAndSignInAsync(user, info).ConfigureAwait(false);
     }
 
-    private async Task SeedRolesAsync(ApplicationUser user)
+    private async Task SeedRolesAsync(ApplicationUser user, string loginProvider)
     {
+        if (loginProvider == LoginProviders.DuoScheme)
+            await userManager.AddToRoleAsync(user, AppRole.OrderAdministrator).ConfigureAwait(false);
+
         // Add the new user to application Roles if seeded in AppSettings.
         var settings = new List<SeedUserRoles>();
         configuration.GetSection(nameof(SeedUserRoles)).Bind(settings);
@@ -174,7 +174,7 @@ public class AuthenticationManager(
             FamilyName = user.FamilyName,
         };
 
-        user.UserName = info.Principal.GetDisplayName();
+        user.UserName = info.Principal.GetEmail();
         user.Email = info.Principal.GetEmail();
         user.GivenName = info.Principal.GetGivenName();
         user.FamilyName = info.Principal.GetFamilyName();

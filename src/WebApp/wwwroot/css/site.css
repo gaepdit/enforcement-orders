@@ -23,7 +23,7 @@ summary {
     display: list-item;
 }
 
-summary h2 {
+summary h2, summary h3 {
     display: inline-block;
     margin-top: .5em;
 }
