@@ -6,10 +6,6 @@ using FluentValidation;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Set default timeout for regular expressions.
-// https://learn.microsoft.com/en-us/dotnet/standard/base-types/best-practices-regex#use-time-out-values
-AppDomain.CurrentDomain.SetData("REGEX_DEFAULT_MATCH_TIMEOUT", TimeSpan.FromMilliseconds(100));
-
 // Bind application settings.
 builder.BindAppSettings().AddErrorLogging();
 
@@ -61,8 +57,8 @@ builder.Services.AddValidatorsFromAssemblyContaining<LegalAuthorityValidator>();
 if (builder.Environment.IsDevelopment())
 {
     builder.Services.AddWebOptimizer(
-        minifyJavaScript: AppSettings.DevSettings.EnableWebOptimizerInDev,
-        minifyCss: AppSettings.DevSettings.EnableWebOptimizerInDev);
+        minifyJavaScript: AppSettings.DevSettings.EnableWebOptimizer,
+        minifyCss: AppSettings.DevSettings.EnableWebOptimizer);
 }
 else
 {
@@ -73,7 +69,7 @@ else
 var app = builder.Build();
 
 // Configure security HTTP headers
-if (!app.Environment.IsDevelopment() || AppSettings.DevSettings.UseSecurityHeadersInDev)
+if (!app.Environment.IsDevelopment() || AppSettings.DevSettings.EnableSecurityHeaders)
 {
     app.UseHsts();
     app.UseSecurityHeaders(policyCollection => policyCollection.AddSecurityHeaderPolicies());
