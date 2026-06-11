@@ -4,6 +4,39 @@ namespace Enfo.WebApp.Platform.AppConfiguration;
 
 internal static class SecurityHeaders
 {
+    public static IHostApplicationBuilder AddHttpSecurity(this IHostApplicationBuilder builder)
+    {
+        if (builder.Environment.IsDevelopment())
+        {
+            builder.Services.AddHttpsRedirection(options =>
+                options.RedirectStatusCode = StatusCodes.Status307TemporaryRedirect);
+        }
+        else
+        {
+            builder.Services
+                .AddHsts(options => options.MaxAge = TimeSpan.FromDays(730))
+                .AddHttpsRedirection(options =>
+                {
+                    options.HttpsPort = 443;
+                    options.RedirectStatusCode = StatusCodes.Status308PermanentRedirect;
+                })
+                .AddAntiforgery(options => options.Cookie.SecurePolicy = CookieSecurePolicy.Always);
+        }
+
+        return builder;
+    }
+
+    public static WebApplication UseSecurityHeaders(this WebApplication app)
+    {
+        if (!app.Environment.IsDevelopment())
+            app.UseHsts();
+
+        if (AppSettings.UseSecurityHeaders)
+            app.UseSecurityHeaders(policyCollection => policyCollection.AddSecurityHeaderPolicies());
+
+        return app;
+    }
+
     private static readonly string DatadogReportUri =
         $"https://browser-intake-us3-datadoghq.com/api/v2/logs?" +
         $"dd-api-key={AppSettings.DataDogSettings.ClientToken}" +

@@ -5,34 +5,38 @@ namespace Enfo.WebApp.Platform.AppConfiguration;
 
 public static class ApiDocumentation
 {
-    public static void AddApiDocumentation(this IServiceCollection services)
+    private const string ApiVersion = "v3";
+    private const string ApiTitle = "Georgia EPD Enforcement Orders API";
+
+    public static IServiceCollection AddApiDocumentation(this IServiceCollection services)
     {
         services.AddMvcCore().AddApiExplorer();
-        services
-            .AddSwaggerGen(c =>
+        services.AddSwaggerGen(c =>
+        {
+            c.EnableAnnotations();
+            c.IgnoreObsoleteActions();
+            c.SwaggerDoc(ApiVersion, new OpenApiInfo
             {
-                c.EnableAnnotations();
-                c.IgnoreObsoleteActions();
-                c.SwaggerDoc("v3", new OpenApiInfo
+                Version = ApiVersion,
+                Title = ApiTitle,
+                Contact = new OpenApiContact
                 {
-                    Version = "v3",
-                    Title = "Georgia EPD Enforcement Orders API",
-                    Contact = new OpenApiContact
-                    {
-                        Name = "Enforcement Orders Application Technical Support",
-                        Email = AppSettings.Support.TechnicalSupportEmail,
-                        Url = new Uri(AppSettings.Support.TechnicalSupportSite),
-                    },
-                });
+                    Name = $"{ApiTitle} Support",
+                    Email = AppSettings.Support.TechnicalSupportEmail,
+                    Url = new Uri(AppSettings.Support.TechnicalSupportSite),
+                },
             });
+        });
+
+        return services;
     }
 
     public static void UseApiDocumentation(this IApplicationBuilder app) => app
         .UseSwagger(options => { options.RouteTemplate = "api-docs/{documentName}/openapi.json"; })
         .UseSwaggerUI(options =>
         {
-            options.SwaggerEndpoint("/api-docs/v3/openapi.json", "ENFO API v3");
+            options.SwaggerEndpoint($"{ApiVersion}/openapi.json", $"{ApiTitle} {ApiVersion}");
             options.RoutePrefix = "api-docs";
-            options.DocumentTitle = "Georgia EPD Enforcement Orders API";
+            options.DocumentTitle = ApiTitle;
         });
 }

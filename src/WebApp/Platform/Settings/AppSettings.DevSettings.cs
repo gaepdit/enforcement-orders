@@ -2,10 +2,14 @@ namespace Enfo.WebApp.Platform.Settings;
 
 internal static partial class AppSettings
 {
+    // Dev-related properties
+    public static bool TestUserEnabled => DevSettings is { UseDevSettings: true, EnableTestUser: true };
+    public static bool UseSecurityHeaders => DevSettings is not { UseDevSettings: true, EnableSecurityHeaders: false };
+
+    // DEV configuration settings
     public static DevSettingsSection DevSettings { get; private set; } = new();
 
-    // PROD configuration settings
-    private static readonly DevSettingsSection ProductionDefault = new()
+    private static void DisableDevSettings() => DevSettings = new DevSettingsSection
     {
         UseDevSettings = false,
         BuildDatabase = true,
@@ -72,7 +76,7 @@ internal static partial class AppSettings
                            Convert.ToBoolean(devConfig[nameof(DevSettings.UseDevSettings)]);
 
         if (useDevConfig) devConfig.Bind(DevSettings);
-        else DevSettings = ProductionDefault;
+        else DisableDevSettings();
 
         return builder;
     }
