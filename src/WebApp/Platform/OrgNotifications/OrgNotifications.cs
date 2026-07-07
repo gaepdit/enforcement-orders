@@ -9,11 +9,8 @@ namespace Enfo.WebApp.Platform.OrgNotifications;
 
 public static class OrgNotificationsServiceExtensions
 {
-    public static void AddOrgNotifications(this IServiceCollection services)
-    {
-        services.AddHttpClient();
-        services.AddScoped<IOrgNotifications, OrgNotifications>();
-    }
+    public static IServiceCollection AddOrgNotifications(this IServiceCollection services) =>
+        services.AddHttpClient().AddScoped<IOrgNotifications, OrgNotifications>();
 }
 
 public interface IOrgNotifications

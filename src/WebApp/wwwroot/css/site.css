@@ -23,7 +23,7 @@ summary {
     display: list-item;
 }
 
-summary h2 {
+summary h2, summary h3 {
     display: inline-block;
     margin-top: .5em;
 }
@@ -567,7 +567,7 @@ hr {
 
 .usa-nav-primary .gaepd-nav-button:hover, .usa-nav-primary .gaepd-nav-button:focus, .usa-nav-primary .gaepd-nav-button:active {
     color: #0071bc;
-    background-color: #d6d7d9;
+    background-color: #f1f1f1;
 }
 
 @media screen and (min-width: 951px) {
