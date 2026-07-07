@@ -7,7 +7,7 @@ using FluentValidation;
 var builder = WebApplication.CreateBuilder(args);
 
 // Configure basic settings.
-builder.BindAppSettings().AddHttpSecurity().AddErrorLogging();
+builder.BindAppSettings().AddHttpSecurity();
 builder.Services.AddDataProtection();
 
 // Configure Identity stores.
