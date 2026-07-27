@@ -43,16 +43,17 @@ internal static class SecurityHeaders
         $"&dd-evp-origin=content-security-policy&ddsource=csp-report" +
         $"&ddtags=service%3Aenfo%2Cenv%3A{AppSettings.ShortEnv}%2Cversion%3A{AppSettings.SimpleVersion}";
 
-    internal static void AddSecurityHeaderPolicies(this HeaderPolicyCollection policies)
+    private static void AddSecurityHeaderPolicies(this HeaderPolicyCollection policies)
     {
-        policies.AddFrameOptionsDeny();
-        policies.AddContentTypeOptionsNoSniff();
-        policies.AddReferrerPolicyStrictOriginWhenCrossOrigin();
-        policies.RemoveServerHeader();
-        policies.AddContentSecurityPolicyReportOnly(builder => builder.CspBuilder());
-        policies.AddCrossOriginOpenerPolicy(builder => builder.SameOrigin());
-        policies.AddCrossOriginEmbedderPolicy(builder => builder.Credentialless());
-        policies.AddCrossOriginResourcePolicy(builder => builder.SameSite());
+        policies
+            .AddFrameOptionsDeny()
+            .AddContentTypeOptionsNoSniff()
+            .AddReferrerPolicyStrictOriginWhenCrossOrigin()
+            .RemoveServerHeader()
+            .AddContentSecurityPolicyReportOnly(builder => builder.CspBuilder())
+            .AddCrossOriginOpenerPolicy(builder => builder.SameOrigin())
+            .AddCrossOriginEmbedderPolicy(builder => builder.Credentialless())
+            .AddCrossOriginResourcePolicy(builder => builder.SameSite());
 
         if (string.IsNullOrEmpty(AppSettings.DataDogSettings.ClientToken)) return;
         policies.AddReportingEndpoints(builder => builder.AddEndpoint("csp-endpoint", DatadogReportUri));
@@ -81,7 +82,10 @@ internal static class SecurityHeaders
         builder.AddFormAction().Self()
             .From("https://login.microsoftonline.com");
         builder.AddManifestSrc().Self();
-        builder.AddFrameAncestors().None();
+        builder.AddFrameAncestors()
+            .From("https://aux.gaepd.org")
+            .From("https://uat-aux.gaepd.org")
+            .From("https://dev-aux.gaepd.org");
         builder.AddWorkerSrc()
             .From("https://www.datadoghq-browser-agent.com/us3/v6/");
         builder.AddReportTo("csp-endpoint");
