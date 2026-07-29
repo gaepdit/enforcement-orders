@@ -3,7 +3,9 @@ using Enfo.Domain.Users;
 using Enfo.WebApp.Models;
 using Enfo.WebApp.Platform.RazorHelpers;
 using Enfo.WebApp.Platform.Settings;
+using JetBrains.Annotations;
 using Microsoft.AspNetCore.Identity;
+using System.Net;
 
 namespace Enfo.WebApp.Pages.Account;
 
@@ -22,7 +24,7 @@ public class LoginModel(
 
     public IActionResult OnGet(string returnUrl = null)
     {
-        ReturnUrl = returnUrl;
+        ReturnUrl = WebUtility.HtmlEncode(returnUrl);
         Message = TempData.GetDisplayMessage();
         ConfigurePageVariables();
 
@@ -50,7 +52,7 @@ public class LoginModel(
         if (!AppSettings.TestUserEnabled) return BadRequest();
         if (!AppSettings.DevSettings.TestUserIsAuthenticated) return Forbid();
 
-        ReturnUrl = returnUrl;
+        ReturnUrl = WebUtility.HtmlEncode(returnUrl);
         await authenticationManager.LogInAsTestUserAsync(AppSettings.DevSettings.TestUserRoles);
         return LocalRedirectOrHome();
     }
@@ -58,7 +60,7 @@ public class LoginModel(
     // The callback method is called by the external login provider.
     public async Task<IActionResult> OnGetCallbackAsync(string returnUrl = null, string remoteError = null)
     {
-        ReturnUrl = returnUrl;
+        ReturnUrl = WebUtility.HtmlEncode(returnUrl);
         if (remoteError is not null)
             return LoginPageWithError($"Error from account provider: {remoteError}");
         var result = await authenticationManager.LogInUsingExternalProviderAsync();
@@ -94,6 +96,6 @@ public class LoginModel(
 
 public record EntraIdPhaseOut
 {
-    public bool Enabled { get; init; }
-    public DateOnly EndDate { get; init; }
+    public bool Enabled { get; [UsedImplicitly] init; }
+    public DateOnly EndDate { get; [UsedImplicitly] init; }
 }
