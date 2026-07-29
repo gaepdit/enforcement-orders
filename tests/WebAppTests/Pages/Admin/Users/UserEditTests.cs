@@ -14,30 +14,32 @@ namespace WebAppTests.Pages.Admin.Users;
 [TestFixture]
 public class UserEditTests
 {
-    private readonly List<Edit.UserRoleSetting> _roleSettings = new()
-    {
-        new Edit.UserRoleSetting
+    private readonly List<Edit.UserRoleSetting> _roleSettings =
+    [
+        new()
         {
             Name = AppRole.OrderAdministrator,
             Description = AppRole.OrderAdministratorRole.Description,
             DisplayName = AppRole.OrderAdministratorRole.DisplayName,
             IsSelected = true,
         },
-        new Edit.UserRoleSetting
+
+        new()
         {
             Name = AppRole.SiteMaintenance,
             Description = AppRole.SiteMaintenanceRole.Description,
             DisplayName = AppRole.SiteMaintenanceRole.DisplayName,
             IsSelected = false,
         },
-        new Edit.UserRoleSetting
+
+        new()
         {
             Name = AppRole.UserMaintenance,
             Description = AppRole.UserMaintenanceRole.Description,
             DisplayName = AppRole.UserMaintenanceRole.DisplayName,
             IsSelected = false,
         },
-    };
+    ];
 
     [Test]
     public async Task OnGet_WithoutRoles_PopulatesThePageModel()
@@ -47,17 +49,19 @@ public class UserEditTests
         var userService = Substitute.For<IStaffService>();
         userService.FindUserAsync(Arg.Any<Guid>()).Returns(userView);
         userService.GetUserRolesAsync(Arg.Any<Guid>()).Returns(new List<string>());
-        var pageModel = new Edit(userService);
 
-        var result = await pageModel.OnGetAsync(Guid.Empty);
+        var userId = Guid.NewGuid();
+        var pageModel = new Edit(userService) { Id = userId };
+
+        var result = await pageModel.OnGetAsync();
 
         using (new AssertionScope())
         {
             result.Should().BeOfType<PageResult>();
-            pageModel.UserId.Should().Be(Guid.Empty);
+            pageModel.Id.Should().Be(userId);
             pageModel.DisplayStaff.Should().Be(userView);
             pageModel.UserRoleSettings.Should().NotBeEmpty();
-            pageModel.UserRoleSettings.Count.Should().Be(3);
+            pageModel.UserRoleSettings.Should().HaveCount(3);
         }
     }
 
@@ -70,31 +74,33 @@ public class UserEditTests
         var userService = Substitute.For<IStaffService>();
         userService.FindUserAsync(Arg.Any<Guid>()).Returns(userView);
         userService.GetUserRolesAsync(Arg.Any<Guid>()).Returns(roles);
-        var pageModel = new Edit(userService);
 
-        var result = await pageModel.OnGetAsync(Guid.Empty);
+        var userId = Guid.NewGuid();
+        var pageModel = new Edit(userService) { Id = userId };
+
+        var result = await pageModel.OnGetAsync();
 
         using (new AssertionScope())
         {
             result.Should().BeOfType<PageResult>();
-            pageModel.UserId.Should().Be(Guid.Empty);
+            pageModel.Id.Should().Be(userId);
             pageModel.DisplayStaff.Should().Be(userView);
             pageModel.UserRoleSettings.Should().BeEquivalentTo(_roleSettings);
         }
     }
 
     [Test]
-    public async Task OnGet_MissingId_ReturnsNotFound()
+    public async Task OnGet_MissingId_ReturnsRedirect()
     {
         var userService = Substitute.For<IStaffService>();
-        var pageModel = new Edit(userService);
+        var pageModel = new Edit(userService) { Id = null };
 
-        var result = await pageModel.OnGetAsync(null);
+        var result = await pageModel.OnGetAsync();
 
         using (new AssertionScope())
         {
-            result.Should().BeOfType<NotFoundResult>();
-            pageModel.UserId.Should().Be(Guid.Empty);
+            result.Should().BeOfType<RedirectToPageResult>();
+            pageModel.Id.Should().Be(null);
             pageModel.DisplayStaff.Should().BeNull();
             pageModel.UserRoleSettings.Should().BeNull();
         }
@@ -105,14 +111,16 @@ public class UserEditTests
     {
         var userService = Substitute.For<IStaffService>();
         userService.FindUserAsync(Arg.Any<Guid>()).Returns((StaffView)null);
-        var pageModel = new Edit(userService);
 
-        var result = await pageModel.OnGetAsync(Guid.Empty);
+        var userId = Guid.NewGuid();
+        var pageModel = new Edit(userService) { Id = userId };
+
+        var result = await pageModel.OnGetAsync();
 
         using (new AssertionScope())
         {
             result.Should().BeOfType<NotFoundResult>();
-            pageModel.UserId.Should().Be(Guid.Empty);
+            pageModel.Id.Should().Be(userId);
             pageModel.DisplayStaff.Should().BeNull();
             pageModel.UserRoleSettings.Should().BeNull();
         }
@@ -130,7 +138,7 @@ public class UserEditTests
         var pageModel = new Edit(userService)
         {
             TempData = tempData,
-            UserId = Guid.Empty,
+            Id = Guid.Empty,
             UserRoleSettings = _roleSettings,
         };
 
@@ -154,7 +162,7 @@ public class UserEditTests
         userService.FindUserAsync(Arg.Any<Guid>()).Returns(new StaffView(UserTestData.ApplicationUsers[0]));
         userService.GetUserRolesAsync(Arg.Any<Guid>()).Returns(new List<string>());
 
-        var pageModel = new Edit(userService) { UserRoleSettings = new List<Edit.UserRoleSetting>() };
+        var pageModel = new Edit(userService) { UserRoleSettings = [], Id = Guid.NewGuid() };
         pageModel.ModelState.AddModelError("Error", "Sample error description");
 
         var result = await pageModel.OnPostAsync();
@@ -176,7 +184,7 @@ public class UserEditTests
         var userService = Substitute.For<IStaffService>();
         userService.UpdateUserRolesAsync(Arg.Any<Guid>(), Arg.Any<Dictionary<string, bool>>()).Returns(identityResult);
         userService.FindUserAsync(Arg.Any<Guid>()).Returns(userView);
-        var pageModel = new Edit(userService) { UserRoleSettings = _roleSettings };
+        var pageModel = new Edit(userService) { UserRoleSettings = _roleSettings, Id = Guid.NewGuid() };
 
         var result = await pageModel.OnPostAsync();
 

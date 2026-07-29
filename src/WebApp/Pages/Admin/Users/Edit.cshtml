@@ -1,4 +1,4 @@
-﻿@page "{id}"
+﻿@page "{id:Guid?}"
 @model Edit
 @{
     ViewData["Title"] = "Edit Application Roles";
@@ -26,8 +26,7 @@
     }
 
     <div class="gaepd-buttonrow">
-        <input asp-for="UserId" />
         <button type="submit">Save Roles</button>
-        <a asp-page="Details" asp-route-id="@Model.UserId.ToString()" class="usa-button usa-button-secondary">Cancel</a>
+        <a asp-page="Details" asp-route-id="@Model.Id.ToString()" class="usa-button usa-button-secondary">Cancel</a>
     </div>
 </form>
