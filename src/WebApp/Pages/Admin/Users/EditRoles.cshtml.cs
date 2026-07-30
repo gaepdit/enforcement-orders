@@ -6,7 +6,7 @@ using Enfo.WebApp.Platform.RazorHelpers;
 namespace Enfo.WebApp.Pages.Admin.Users;
 
 [Authorize(Roles = AppRole.UserMaintenance)]
-public class Edit(IStaffService staffService) : PageModel
+public class EditRoles(IStaffService staffService) : PageModel
 {
     [FromRoute]
     public Guid? Id { get; set; }

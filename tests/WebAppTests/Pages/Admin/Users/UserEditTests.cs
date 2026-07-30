@@ -14,7 +14,7 @@ namespace WebAppTests.Pages.Admin.Users;
 [TestFixture]
 public class UserEditTests
 {
-    private readonly List<Edit.UserRoleSetting> _roleSettings =
+    private readonly List<EditRoles.UserRoleSetting> _roleSettings =
     [
         new()
         {
@@ -51,7 +51,7 @@ public class UserEditTests
         userService.GetUserRolesAsync(Arg.Any<Guid>()).Returns(new List<string>());
 
         var userId = Guid.NewGuid();
-        var pageModel = new Edit(userService) { Id = userId };
+        var pageModel = new EditRoles(userService) { Id = userId };
 
         var result = await pageModel.OnGetAsync();
 
@@ -76,7 +76,7 @@ public class UserEditTests
         userService.GetUserRolesAsync(Arg.Any<Guid>()).Returns(roles);
 
         var userId = Guid.NewGuid();
-        var pageModel = new Edit(userService) { Id = userId };
+        var pageModel = new EditRoles(userService) { Id = userId };
 
         var result = await pageModel.OnGetAsync();
 
@@ -93,7 +93,7 @@ public class UserEditTests
     public async Task OnGet_MissingId_ReturnsRedirect()
     {
         var userService = Substitute.For<IStaffService>();
-        var pageModel = new Edit(userService) { Id = null };
+        var pageModel = new EditRoles(userService) { Id = null };
 
         var result = await pageModel.OnGetAsync();
 
@@ -113,7 +113,7 @@ public class UserEditTests
         userService.FindUserAsync(Arg.Any<Guid>()).Returns((StaffView)null);
 
         var userId = Guid.NewGuid();
-        var pageModel = new Edit(userService) { Id = userId };
+        var pageModel = new EditRoles(userService) { Id = userId };
 
         var result = await pageModel.OnGetAsync();
 
@@ -135,7 +135,7 @@ public class UserEditTests
         // Initialize Page TempData
         var httpContext = new DefaultHttpContext();
         var tempData = new TempDataDictionary(httpContext, Substitute.For<ITempDataProvider>());
-        var pageModel = new Edit(userService)
+        var pageModel = new EditRoles(userService)
         {
             TempData = tempData,
             Id = Guid.Empty,
@@ -162,7 +162,7 @@ public class UserEditTests
         userService.FindUserAsync(Arg.Any<Guid>()).Returns(new StaffView(UserTestData.ApplicationUsers[0]));
         userService.GetUserRolesAsync(Arg.Any<Guid>()).Returns(new List<string>());
 
-        var pageModel = new Edit(userService) { UserRoleSettings = [], Id = Guid.NewGuid() };
+        var pageModel = new EditRoles(userService) { UserRoleSettings = [], Id = Guid.NewGuid() };
         pageModel.ModelState.AddModelError("Error", "Sample error description");
 
         var result = await pageModel.OnPostAsync();
@@ -184,7 +184,7 @@ public class UserEditTests
         var userService = Substitute.For<IStaffService>();
         userService.UpdateUserRolesAsync(Arg.Any<Guid>(), Arg.Any<Dictionary<string, bool>>()).Returns(identityResult);
         userService.FindUserAsync(Arg.Any<Guid>()).Returns(userView);
-        var pageModel = new Edit(userService) { UserRoleSettings = _roleSettings, Id = Guid.NewGuid() };
+        var pageModel = new EditRoles(userService) { UserRoleSettings = _roleSettings, Id = Guid.NewGuid() };
 
         var result = await pageModel.OnPostAsync();
 
