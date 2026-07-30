@@ -65,7 +65,7 @@ internal static class SecurityHeaders
         builder.AddBaseUri().None();
         builder.AddObjectSrc().None();
         builder.AddScriptSrc().Self()
-            .From("https://www.datadoghq-browser-agent.com/us3/v6/")
+            .From("https://www.datadoghq-browser-agent.com/us3/")
             .WithHash256("Tui7QoFlnLXkJCSl1/JvEZdIXTmBttnWNxzJpXomQjg=") // Swagger UI inline script
             .WithHash256("ZfBxknfwMkoMSoaip4gXIEEtJwKW2s2WlmmCB03P704=") // Swagger UI inline script
             .WithHashTagHelper()
@@ -86,7 +86,7 @@ internal static class SecurityHeaders
             .From("https://uat-aux.gaepd.org")
             .From("https://dev-aux.gaepd.org");
         builder.AddWorkerSrc()
-            .From("https://www.datadoghq-browser-agent.com/us3/v6/");
+            .From("https://www.datadoghq-browser-agent.com/us3/");
         builder.AddReportTo("csp-endpoint");
     }
 #pragma warning restore S1075
