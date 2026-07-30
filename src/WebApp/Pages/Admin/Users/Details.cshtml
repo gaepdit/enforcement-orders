@@ -41,7 +41,6 @@
 <div>
     @if (User.IsInRole(AppRole.UserMaintenance))
     {
-        <a asp-page="Edit" asp-route-id="@Model.DisplayStaff.Id.ToString()" class="usa-button usa-button-secondary">Edit
-            Roles</a>
+        <a asp-page="EditRoles" asp-route-id="@Model.DisplayStaff.Id" class="usa-button usa-button-secondary">Edit Roles</a>
     }
 </div>
