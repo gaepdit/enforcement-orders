@@ -10,6 +10,7 @@ public static class FileStorage
     public static async Task ConfigureFileStorage(this IHostApplicationBuilder builder)
     {
         builder.AddFileServices();
+
         builder.Services.AddTransient<IAttachmentStore, AttachmentStore>();
         if (AppSettings.DevSettings.UseDevSettings) await SeedFileStoreAsync(builder.Services);
     }
@@ -26,7 +27,7 @@ public static class FileStorage
                 : Convert.FromBase64String(attachment.Base64EncodedFile);
 
             await using var fileStream = new MemoryStream(fileBytes);
-            await fileService.SaveFileAsync(fileStream, attachment.FileName);
+            await fileService.SaveFileAsync(fileStream, attachment.FileName, attachment.FileName[..2]);
         }
     }
 }
