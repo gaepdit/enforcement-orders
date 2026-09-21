@@ -3,8 +3,12 @@ using Enfo.WebApp.Platform.AppConfiguration;
 using Enfo.WebApp.Platform.OrgNotifications;
 using Enfo.WebApp.Platform.Settings;
 using FluentValidation;
+using ZLogger;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Configure logging
+builder.Logging.ClearProviders().AddZLoggerConsole(options => options.UseJsonFormatter());
 
 // Configure basic settings.
 builder.BindAppSettings().AddHttpSecurity();
