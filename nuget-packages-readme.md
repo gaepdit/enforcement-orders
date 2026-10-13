@@ -1,0 +1,12 @@
+# NuGet Package maintenance
+
+Some NuGet packages have been added directly to work around vulnerable dependencies in other packages.
+
+- `System.Security.Cryptography.Xml` was added to `AppServices.Core` to avoid a vulnerable version referenced in
+  `Microsoft.Identity.Web`.
+
+- `System.Security.Cryptography.Xml` was added to `EfRepositoryTests` to avoid a vulnerable version referenced in
+  `EfCore.TestSupport`.
+
+- `SQLitePCLRaw.lib.e_sqlite3` was added to `EfRepositoryTests` and pinned to version 2.x to avoid a vulnerable version
+  referenced in `EfCore.TestSupport` (via `Microsoft.EntityFrameworkCore.Sqlite`).
