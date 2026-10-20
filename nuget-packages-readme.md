@@ -10,3 +10,6 @@ Some NuGet packages have been added directly to work around vulnerable dependenc
 
 - `SQLitePCLRaw.lib.e_sqlite3` was added to `EfRepositoryTests` and pinned to version 2.x to avoid a vulnerable version
   referenced in `EfCore.TestSupport` (via `Microsoft.EntityFrameworkCore.Sqlite`).
+
+- `System.Security.Cryptography.Pkcs` was added to `EfRepository` to avoid a vulnerable version referenced in
+  `Microsoft.Data.SqlClient`.
