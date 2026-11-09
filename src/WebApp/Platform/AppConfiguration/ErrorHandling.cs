@@ -6,7 +6,6 @@ internal static class ErrorHandling
     {
         if (app.Environment.IsDevelopment()) app.UseDeveloperExceptionPage(); // Development
         else app.UseExceptionHandler("/Error"); // Production or Staging
-
         return app;
     }
 }

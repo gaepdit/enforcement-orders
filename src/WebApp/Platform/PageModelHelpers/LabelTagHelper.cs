@@ -18,13 +18,17 @@ public class LabelTagHelper : TagHelper
     /// </summary>
     [UsedImplicitly]
     [HtmlAttributeName(ForAttributeName)]
-    public ModelExpression Model { get; set; }
+    public ModelExpression Model
+    {
+        get => field ?? throw new InvalidOperationException("Uninitialized Model.");
+        set;
+    }
 
     /// <inheritdoc />
     /// <remarks>Adds text indicating the field is required if the property has the RequiredAttribute.</remarks>
     public override void Process(TagHelperContext context, TagHelperOutput output)
     {
-        if (Model.Metadata.IsRequired && Model.Metadata.ModelType != typeof(bool))
-            output.Content.AppendHtml(""" <abbr class="required-field-label" title="Required">*</abbr>""");
+        if (Model.Metadata.IsRequired && Model.Metadata.ModelType != typeof(bool) && !Model.Metadata.ModelType.IsEnum)
+            output.Content.AppendHtml(""" <span class="text-danger-emphasis">*</span>""");
     }
 }

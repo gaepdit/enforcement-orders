@@ -1,65 +1,66 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
-    <PropertyGroup>
-        <InformationalVersion>2026.10.20</InformationalVersion>
-        <RootNamespace>Enfo.WebApp</RootNamespace>
-        <AssemblyName>Enfo.WebApp</AssemblyName>
-        <UserSecretsId>aspnet-Enfo.WebApp-A834A848-D8DF-4E5F-B1E2-7EE74113BF3E</UserSecretsId>
-    </PropertyGroup>
+  <PropertyGroup>
+    <InformationalVersion>2026.10.20</InformationalVersion>
+    <RootNamespace>Enfo.WebApp</RootNamespace>
+    <AssemblyName>Enfo.WebApp</AssemblyName>
+    <UserSecretsId>aspnet-Enfo.WebApp-A834A848-D8DF-4E5F-B1E2-7EE74113BF3E</UserSecretsId>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
 
-    <ItemGroup>
-        <PackageReference Include="Azure.Extensions.AspNetCore.Configuration.Secrets" />
-        <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
-        <PackageReference Include="LigerShark.WebOptimizer.Core" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" />
-        <PackageReference Include="Microsoft.Web.LibraryManager.Build" />
-        <PackageReference Include="NetEscapades.AspNetCore.SecurityHeaders" />
-        <PackageReference Include="NetEscapades.AspNetCore.SecurityHeaders.TagHelpers" />
-        <PackageReference Include="Swashbuckle.AspNetCore" />
-    </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Azure.Extensions.AspNetCore.Configuration.Secrets" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
+    <PackageReference Include="LigerShark.WebOptimizer.Core" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" />
+    <PackageReference Include="Microsoft.Web.LibraryManager.Build" />
+    <PackageReference Include="NetEscapades.AspNetCore.SecurityHeaders" />
+    <PackageReference Include="NetEscapades.AspNetCore.SecurityHeaders.TagHelpers" />
+    <PackageReference Include="Swashbuckle.AspNetCore" />
+  </ItemGroup>
 
-    <ItemGroup>
-        <ProjectReference Include="..\AppServices\AppServices.csproj" />
-        <ProjectReference Include="..\Domain\Domain.csproj" />
-        <ProjectReference Include="..\EfRepository\EfRepository.csproj" />
-        <ProjectReference Include="..\LocalRepository\LocalRepository.csproj" />
-    </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AppServices\AppServices.csproj" />
+    <ProjectReference Include="..\Domain\Domain.csproj" />
+    <ProjectReference Include="..\EfRepository\EfRepository.csproj" />
+    <ProjectReference Include="..\LocalRepository\LocalRepository.csproj" />
+  </ItemGroup>
 
-    <ItemGroup>
-        <None Include="../../README.md" />
-    </ItemGroup>
+  <ItemGroup>
+    <None Include="../../README.md" />
+  </ItemGroup>
 
-    <ItemGroup>
-        <Content Update="libman.json">
-            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-            <CopyToPublishDirectory>Never</CopyToPublishDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </Content>
-        <None Update="Properties\PublishProfiles\*.pubxml">
-            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-            <CopyToPublishDirectory>Never</CopyToPublishDirectory>
-            <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-        </None>
-    </ItemGroup>
+  <ItemGroup>
+    <Content Update="libman.json">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+    <None Update="Properties\PublishProfiles\*.pubxml">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </None>
+  </ItemGroup>
 
-    <ItemGroup>
-        <MsDeploySkipRules Include="SkipAppSettings">
-            <ObjectName>filePath</ObjectName>
-            <AbsolutePath>appsettings.*.json</AbsolutePath>
-        </MsDeploySkipRules>
-        <MsDeploySkipRules Include="SkipWebConfig">
-            <ObjectName>filePath</ObjectName>
-            <AbsolutePath>web.config</AbsolutePath>
-        </MsDeploySkipRules>
-    </ItemGroup>
+  <ItemGroup>
+    <MsDeploySkipRules Include="SkipAppSettings">
+      <ObjectName>filePath</ObjectName>
+      <AbsolutePath>appsettings.*.json</AbsolutePath>
+    </MsDeploySkipRules>
+    <MsDeploySkipRules Include="SkipWebConfig">
+      <ObjectName>filePath</ObjectName>
+      <AbsolutePath>web.config</AbsolutePath>
+    </MsDeploySkipRules>
+  </ItemGroup>
 
-    <ItemGroup>
-        <Compile Update="Platform\Settings\AppSettings.DevSettings.cs">
-            <DependentUpon>AppSettings.cs</DependentUpon>
-        </Compile>
-        <Compile Update="Platform\Settings\AppSettings.Extensions.cs">
-            <DependentUpon>AppSettings.cs</DependentUpon>
-        </Compile>
-    </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Platform\Settings\AppSettings.DevSettings.cs">
+      <DependentUpon>AppSettings.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Platform\Settings\AppSettings.Extensions.cs">
+      <DependentUpon>AppSettings.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
 
 </Project>

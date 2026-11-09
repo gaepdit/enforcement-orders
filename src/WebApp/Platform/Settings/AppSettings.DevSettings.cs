@@ -1,3 +1,5 @@
+using JetBrains.Annotations;
+
 namespace Enfo.WebApp.Platform.Settings;
 
 internal static partial class AppSettings
@@ -9,19 +11,9 @@ internal static partial class AppSettings
     // DEV configuration settings
     public static DevSettingsSection DevSettings { get; private set; } = new();
 
-    private static void DisableDevSettings() => DevSettings = new DevSettingsSection
-    {
-        UseDevSettings = false,
-        BuildDatabase = true,
-        UseEfMigrations = true,
-        EnableTestUser = false,
-        TestUserIsAuthenticated = false,
-        TestUserRoles = [],
-        EnableSecurityHeaders = false,
-        EnableWebOptimizer = false,
-    };
+    private static void DisableDevSettings() => DevSettings = new DevSettingsSection { UseDevSettings = false };
 
-    // DEV configuration settings
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public record DevSettingsSection
     {
         /// <summary>

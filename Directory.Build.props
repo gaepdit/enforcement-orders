@@ -9,8 +9,11 @@
         <ArtifactsPath>$(MSBuildThisFileDirectory)_artifacts</ArtifactsPath>
     </PropertyGroup>
 
-    <PropertyGroup>
-        <!-- https://aka.ms/vs-build-acceleration -->
-        <AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
-    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="SonarAnalyzer.CSharp">
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+    </ItemGroup>
+
 </Project>

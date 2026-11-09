@@ -1,4 +1,5 @@
 ﻿using Enfo.WebApp.Platform.Settings;
+using GaEpd.GuardClauses;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Caching.Memory;
 using ZLogger;
@@ -36,7 +37,7 @@ public class OrgNotifications(
     {
         if (string.IsNullOrEmpty(AppSettings.OrgNotificationsApiUrl)) return [];
 
-        if (cache.TryGetValue(CacheKey, out List<OrgNotification> notifications) && notifications != null)
+        if (cache.TryGetValue(CacheKey, out List<OrgNotification>? notifications) && notifications != null)
             return notifications;
 
         try
@@ -58,19 +59,40 @@ public class OrgNotifications(
 
 public static class ApiExtensions
 {
-    public static async Task<T> FetchApiDataAsync<T>(this IHttpClientFactory httpClientFactory,
+    public static async Task<T?> FetchApiDataAsync<T>(this IHttpClientFactory httpClientFactory,
         string apiUrl, string endpointPath, string clientName)
     {
         var client = httpClientFactory.CreateClient(clientName);
-        using var response = await client.GetAsync(UriCombine(apiUrl, endpointPath));
+        using var response = await client.GetAsync(UrlCombine(apiUrl, endpointPath));
         response.EnsureSuccessStatusCode();
         return await response.Content.ReadFromJsonAsync<T>();
     }
 
-    private static string UriCombine(string a, string b, char separator = '/')
+    /// <summary>
+    /// Combine a base URL and a relative URL path, correctly handling path separators.
+    /// The base URL must be an absolute URL.
+    /// </summary>
+    /// <param name="baseUrl">The base URL.</param>
+    /// <param name="relativeUrl">The relative path.</param>
+    /// <returns>The combined URL.</returns>
+    private static Uri UrlCombine(string baseUrl, string? relativeUrl) =>
+        UrlCombine(new Uri(Guard.NotNullOrWhiteSpace(baseUrl)), relativeUrl);
+
+    /// <summary>
+    /// Combine a base URL and a relative URL path, correctly handling path separators.
+    /// The base URL must be an absolute URL.
+    /// </summary>
+    /// <param name="baseUrl">The base URL.</param>
+    /// <param name="relativeUrl">The relative path.</param>
+    /// <returns>The combined URL.</returns>
+    private static Uri UrlCombine(Uri baseUrl, string? relativeUrl)
     {
-        if (string.IsNullOrEmpty(a)) return b;
-        if (string.IsNullOrEmpty(b)) return a;
-        return a.TrimEnd(separator) + separator + b.TrimStart(separator);
+        Guard.NotNull(baseUrl);
+        if (!baseUrl.IsAbsoluteUri) throw new ArgumentOutOfRangeException(nameof(baseUrl));
+
+        if (string.IsNullOrEmpty(relativeUrl)) return baseUrl;
+
+        const char separator = '/';
+        return new Uri(baseUrl.ToString().TrimEnd(separator) + separator + relativeUrl.TrimStart(separator));
     }
 }
