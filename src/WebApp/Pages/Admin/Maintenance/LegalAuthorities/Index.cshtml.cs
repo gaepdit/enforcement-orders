@@ -1,7 +1,7 @@
 ﻿using Enfo.Domain.LegalAuthorities.Repositories;
 using Enfo.Domain.LegalAuthorities.Resources;
 using Enfo.WebApp.Models;
-using Enfo.WebApp.Platform.RazorHelpers;
+using Enfo.WebApp.Platform.PageModelHelpers;
 using Microsoft.EntityFrameworkCore;
 
 namespace Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthorities;
@@ -39,7 +39,7 @@ public class Index(ILegalAuthorityRepository repository) : PageModel
             throw;
         }
 
-        TempData?.SetDisplayMessage(Context.Success,
+        TempData?.SetDisplayMessage(DisplayMessage.AlertContext.Success,
             $"{item.AuthorityName} successfully {(item.Active ? "deactivated" : "restored")}.");
 
         return RedirectToPage("Index");

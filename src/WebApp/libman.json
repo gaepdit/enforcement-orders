@@ -1,68 +1,51 @@
 {
-  "version": "1.0",
-  "defaultProvider": "cdnjs",
+  "version": "3.0",
+  "defaultProvider": "jsdelivr",
   "libraries": [
     {
-      "library": "jquery@3.6.1",
-      "destination": "wwwroot/lib/jquery/",
+      "library": "jquery@3.7.1",
+      "destination": "wwwroot/lib/jquery",
       "files": [
-        "jquery.min.js",
-        "jquery.min.map",
-        "jquery.js"
+        "dist/jquery.min.js",
+        "dist/jquery.min.map",
+        "dist/jquery.js"
       ]
     },
     {
-      "provider": "cdnjs",
-      "library": "jqueryui@1.13.2",
-      "destination": "wwwroot/lib/jqueryui/",
+      "library": "bootstrap@5.3.8",
+      "destination": "wwwroot/lib/bootstrap",
       "files": [
-        "jquery-ui.min.js",
-        "themes/base/jquery-ui.css",
-        "themes/base/jquery-ui.min.css",
-        "themes/base/theme.css",
-        "themes/base/theme.min.css",
-        "themes/base/images/ui-icons_444444_256x240.png",
-        "themes/base/images/ui-icons_555555_256x240.png",
-        "themes/base/images/ui-icons_777620_256x240.png",
-        "themes/base/images/ui-icons_777777_256x240.png",
-        "themes/base/images/ui-icons_cc0000_256x240.png",
-        "themes/base/images/ui-icons_ffffff_256x240.png",
-        "jquery-ui.js"
+        "dist/js/bootstrap.bundle.min.js",
+        "dist/js/bootstrap.bundle.js",
+        "dist/js/bootstrap.bundle.min.js.map",
+        "dist/css/bootstrap.css",
+        "dist/css/bootstrap.min.css",
+        "dist/css/bootstrap.min.css.map"
       ]
     },
     {
-      "provider": "cdnjs",
-      "library": "jquery-ui-timepicker-addon@1.6.3",
-      "destination": "wwwroot/lib/jquery-ui-timepicker-addon/",
+      "library": "jquery-validation@1.21.0",
+      "destination": "wwwroot/lib/jquery-validation",
       "files": [
-        "jquery-ui-timepicker-addon.min.js",
-        "jquery-ui-timepicker-addon.min.css",
-        "jquery-ui-timepicker-addon.js",
-        "jquery-ui-timepicker-addon.css"
+        "dist/jquery.validate.min.js",
+        "dist/jquery.validate.js"
       ]
     },
     {
-      "provider": "cdnjs",
-      "library": "jquery-validate@1.19.5",
-      "destination": "wwwroot/lib/jquery-validate/",
-      "files": [
-        "jquery.validate.min.js",
-        "jquery.validate.js"
-      ]
-    },
-    {
-      "provider": "cdnjs",
       "library": "jquery-validation-unobtrusive@4.0.0",
-      "destination": "wwwroot/lib/jquery-validation-unobtrusive/",
+      "destination": "wwwroot/lib/jquery-validation-unobtrusive",
       "files": [
-        "jquery.validate.unobtrusive.min.js",
-        "jquery.validate.unobtrusive.js"
+        "dist/jquery.validate.unobtrusive.min.js",
+        "dist/jquery.validate.unobtrusive.js"
       ]
     },
     {
-      "provider": "cdnjs",
-      "library": "uswds@1.6.14",
-      "destination": "wwwroot/lib/uswds/"
+      "library": "anchor-js@5.0.0",
+      "destination": "wwwroot/lib/anchor-js",
+      "files": [
+        "anchor.min.js",
+        "anchor.js"
+      ]
     }
   ]
 }

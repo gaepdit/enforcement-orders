@@ -2,7 +2,7 @@
 using Enfo.Domain.Users;
 using Enfo.WebApp.Models;
 using Enfo.WebApp.Pages.Admin.Users;
-using Enfo.WebApp.Platform.RazorHelpers;
+using Enfo.WebApp.Platform.PageModelHelpers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -150,7 +150,8 @@ public class UserEditTests
             result.Should().BeOfType<RedirectToPageResult>();
             ((RedirectToPageResult)result).PageName.Should().Be("Details");
             ((RedirectToPageResult)result).RouteValues!["id"].Should().Be(Guid.Empty);
-            var expectedMessage = new DisplayMessage(Context.Success, "User roles successfully updated.");
+            var expectedMessage =
+                new DisplayMessage(DisplayMessage.AlertContext.Success, "User roles successfully updated.");
             pageModel.TempData.GetDisplayMessage().Should().BeEquivalentTo(expectedMessage);
         }
     }

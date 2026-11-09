@@ -2,7 +2,7 @@
 using Enfo.Domain.EpdContacts.Resources;
 using Enfo.WebApp.Models;
 using Enfo.WebApp.Pages.Admin.Maintenance.Contacts;
-using Enfo.WebApp.Platform.RazorHelpers;
+using Enfo.WebApp.Platform.PageModelHelpers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -31,7 +31,7 @@ public class AddTests
 
         var result = await page.OnPostAsync(repo);
 
-        var expected = new DisplayMessage(Context.Success,
+        var expected = new DisplayMessage(DisplayMessage.AlertContext.Success,
             $"{Add.ThisOption.SingularName} successfully added.");
 
         using (new AssertionScope())

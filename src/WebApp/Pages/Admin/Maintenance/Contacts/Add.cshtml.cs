@@ -2,7 +2,7 @@
 using Enfo.Domain.EpdContacts.Resources;
 using Enfo.Domain.Users;
 using Enfo.WebApp.Models;
-using Enfo.WebApp.Platform.RazorHelpers;
+using Enfo.WebApp.Platform.PageModelHelpers;
 
 namespace Enfo.WebApp.Pages.Admin.Maintenance.Contacts;
 
@@ -27,7 +27,8 @@ public class Add : PageModel
         Item.TrimAll();
         if (!ModelState.IsValid) return Page();
         HighlightId = await repository.CreateAsync(Item);
-        TempData.SetDisplayMessage(Context.Success, $"{ThisOption.SingularName} successfully added.");
+        TempData.SetDisplayMessage(DisplayMessage.AlertContext.Success,
+            $"{ThisOption.SingularName} successfully added.");
         return RedirectToPage("Index");
     }
 }

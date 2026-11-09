@@ -2,7 +2,7 @@
 using Enfo.Domain.EpdContacts.Resources;
 using Enfo.Domain.Users;
 using Enfo.WebApp.Models;
-using Enfo.WebApp.Platform.RazorHelpers;
+using Enfo.WebApp.Platform.PageModelHelpers;
 using Microsoft.EntityFrameworkCore;
 
 namespace Enfo.WebApp.Pages.Admin.Maintenance.Contacts;
@@ -26,7 +26,8 @@ public class Edit(IEpdContactRepository repository) : PageModel
 
         if (!originalItem.Active)
         {
-            TempData.SetDisplayMessage(Context.Warning, $"Inactive {ThisOption.PluralName} cannot be edited.");
+            TempData.SetDisplayMessage(DisplayMessage.AlertContext.Warning,
+                $"Inactive {ThisOption.PluralName} cannot be edited.");
             return RedirectToPage("Index");
         }
 
@@ -43,7 +44,8 @@ public class Edit(IEpdContactRepository repository) : PageModel
 
         if (!originalItem.Active)
         {
-            TempData.SetDisplayMessage(Context.Warning, $"Inactive {ThisOption.PluralName} cannot be edited.");
+            TempData.SetDisplayMessage(DisplayMessage.AlertContext.Warning,
+                $"Inactive {ThisOption.PluralName} cannot be edited.");
             return RedirectToPage("Index");
         }
 
@@ -60,7 +62,8 @@ public class Edit(IEpdContactRepository repository) : PageModel
         }
 
         HighlightId = Item.Id.Value;
-        TempData.SetDisplayMessage(Context.Success, $"{ThisOption.SingularName} successfully updated.");
+        TempData.SetDisplayMessage(DisplayMessage.AlertContext.Success,
+            $"{ThisOption.SingularName} successfully updated.");
         return RedirectToPage("Index");
     }
 }

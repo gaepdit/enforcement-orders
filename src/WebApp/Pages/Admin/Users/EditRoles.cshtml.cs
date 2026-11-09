@@ -1,7 +1,7 @@
 ﻿using Enfo.AppServices.Staff;
 using Enfo.Domain.Users;
 using Enfo.WebApp.Models;
-using Enfo.WebApp.Platform.RazorHelpers;
+using Enfo.WebApp.Platform.PageModelHelpers;
 
 namespace Enfo.WebApp.Pages.Admin.Users;
 
@@ -44,7 +44,7 @@ public class EditRoles(IStaffService staffService) : PageModel
 
         if (result.Succeeded)
         {
-            TempData.SetDisplayMessage(Context.Success, "User roles successfully updated.");
+            TempData.SetDisplayMessage(DisplayMessage.AlertContext.Success, "User roles successfully updated.");
             return RedirectToPage("Details", new { Id });
         }
 

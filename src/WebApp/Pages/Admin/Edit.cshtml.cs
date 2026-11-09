@@ -6,7 +6,7 @@ using Enfo.Domain.LegalAuthorities.Repositories;
 using Enfo.Domain.LegalAuthorities.Resources;
 using Enfo.Domain.Users;
 using Enfo.WebApp.Models;
-using Enfo.WebApp.Platform.RazorHelpers;
+using Enfo.WebApp.Platform.PageModelHelpers;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -38,7 +38,8 @@ public class Edit(
 
         if (originalItem.Deleted)
         {
-            TempData.SetDisplayMessage(Context.Warning, "This Enforcement Order is deleted and cannot be edited.");
+            TempData.SetDisplayMessage(DisplayMessage.AlertContext.Warning,
+                "This Enforcement Order is deleted and cannot be edited.");
             return RedirectToPage("Details", new { id });
         }
 
@@ -55,7 +56,8 @@ public class Edit(
 
         if (originalItem.Deleted)
         {
-            TempData.SetDisplayMessage(Context.Warning, "This Enforcement Order is deleted and cannot be edited.");
+            TempData.SetDisplayMessage(DisplayMessage.AlertContext.Warning,
+                "This Enforcement Order is deleted and cannot be edited.");
             return RedirectToPage("Details", new { Item.Id });
         }
 
@@ -81,7 +83,8 @@ public class Edit(
             throw;
         }
 
-        TempData.SetDisplayMessage(Context.Success, "The Enforcement Order has been successfully updated.");
+        TempData.SetDisplayMessage(DisplayMessage.AlertContext.Success,
+            "The Enforcement Order has been successfully updated.");
         return RedirectToPage("Details", new { Item.Id });
     }
 

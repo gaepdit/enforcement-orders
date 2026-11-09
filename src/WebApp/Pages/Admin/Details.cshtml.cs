@@ -3,7 +3,7 @@ using Enfo.Domain.EnforcementOrders.Resources;
 using Enfo.Domain.Users;
 using Enfo.Domain.Utils;
 using Enfo.WebApp.Models;
-using Enfo.WebApp.Platform.RazorHelpers;
+using Enfo.WebApp.Platform.PageModelHelpers;
 
 namespace Enfo.WebApp.Pages.Admin;
 
@@ -42,19 +42,20 @@ public class Details(IEnforcementOrderRepository repository) : PageModel
 
         if (Item.Deleted)
         {
-            TempData.SetDisplayMessage(Context.Warning, "This Enforcement Order is deleted and cannot be edited.");
+            TempData.SetDisplayMessage(DisplayMessage.AlertContext.Warning,
+                "This Enforcement Order is deleted and cannot be edited.");
             return Page();
         }
 
         if (!ModelState.IsValid || Attachment is null)
         {
-            Message = new DisplayMessage(Context.Warning, "Please select a valid file.");
+            Message = new DisplayMessage(DisplayMessage.AlertContext.Warning, "Please select a valid file.");
             return Page();
         }
 
         if (Attachment.Length == 0)
         {
-            Message = new DisplayMessage(Context.Error, "File upload failed.");
+            Message = new DisplayMessage(DisplayMessage.AlertContext.Danger, "File upload failed.");
             return Page();
         }
 
@@ -62,7 +63,8 @@ public class Details(IEnforcementOrderRepository repository) : PageModel
 
         if (!FileTypes.FileUploadAllowed(extension))
         {
-            Message = new DisplayMessage(Context.Error, "Invalid file. Only PDF attachments are allowed.");
+            Message = new DisplayMessage(DisplayMessage.AlertContext.Danger,
+                "Invalid file. Only PDF attachments are allowed.");
             return Page();
         }
 
@@ -79,7 +81,8 @@ public class Details(IEnforcementOrderRepository repository) : PageModel
 
         if (Item.Deleted)
         {
-            TempData.SetDisplayMessage(Context.Warning, "This Enforcement Order is deleted and cannot be edited.");
+            TempData.SetDisplayMessage(DisplayMessage.AlertContext.Warning,
+                "This Enforcement Order is deleted and cannot be edited.");
             return Page();
         }
 

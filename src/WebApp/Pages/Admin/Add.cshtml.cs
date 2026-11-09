@@ -6,7 +6,7 @@ using Enfo.Domain.LegalAuthorities.Repositories;
 using Enfo.Domain.LegalAuthorities.Resources;
 using Enfo.Domain.Users;
 using Enfo.WebApp.Models;
-using Enfo.WebApp.Platform.RazorHelpers;
+using Enfo.WebApp.Platform.PageModelHelpers;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -43,7 +43,8 @@ public class Add(
         }
 
         var id = await order.CreateAsync(Item);
-        TempData.SetDisplayMessage(Context.Success, "The new Enforcement Order has been successfully added.");
+        TempData.SetDisplayMessage(DisplayMessage.AlertContext.Success,
+            "The new Enforcement Order has been successfully added.");
         return RedirectToPage("Details", new { id });
     }
 

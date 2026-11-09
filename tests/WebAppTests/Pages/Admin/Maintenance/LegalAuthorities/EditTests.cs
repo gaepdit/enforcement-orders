@@ -2,7 +2,7 @@
 using Enfo.Domain.LegalAuthorities.Resources;
 using Enfo.WebApp.Models;
 using Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthorities;
-using Enfo.WebApp.Platform.RazorHelpers;
+using Enfo.WebApp.Platform.PageModelHelpers;
 using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Http;
@@ -77,7 +77,7 @@ public class EditTests
 
         var result = await page.OnGetAsync(item.Id);
 
-        var expected = new DisplayMessage(Context.Warning,
+        var expected = new DisplayMessage(DisplayMessage.AlertContext.Warning,
             $"Inactive {Edit.ThisOption.PluralName} cannot be edited.");
 
         using (new AssertionScope())
@@ -124,7 +124,7 @@ public class EditTests
 
         var result = await page.OnPostAsync(validator);
 
-        var expected = new DisplayMessage(Context.Warning,
+        var expected = new DisplayMessage(DisplayMessage.AlertContext.Warning,
             $"Inactive {Edit.ThisOption.PluralName} cannot be edited.");
 
         using (new AssertionScope())
@@ -153,7 +153,7 @@ public class EditTests
 
         var result = await page.OnPostAsync(validator);
 
-        var expected = new DisplayMessage(Context.Success,
+        var expected = new DisplayMessage(DisplayMessage.AlertContext.Success,
             $"{item.AuthorityName} successfully updated.");
 
         using (new AssertionScope())

@@ -1,6 +1,6 @@
 using Enfo.Domain.EnforcementOrders.Repositories;
 using Enfo.WebApp.Models;
-using Enfo.WebApp.Platform.RazorHelpers;
+using Enfo.WebApp.Platform.PageModelHelpers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Index = Enfo.WebApp.Pages.Index;
@@ -55,10 +55,10 @@ public class IndexTests
 
         var page = new Index { TempData = tempData };
 
-        page.TempData.SetDisplayMessage(Context.Info, "Info message");
+        page.TempData.SetDisplayMessage(DisplayMessage.AlertContext.Info, "Info message");
         await page.OnGetAsync(repo);
 
-        var expected = new DisplayMessage(Context.Info, "Info message");
+        var expected = new DisplayMessage(DisplayMessage.AlertContext.Info, "Info message");
         page.Message.Should().BeEquivalentTo(expected);
     }
 }

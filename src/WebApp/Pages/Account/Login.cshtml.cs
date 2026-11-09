@@ -1,7 +1,7 @@
 ﻿using Enfo.AppServices.AuthenticationServices;
 using Enfo.Domain.Users;
 using Enfo.WebApp.Models;
-using Enfo.WebApp.Platform.RazorHelpers;
+using Enfo.WebApp.Platform.PageModelHelpers;
 using Enfo.WebApp.Platform.Settings;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Identity;
@@ -69,7 +69,7 @@ public class LoginModel(
 
     private RedirectToPageResult LoginPageWithError(string message)
     {
-        TempData.SetDisplayMessage(Context.Error, message);
+        TempData.SetDisplayMessage(DisplayMessage.AlertContext.Danger, message);
         return RedirectToPage("Login", new { ReturnUrl });
     }
 

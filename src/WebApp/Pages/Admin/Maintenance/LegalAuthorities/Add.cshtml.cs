@@ -2,7 +2,7 @@
 using Enfo.Domain.LegalAuthorities.Resources;
 using Enfo.Domain.Users;
 using Enfo.WebApp.Models;
-using Enfo.WebApp.Platform.RazorHelpers;
+using Enfo.WebApp.Platform.PageModelHelpers;
 using FluentValidation;
 
 namespace Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthorities;
@@ -33,7 +33,7 @@ public class Add : PageModel
         var id = await repository.CreateAsync(Item);
 
         HighlightId = id;
-        TempData.SetDisplayMessage(Context.Success, $"{Item.AuthorityName} successfully added.");
+        TempData.SetDisplayMessage(DisplayMessage.AlertContext.Success, $"{Item.AuthorityName} successfully added.");
         return RedirectToPage("Index");
     }
 }

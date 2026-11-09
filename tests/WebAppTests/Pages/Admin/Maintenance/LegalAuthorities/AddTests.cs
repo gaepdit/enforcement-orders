@@ -2,7 +2,7 @@
 using Enfo.Domain.LegalAuthorities.Resources;
 using Enfo.WebApp.Models;
 using Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthorities;
-using Enfo.WebApp.Platform.RazorHelpers;
+using Enfo.WebApp.Platform.PageModelHelpers;
 using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Http;
@@ -33,7 +33,7 @@ public class AddTests
 
         var result = await page.OnPostAsync(repo, validator);
 
-        var expected = new DisplayMessage(Context.Success,
+        var expected = new DisplayMessage(DisplayMessage.AlertContext.Success,
             $"{item.AuthorityName} successfully added.");
 
         using (new AssertionScope())

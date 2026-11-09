@@ -2,7 +2,7 @@
 using Enfo.Domain.EnforcementOrders.Resources;
 using Enfo.Domain.Users;
 using Enfo.WebApp.Models;
-using Enfo.WebApp.Platform.RazorHelpers;
+using Enfo.WebApp.Platform.PageModelHelpers;
 
 namespace Enfo.WebApp.Pages.Admin;
 
@@ -28,7 +28,7 @@ public class Delete(IEnforcementOrderRepository repository) : PageModel
     public async Task<IActionResult> OnPostAsync()
     {
         await repository.DeleteAsync(Id);
-        TempData?.SetDisplayMessage(Context.Success, "The Order has been successfully deleted.");
+        TempData?.SetDisplayMessage(DisplayMessage.AlertContext.Success, "The Order has been successfully deleted.");
         return RedirectToPage("Details", new { Id });
     }
 }

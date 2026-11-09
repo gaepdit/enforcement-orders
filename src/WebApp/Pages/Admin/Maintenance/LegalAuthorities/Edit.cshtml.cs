@@ -2,7 +2,7 @@
 using Enfo.Domain.LegalAuthorities.Resources;
 using Enfo.Domain.Users;
 using Enfo.WebApp.Models;
-using Enfo.WebApp.Platform.RazorHelpers;
+using Enfo.WebApp.Platform.PageModelHelpers;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 
@@ -30,7 +30,8 @@ public class Edit(ILegalAuthorityRepository repository) : PageModel
 
         if (!originalItem.Active)
         {
-            TempData.SetDisplayMessage(Context.Warning, $"Inactive {ThisOption.PluralName} cannot be edited.");
+            TempData.SetDisplayMessage(DisplayMessage.AlertContext.Warning,
+                $"Inactive {ThisOption.PluralName} cannot be edited.");
             return RedirectToPage("Index");
         }
 
@@ -48,7 +49,8 @@ public class Edit(ILegalAuthorityRepository repository) : PageModel
 
         if (!originalItem.Active)
         {
-            TempData.SetDisplayMessage(Context.Warning, $"Inactive {ThisOption.PluralName} cannot be edited.");
+            TempData.SetDisplayMessage(DisplayMessage.AlertContext.Warning,
+                $"Inactive {ThisOption.PluralName} cannot be edited.");
             return RedirectToPage("Index");
         }
 
@@ -66,7 +68,7 @@ public class Edit(ILegalAuthorityRepository repository) : PageModel
         }
 
         HighlightId = Item.Id.Value;
-        TempData.SetDisplayMessage(Context.Success, $"{Item.AuthorityName} successfully updated.");
+        TempData.SetDisplayMessage(DisplayMessage.AlertContext.Success, $"{Item.AuthorityName} successfully updated.");
         return RedirectToPage("Index");
     }
 }

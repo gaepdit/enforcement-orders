@@ -1,7 +1,7 @@
 ﻿using Enfo.Domain.EpdContacts.Repositories;
 using Enfo.Domain.EpdContacts.Resources;
 using Enfo.WebApp.Models;
-using Enfo.WebApp.Platform.RazorHelpers;
+using Enfo.WebApp.Platform.PageModelHelpers;
 using Microsoft.EntityFrameworkCore;
 
 namespace Enfo.WebApp.Pages.Admin.Maintenance.Contacts;
@@ -39,7 +39,7 @@ public class Index(IEpdContactRepository repository) : PageModel
             throw;
         }
 
-        TempData?.SetDisplayMessage(Context.Success,
+        TempData?.SetDisplayMessage(DisplayMessage.AlertContext.Success,
             $"{ThisOption.SingularName} successfully {(item.Active ? "deactivated" : "restored")}.");
 
         return RedirectToPage("Index");

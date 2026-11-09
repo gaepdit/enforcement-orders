@@ -2,7 +2,7 @@
 using Enfo.Domain.Users;
 using Enfo.WebApp.Models;
 using Enfo.WebApp.Pages.Admin;
-using Enfo.WebApp.Platform.RazorHelpers;
+using Enfo.WebApp.Platform.PageModelHelpers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -43,10 +43,10 @@ public class DetailsTests
         var tempData = new TempDataDictionary(httpContext, Substitute.For<ITempDataProvider>());
         var page = new Details(repo) { TempData = tempData };
 
-        page.TempData.SetDisplayMessage(Context.Info, "Info message");
+        page.TempData.SetDisplayMessage(DisplayMessage.AlertContext.Info, "Info message");
         await page.OnGetAsync(itemId);
 
-        var expected = new DisplayMessage(Context.Info, "Info message");
+        var expected = new DisplayMessage(DisplayMessage.AlertContext.Info, "Info message");
         page.Message.Should().BeEquivalentTo(expected);
     }
 

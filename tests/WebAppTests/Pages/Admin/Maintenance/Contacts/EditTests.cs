@@ -2,7 +2,7 @@
 using Enfo.Domain.EpdContacts.Resources;
 using Enfo.WebApp.Models;
 using Enfo.WebApp.Pages.Admin.Maintenance.Contacts;
-using Enfo.WebApp.Platform.RazorHelpers;
+using Enfo.WebApp.Platform.PageModelHelpers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -75,7 +75,7 @@ public class EditTests
 
         var result = await page.OnGetAsync(item.Id);
 
-        var expected = new DisplayMessage(Context.Warning,
+        var expected = new DisplayMessage(DisplayMessage.AlertContext.Warning,
             $"Inactive {Edit.ThisOption.PluralName} cannot be edited.");
 
         using (new AssertionScope())
@@ -114,7 +114,7 @@ public class EditTests
 
         var result = await page.OnPostAsync();
 
-        var expected = new DisplayMessage(Context.Warning,
+        var expected = new DisplayMessage(DisplayMessage.AlertContext.Warning,
             $"Inactive {Edit.ThisOption.PluralName} cannot be edited.");
 
         using (new AssertionScope())
@@ -139,7 +139,7 @@ public class EditTests
 
         var result = await page.OnPostAsync();
 
-        var expected = new DisplayMessage(Context.Success,
+        var expected = new DisplayMessage(DisplayMessage.AlertContext.Success,
             $"{Edit.ThisOption.SingularName} successfully updated.");
 
         using (new AssertionScope())

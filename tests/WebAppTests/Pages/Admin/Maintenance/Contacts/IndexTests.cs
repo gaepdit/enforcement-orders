@@ -1,7 +1,7 @@
 ﻿using Enfo.Domain.EpdContacts.Repositories;
 using Enfo.Domain.EpdContacts.Resources;
 using Enfo.WebApp.Models;
-using Enfo.WebApp.Platform.RazorHelpers;
+using Enfo.WebApp.Platform.PageModelHelpers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -39,10 +39,10 @@ public class IndexTests
         var tempData = new TempDataDictionary(httpContext, Substitute.For<ITempDataProvider>());
         var page = new Index(repo) { TempData = tempData };
 
-        page.TempData.SetDisplayMessage(Context.Info, "Info message");
+        page.TempData.SetDisplayMessage(DisplayMessage.AlertContext.Info, "Info message");
         await page.OnGetAsync();
 
-        var expected = new DisplayMessage(Context.Info, "Info message");
+        var expected = new DisplayMessage(DisplayMessage.AlertContext.Info, "Info message");
         page.Message.Should().BeEquivalentTo(expected);
     }
 
@@ -60,7 +60,7 @@ public class IndexTests
 
         var result = await page.OnPostAsync(item.Id);
 
-        var expected = new DisplayMessage(Context.Success,
+        var expected = new DisplayMessage(DisplayMessage.AlertContext.Success,
             $"{Index.ThisOption.SingularName} successfully {(item.Active ? "deactivated" : "restored")}.");
 
         using (new AssertionScope())

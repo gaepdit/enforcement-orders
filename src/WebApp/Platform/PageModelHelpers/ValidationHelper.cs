@@ -2,7 +2,7 @@ using FluentValidation;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.Runtime.CompilerServices;
 
-namespace Enfo.WebApp.Platform.RazorHelpers;
+namespace Enfo.WebApp.Platform.PageModelHelpers;
 
 public static class ValidationHelper
 {

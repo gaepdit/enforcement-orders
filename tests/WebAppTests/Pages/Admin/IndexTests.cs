@@ -3,7 +3,7 @@ using Enfo.Domain.EnforcementOrders.Resources;
 using Enfo.Domain.EnforcementOrders.Specs;
 using Enfo.Domain.Pagination;
 using Enfo.WebApp.Models;
-using Enfo.WebApp.Platform.RazorHelpers;
+using Enfo.WebApp.Platform.PageModelHelpers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -65,10 +65,10 @@ public class IndexTests
         var tempData = new TempDataDictionary(httpContext, Substitute.For<ITempDataProvider>());
         var page = new Index(repo) { TempData = tempData };
 
-        page.TempData.SetDisplayMessage(Context.Info, "Info message");
+        page.TempData.SetDisplayMessage(DisplayMessage.AlertContext.Info, "Info message");
         await page.OnGetAsync();
 
-        var expected = new DisplayMessage(Context.Info, "Info message");
+        var expected = new DisplayMessage(DisplayMessage.AlertContext.Info, "Info message");
         page.Message.Should().BeEquivalentTo(expected);
     }
 

@@ -6,7 +6,7 @@ using Enfo.Domain.LegalAuthorities.Repositories;
 using Enfo.Domain.LegalAuthorities.Resources;
 using Enfo.WebApp.Models;
 using Enfo.WebApp.Pages.Admin;
-using Enfo.WebApp.Platform.RazorHelpers;
+using Enfo.WebApp.Platform.PageModelHelpers;
 using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Http;
@@ -90,7 +90,7 @@ public class EditTests
 
         var result = await page.OnGetAsync(item.Id);
 
-        var expected = new DisplayMessage(Context.Warning,
+        var expected = new DisplayMessage(DisplayMessage.AlertContext.Warning,
             "This Enforcement Order is deleted and cannot be edited.");
 
         using (new AssertionScope())
@@ -143,7 +143,7 @@ public class EditTests
 
         var result = await page.OnPostAsync(validator);
 
-        var expected = new DisplayMessage(Context.Warning,
+        var expected = new DisplayMessage(DisplayMessage.AlertContext.Warning,
             "This Enforcement Order is deleted and cannot be edited.");
 
         using (new AssertionScope())
@@ -176,7 +176,7 @@ public class EditTests
 
         var result = await page.OnPostAsync(validator);
 
-        var expected = new DisplayMessage(Context.Success,
+        var expected = new DisplayMessage(DisplayMessage.AlertContext.Success,
             "The Enforcement Order has been successfully updated.");
 
         using (new AssertionScope())

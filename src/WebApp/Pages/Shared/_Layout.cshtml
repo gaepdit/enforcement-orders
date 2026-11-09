@@ -1,40 +1,82 @@
+@using Enfo.WebApp.Platform.PageModelHelpers
+@{
+    var displayMessage = TempData.GetDisplayMessage();
+}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"]@(string.IsNullOrWhiteSpace(ViewData["Title"]?.ToString()) ? "" : " | ") Georgia EPD Enforcement Orders</title>
-    <partial name="_FaviconPartial" />
-    <link rel="stylesheet" href="~/lib/uswds/css/uswds.min.css" />
+    <partial name="Shared/_FaviconPartial" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
-    @await RenderSectionAsync("Styles", required: false)
-    <partial name="_MonitoringScriptsPartial" />
+    <partial name="Shared/_MonitoringScriptsPartial" />
+    <script src="~/js/color-modes.js"></script>
+    @await RenderSectionAsync("Styles", false)
 </head>
-<body>
+<body id="top" class="d-flex flex-column vh-100">
+<a class="skip-nav shadow border border-2 rounded border-info bg-info-subtle text-info-emphasis d-print-none"
+   href="#main-content">Skip to main content</a>
 <environment exclude="Production">
-    <div class="banner-test-site">
-        Test Site
-    </div>
+    <div class="banner-test-site">Test Site</div>
 </environment>
-
-<a class="usa-skipnav" href="#main-content">Skip to main content</a>
-
+<vc:main-menu model="Model" />
 <vc:notifications />
-<partial name="_MenuPartial" />
 
-<main class="usa-grid usa-section usa-content usa-layout-docs" id="main-content">
-    @RenderBody()
+<main id="main-content" role="main" class="flex-grow-1">
+    <div class="container">
+        <partial name="Shared/_AlertPartial" for="@displayMessage" />
+        @RenderBody()
+    </div>
 </main>
 
-<div class="usa-footer usa-footer-medium" role="contentinfo">
-    <div class="usa-grid usa-footer-return-to-top">
-        <a href="#">Return to top</a>
+<footer class="footer pt-3">
+    <div class="bg-body-tertiary py-2 border-bottom d-print-none">
+        <div class="container">
+            <a href="#top" class="btn-subtle link-body-emphasis icon-link ms-n1 text-decoration-none">
+                <svg class="bi">
+                    <use href="@Url.Content("~/images/app-icons.svg")#app-icon-arrow-bar-up"></use>
+                </svg>
+                Return to top
+            </a>
+        </div>
     </div>
-</div>
+    <div class="bg-body-secondary pt-2 pb-3">
+        <div class="container">
+            <small>
+                Georgia EPD Enforcement Orders
+                <span class="d-print-none ms-1">
+                    <span class="text-body-secondary">|</span>
+                    <a asp-page="/Support" class="btn-subtle">Support</a>
+                    <span class="text-body-secondary">|</span>
+                    <a href="https://epd.georgia.gov/" target="_blank" rel="noopener"
+                       class="btn-subtle">Environmental Protection Division</a>
+                </span>
+                <br />&copy; @DateTime.Now.Year.ToString() State of Georgia
+                <span class="d-print-none ms-1">
+                    <span class="text-body-secondary">|</span>
+                    <a href="https://georgia.gov/accessibility" target="_blank" rel="noopener"
+                       class="btn-subtle">Accessibility</a>
+                    <span class="text-body-secondary">|</span>
+                    <a href="https://gadnr.org/ada" target="_blank" rel="noopener"
+                       class="btn-subtle">DNR Accessibility Notice</a>
+                    <span class="text-body-secondary">|</span>
+                    <a href="https://georgia.gov/privacysecurity" target="_blank" rel="noopener"
+                       class="btn-subtle">Privacy/Security</a>
+                </span>
+            </small>
+        </div>
+    </div>
+</footer>
 
-<script src="~/lib/jquery/jquery.min.js"></script>
-<script src="~/lib/uswds/js/uswds.min.js"></script>
-<script src="~/js/closeAlert.js"></script>
-@await RenderSectionAsync("Scripts", required: false)
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+@if (!ViewData.ContainsKey("NoAnchors"))
+{
+    <script src="~/lib/anchor-js/anchor.min.js"></script>
+    <script src="~/js/anchorInit.js"></script>
+}
+@await RenderSectionAsync("Scripts", false)
 </body>
 </html>

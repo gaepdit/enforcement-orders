@@ -1,7 +1,7 @@
 ﻿using Enfo.Domain.Data;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace Enfo.WebApp.Platform.RazorHelpers;
+namespace Enfo.WebApp.Platform.PageModelHelpers;
 
 public static class CommonSelectLists
 {
