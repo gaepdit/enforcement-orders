@@ -1,6 +1,6 @@
 ﻿using Enfo.Domain.EnforcementOrders.Repositories;
 using Enfo.Domain.EnforcementOrders.Resources;
-using Enfo.Domain.Users;
+using Enfo.Domain.Identity;
 using Enfo.Domain.Utils;
 using Enfo.WebApp.Models;
 using Enfo.WebApp.Platform.PageModelHelpers;
@@ -8,7 +8,7 @@ using Enfo.WebApp.Platform.PageModelHelpers;
 namespace Enfo.WebApp.Pages.Admin;
 
 [Authorize]
-public class Details(IEnforcementOrderRepository repository) : PageModel
+public class DetailsModel(IEnforcementOrderRepository repository) : PageModel
 {
     [BindProperty]
     public int Id { get; set; }

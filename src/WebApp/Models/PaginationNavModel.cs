@@ -2,4 +2,4 @@
 
 namespace Enfo.WebApp.Models;
 
-public record PaginationNavModel(IPaginatedResult Paging, IDictionary<string, string> RouteValues);
+public record PaginationNavModel(IPaginatedResult Paging, IDictionary<string, string?> RouteValues);

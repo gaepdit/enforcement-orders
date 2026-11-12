@@ -1,4 +1,4 @@
-﻿using Enfo.Domain.Users;
+﻿using Enfo.Domain.Identity;
 using Enfo.WebApp.Pages.Account;
 
 namespace Enfo.WebApp.Pages.Shared.Components.MainMenu;

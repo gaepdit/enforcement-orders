@@ -1,8 +1,8 @@
 ﻿using Enfo.Domain.Attachments;
 using Enfo.Domain.EnforcementOrders.Entities;
 using Enfo.Domain.EpdContacts.Entities;
+using Enfo.Domain.Identity;
 using Enfo.Domain.LegalAuthorities.Entities;
-using Enfo.Domain.Users;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 

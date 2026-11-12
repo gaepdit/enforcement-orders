@@ -1,5 +1,5 @@
 ﻿using Enfo.Domain.EnforcementOrders.Repositories;
-using Enfo.Domain.Users;
+using Enfo.Domain.Identity;
 using Enfo.WebApp.Models;
 using Enfo.WebApp.Pages.Admin;
 using Enfo.WebApp.Platform.PageModelHelpers;
@@ -13,7 +13,7 @@ using System.Security.Claims;
 namespace WebAppTests.Pages.Admin;
 
 [TestFixture]
-public class DetailsTests
+public class DetailsModelTests
 {
     [Test]
     public async Task OnGet_ReturnsWithOrder()
@@ -22,7 +22,7 @@ public class DetailsTests
         var item = ResourceHelper.GetEnforcementOrderAdminView(itemId);
         var repo = Substitute.For<IEnforcementOrderRepository>();
         repo.GetAdminViewAsync(itemId).Returns(item);
-        var page = new Details(repo);
+        var page = new DetailsModel(repo);
 
         await page.OnGetAsync(itemId);
 
@@ -41,7 +41,7 @@ public class DetailsTests
         // Initialize Page TempData
         var httpContext = new DefaultHttpContext();
         var tempData = new TempDataDictionary(httpContext, Substitute.For<ITempDataProvider>());
-        var page = new Details(repo) { TempData = tempData };
+        var page = new DetailsModel(repo) { TempData = tempData };
 
         page.TempData.SetDisplayMessage(DisplayMessage.AlertContext.Info, "Info message");
         await page.OnGetAsync(itemId);
@@ -54,7 +54,7 @@ public class DetailsTests
     public async Task OnGet_MissingIdReturnsNotFound()
     {
         var repo = Substitute.For<IEnforcementOrderRepository>();
-        var page = new Details(repo);
+        var page = new DetailsModel(repo);
 
         var result = await page.OnGetAsync(null);
 
@@ -70,7 +70,7 @@ public class DetailsTests
     public async Task OnGet_NonexistentIdReturnsNotFound()
     {
         var repo = Substitute.For<IEnforcementOrderRepository>();
-        var page = new Details(repo);
+        var page = new DetailsModel(repo);
 
         var result = await page.OnGetAsync(-1);
 
@@ -102,7 +102,7 @@ public class DetailsTests
         formFileMock.Length.Returns(1);
         formFileMock.FileName.Returns("test.pdf");
 
-        var page = new Details(repoMock)
+        var page = new DetailsModel(repoMock)
         {
             Id = itemId,
             Attachment = formFileMock,

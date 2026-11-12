@@ -1,11 +1,11 @@
 ﻿using Enfo.AppServices.Staff;
+using Enfo.WebApp.Pages.Admin.Users;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Index = Enfo.WebApp.Pages.Admin.Users.Index;
 
 namespace WebAppTests.Pages.Admin.Users;
 
 [TestFixture]
-public class UserIndexTests
+public class IndexTests
 {
     [Test]
     [TestCase(null, null, null)]
@@ -13,13 +13,14 @@ public class UserIndexTests
     public async Task OnSearch_IfValidModel_ReturnPage(string name, string email, string role)
     {
         var users = UserTestData.ApplicationUsers;
-        var searchResults = users.Select(e => new StaffView(e)).ToList();
+        var searchResults = users.Select(e => new StaffViewDto(e)).ToList();
 
-        var userService = Substitute.For<IStaffService>();
-        userService.SearchUsersAsync(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>()).Returns(searchResults);
-        var pageModel = new Index();
+        var staffService = Substitute.For<IStaffService>();
+        staffService.SearchAsync(Arg.Any<StaffSearchDto>()).Returns(searchResults);
+        var pageModel = new UsersIndexModel(staffService);
+        var spec = new StaffSearchDto(name, email, role);
 
-        var result = await pageModel.OnGetSearchAsync(userService, name, email, role);
+        var result = await pageModel.OnGetSearchAsync(spec);
 
         using (new AssertionScope())
         {
@@ -33,11 +34,11 @@ public class UserIndexTests
     [Test]
     public async Task OnSearch_IfInvalidModel_ReturnPageWithInvalidModelState()
     {
-        var userService = Substitute.For<IStaffService>();
-        var pageModel = new Index();
+        var staffService = Substitute.For<IStaffService>();
+        var pageModel = new UsersIndexModel(staffService);
         pageModel.ModelState.AddModelError("Error", "Sample error description");
 
-        var result = await pageModel.OnGetSearchAsync(userService, null, null, null);
+        var result = await pageModel.OnGetSearchAsync(new StaffSearchDto(null, null, null));
 
         using (new AssertionScope())
         {

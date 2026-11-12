@@ -1,6 +1,6 @@
 ﻿using Enfo.Domain.EnforcementOrders.Repositories;
 using Enfo.Domain.EnforcementOrders.Resources;
-using Enfo.Domain.Users;
+using Enfo.Domain.Identity;
 using Enfo.WebApp.Models;
 using Enfo.WebApp.Platform.PageModelHelpers;
 

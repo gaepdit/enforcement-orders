@@ -5,7 +5,7 @@ using Enfo.WebApp.Platform.PageModelHelpers;
 
 namespace Enfo.WebApp.Pages;
 
-public class Details : PageModel
+public class DetailsModel : PageModel
 {
     public EnforcementOrderDetailedView Item { get; private set; }
     public DisplayMessage Message { get; private set; }

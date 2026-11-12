@@ -2,9 +2,9 @@
 using Enfo.Domain.EnforcementOrders.Resources;
 using Enfo.Domain.EpdContacts.Repositories;
 using Enfo.Domain.EpdContacts.Resources;
+using Enfo.Domain.Identity;
 using Enfo.Domain.LegalAuthorities.Repositories;
 using Enfo.Domain.LegalAuthorities.Resources;
-using Enfo.Domain.Users;
 using Enfo.WebApp.Models;
 using Enfo.WebApp.Platform.PageModelHelpers;
 using FluentValidation;

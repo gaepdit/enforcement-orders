@@ -1,6 +1,6 @@
 ﻿using Enfo.Domain.EpdContacts.Repositories;
 using Enfo.Domain.EpdContacts.Resources;
-using Enfo.Domain.Users;
+using Enfo.Domain.Identity;
 using Enfo.WebApp.Models;
 using Enfo.WebApp.Platform.PageModelHelpers;
 

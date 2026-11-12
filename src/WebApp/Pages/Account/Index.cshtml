@@ -1,58 +1,39 @@
 ﻿@page
-@using Enfo.Domain.Users
-@model IndexModel
+@model AccountIndexModel
 @{
     ViewData["Title"] = "Account Profile";
 }
 
 <h1>@ViewData["Title"]</h1>
-<h2>@Model.DisplayStaff?.Name</h2>
-<p>
-    <strong>Email:</strong> @Model.DisplayStaff?.Email
-</p>
+<hr />
 
-<h3>Roles</h3>
-<p>Your account has the following application roles:</p>
+<h2>@Model.DisplayStaff.Name</h2>
 
-<div class="gaepd-container-light">
-    @if (Model.Roles is { Count: > 0 })
-    {
-        <dl>
-            @foreach (var role in Model.Roles)
-            {
-                if (AppRole.AllRoles.TryGetValue(role, out var userRole))
-                {
-                    <dt>@userRole?.DisplayName</dt>
-                    <dd>
-                        <small class="gaepd-text-muted">@userRole?.Description</small>
-                    </dd>
-                }
-            }
-        </dl>
-    }
-    else
-    {
-        <p>
-            <strong>None (view only)</strong>
-        </p>
-    }
+<dl class="row">
+    <dt class="col-sm-2">Email</dt>
+    <dd class="col-sm-10">@Model.DisplayStaff.Email</dd>
+</dl>
+
+<div class="mb-3">
+    <form class="d-inline-block" asp-page="Logout" method="post">
+        <button type="submit" class="btn btn-danger">Sign out</button>
+    </form>
 </div>
 
-<form asp-page="./Logout" asp-route-returnUrl="@Url.Page("/")" method="post">
-    <button type="submit" class="usa-button-red">Sign out</button>
-</form>
+<h3>Roles</h3>
 
-<environment include="Local,Development">
-    <details>
-        <summary><h3>Claims</h3></summary>
-        <div class="gaepd-container-light">
-            <dl>
-                @foreach (var claim in Model.Claims)
-                {
-                    <dt>@claim.Type</dt>
-                    <dd class="gaepd-text-muted">@claim.Value</dd>
-                }
-            </dl>
-        </div>
+<partial name="Shared/_UserRolesPartial" model="Model.Roles" />
+
+<environment include="Local, Development">
+    <details class="p-3 border rounded-3 bg-info-subtle">
+        <summary class="rounded-1 p-1"><h3 class="h4 ps-1 m-0 no-anchor d-inline-block">Claims</h3></summary>
+
+        <dl class="p-3">
+            @foreach (var claim in Model.User.Claims)
+            {
+                <dt>@claim.Type</dt>
+                <dd class="text-body-secondary">@claim.Value</dd>
+            }
+        </dl>
     </details>
 </environment>

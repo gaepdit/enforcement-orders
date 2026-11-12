@@ -1,4 +1,4 @@
-﻿using Enfo.Domain.Users;
+﻿using Enfo.Domain.Identity;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;

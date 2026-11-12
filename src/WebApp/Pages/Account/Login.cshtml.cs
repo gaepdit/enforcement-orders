@@ -1,5 +1,5 @@
 ﻿using Enfo.AppServices.AuthenticationServices;
-using Enfo.Domain.Users;
+using Enfo.Domain.Identity;
 using Enfo.WebApp.Models;
 using Enfo.WebApp.Platform.PageModelHelpers;
 using Enfo.WebApp.Platform.Settings;
@@ -16,30 +16,24 @@ public class LoginModel(
     IConfiguration configuration
 ) : PageModel
 {
-    public string ReturnUrl { get; private set; }
-    public DisplayMessage Message { get; private set; }
+    public string? ReturnUrl { get; private set; }
     public IEnumerable<string> LoginProviderNames { get; private set; } = null!;
     public bool DisplayFailedLogin { get; private set; }
     public EntraIdPhaseOut EntraIdPhaseOut { get; } = new();
 
-    public IActionResult OnGet(string returnUrl = null)
+    public IActionResult OnGetAsync(string? returnUrl = null)
     {
         ReturnUrl = WebUtility.HtmlEncode(returnUrl);
-        Message = TempData.GetDisplayMessage();
         ConfigurePageVariables();
-
-        return User.Identity is not { IsAuthenticated: true }
-            ? Page()
-            : LocalRedirectOrHome();
+        if (User.Identity is not { IsAuthenticated: true }) return Page();
+        return LocalRedirectOrHome();
     }
 
-    public async Task<IActionResult> OnPostAsync(string scheme, string returnUrl = null)
+    public async Task<IActionResult> OnPostAsync(string scheme, string? returnUrl = null)
     {
         if (User.Identity is { IsAuthenticated: true }) return RedirectToPage("Logout");
         if (scheme == LoginProviders.TestUserScheme) return await LogInAsTestUserAsync(returnUrl);
-
-        if (!configuration.ValidateLoginProvider(scheme))
-            throw new ArgumentException("Invalid scheme", nameof(scheme));
+        if (!configuration.ValidateLoginProvider(scheme)) throw new ArgumentException("Invalid scheme", nameof(scheme));
 
         // Request a redirect to the external login provider.
         var redirectUrl = Url.Page("Login", pageHandler: "Callback", values: new { returnUrl });
@@ -47,7 +41,7 @@ public class LoginModel(
         return Challenge(properties, scheme);
     }
 
-    public async Task<IActionResult> LogInAsTestUserAsync(string returnUrl = null)
+    public async Task<IActionResult> LogInAsTestUserAsync(string? returnUrl = null)
     {
         if (!AppSettings.TestUserEnabled) return BadRequest();
         if (!AppSettings.DevSettings.TestUserIsAuthenticated) return Forbid();
@@ -58,7 +52,7 @@ public class LoginModel(
     }
 
     // The callback method is called by the external login provider.
-    public async Task<IActionResult> OnGetCallbackAsync(string returnUrl = null, string remoteError = null)
+    public async Task<IActionResult> OnGetCallbackAsync(string? returnUrl = null, string? remoteError = null)
     {
         ReturnUrl = WebUtility.HtmlEncode(returnUrl);
         if (remoteError is not null)
@@ -79,7 +73,6 @@ public class LoginModel(
         foreach (var error in result.Errors)
             ModelState.AddModelError(string.Empty, error.Description);
         DisplayFailedLogin = true;
-
         ConfigurePageVariables();
         return Page();
     }

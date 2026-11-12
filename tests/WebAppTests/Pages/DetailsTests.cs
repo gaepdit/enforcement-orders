@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 namespace WebAppTests.Pages;
 
 [TestFixture]
-public class DetailsTests
+public class DetailsModelTests
 {
     [Test]
     public async Task OnGet_ReturnsWithOrder()
@@ -18,7 +18,7 @@ public class DetailsTests
         var item = ResourceHelper.GetEnforcementOrderDetailedView(itemId);
         var repo = Substitute.For<IEnforcementOrderRepository>();
         repo.GetAsync(itemId).Returns(item);
-        var page = new Details();
+        var page = new DetailsModel();
 
         await page.OnGetAsync(repo, itemId);
 
@@ -38,7 +38,7 @@ public class DetailsTests
         var httpContext = new DefaultHttpContext();
         var tempData = new TempDataDictionary(httpContext, Substitute.For<ITempDataProvider>());
 
-        var page = new Details { TempData = tempData };
+        var page = new DetailsModel { TempData = tempData };
 
         page.TempData.SetDisplayMessage(DisplayMessage.AlertContext.Info, "Info message");
         await page.OnGetAsync(repo, itemId);
@@ -51,7 +51,7 @@ public class DetailsTests
     public async Task OnGet_NullId_ReturnsNotFound()
     {
         var repo = Substitute.For<IEnforcementOrderRepository>();
-        var page = new Details();
+        var page = new DetailsModel();
 
         var result = await page.OnGetAsync(repo, null);
 
@@ -67,7 +67,7 @@ public class DetailsTests
     public async Task OnGet_NonexistentId_ReturnsNotFound()
     {
         var repo = Substitute.For<IEnforcementOrderRepository>();
-        var page = new Details();
+        var page = new DetailsModel();
 
         var result = await page.OnGetAsync(repo, -1);
 

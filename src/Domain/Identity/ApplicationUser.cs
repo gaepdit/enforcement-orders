@@ -1,6 +1,7 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Enfo.Domain.Utils;
+using Microsoft.AspNetCore.Identity;
 
-namespace Enfo.Domain.Users;
+namespace Enfo.Domain.Identity;
 
 // Add profile data for application users by adding properties to the ApplicationUser class.
 // (IdentityUser already includes ID, Email, and UserName properties.)
@@ -34,6 +35,5 @@ public sealed class ApplicationUser : IdentityUser<Guid>
     public DateTimeOffset? ProfileUpdatedAt { get; set; }
     public DateTimeOffset? MostRecentLogin { get; set; }
 
-    public string DisplayName =>
-        string.Join(" ", new[] { GivenName, FamilyName }.Where(s => !string.IsNullOrEmpty(s)));
+    public string DisplayName => new[] { GivenName, FamilyName }.ConcatWithSeparator();
 }

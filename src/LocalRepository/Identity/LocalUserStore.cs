@@ -1,4 +1,4 @@
-using Enfo.Domain.Users;
+using Enfo.Domain.Identity;
 using EnfoTests.TestData;
 using Microsoft.AspNetCore.Identity;
 

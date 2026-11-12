@@ -1,46 +1,38 @@
 ﻿@page "{id}"
-@using Enfo.Domain.Users
-@model Details
+@using Enfo.Domain.Identity
+@model DetailsModel
 @{
-    ViewData["Title"] = "User Profile";
+    ViewData["Title"] = "User Profile: " + Model.DisplayStaff.Name;
 }
 
-<partial name="_AlertPartial" for="Message" />
+<h1>User Profile</h1>
+<hr />
 
-<h1>@ViewData["Title"]</h1>
-<h2>@Model.DisplayStaff.Name</h2>
-<p>@Model.DisplayStaff.Email</p>
+<h2>
+    @Model.DisplayStaff.Name
+    @if (string.Equals(Model.DisplayStaff.Email, User.Identity?.Name, StringComparison.OrdinalIgnoreCase))
+    {
+        <a asp-page="/Account/Index">
+            <span class="badge bg-info-subtle border border-info-subtle text-info-emphasis text-uppercase rounded-pill">You</span>
+        </a>
+    }
+</h2>
+
+<dl class="row">
+    <dt class="col-sm-2">Email</dt>
+    <dd class="col-sm-10">@Model.DisplayStaff.Email</dd>
+</dl>
+<hr />
 
 <h3>Roles</h3>
-<p>This account has the following application roles:</p>
 
-<div class="gaepd-container-light">
-    @if (Model.Roles is {Count: > 0 })
-    {
-        <dl>
-            @foreach (var role in Model.Roles)
-            {
-                if (AppRole.AllRoles.TryGetValue(role, out var userRole))
-                {
-                    <dt>@userRole?.DisplayName</dt>
-                    <dd>
-                        <small class="gaepd-text-muted">@userRole?.Description</small>
-                    </dd>
-                }
-            }
-        </dl>
-    }
-    else
-    {
-        <p>
-            <strong>None (view only)</strong>
-        </p>
-    }
-</div>
+@if (User.IsInRole(AppRole.UserMaintenance))
+{
+    <p>
+        <a asp-page="EditRoles" asp-route-id="@Model.DisplayStaff.Id" class="btn btn-outline-primary btn-sm">
+            Edit User Roles
+        </a>
+    </p>
+}
 
-<div>
-    @if (User.IsInRole(AppRole.UserMaintenance))
-    {
-        <a asp-page="EditRoles" asp-route-id="@Model.DisplayStaff.Id" class="usa-button usa-button-secondary">Edit Roles</a>
-    }
-</div>
+<partial name="Shared/_UserRolesPartial" model="Model.Roles" />

@@ -1,6 +1,6 @@
-﻿using Enfo.Domain.LegalAuthorities.Repositories;
+﻿using Enfo.Domain.Identity;
+using Enfo.Domain.LegalAuthorities.Repositories;
 using Enfo.Domain.LegalAuthorities.Resources;
-using Enfo.Domain.Users;
 using Enfo.WebApp.Models;
 using Enfo.WebApp.Platform.PageModelHelpers;
 using FluentValidation;

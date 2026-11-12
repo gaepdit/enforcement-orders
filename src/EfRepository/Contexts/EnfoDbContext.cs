@@ -2,8 +2,8 @@
 using Enfo.Domain.BaseEntities;
 using Enfo.Domain.EnforcementOrders.Entities;
 using Enfo.Domain.EpdContacts.Entities;
+using Enfo.Domain.Identity;
 using Enfo.Domain.LegalAuthorities.Entities;
-using Enfo.Domain.Users;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;

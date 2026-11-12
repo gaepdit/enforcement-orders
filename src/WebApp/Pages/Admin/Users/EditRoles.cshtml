@@ -1,32 +1,54 @@
 ﻿@page "{id:Guid?}"
-@model EditRoles
+@model EditRolesModel
 @{
-    ViewData["Title"] = "Edit Application Roles";
+    ViewData["Title"] = "Edit User Roles";
+    ViewData["NoAnchors"] = "True";
 }
 
-<h1>@ViewData["Title"] For:</h1>
-<h2>@Model.DisplayStaff.Name (@Model.DisplayStaff.Email)</h2>
+<h1>@ViewData["Title"]</h1>
+<hr />
 
-<form method="post" class="usa-form-large">
-    <div asp-validation-summary="ModelOnly" class="usa-input-error-message" role="alert">
-        User update failed:
-    </div>
+<h2>@Model.DisplayStaff.Name</h2>
 
-    @for (var i = 0; i < Model.UserRoleSettings.Count; i++)
-    {
-        var index = i;
-        <div class="gaepd-checkbox-tile">
-            <input type="checkbox" asp-for="@Model.UserRoleSettings[index].IsSelected" aria-describedby="RoleHelpBlock-@index.ToString()" />
-            <label class="gaepd-checkbox-label" asp-for="@Model.UserRoleSettings[index].IsSelected">
-                @Model.UserRoleSettings[index].DisplayName
-                <small id="RoleHelpBlock-@index.ToString()" class="gaepd-text-muted">@Model.UserRoleSettings[index].Description</small>
-            </label>
-            <input type="hidden" asp-for="@Model.UserRoleSettings[index].Name" />
+<dl class="row">
+    <dt class="col-sm-3">Email</dt>
+    <dd class="col-sm-9">@Model.DisplayStaff.Email</dd>
+</dl>
+
+
+<div class="p-3 border rounded-3 bg-light-subtle mb-3">
+    <p>View a detailed description of <a asp-page="Roles" target="_blank">user roles and capabilities</a>.</p>
+    <form method="post">
+        <div asp-validation-summary="All" class="alert alert-danger d-flex align-items-center" role="alert">
+            <svg class="bi me-2" role="img" aria-label="Danger:">
+                <use href="@Url.Content("~/images/app-icons.svg")#app-icon-exclamation-triangle-fill"></use>
+            </svg>
+            <div>Roles update failed:</div>
         </div>
-    }
 
-    <div class="gaepd-buttonrow">
-        <button type="submit">Save Roles</button>
-        <a asp-page="Details" asp-route-id="@Model.Id.ToString()" class="usa-button usa-button-secondary">Cancel</a>
-    </div>
-</form>
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
+            @for (var i = 0; i < Model.RoleSettings.Count; i++)
+            {
+                var index = i;
+                <div class="col">
+                    <div class="card h-100">
+                        <label class="form-check-label p-1 h-100" asp-for="@Model.RoleSettings[index].IsSelected">
+                            <input class="form-check-input m-2" asp-for="@Model.RoleSettings[index].IsSelected" aria-describedby="role-help-block-@index.ToString()" />
+                            <p class="d-inline-block w-75">
+                                @Model.RoleSettings[index].DisplayName<br />
+                                <small id="role-help-block-@index.ToString()" class="card-text">@Model.RoleSettings[index].Description</small>
+                                <input type="hidden" asp-for="@Model.RoleSettings[index].Name" />
+                            </p>
+                        </label>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="mt-3">
+            <button type="submit" class="btn btn-primary col-sm-3 me-2">Save Roles</button>
+            <a asp-page="Details" asp-route-id="@Model.Id" class="btn btn-outline-secondary col-md-2">Cancel</a>
+        </div>
+        <input asp-for="Id" type="hidden" />
+    </form>
+</div>

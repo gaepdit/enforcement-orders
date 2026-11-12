@@ -1,4 +1,4 @@
-﻿using Enfo.Domain.Users;
+﻿using Enfo.Domain.Identity;
 
 namespace WebAppTests.Pages.Admin.Users;
 

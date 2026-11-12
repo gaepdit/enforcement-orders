@@ -1,4 +1,4 @@
-﻿using Enfo.Domain.Users;
+﻿using Enfo.Domain.Identity;
 using Enfo.EfRepository.Contexts;
 using Enfo.LocalRepository.Identity;
 using Enfo.WebApp.Platform.Settings;

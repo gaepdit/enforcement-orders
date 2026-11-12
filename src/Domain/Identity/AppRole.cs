@@ -1,4 +1,4 @@
-﻿namespace Enfo.Domain.Users;
+﻿namespace Enfo.Domain.Identity;
 
 /// <summary>
 /// Class for listing and describing the application roles for use in the UI, etc.
@@ -31,6 +31,22 @@ public class AppRole
     /// (This declaration must appear before the list of static instance types.)
     /// </summary>
     public static Dictionary<string, AppRole> AllRoles { get; } = new();
+
+    /// <summary>
+    /// Converts a list of role strings to a list of <see cref="AppRole"/> objects.
+    /// </summary>
+    /// <param name="roles">A list of role strings.</param>
+    /// <returns>A list of AppRoles.</returns>
+    public static IEnumerable<AppRole> RolesAsAppRoles(IEnumerable<string> roles)
+    {
+        var appRoles = new List<AppRole>();
+
+        foreach (var role in roles)
+            if (AllRoles.TryGetValue(role, out var appRole))
+                appRoles.Add(appRole);
+
+        return appRoles;
+    }
 
     // These static Role objects are used for displaying role information in the UI.
 

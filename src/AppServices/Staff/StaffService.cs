@@ -1,10 +1,23 @@
-using Enfo.Domain.Users;
+using Enfo.Domain.Identity;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using System.Diagnostics.CodeAnalysis;
 using System.Security.Claims;
 
 namespace Enfo.AppServices.Staff;
+
+/// <summary>
+/// Provide methods for interacting with user accounts
+/// </summary>
+public interface IStaffService
+{
+    public Task<StaffViewDto> GetCurrentUserAsync();
+    public Task<StaffViewDto?> FindAsync(Guid id);
+    Task<List<StaffViewDto>> SearchAsync(StaffSearchDto spec);
+    Task<IList<string>> GetRolesAsync(Guid id);
+    public Task<IReadOnlyList<AppRole>> GetAppRolesAsync(Guid id);
+    public Task<IdentityResult> UpdateRolesAsync(Guid id, Dictionary<string, bool> roleUpdates);
+}
 
 public class StaffService(UserManager<ApplicationUser> userManager, IHttpContextAccessor httpContextAccessor)
     : IStaffService
@@ -19,50 +32,49 @@ public class StaffService(UserManager<ApplicationUser> userManager, IHttpContext
     }
 
     // IUserService methods
-    public async Task<StaffView?> GetCurrentUserAsync()
+    public async Task<StaffViewDto> GetCurrentUserAsync()
     {
-        var user = await GetCurrentApplicationUserAsync().ConfigureAwait(false);
-        return user == null ? null : new StaffView(user);
+        var user = await GetCurrentApplicationUserAsync().ConfigureAwait(false)
+                   ?? throw new CurrentUserNotFoundException();
+        return new StaffViewDto(user);
     }
 
-    public async Task<IList<string>> GetCurrentUserRolesAsync()
+    public async Task<StaffViewDto?> FindAsync(Guid id)
     {
-        var user = await GetCurrentApplicationUserAsync().ConfigureAwait(false);
-        return user is null ? [] : await userManager.GetRolesAsync(user).ConfigureAwait(false);
+        var user = await userManager.FindByIdAsync(id.ToString()).ConfigureAwait(false);
+        return user == null ? null : new StaffViewDto(user);
     }
+
+    public async Task<List<StaffViewDto>> SearchAsync(StaffSearchDto spec) =>
+        FilterUsers(string.IsNullOrEmpty(spec.Role)
+                ? userManager.Users
+                : (await userManager.GetUsersInRoleAsync(spec.Role).ConfigureAwait(false)).AsQueryable(),
+            spec.Name, spec.Email);
 
     [SuppressMessage("Performance",
         "CA1862:Use the \'StringComparison\' method overloads to perform case-insensitive string comparisons")]
-    private static List<StaffView>
-        FilterUsers(IQueryable<ApplicationUser> users, string nameFilter, string emailFilter) =>
+    private static List<StaffViewDto>
+        FilterUsers(IQueryable<ApplicationUser> users, string? nameFilter, string? emailFilter) =>
         users
             .Where(m => string.IsNullOrWhiteSpace(nameFilter)
                         || m.GivenName.ToLower().Contains(nameFilter.ToLower())
                         || m.FamilyName.ToLower().Contains(nameFilter.ToLower()))
             .Where(m => string.IsNullOrWhiteSpace(emailFilter) || m.Email == emailFilter)
             .OrderBy(m => m.FamilyName).ThenBy(m => m.GivenName)
-            .Select(e => new StaffView(e))
+            .Select(e => new StaffViewDto(e))
             .ToList();
 
-    public async Task<List<StaffView>> SearchUsersAsync(string nameFilter, string emailFilter, string role) =>
-        FilterUsers(string.IsNullOrEmpty(role)
-                ? userManager.Users
-                : (await userManager.GetUsersInRoleAsync(role).ConfigureAwait(false)).AsQueryable(),
-            nameFilter, emailFilter);
-
-    public async Task<StaffView?> FindUserAsync(Guid id)
+    public async Task<IList<string>> GetRolesAsync(Guid id)
     {
         var user = await userManager.FindByIdAsync(id.ToString()).ConfigureAwait(false);
-        return user == null ? null : new StaffView(user);
+        return user is null ? [] : await userManager.GetRolesAsync(user).ConfigureAwait(false);
     }
 
-    public async Task<IList<string>> GetUserRolesAsync(Guid id)
-    {
-        var user = await userManager.FindByIdAsync(id.ToString()).ConfigureAwait(false);
-        return user == null ? [] : await userManager.GetRolesAsync(user).ConfigureAwait(false);
-    }
+    public async Task<IReadOnlyList<AppRole>> GetAppRolesAsync(Guid id) =>
+        AppRole.RolesAsAppRoles(await GetRolesAsync(id).ConfigureAwait(false))
+            .OrderBy(r => r.DisplayName, StringComparer.CurrentCultureIgnoreCase).ToList();
 
-    public async Task<IdentityResult> UpdateUserRolesAsync(Guid id, Dictionary<string, bool> roleUpdates)
+    public async Task<IdentityResult> UpdateRolesAsync(Guid id, Dictionary<string, bool> roleUpdates)
     {
         foreach (var (key, value) in roleUpdates)
         {

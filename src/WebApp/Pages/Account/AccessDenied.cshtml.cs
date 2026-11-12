@@ -1,7 +1,7 @@
 ﻿namespace Enfo.WebApp.Pages.Account;
 
 [AllowAnonymous]
-public class AccessDenied : PageModel
+public class AccessDeniedModel : PageModel
 {
     public static void OnGet()
     {
