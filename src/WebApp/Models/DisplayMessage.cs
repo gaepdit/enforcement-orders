@@ -2,6 +2,7 @@
 
 namespace Enfo.WebApp.Models;
 
+[method: JsonConstructor]
 public record DisplayMessage(DisplayMessage.AlertContext Context, string Message, List<string> Details)
 {
     public DisplayMessage(AlertContext context, string message) : this(context, message, []) { }
