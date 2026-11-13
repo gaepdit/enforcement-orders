@@ -9,21 +9,14 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Enfo.WebApp.Pages;
 
-public class Search(IEnforcementOrderRepository order, ILegalAuthorityRepository legalAuthority)
-    : PageModel
+public class Search(IEnforcementOrderRepository order, ILegalAuthorityRepository legalAuthority) : PageModel
 {
-    public EnforcementOrderSpec Spec { get; set; }
-    public PaginatedResult<EnforcementOrderSummaryView> OrdersList { get; private set; }
+    public EnforcementOrderSpec Spec { get; set; } = null!;
+    public PaginatedResult<EnforcementOrderSummaryView> OrdersList { get; private set; } = null!;
+    public SelectList LegalAuthoritiesSelectList { get; private set; } = null!;
     public bool ShowResults { get; private set; }
 
-    // Select Lists
-    public SelectList LegalAuthoritiesSelectList { get; private set; }
-
-    public async Task OnGetAsync()
-    {
-        Spec = new EnforcementOrderSpec();
-        LegalAuthoritiesSelectList = await GetLegalAuthoritiesSelectList();
-    }
+    public async Task OnGetAsync() => LegalAuthoritiesSelectList = await GetLegalAuthoritiesSelectList();
 
     public async Task OnGetSearchAsync(EnforcementOrderSpec spec, [FromQuery] int p = 1)
     {

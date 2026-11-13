@@ -7,9 +7,9 @@
 [JsonConverter(typeof(JsonStringEnumConverter))]
 public enum ActivityState
 {
-    All,
-    Proposed,
-    Executed,
+    [Display(Name = "All Orders")] All,
+    [Display(Name = "Proposed Orders Only")] Proposed,
+    [Display(Name = "Executed Orders Only")] Executed,
 }
 
 /// <summary>

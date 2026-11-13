@@ -7,90 +7,94 @@
     ViewData["Title"] = "Search Enforcement Orders";
 }
 
-<h1>@ViewData["Title"]</h1>
-
-@if (User.Identity?.IsAuthenticated == true)
-{
-    <div class="gaepd-noprint">
-        <a asp-page="/Admin/Search" class="gaepd-no-visited">Go to admin search</a>
+<div class="container-full">
+    <div class="row justify-content-between align-items-baseline g-0 mt-1 mb-3">
+        <div class="col"><h1>@ViewData["Title"]</h1></div>
+        @if (User.Identity?.IsAuthenticated == true)
+        {
+            <div class="col-auto d-print-none ms-2">
+                <a asp-page="/Admin/Search"
+                   class="link-underline link-underline-opacity-25 link-underline-opacity-100-hover link-offset-2">
+                    <svg class="bi me-2">
+                        <use href="@Url.Content("~/images/app-icons.svg")#app-icon-person-badge"></use>
+                    </svg>
+                    Go to admin search
+                </a>
+            </div>
+        }
     </div>
-}
+</div>
 
-<div class="gaepd-container-light">
-    <form method="get" class="usa-form-large" asp-fragment="search-results">
-        <fieldset class="usa-fieldset-inputs">
-            <legend>Details</legend>
-            <label asp-for="Spec.Facility"></label>
-            <input asp-for="Spec.Facility" name="@nameof(Model.Spec.Facility)" />
+<div class="container">
+    <div class="row">
+        <div class="p-3 rounded-3 bg-light-subtle border col-lg-9">
+            <div class="text-body-secondary pb-2">
+                <em>All fields are optional.</em>
+            </div>
+            <form method="get" asp-page-handler="Search" asp-fragment="SearchResults">
+                <div class="row">
+                    <div class="col-md mb-3">
+                        <div class="form-floating">
+                            <input asp-for="Spec.Facility" class="form-control" />
+                            <label asp-for="Spec.Facility" class="form-label"></label>
+                        </div>
+                    </div>
+                    <div class="col-md mb-3">
+                        <div class="form-floating">
+                            <select asp-for="Spec.County" asp-items="@CommonSelectLists.CountiesSelectList" class="form-select">
+                                <option value="">(any)</option>
+                            </select>
+                            <label asp-for="Spec.County" class="form-label"></label>
+                        </div>
+                    </div>
+                </div>
 
-            <label asp-for="Spec.County"></label>
-            <select asp-for="Spec.County" asp-items="CommonSelectLists.CountiesSelectList"
-                    name="@nameof(Model.Spec.County)" class="custom-select">
-                <option value="">(any)</option>
-            </select>
+                <div class="row">
+                    <div class="col-md mb-3">
+                        <div class="form-floating">
+                            <input asp-for="Spec.OrderNumber" class="form-control" />
+                            <label asp-for="Spec.OrderNumber" class="form-label"></label>
+                        </div>
+                    </div>
+                    <div class="col-md mb-3">
+                        <div class="form-floating">
+                            <select asp-for="Spec.LegalAuth" asp-items="Model.LegalAuthoritiesSelectList" class="form-select">
+                                <option value="">(any)</option>
+                            </select>
+                            <label asp-for="Spec.LegalAuth" class="form-label"></label>
+                        </div>
+                    </div>
+                </div>
 
-            <label asp-for="Spec.OrderNumber">Order Number</label>
-            <input asp-for="Spec.OrderNumber" name="@nameof(Model.Spec.OrderNumber)" />
+                <div class="row">
+                    <div class="col-md mb-3">
+                        <div class="form-floating">
+                            <select asp-for="Spec.Status" asp-items="@Html.GetEnumSelectList<ActivityState>()" class="form-select">
+                            </select>
+                            <label asp-for="Spec.Status" class="form-label"></label>
+                        </div>
+                    </div>
+                    <div class="col-md mb-3">
+                        <div class="input-group">
+                            <div class="form-floating">
+                                <input asp-for="Spec.FromDate" class="form-control" />
+                                <label asp-for="Spec.FromDate" class="form-label"></label>
+                            </div>
+                            <div class="form-floating">
+                                <input asp-for="Spec.TillDate" class="form-control" />
+                                <label asp-for="Spec.TillDate" class="form-label"></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-            <label asp-for="Spec.LegalAuth"></label>
-            <select asp-for="Spec.LegalAuth" asp-items="Model.LegalAuthoritiesSelectList" name="@nameof(Model.Spec.LegalAuth)"
-                    class="custom-select">
-                <option value="">(any)</option>
-            </select>
-        </fieldset>
-
-        <fieldset class="usa-fieldset-inputs">
-            <legend>Status</legend>
-            <ul class="usa-unstyled-list">
-                <li>
-                    <input type="radio" name="Status" value="All" id="Status-All"
-                           @if (Model.Spec.Status == ActivityState.All)
-                           {
-                               <text> checked</text>
-                           }>
-                    <label for="Status-All">All Orders</label>
-                </li>
-                <li>
-                    <input type="radio" name="Status" value="Proposed" id="Status-Proposed"
-                           @if (Model.Spec.Status == ActivityState.Proposed)
-                           {
-                               <text> checked</text>
-                           }>
-                    <label for="Status-Proposed">Proposed orders only</label>
-                </li>
-                <li>
-                    <input type="radio" name="Status" value="Executed" id="Status-Executed"
-                           @if (Model.Spec.Status == ActivityState.Executed)
-                           {
-                               <text> checked</text>
-                           }>
-                    <label for="Status-Executed">Executed orders only</label>
-                </li>
-            </ul>
-        </fieldset>
-
-        <div class="usa-grid-full">
-            <fieldset class="usa-fieldset-inputs usa-width-one-half">
-                <legend>Date from</legend>
-                <input type="datetime" asp-for="Spec.FromDate" name="@nameof(Model.Spec.FromDate)"
-                       class="date-picker usa-input-medium" />
-                <span asp-validation-for="Spec.FromDate" class="usa-input-error-message"></span>
-            </fieldset>
-
-            <fieldset class="usa-fieldset-inputs usa-width-one-half">
-                <legend>Date until</legend>
-                <input type="datetime" asp-for="Spec.TillDate" name="@nameof(Model.Spec.TillDate)"
-                       class="date-picker usa-input-medium" />
-                <span asp-validation-for="Spec.TillDate" class="usa-input-error-message"></span>
-            </fieldset>
+                <div class="mt-3 mb-1">
+                    <button id="SearchButton" type="submit" class="btn btn-lg btn-primary col-4 me-2">Search</button>
+                    <a asp-page="Search" class="btn btn-lg btn-outline-secondary col-4 col-md-3">Clear Form</a>
+                </div>
+            </form>
         </div>
-
-        <div class="gaepd-buttonrow">
-            <input type="hidden" name="handler" value="search" />
-            <button id="SearchButton" type="submit">Search</button>
-            <a asp-page="Search" class="usa-button usa-button-secondary">Clear Form</a>
-        </div>
-    </form>
+    </div>
 </div>
 
 @if (Model.ShowResults)
@@ -111,7 +115,7 @@
                     <th scope="col" class="gaepd-sortable"
                         @if (Model.Spec.Sort == OrderSorting.FacilityAsc)
                         {
-                            @:aria-sort="ascending" 
+                            @:aria-sort="ascending"
                         }
                         else if (Model.Spec.Sort == OrderSorting.FacilityDesc)
                         {
@@ -128,7 +132,7 @@
                     <th scope="col" colspan="2" class="gaepd-sortable"
                         @if (Model.Spec.Sort == OrderSorting.DateAsc)
                         {
-                            @:aria-sort="ascending" 
+                            @:aria-sort="ascending"
                         }
                         else if (Model.Spec.Sort == OrderSorting.DateDesc)
                         {
@@ -191,6 +195,7 @@
     <link rel="stylesheet" href="~/lib/jqueryui/themes/base/jquery-ui.min.css" />
     <link rel="stylesheet" href="~/lib/jqueryui/themes/base/theme.min.css" />
 }
+
 @section Scripts
 {
     <script src="~/lib/jqueryui/jquery-ui.min.js"></script>

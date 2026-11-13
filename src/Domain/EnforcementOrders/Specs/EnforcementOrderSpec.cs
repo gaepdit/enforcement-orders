@@ -1,4 +1,5 @@
-﻿using Enfo.Domain.Utils;
+﻿using System.Globalization;
+using Enfo.Domain.Utils;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace Enfo.Domain.EnforcementOrders.Specs;
@@ -16,17 +17,19 @@ public class EnforcementOrderSpec
     [DisplayName("Legal Authority")]
     public int? LegalAuth { get; set; }
 
-    [DisplayName("Beginning Date")]
-    [DisplayFormat(DataFormatString = DisplayFormats.EditDate, ApplyFormatInEditMode = true)]
+    [Display(Name = "Beginning Date")]
+    [DataType(DataType.Date)]
+    [DisplayFormat(DataFormatString = DisplayFormats.DateSearch, ApplyFormatInEditMode = true)]
     [SwaggerSchema(Format = "date")]
     public DateTime? FromDate { get; set; }
 
-    [DisplayName("Ending Date")]
-    [DisplayFormat(DataFormatString = DisplayFormats.EditDate, ApplyFormatInEditMode = true)]
+    [Display(Name = "Ending Date")]
+    [DataType(DataType.Date)]
+    [DisplayFormat(DataFormatString = DisplayFormats.DateSearch, ApplyFormatInEditMode = true)]
     [SwaggerSchema(Format = "date")]
     public DateTime? TillDate { get; set; }
 
-    [DisplayName("Enforcement Order Status")]
+    [DisplayName("Order Status")]
     public ActivityState Status { get; set; } = ActivityState.All;
 
     public OrderSorting Sort { get; set; } = OrderSorting.DateDesc;
@@ -40,12 +43,12 @@ public class EnforcementOrderSpec
 
     public IDictionary<string, string> AsRouteValues() => new Dictionary<string, string>
     {
-            {nameof(Facility), Facility},
-            {nameof(County), County},
-            {nameof(LegalAuth), LegalAuth?.ToString()},
-            {nameof(FromDate), FromDate?.ToString()},
-            {nameof(TillDate), TillDate?.ToString()},
-            {nameof(Status), Status.ToString()},
-            {nameof(OrderNumber), OrderNumber},
-        };
+        { nameof(Facility), Facility },
+        { nameof(County), County },
+        { nameof(LegalAuth), LegalAuth?.ToString() },
+        { nameof(FromDate), FromDate?.ToString(DisplayFormats.RouteValue, CultureInfo.InvariantCulture) },
+        { nameof(TillDate), TillDate?.ToString(DisplayFormats.RouteValue, CultureInfo.InvariantCulture) },
+        { nameof(Status), Status.ToString() },
+        { nameof(OrderNumber), OrderNumber },
+    };
 }
