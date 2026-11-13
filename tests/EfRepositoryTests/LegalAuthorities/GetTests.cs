@@ -13,7 +13,7 @@ public class GetTests
     {
         await using var repositoryHelper = await RepositoryHelper.CreateRepositoryHelperAsync();
         using var repository = repositoryHelper.GetLegalAuthorityRepository();
-        var item = new LegalAuthorityView(LegalAuthorityData.LegalAuthorities.Single(e => e.Id == id));
+        var item = new LegalAuthorityViewDto(LegalAuthorityData.LegalAuthorities.Single(e => e.Id == id));
 
         var result = await repository.GetAsync(id);
 

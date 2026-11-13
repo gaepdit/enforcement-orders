@@ -1,4 +1,4 @@
-﻿using Enfo.Domain.EpdContacts.Repositories;
+﻿using Enfo.Domain.EpdContacts;
 using Enfo.Domain.EpdContacts.Resources;
 using Enfo.Domain.Identity;
 using Enfo.WebApp.Models;
@@ -17,12 +17,13 @@ public class AddModel : PageModel
     [TempData]
     public int HighlightId { get; set; }
 
-    public async Task<IActionResult> OnPostAsync([FromServices] IEpdContactRepository repository)
+    public async Task<IActionResult> OnPostAsync([FromServices] IEpdContactRepository repository,
+        CancellationToken token)
     {
         Item.TrimAll();
         if (!ModelState.IsValid) return Page();
 
-        HighlightId = await repository.CreateAsync(Item);
+        HighlightId = await repository.CreateAsync(Item, token);
 
         TempData.SetDisplayMessage(DisplayMessage.AlertContext.Success,
             $"{ThisOption.SingularName} successfully added.");

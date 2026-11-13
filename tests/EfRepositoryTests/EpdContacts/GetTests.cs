@@ -15,7 +15,7 @@ public class GetTests
         var item = await repository.GetAsync(id);
 
         var epdContact = EpdContactData.EpdContacts.Single(e => e.Id == id);
-        var expected = new EpdContactView(epdContact);
+        var expected = new EpdContactViewDto(epdContact);
 
         item.Should().BeEquivalentTo(expected);
     }

@@ -1,4 +1,4 @@
-﻿using Enfo.Domain.LegalAuthorities.Entities;
+﻿using Enfo.Domain.LegalAuthorities;
 using Enfo.Domain.LegalAuthorities.Resources;
 using Enfo.LocalRepository.Repositories;
 
@@ -17,7 +17,7 @@ public class CreateTests
         var itemId = await repository.CreateAsync(resource);
 
         var item = new LegalAuthority(resource) { Id = itemId };
-        var expected = new LegalAuthorityView(item);
+        var expected = new LegalAuthorityViewDto(item);
         var newItem = await repository.GetAsync(itemId);
 
         using (new AssertionScope())

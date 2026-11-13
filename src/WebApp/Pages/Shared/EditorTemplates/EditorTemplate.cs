@@ -7,5 +7,6 @@ namespace Enfo.WebApp.Pages.Shared.EditorTemplates;
 /// </summary>
 public static class EditorTemplate
 {
+    public const string Checkbox = nameof(Checkbox);
     public const string Input = nameof(Input);
 }

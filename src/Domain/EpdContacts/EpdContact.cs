@@ -2,7 +2,7 @@
 using Enfo.Domain.EpdContacts.Resources;
 using Enfo.Domain.Utils;
 
-namespace Enfo.Domain.EpdContacts.Entities;
+namespace Enfo.Domain.EpdContacts;
 
 public class EpdContact : IdentifiedEntity, IAuditable
 {
@@ -65,5 +65,6 @@ public class EpdContact : IdentifiedEntity, IAuditable
         State = Guard.NotNullOrWhiteSpace(resource.State);
         Street = Guard.NotNullOrWhiteSpace(resource.Street);
         Street2 = resource.Street2;
+        Active = resource.Active;
     }
 }

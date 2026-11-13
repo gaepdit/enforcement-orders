@@ -1,8 +1,7 @@
-using Enfo.Domain.LegalAuthorities.Resources.Validation;
+using Enfo.Domain;
 using Enfo.WebApp.Platform.AppConfiguration;
 using Enfo.WebApp.Platform.OrgNotifications;
 using Enfo.WebApp.Platform.Settings;
-using FluentValidation;
 using ZLogger;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -35,7 +34,7 @@ builder.Services
     .AddApiDocumentation()
     .AddWebOptimizer()
     .AddOrgNotifications()
-    .AddValidatorsFromAssemblyContaining<LegalAuthorityValidator>();
+    .RegisterServices();
 
 // Build the application.
 var app = builder.Build();

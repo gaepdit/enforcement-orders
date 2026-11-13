@@ -1,5 +1,4 @@
-﻿using Enfo.Domain.EpdContacts.Entities;
-using Enfo.Domain.EpdContacts.Repositories;
+﻿using Enfo.Domain.EpdContacts;
 using Enfo.Domain.EpdContacts.Resources;
 using EnfoTests.TestData;
 
@@ -7,18 +6,19 @@ namespace Enfo.LocalRepository.Repositories;
 
 public sealed class LocalEpdContactRepository : IEpdContactRepository
 {
-    public Task<EpdContactView> GetAsync(int id) =>
+    public Task<EpdContactViewDto> GetAsync(int id, CancellationToken token) =>
         EpdContactData.EpdContacts.Exists(e => e.Id == id)
-            ? Task.FromResult(new EpdContactView(
+            ? Task.FromResult(new EpdContactViewDto(
                 EpdContactData.EpdContacts.SingleOrDefault(e => e.Id == id)!))
-            : Task.FromResult<EpdContactView>(null);
+            : Task.FromResult<EpdContactViewDto>(null);
 
-    public Task<IReadOnlyList<EpdContactView>> ListAsync(bool includeInactive = false) =>
-        Task.FromResult<IReadOnlyList<EpdContactView>>(EpdContactData.EpdContacts
+    public Task<IReadOnlyList<EpdContactViewDto>> ListAsync(bool includeInactive = false,
+        CancellationToken token = default) =>
+        Task.FromResult<IReadOnlyList<EpdContactViewDto>>(EpdContactData.EpdContacts
             .Where(e => e.Active || includeInactive)
-            .Select(e => new EpdContactView(e)).ToList());
+            .Select(e => new EpdContactViewDto(e)).ToList());
 
-    public Task<int> CreateAsync(EpdContactCommand resource)
+    public Task<int> CreateAsync(EpdContactCommand resource, CancellationToken token)
     {
         resource.TrimAll();
         var id = EpdContactData.EpdContacts.Max(e => e.Id) + 1;
@@ -28,14 +28,10 @@ public sealed class LocalEpdContactRepository : IEpdContactRepository
         return Task.FromResult(id);
     }
 
-    public Task UpdateAsync(EpdContactCommand resource)
+    public Task UpdateAsync(int id, EpdContactCommand resource, CancellationToken token)
     {
-        if (!EpdContactData.EpdContacts.Exists(e => e.Id == resource.Id))
-            throw new ArgumentException($"ID ({resource.Id}) not found.", nameof(resource));
-
-        var item = EpdContactData.EpdContacts.Single(e => e.Id == resource.Id);
-
-        if (!item.Active) throw new ArgumentException("Only active items can be edited.", nameof(resource));
+        var item = EpdContactData.EpdContacts.SingleOrDefault(e => e.Id == id);
+        if (item is null) throw new ArgumentException($"ID ({id}) not found.", nameof(resource));
 
         resource.TrimAll();
         item.ApplyUpdate(resource);
@@ -43,7 +39,7 @@ public sealed class LocalEpdContactRepository : IEpdContactRepository
         return Task.CompletedTask;
     }
 
-    public Task UpdateStatusAsync(int id, bool newActiveStatus)
+    public Task UpdateStatusAsync(int id, bool newActiveStatus, CancellationToken token)
     {
         if (!EpdContactData.EpdContacts.Exists(e => e.Id == id))
             throw new ArgumentException($"ID ({id}) not found.", nameof(id));
@@ -54,7 +50,7 @@ public sealed class LocalEpdContactRepository : IEpdContactRepository
         return Task.CompletedTask;
     }
 
-    public Task<bool> ExistsAsync(int id) =>
+    public Task<bool> ExistsAsync(int id, CancellationToken token) =>
         Task.FromResult(EpdContactData.EpdContacts.Exists(e => e.Id == id));
 
     public void Dispose()

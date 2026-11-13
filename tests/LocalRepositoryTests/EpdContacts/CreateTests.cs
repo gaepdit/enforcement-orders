@@ -1,4 +1,4 @@
-﻿using Enfo.Domain.EpdContacts.Entities;
+﻿using Enfo.Domain.EpdContacts;
 using Enfo.Domain.EpdContacts.Resources;
 using Enfo.LocalRepository.Repositories;
 
@@ -29,7 +29,7 @@ public class CreateTests
         var itemId = await repository.CreateAsync(resource);
 
         var epdContact = new EpdContact(resource) { Id = itemId };
-        var expected = new EpdContactView(epdContact);
+        var expected = new EpdContactViewDto(epdContact);
 
         var newItem = await repository.GetAsync(itemId);
 

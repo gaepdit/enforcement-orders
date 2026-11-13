@@ -1,8 +1,6 @@
-﻿using Enfo.Domain.LegalAuthorities.Repositories;
+﻿using Enfo.Domain.LegalAuthorities;
 using Enfo.Domain.LegalAuthorities.Resources;
 using Enfo.WebApp.Models;
-using Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthorities;
-using Enfo.WebApp.Platform.PageModelHelpers;
 using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Http;
@@ -51,7 +49,7 @@ public class EditTests
     public async Task OnGet_GivenInvalidId_ReturnsNotFound()
     {
         var repo = Substitute.For<ILegalAuthorityRepository>();
-        repo.GetAsync(Arg.Any<int>()).Returns(null as LegalAuthorityView);
+        repo.GetAsync(Arg.Any<int>()).Returns(null as LegalAuthorityViewDto);
         var page = new Edit(repo);
 
         var result = await page.OnGetAsync(-1);
@@ -92,7 +90,7 @@ public class EditTests
     public async Task OnPost_GivenInvalidId_ReturnsNotFound()
     {
         var repo = Substitute.For<ILegalAuthorityRepository>();
-        repo.GetAsync(Arg.Any<int>()).Returns(null as LegalAuthorityView);
+        repo.GetAsync(Arg.Any<int>()).Returns(null as LegalAuthorityViewDto);
         var validator = Substitute.For<IValidator<LegalAuthorityCommand>>();
         validator.ValidateAsync(Arg.Any<LegalAuthorityCommand>(), CancellationToken.None)
             .Returns(new ValidationResult());

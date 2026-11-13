@@ -13,7 +13,7 @@ public class EnforcementOrderSummaryView
         Id = item.Id;
         FacilityName = item.FacilityName;
         County = item.County;
-        LegalAuthority = item.LegalAuthority == null ? null : new LegalAuthorityView(item.LegalAuthority);
+        LegalAuthority = item.LegalAuthority == null ? null : new LegalAuthorityViewDto(item.LegalAuthority);
         OrderNumber = item.OrderNumber;
         IsPublicProposedOrder = item.GetIsPublicProposedOrder;
         IsProposedOrder = IsPublicProposedOrder && item.IsProposedOrder;
@@ -35,7 +35,7 @@ public class EnforcementOrderSummaryView
     public string County { get; }
 
     [DisplayName("Legal Authority")]
-    public LegalAuthorityView LegalAuthority { get; }
+    public LegalAuthorityViewDto LegalAuthority { get; }
 
     [DisplayName("Order Number")]
     public string OrderNumber { get; }

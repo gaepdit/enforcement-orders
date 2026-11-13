@@ -184,7 +184,7 @@ public sealed class EnforcementOrderRepository(
     {
         resource.TrimAll();
         var item = new EnforcementOrder(resource);
-        await context.EnforcementOrders.AddAsync(item).ConfigureAwait(false);
+        context.EnforcementOrders.Add(item);
         await context.SaveChangesAsync().ConfigureAwait(false);
         if (resource.Attachment is not null)
             await AddAttachmentAsync(item.Id, resource.Attachment).ConfigureAwait(false);
@@ -236,7 +236,7 @@ public sealed class EnforcementOrderRepository(
         };
 
         await attachmentStore.SaveFileAttachmentAsync(file, attachmentId).ConfigureAwait(false);
-        await context.Attachments.AddAsync(attachment).ConfigureAwait(false);
+        context.Attachments.Add(attachment);
         await context.SaveChangesAsync().ConfigureAwait(false);
     }
 

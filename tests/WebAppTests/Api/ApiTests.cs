@@ -2,7 +2,7 @@ using Enfo.Domain.Attachments;
 using Enfo.Domain.EnforcementOrders.Repositories;
 using Enfo.Domain.EnforcementOrders.Resources;
 using Enfo.Domain.EnforcementOrders.Specs;
-using Enfo.Domain.LegalAuthorities.Repositories;
+using Enfo.Domain.LegalAuthorities;
 using Enfo.Domain.LegalAuthorities.Resources;
 using Enfo.LocalRepository.Repositories;
 using Enfo.WebApp.Api;
@@ -117,7 +117,7 @@ public class ApiTests
     public async Task GetAuthority_UnknownId_Returns404Object()
     {
         var repo = Substitute.For<ILegalAuthorityRepository>();
-        repo.GetAsync(Arg.Any<int>()).Returns(null as LegalAuthorityView);
+        repo.GetAsync(Arg.Any<int>()).Returns(null as LegalAuthorityViewDto);
 
         var controller = new ApiController();
         var response = await controller.GetLegalAuthorityAsync(repo, 1);

@@ -1,7 +1,7 @@
 using Enfo.Domain.EnforcementOrders.Repositories;
 using Enfo.Domain.EnforcementOrders.Resources;
 using Enfo.Domain.EnforcementOrders.Specs;
-using Enfo.Domain.LegalAuthorities.Repositories;
+using Enfo.Domain.LegalAuthorities;
 using Enfo.Domain.LegalAuthorities.Resources;
 using Enfo.Domain.Pagination;
 using Enfo.WebApp.Pages;
@@ -26,8 +26,8 @@ public class SearchTests
         {
             page.Spec.Should().BeEquivalentTo(new EnforcementOrderSpec());
             var expectedLegal = new SelectList(ResourceHelper.GetLegalAuthorityViewList(),
-                nameof(LegalAuthorityView.Id),
-                nameof(LegalAuthorityView.AuthorityName));
+                nameof(LegalAuthorityViewDto.Id),
+                nameof(LegalAuthorityViewDto.AuthorityName));
             page.LegalAuthoritiesSelectList.Should().BeEquivalentTo(expectedLegal);
             page.ShowResults.Should().BeFalse();
         }
@@ -51,8 +51,8 @@ public class SearchTests
             page.Spec.Should().BeEquivalentTo(new EnforcementOrderSpec());
             page.OrdersList.Should().BeEquivalentTo(expectedOrders);
             var expectedLegal = new SelectList(ResourceHelper.GetLegalAuthorityViewList(),
-                nameof(LegalAuthorityView.Id),
-                nameof(LegalAuthorityView.AuthorityName));
+                nameof(LegalAuthorityViewDto.Id),
+                nameof(LegalAuthorityViewDto.AuthorityName));
             page.LegalAuthoritiesSelectList.Should().BeEquivalentTo(expectedLegal);
             page.ShowResults.Should().BeTrue();
         }
@@ -76,8 +76,8 @@ public class SearchTests
             page.Spec.Should().BeEquivalentTo(new EnforcementOrderSpec());
             page.OrdersList.Should().BeEquivalentTo(expectedOrders);
             var expectedLegal = new SelectList(ResourceHelper.GetLegalAuthorityViewList(),
-                nameof(LegalAuthorityView.Id),
-                nameof(LegalAuthorityView.AuthorityName));
+                nameof(LegalAuthorityViewDto.Id),
+                nameof(LegalAuthorityViewDto.AuthorityName));
             page.LegalAuthoritiesSelectList.Should().BeEquivalentTo(expectedLegal);
             page.ShowResults.Should().BeTrue();
         }

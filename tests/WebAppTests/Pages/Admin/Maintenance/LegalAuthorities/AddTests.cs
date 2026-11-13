@@ -1,8 +1,5 @@
-﻿using Enfo.Domain.LegalAuthorities.Repositories;
-using Enfo.Domain.LegalAuthorities.Resources;
+﻿using Enfo.Domain.LegalAuthorities;
 using Enfo.WebApp.Models;
-using Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthorities;
-using Enfo.WebApp.Platform.PageModelHelpers;
 using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Http;

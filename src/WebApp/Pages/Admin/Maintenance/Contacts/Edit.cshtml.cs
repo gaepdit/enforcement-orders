@@ -1,67 +1,43 @@
-﻿using Enfo.Domain.EpdContacts.Repositories;
+﻿using Enfo.Domain.EpdContacts;
 using Enfo.Domain.EpdContacts.Resources;
 using Enfo.Domain.Identity;
 using Enfo.WebApp.Models;
 using Enfo.WebApp.Platform.PageModelHelpers;
-using Microsoft.EntityFrameworkCore;
 
 namespace Enfo.WebApp.Pages.Admin.Maintenance.Contacts;
 
 [Authorize(Roles = AppRole.SiteMaintenance)]
-public class Edit(IEpdContactRepository repository) : PageModel
+public class EditModel(IEpdContactRepository repository) : PageModel
 {
+    [FromRoute]
+    public int Id { get; set; }
+
     [BindProperty]
-    public EpdContactCommand Item { get; set; }
+    public EpdContactCommand Item { get; set; } = null!;
 
     [TempData]
     public int HighlightId { get; set; }
 
     public static MaintenanceOption ThisOption => MaintenanceOption.EpdContact;
 
-    public async Task<IActionResult> OnGetAsync(int? id)
+    public async Task<IActionResult> OnGetAsync(CancellationToken token = default)
     {
-        if (id == null) return NotFound();
-        var originalItem = await repository.GetAsync(id.Value);
+        if (Id == 0) return NotFound();
+        var originalItem = await repository.GetAsync(Id, token);
         if (originalItem == null) return NotFound("ID not found.");
-
-        if (!originalItem.Active)
-        {
-            TempData.SetDisplayMessage(DisplayMessage.AlertContext.Warning,
-                $"Inactive {ThisOption.PluralName} cannot be edited.");
-            return RedirectToPage("Index");
-        }
 
         Item = new EpdContactCommand(originalItem);
         return Page();
     }
 
-    public async Task<IActionResult> OnPostAsync()
+    public async Task<IActionResult> OnPostAsync(CancellationToken token = default)
     {
-        if (Item.Id is null) return BadRequest();
-
-        var originalItem = await repository.GetAsync(Item.Id.Value);
-        if (originalItem == null) return NotFound();
-
-        if (!originalItem.Active)
-        {
-            TempData.SetDisplayMessage(DisplayMessage.AlertContext.Warning,
-                $"Inactive {ThisOption.PluralName} cannot be edited.");
-            return RedirectToPage("Index");
-        }
-
+        if (Id == 0) return BadRequest();
         if (!ModelState.IsValid) return Page();
 
-        try
-        {
-            await repository.UpdateAsync(Item);
-        }
-        catch (DbUpdateConcurrencyException)
-        {
-            if (!await repository.ExistsAsync(Item.Id.Value)) return NotFound();
-            throw;
-        }
+        await repository.UpdateAsync(Id, Item, token);
 
-        HighlightId = Item.Id.Value;
+        HighlightId = Id;
         TempData.SetDisplayMessage(DisplayMessage.AlertContext.Success,
             $"{ThisOption.SingularName} successfully updated.");
         return RedirectToPage("Index");

@@ -14,7 +14,7 @@ public class ListTests
         items.Should().HaveSameCount(EpdContactData.EpdContacts.Where(e => e.Active));
 
         var epdContact = EpdContactData.EpdContacts.First(e => e.Active);
-        var expected = new EpdContactView(epdContact);
+        var expected = new EpdContactViewDto(epdContact);
 
         items[0].Should().BeEquivalentTo(expected);
     }
@@ -28,7 +28,7 @@ public class ListTests
         items.Should().HaveCount(EpdContactData.EpdContacts.Count);
 
         var epdContact = EpdContactData.EpdContacts[0];
-        var expected = new EpdContactView(epdContact);
+        var expected = new EpdContactViewDto(epdContact);
 
         items[0].Should().BeEquivalentTo(expected);
     }

@@ -15,20 +15,20 @@ public class EnforcementOrderAdminView : EnforcementOrderAdminSummaryView
         Cause = item.Cause;
         Requirements = item.Requirements;
         SettlementAmount = item.SettlementAmount;
-        CommentContact = item.CommentContact == null ? null : new EpdContactView(item.CommentContact);
+        CommentContact = item.CommentContact == null ? null : new EpdContactViewDto(item.CommentContact);
         IsHearingScheduled = item.IsHearingScheduled;
         HearingDate = item.HearingDate;
         HearingLocation = item.HearingLocation;
         HearingCommentPeriodClosesDate = item.HearingCommentPeriodClosesDate;
-        HearingContact = item.HearingContact == null ? null : new EpdContactView(item.HearingContact);
+        HearingContact = item.HearingContact == null ? null : new EpdContactViewDto(item.HearingContact);
         IsPublicProposedOrder = item.GetIsPublicProposedOrder;
         CommentPeriodClosesDate = item.CommentPeriodClosesDate;
         IsPublicExecutedOrder = item.GetIsPublicExecutedOrder;
         ExecutedOrderPostedDate = item.ExecutedOrderPostedDate;
         Attachments = item.Attachments?
-                .Where(a => !a.Deleted)
-                .Select(a => new AttachmentView(a)).ToList()
-            ?? new List<AttachmentView>();
+                          .Where(a => !a.Deleted)
+                          .Select(a => new AttachmentView(a)).ToList()
+                      ?? new List<AttachmentView>();
     }
 
     private static PublicationProgress GetResourcePublicationState(
@@ -61,7 +61,7 @@ public class EnforcementOrderAdminView : EnforcementOrderAdminSummaryView
     private bool IsPublicProposedOrder { get; }
 
     [DisplayName("Send Comments To")]
-    public EpdContactView CommentContact { get; }
+    public EpdContactViewDto CommentContact { get; }
 
     [DisplayName("Date Comment Period Closes")]
     [DisplayFormat(DataFormatString = DisplayFormats.ShortDateComposite)]
@@ -97,7 +97,7 @@ public class EnforcementOrderAdminView : EnforcementOrderAdminSummaryView
     public DateTime? HearingCommentPeriodClosesDate { get; }
 
     [DisplayName("Hearing Information Contact")]
-    public EpdContactView HearingContact { get; }
+    public EpdContactViewDto HearingContact { get; }
 
     // Calculated properties
 

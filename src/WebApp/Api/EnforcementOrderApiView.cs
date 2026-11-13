@@ -40,7 +40,7 @@ public class EnforcementOrderApiView
     public int Id { get; }
     public string FacilityName { get; }
     public string County { get; }
-    public LegalAuthorityView LegalAuthority { get; }
+    public LegalAuthorityViewDto LegalAuthority { get; }
     public string OrderNumber { get; }
     public bool IsProposedOrder { get; }
     public DateTime? CommentPeriodClosesDate { get; }
@@ -51,12 +51,12 @@ public class EnforcementOrderApiView
     public string Cause { get; }
     public string Requirements { get; }
     public decimal? SettlementAmount { get; }
-    public EpdContactView CommentContact { get; }
+    public EpdContactViewDto CommentContact { get; }
     public bool IsHearingScheduled { get; }
     public DateTime? HearingDate { get; }
     public string HearingLocation { get; }
     public DateTime? HearingCommentPeriodClosesDate { get; }
-    public EpdContactView HearingContact { get; }
+    public EpdContactViewDto HearingContact { get; }
     public List<AttachmentApiView> Attachments { get; }
 
     [PublicAPI]

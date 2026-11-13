@@ -1,4 +1,4 @@
-﻿using Enfo.Domain.LegalAuthorities.Entities;
+﻿using Enfo.Domain.LegalAuthorities;
 
 // ReSharper disable StringLiteralTypo
 

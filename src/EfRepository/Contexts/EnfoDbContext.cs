@@ -1,9 +1,9 @@
 ﻿using Enfo.Domain.Attachments;
 using Enfo.Domain.BaseEntities;
 using Enfo.Domain.EnforcementOrders.Entities;
-using Enfo.Domain.EpdContacts.Entities;
+using Enfo.Domain.EpdContacts;
 using Enfo.Domain.Identity;
-using Enfo.Domain.LegalAuthorities.Entities;
+using Enfo.Domain.LegalAuthorities;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;

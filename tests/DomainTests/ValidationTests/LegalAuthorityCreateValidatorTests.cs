@@ -1,19 +1,18 @@
-using Enfo.Domain.LegalAuthorities.Repositories;
+using Enfo.Domain.LegalAuthorities;
 using Enfo.Domain.LegalAuthorities.Resources;
-using Enfo.Domain.LegalAuthorities.Resources.Validation;
 using FluentValidation.TestHelper;
 
 namespace DomainTests.ValidationTests;
 
 [TestFixture]
-public class ValidatingLegalAuthority
+public class LegalAuthorityCreateValidatorTests
 {
     [Test]
     public async Task SucceedsGivenValidUpdates()
     {
-        var command = new LegalAuthorityCommand { Id = 1, AuthorityName = "auth" };
+        var command = new LegalAuthorityCreateDto { AuthorityName = "auth" };
 
-        var validator = new LegalAuthorityValidator(Substitute.For<ILegalAuthorityRepository>());
+        var validator = new LegalAuthorityCreateValidator(Substitute.For<ILegalAuthorityRepository>());
 
         var result = await validator.TestValidateAsync(command);
 
@@ -27,9 +26,9 @@ public class ValidatingLegalAuthority
     [Test]
     public async Task FailsIfMissingRequiredProperties()
     {
-        var command = new LegalAuthorityCommand { Id = 1, AuthorityName = null };
+        var command = new LegalAuthorityCreateDto { AuthorityName = null };
 
-        var validator = new LegalAuthorityValidator(Substitute.For<ILegalAuthorityRepository>());
+        var validator = new LegalAuthorityCreateValidator(Substitute.For<ILegalAuthorityRepository>());
 
         var result = await validator.TestValidateAsync(command);
 
@@ -44,12 +43,13 @@ public class ValidatingLegalAuthority
     [Test]
     public async Task FailsWithDuplicateName()
     {
-        var command = new LegalAuthorityCommand { Id = 1, AuthorityName = "auth" };
+        var command = new LegalAuthorityCreateDto { AuthorityName = "auth" };
+
 
         var repoMock = Substitute.For<ILegalAuthorityRepository>();
-        repoMock.NameExistsAsync(Arg.Any<string>()).Returns(true);
+        repoMock.NameExistsAsync(Arg.Any<string>(), Arg.Any<CancellationToken>()).Returns(true);
 
-        var validator = new LegalAuthorityValidator(repoMock);
+        var validator = new LegalAuthorityCreateValidator(repoMock);
 
         var result = await validator.TestValidateAsync(command);
 

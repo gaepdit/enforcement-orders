@@ -1,4 +1,4 @@
-﻿using Enfo.Domain.EpdContacts.Entities;
+﻿using Enfo.Domain.EpdContacts;
 
 // ReSharper disable StringLiteralTypo
 

@@ -1,7 +1,6 @@
-﻿using Enfo.Domain.EpdContacts.Repositories;
+﻿using Enfo.Domain.EpdContacts;
 using Enfo.Domain.EpdContacts.Resources;
 using Enfo.WebApp.Models;
-using Enfo.WebApp.Platform.PageModelHelpers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -86,7 +85,7 @@ public class IndexTests
     public async Task OnPost_GivenInvalidId_ReturnsNotFound()
     {
         var repo = Substitute.For<IEpdContactRepository>();
-        repo.GetAsync(Arg.Any<int>()).Returns(null as EpdContactView);
+        repo.GetAsync(Arg.Any<int>()).Returns(null as EpdContactViewDto);
         var page = new Index(repo);
 
         var result = await page.OnPostAsync(1);

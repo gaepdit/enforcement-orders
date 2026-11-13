@@ -1,5 +1,4 @@
 ﻿using Enfo.Domain.Utils;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Enfo.Domain.EpdContacts.Resources;
 
@@ -7,9 +6,8 @@ public class EpdContactCommand
 {
     public EpdContactCommand() { }
 
-    public EpdContactCommand(EpdContactView item)
+    public EpdContactCommand(EpdContactViewDto item)
     {
-        Id = item.Id;
         ContactName = item.ContactName;
         Email = item.Email;
         Organization = item.Organization;
@@ -20,10 +18,8 @@ public class EpdContactCommand
         State = item.State;
         Street = item.Street;
         Street2 = item.Street2;
+        Active = item.Active;
     }
-
-    [HiddenInput]
-    public int? Id { get; init; }
 
     [DisplayName("Contact Full Name")]
     [Required(ErrorMessage = "Contact Name is required.")]
@@ -72,6 +68,8 @@ public class EpdContactCommand
     [StringLength(10)]
     [RegularExpression(ResourceRegex.PostalCode, ErrorMessage = "Provide a valid US ZIP Code.")]
     public string PostalCode { get; set; }
+
+    public bool Active { get; init; }
 
     public void TrimAll()
     {

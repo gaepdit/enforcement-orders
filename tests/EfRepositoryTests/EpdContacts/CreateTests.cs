@@ -1,5 +1,5 @@
 ﻿using EfRepositoryTests.Helpers;
-using Enfo.Domain.EpdContacts.Entities;
+using Enfo.Domain.EpdContacts;
 using Enfo.Domain.EpdContacts.Resources;
 
 namespace EfRepositoryTests.EpdContacts;
@@ -29,7 +29,7 @@ public class CreateTests
         repositoryHelper.ClearChangeTracker();
 
         var epdContact = new EpdContact(resource) { Id = itemId };
-        var expected = new EpdContactView(epdContact);
+        var expected = new EpdContactViewDto(epdContact);
 
         (await repository.GetAsync(itemId)).Should().BeEquivalentTo(expected);
     }

@@ -1,5 +1,4 @@
-﻿using Enfo.Domain.LegalAuthorities.Entities;
-using Enfo.Domain.LegalAuthorities.Repositories;
+﻿using Enfo.Domain.LegalAuthorities;
 using Enfo.Domain.LegalAuthorities.Resources;
 using EnfoTests.TestData;
 
@@ -7,58 +6,48 @@ namespace Enfo.LocalRepository.Repositories;
 
 public sealed class LocalLegalAuthorityRepository : ILegalAuthorityRepository
 {
-    public Task<LegalAuthorityView> GetAsync(int id) =>
+    public Task<LegalAuthorityViewDto> GetAsync(int id, CancellationToken token) =>
         LegalAuthorityData.LegalAuthorities.Exists(e => e.Id == id)
-            ? Task.FromResult(new LegalAuthorityView(
-                LegalAuthorityData.LegalAuthorities.SingleOrDefault(e => e.Id == id)!))
-            : Task.FromResult<LegalAuthorityView>(null);
+            ? Task.FromResult(new LegalAuthorityViewDto(
+                LegalAuthorityData.LegalAuthorities.SingleOrDefault(e => e.Id == id) ??
+                throw new ArgumentException($"ID ({id}) not found.", nameof(id))))
+            : Task.FromResult<LegalAuthorityViewDto>(null);
 
-    public Task<IReadOnlyList<LegalAuthorityView>> ListAsync(bool includeInactive = false) =>
-        Task.FromResult<IReadOnlyList<LegalAuthorityView>>(LegalAuthorityData.LegalAuthorities
+    public Task<IReadOnlyList<LegalAuthorityViewDto>> ListAsync(bool includeInactive = false,
+        CancellationToken token = default) =>
+        Task.FromResult<IReadOnlyList<LegalAuthorityViewDto>>(LegalAuthorityData.LegalAuthorities
             .Where(e => e.Active || includeInactive)
-            .Select(e => new LegalAuthorityView(e)).ToList());
+            .Select(e => new LegalAuthorityViewDto(e)).ToList());
 
-    public Task<int> CreateAsync(LegalAuthorityCommand resource)
+    public Task<int> CreateAsync(LegalAuthorityCreateDto resource, CancellationToken token)
     {
-        resource.TrimAll();
         var id = LegalAuthorityData.LegalAuthorities.Max(e => e.Id) + 1;
-        var item = new LegalAuthority(resource) { Id = id };
+        var item = new LegalAuthority { Id = id, AuthorityName = resource.AuthorityName };
         LegalAuthorityData.LegalAuthorities.Add(item);
 
         return Task.FromResult(id);
     }
 
-    public Task UpdateAsync(LegalAuthorityCommand resource)
+    public Task UpdateAsync(int id, LegalAuthorityUpdateDto resource, CancellationToken token)
     {
-        if (!LegalAuthorityData.LegalAuthorities.Exists(e => e.Id == resource.Id))
-            throw new ArgumentException($"ID ({resource.Id}) not found.", nameof(resource));
+        var item = LegalAuthorityData.LegalAuthorities.SingleOrDefault(e => e.Id == id) ??
+                   throw new ArgumentException($"ID ({id}) not found.", nameof(resource));
 
-        var item = LegalAuthorityData.LegalAuthorities.Single(e => e.Id == resource.Id);
-
-        if (!item.Active) throw new ArgumentException("Only active items can be edited.", nameof(resource));
-
-        resource.TrimAll();
-        item.ApplyUpdate(resource);
+        item.AuthorityName = resource.AuthorityName.Trim();
+        item.Active = resource.Active;
 
         return Task.CompletedTask;
     }
 
-    public Task UpdateStatusAsync(int id, bool newActiveStatus)
-    {
-        if (!LegalAuthorityData.LegalAuthorities.Exists(e => e.Id == id))
-            throw new ArgumentException($"ID ({id}) not found.", nameof(id));
 
-        var item = LegalAuthorityData.LegalAuthorities.Single(e => e.Id == id);
-        item.Active = newActiveStatus;
-
-        return Task.CompletedTask;
-    }
-
-    public Task<bool> ExistsAsync(int id) =>
+    public Task<bool> ExistsAsync(int id, CancellationToken token) =>
         Task.FromResult(LegalAuthorityData.LegalAuthorities.Exists(e => e.Id == id));
 
-    public Task<bool> NameExistsAsync(string name) =>
+    public Task<bool> NameExistsAsync(string name, CancellationToken token) =>
         Task.FromResult(LegalAuthorityData.LegalAuthorities.Exists(e => e.AuthorityName == name));
+
+    public Task<int?> FindIdByNameAsync(string name, CancellationToken token) =>
+        Task.FromResult(LegalAuthorityData.LegalAuthorities.SingleOrDefault(e => e.AuthorityName == name)?.Id);
 
     public void Dispose()
     {

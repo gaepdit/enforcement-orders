@@ -1,5 +1,5 @@
 ﻿using Enfo.Domain.Identity;
-using Enfo.Domain.LegalAuthorities.Repositories;
+using Enfo.Domain.LegalAuthorities;
 using Enfo.Domain.LegalAuthorities.Resources;
 using Enfo.WebApp.Models;
 using Enfo.WebApp.Platform.PageModelHelpers;
@@ -11,7 +11,7 @@ namespace Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthorities;
 public class AddModel : PageModel
 {
     [BindProperty]
-    public LegalAuthorityCommand Item { get; init; } = null!;
+    public LegalAuthorityCreateDto Item { get; init; } = null!;
 
     public static MaintenanceOption ThisOption => MaintenanceOption.LegalAuthority;
 
@@ -20,13 +20,13 @@ public class AddModel : PageModel
 
     public async Task<IActionResult> OnPostAsync(
         [FromServices] ILegalAuthorityRepository repository,
-        [FromServices] IValidator<LegalAuthorityCommand> validator)
+        [FromServices] IValidator<LegalAuthorityCreateDto> validator,
+        CancellationToken token = default)
     {
-        Item.TrimAll();
         await validator.ApplyValidationAsync(Item, ModelState);
         if (!ModelState.IsValid) return Page();
 
-        HighlightId = await repository.CreateAsync(Item);
+        HighlightId = await repository.CreateAsync(Item, token).ConfigureAwait(false);
 
         TempData.SetDisplayMessage(DisplayMessage.AlertContext.Success, $"{Item.AuthorityName} successfully added.");
         return RedirectToPage("Index");

@@ -1,8 +1,6 @@
-﻿using Enfo.Domain.EpdContacts.Repositories;
+﻿using Enfo.Domain.EpdContacts;
 using Enfo.Domain.EpdContacts.Resources;
 using Enfo.WebApp.Models;
-using Enfo.WebApp.Pages.Admin.Maintenance.Contacts;
-using Enfo.WebApp.Platform.PageModelHelpers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -48,7 +46,7 @@ public class EditTests
     public async Task OnGet_GivenInvalidId_ReturnsNotFound()
     {
         var repo = Substitute.For<IEpdContactRepository>();
-        repo.GetAsync(Arg.Any<int>()).Returns(null as EpdContactView);
+        repo.GetAsync(Arg.Any<int>()).Returns(null as EpdContactViewDto);
         var page = new Edit(repo);
 
         var result = await page.OnGetAsync(-1);
@@ -91,7 +89,7 @@ public class EditTests
     {
         var item = new EpdContactCommand { Id = 0 };
         var repo = Substitute.For<IEpdContactRepository>();
-        repo.GetAsync(Arg.Any<int>()).Returns(null as EpdContactView);
+        repo.GetAsync(Arg.Any<int>()).Returns(null as EpdContactViewDto);
         var page = new Edit(repo) { Item = item };
 
         var result = await page.OnPostAsync();

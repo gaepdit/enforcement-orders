@@ -1,10 +1,8 @@
-﻿using Enfo.Domain.LegalAuthorities.Entities;
+﻿namespace Enfo.Domain.LegalAuthorities.Resources;
 
-namespace Enfo.Domain.LegalAuthorities.Resources;
-
-public class LegalAuthorityView
+public class LegalAuthorityViewDto
 {
-    public LegalAuthorityView([NotNull] LegalAuthority item)
+    public LegalAuthorityViewDto([NotNull] LegalAuthority item)
     {
         Guard.NotNull(item);
 

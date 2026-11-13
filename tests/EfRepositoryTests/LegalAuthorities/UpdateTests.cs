@@ -14,7 +14,7 @@ public class UpdateTests
         await using var repositoryHelper = await RepositoryHelper.CreateRepositoryHelperAsync();
         using var repository = repositoryHelper.GetLegalAuthorityRepository();
 
-        await repository.UpdateAsync(resource);
+        await repository.UpdateAsync(TODO, resource);
         repositoryHelper.ClearChangeTracker();
 
         var item = await repository.GetAsync(itemId);
@@ -30,11 +30,11 @@ public class UpdateTests
         await using var repositoryHelper = await RepositoryHelper.CreateRepositoryHelperAsync();
         using var repository = repositoryHelper.GetLegalAuthorityRepository();
 
-        await repository.UpdateAsync(resource);
+        await repository.UpdateAsync(TODO, resource);
         repositoryHelper.ClearChangeTracker();
 
         var item = await repository.GetAsync(original.Id);
-        item.Should().BeEquivalentTo(new LegalAuthorityView(original));
+        item.Should().BeEquivalentTo(new LegalAuthorityViewDto(original));
     }
 
     [Test]
@@ -47,7 +47,7 @@ public class UpdateTests
         {
             await using var repositoryHelper = await RepositoryHelper.CreateRepositoryHelperAsync();
             using var repository = repositoryHelper.GetLegalAuthorityRepository();
-            await repository.UpdateAsync(resource);
+            await repository.UpdateAsync(TODO, resource);
         };
 
         await action.Should().ThrowAsync<ArgumentException>();
@@ -63,7 +63,7 @@ public class UpdateTests
         {
             await using var repositoryHelper = await RepositoryHelper.CreateRepositoryHelperAsync();
             using var repository = repositoryHelper.GetLegalAuthorityRepository();
-            await repository.UpdateAsync(itemUpdate);
+            await repository.UpdateAsync(TODO, itemUpdate);
         };
 
         (await action.Should().ThrowAsync<ArgumentException>())

@@ -1,7 +1,7 @@
 ﻿using Enfo.Domain.Attachments;
 using Enfo.Domain.EnforcementOrders.Repositories;
-using Enfo.Domain.EpdContacts.Repositories;
-using Enfo.Domain.LegalAuthorities.Repositories;
+using Enfo.Domain.EpdContacts;
+using Enfo.Domain.LegalAuthorities;
 using Enfo.EfRepository.Contexts;
 using Enfo.EfRepository.Repositories;
 using Microsoft.EntityFrameworkCore;

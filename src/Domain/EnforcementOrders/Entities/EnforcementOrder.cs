@@ -1,8 +1,8 @@
 using Enfo.Domain.Attachments;
 using Enfo.Domain.BaseEntities;
 using Enfo.Domain.EnforcementOrders.Resources;
-using Enfo.Domain.EpdContacts.Entities;
-using Enfo.Domain.LegalAuthorities.Entities;
+using Enfo.Domain.EpdContacts;
+using Enfo.Domain.LegalAuthorities;
 
 namespace Enfo.Domain.EnforcementOrders.Entities;
 

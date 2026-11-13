@@ -1,5 +1,5 @@
 ﻿using Enfo.Domain.Identity;
-using Enfo.Domain.LegalAuthorities.Repositories;
+using Enfo.Domain.LegalAuthorities;
 using Enfo.Domain.LegalAuthorities.Resources;
 
 namespace Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthorities;
@@ -7,7 +7,7 @@ namespace Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthorities;
 [Authorize]
 public class IndexModel(ILegalAuthorityRepository repository) : PageModel
 {
-    public IReadOnlyList<LegalAuthorityView> Items { get; private set; } = null!;
+    public IReadOnlyList<LegalAuthorityViewDto> Items { get; private set; } = null!;
     public static MaintenanceOption ThisOption => MaintenanceOption.LegalAuthority;
     public bool IsSiteMaintainer { get; private set; }
 

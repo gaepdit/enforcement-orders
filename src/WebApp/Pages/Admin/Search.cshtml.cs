@@ -1,7 +1,7 @@
 ﻿using Enfo.Domain.EnforcementOrders.Repositories;
 using Enfo.Domain.EnforcementOrders.Resources;
 using Enfo.Domain.EnforcementOrders.Specs;
-using Enfo.Domain.LegalAuthorities.Repositories;
+using Enfo.Domain.LegalAuthorities;
 using Enfo.Domain.LegalAuthorities.Resources;
 using Enfo.Domain.Pagination;
 using Enfo.WebApp.Platform.AppConfiguration;
@@ -37,6 +37,6 @@ public class Search(IEnforcementOrderRepository repository, ILegalAuthorityRepos
 
     private async Task<SelectList> GetLegalAuthoritiesSelectList() =>
         new(await legalAuthority.ListAsync(),
-            nameof(LegalAuthorityView.Id),
-            nameof(LegalAuthorityView.AuthorityName));
+            nameof(LegalAuthorityViewDto.Id),
+            nameof(LegalAuthorityViewDto.AuthorityName));
 }

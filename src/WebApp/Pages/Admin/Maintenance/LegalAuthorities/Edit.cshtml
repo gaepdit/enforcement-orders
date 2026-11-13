@@ -1,31 +1,35 @@
 ﻿@page "{id}"
-@model Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthorities.Edit
+@using Enfo.WebApp.Pages.Shared.EditorTemplates
+@model EditModel
 @{
-    ViewData["Title"] = $"Edit {Edit.ThisOption.SingularName}: {Model.OriginalName}";
+    ViewData["Title"] = $"Edit {EditModel.ThisOption.SingularName}";
+    ViewData["NoAnchors"] = "True";
 }
 
-<h1>@ViewData["Title"]</h1>
+<h1>Edit @EditModel.ThisOption.SingularName</h1>
+<hr />
+<partial name="Admin/Maintenance/_MaintenanceItemEditWarning" model="@EditModel.ThisOption" />
 
-<div class="gaepd-container-light">
-    <form method="post" class="usa-form-large">
-        <div asp-validation-summary="ModelOnly" class="usa-input-error-message"></div>
+<h2>@Model.OriginalName</h2>
 
-        <p>Required fields are marked with an asterisk (<abbr class="required-field-label" title="Required">*</abbr>).</p>
-
-        <label asp-for="Item.AuthorityName"></label>
-        <input asp-for="Item.AuthorityName" />
-        <span asp-validation-for="Item.AuthorityName" class="usa-input-error-message"></span>
-
-        <div class="gaepd-buttonrow">
-            <input asp-for="Item.Id" />
-            <button type="submit">Save Changes</button>
-            <a asp-page="Index" class="usa-button usa-button-secondary">Cancel</a>
-            <input asp-for="OriginalName" />
+<div class="p-3 border rounded-3 bg-light-subtle">
+    <form method="post">
+        <div class="col-md-8 mb-3">
+            @Html.EditorFor(model => model.Item.AuthorityName, EditorTemplate.Input)
         </div>
+        <div class="mb-3">
+            @Html.EditorFor(model => model.Item.Active, EditorTemplate.Checkbox)
+        </div>
+        <div class="mt-3 mb-1">
+            <input asp-for="OriginalName" type="hidden" />
+            <button type="submit" class="btn btn-primary me-2">Save Changes</button>
+            <a asp-page="Index" class="btn btn-outline-secondary">Cancel</a>
+        </div>
+        <div class="text-danger-emphasis mt-3">* denotes a required field</div>
     </form>
 </div>
 
 @section Scripts
 {
-    <partial name="_ValidationScriptsPartial" />
+    <partial name="Shared/_ValidationScriptsPartial" />
 }

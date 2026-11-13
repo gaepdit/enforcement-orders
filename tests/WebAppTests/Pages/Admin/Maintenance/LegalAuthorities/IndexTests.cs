@@ -1,7 +1,6 @@
-﻿using Enfo.Domain.LegalAuthorities.Repositories;
+﻿using Enfo.Domain.LegalAuthorities;
 using Enfo.Domain.LegalAuthorities.Resources;
 using Enfo.WebApp.Models;
-using Enfo.WebApp.Platform.PageModelHelpers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -86,7 +85,7 @@ public class IndexTests
     public async Task OnPost_GivenInvalidId_ReturnsNotFound()
     {
         var repo = Substitute.For<ILegalAuthorityRepository>();
-        repo.GetAsync(Arg.Any<int>()).Returns(null as LegalAuthorityView);
+        repo.GetAsync(Arg.Any<int>()).Returns(null as LegalAuthorityViewDto);
         var page = new Index(repo);
 
         var result = await page.OnPostAsync(1);

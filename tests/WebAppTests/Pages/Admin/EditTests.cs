@@ -1,8 +1,8 @@
 ﻿using Enfo.Domain.EnforcementOrders.Repositories;
 using Enfo.Domain.EnforcementOrders.Resources;
-using Enfo.Domain.EpdContacts.Repositories;
+using Enfo.Domain.EpdContacts;
 using Enfo.Domain.EpdContacts.Resources;
-using Enfo.Domain.LegalAuthorities.Repositories;
+using Enfo.Domain.LegalAuthorities;
 using Enfo.Domain.LegalAuthorities.Resources;
 using Enfo.WebApp.Models;
 using Enfo.WebApp.Pages.Admin;
@@ -26,9 +26,9 @@ public class EditTests
         var orderRepo = Substitute.For<IEnforcementOrderRepository>();
         orderRepo.GetAdminViewAsync(Arg.Any<int>()).Returns(item);
         var legalRepo = Substitute.For<ILegalAuthorityRepository>();
-        legalRepo.ListAsync().Returns(new List<LegalAuthorityView>());
+        legalRepo.ListAsync().Returns(new List<LegalAuthorityViewDto>());
         var contactRepo = Substitute.For<IEpdContactRepository>();
-        contactRepo.ListAsync().Returns(new List<EpdContactView>());
+        contactRepo.ListAsync().Returns(new List<EpdContactViewDto>());
         var page = new Edit(orderRepo, legalRepo, contactRepo);
 
         await page.OnGetAsync(1);
@@ -196,9 +196,9 @@ public class EditTests
         orderRepo.GetAdminViewAsync(Arg.Any<int>()).Returns(item);
         orderRepo.OrderNumberExistsAsync(Arg.Any<string>(), Arg.Any<int?>()).Returns(false);
         var legalRepo = Substitute.For<ILegalAuthorityRepository>();
-        legalRepo.ListAsync().Returns(new List<LegalAuthorityView>());
+        legalRepo.ListAsync().Returns(new List<LegalAuthorityViewDto>());
         var contactRepo = Substitute.For<IEpdContactRepository>();
-        contactRepo.ListAsync().Returns(new List<EpdContactView>());
+        contactRepo.ListAsync().Returns(new List<EpdContactViewDto>());
 
         var validator = Substitute.For<IValidator<EnforcementOrderUpdate>>();
         validator.ValidateAsync(Arg.Any<EnforcementOrderUpdate>(), CancellationToken.None)

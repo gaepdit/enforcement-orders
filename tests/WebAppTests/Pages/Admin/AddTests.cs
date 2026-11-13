@@ -1,8 +1,8 @@
 ﻿using Enfo.Domain.EnforcementOrders.Repositories;
 using Enfo.Domain.EnforcementOrders.Resources;
-using Enfo.Domain.EpdContacts.Repositories;
+using Enfo.Domain.EpdContacts;
 using Enfo.Domain.EpdContacts.Resources;
-using Enfo.Domain.LegalAuthorities.Repositories;
+using Enfo.Domain.LegalAuthorities;
 using Enfo.Domain.LegalAuthorities.Resources;
 using Enfo.WebApp.Models;
 using Enfo.WebApp.Pages.Admin;
@@ -45,9 +45,9 @@ public class AddTests
     public async Task OnGet_ReturnsWithDefaultCreateResource()
     {
         var legalRepo = Substitute.For<ILegalAuthorityRepository>();
-        legalRepo.ListAsync().Returns(new List<LegalAuthorityView>());
+        legalRepo.ListAsync().Returns(new List<LegalAuthorityViewDto>());
         var contactRepo = Substitute.For<IEpdContactRepository>();
-        contactRepo.ListAsync().Returns(new List<EpdContactView>());
+        contactRepo.ListAsync().Returns(new List<EpdContactViewDto>());
         var page = new Add(Substitute.For<IEnforcementOrderRepository>(), legalRepo, contactRepo);
 
         await page.OnGetAsync();
@@ -149,9 +149,9 @@ public class AddTests
         var item = GetValidEnforcementOrderCreate();
         // Mock repos
         var legalRepo = Substitute.For<ILegalAuthorityRepository>();
-        legalRepo.ListAsync().Returns(new List<LegalAuthorityView>());
+        legalRepo.ListAsync().Returns(new List<LegalAuthorityViewDto>());
         var contactRepo = Substitute.For<IEpdContactRepository>();
-        contactRepo.ListAsync().Returns(new List<EpdContactView>());
+        contactRepo.ListAsync().Returns(new List<EpdContactViewDto>());
         var orderRepo = Substitute.For<IEnforcementOrderRepository>();
         orderRepo.OrderNumberExistsAsync(Arg.Any<string>(), Arg.Any<int?>()).Returns(false);
         var validator = Substitute.For<IValidator<EnforcementOrderCreate>>();

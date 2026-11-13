@@ -1,5 +1,5 @@
 ﻿using EfRepositoryTests.Helpers;
-using Enfo.Domain.LegalAuthorities.Entities;
+using Enfo.Domain.LegalAuthorities;
 using Enfo.Domain.LegalAuthorities.Resources;
 
 namespace EfRepositoryTests.LegalAuthorities;
@@ -18,7 +18,7 @@ public class CreateTests
         repositoryHelper.ClearChangeTracker();
 
         var item = new LegalAuthority(resource) { Id = itemId };
-        var expected = new LegalAuthorityView(item);
+        var expected = new LegalAuthorityViewDto(item);
         (await repository.GetAsync(itemId))
             .Should().BeEquivalentTo(expected);
     }

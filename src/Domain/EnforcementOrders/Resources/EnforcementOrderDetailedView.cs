@@ -15,24 +15,24 @@ public class EnforcementOrderDetailedView : EnforcementOrderSummaryView
         Requirements = item.Requirements;
         SettlementAmount = item.SettlementAmount;
         CommentContact = item.CommentContactId.HasValue &&
-            item.GetIsPublicProposedOrder &&
-            item.CommentPeriodClosesDate.HasValue &&
-            item.CommentPeriodClosesDate >= DateTime.Today
-                ? new EpdContactView(item.CommentContact)
-                : null;
+                         item.GetIsPublicProposedOrder &&
+                         item.CommentPeriodClosesDate.HasValue &&
+                         item.CommentPeriodClosesDate >= DateTime.Today
+            ? new EpdContactViewDto(item.CommentContact)
+            : null;
         IsHearingScheduled = item.IsHearingScheduled;
         HearingDate = item.HearingDate;
         HearingLocation = item.HearingLocation;
         HearingCommentPeriodClosesDate = item.HearingCommentPeriodClosesDate;
         HearingContact = item.HearingContactId.HasValue &&
-            item.HearingCommentPeriodClosesDate.HasValue &&
-            item.HearingCommentPeriodClosesDate >= DateTime.Today
-                ? new EpdContactView(item.HearingContact)
-                : null;
+                         item.HearingCommentPeriodClosesDate.HasValue &&
+                         item.HearingCommentPeriodClosesDate >= DateTime.Today
+            ? new EpdContactViewDto(item.HearingContact)
+            : null;
         Attachments = item.Attachments?
-                .Where(a => !a.Deleted)
-                .Select(a => new AttachmentView(a)).ToList() 
-            ?? new List<AttachmentView>();
+                          .Where(a => !a.Deleted)
+                          .Select(a => new AttachmentView(a)).ToList()
+                      ?? new List<AttachmentView>();
     }
 
     // Common data elements
@@ -50,7 +50,7 @@ public class EnforcementOrderDetailedView : EnforcementOrderSummaryView
     // Proposed orders
 
     [DisplayName("Send Comments To")]
-    public EpdContactView CommentContact { get; }
+    public EpdContactViewDto CommentContact { get; }
 
     // Executed orders
 
@@ -76,5 +76,5 @@ public class EnforcementOrderDetailedView : EnforcementOrderSummaryView
     public DateTime? HearingCommentPeriodClosesDate { get; }
 
     [DisplayName("Hearing Information Contact")]
-    public EpdContactView HearingContact { get; }
+    public EpdContactViewDto HearingContact { get; }
 }

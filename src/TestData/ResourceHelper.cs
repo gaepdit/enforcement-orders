@@ -47,9 +47,9 @@ public static class ResourceHelper
 
     // Maintenance
 
-    public static List<EpdContactView> GetEpdContactViewList() =>
-        EpdContactData.EpdContacts.Select(e => new EpdContactView(e)).ToList();
+    public static List<EpdContactViewDto> GetEpdContactViewList() =>
+        EpdContactData.EpdContacts.Select(e => new EpdContactViewDto(e)).ToList();
 
-    public static List<LegalAuthorityView> GetLegalAuthorityViewList() =>
-        LegalAuthorityData.LegalAuthorities.Select(e => new LegalAuthorityView(e)).ToList();
+    public static List<LegalAuthorityViewDto> GetLegalAuthorityViewList() =>
+        LegalAuthorityData.LegalAuthorities.Select(e => new LegalAuthorityViewDto(e)).ToList();
 }
