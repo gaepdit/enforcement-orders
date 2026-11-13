@@ -1,9 +1,5 @@
 using Enfo.Domain.EnforcementOrders.Repositories;
-using Enfo.WebApp.Models;
-using Enfo.WebApp.Platform.PageModelHelpers;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Index = Enfo.WebApp.Pages.Index;
+using Enfo.WebApp.Pages;
 
 namespace WebAppTests.Pages;
 
@@ -17,7 +13,7 @@ public class IndexTests
         var repo = Substitute.For<IEnforcementOrderRepository>();
         repo.ListCurrentProposedEnforcementOrdersAsync().Returns(list);
         repo.ListRecentlyExecutedEnforcementOrdersAsync().Returns(list);
-        var page = new Index();
+        var page = new IndexModel();
 
         await page.OnGetAsync(repo);
 
@@ -25,7 +21,6 @@ public class IndexTests
         {
             page.CurrentProposedOrders.Should().BeEquivalentTo(list);
             page.RecentExecutedOrders.Should().BeEquivalentTo(list);
-            page.Message.Should().BeNull();
         }
     }
 
@@ -33,7 +28,7 @@ public class IndexTests
     public async Task OnGet_GivenNoResults_ReturnsWithEmptyOrders()
     {
         var repo = Substitute.For<IEnforcementOrderRepository>();
-        var page = new Index();
+        var page = new IndexModel();
 
         await page.OnGetAsync(repo);
 
@@ -41,24 +36,6 @@ public class IndexTests
         {
             page.CurrentProposedOrders.Should().BeEmpty();
             page.RecentExecutedOrders.Should().BeEmpty();
-            page.Message.Should().BeNull();
         }
-    }
-
-    [Test]
-    public async Task SetDisplayMessage_ReturnsWithDisplayMessage()
-    {
-        // Initialize Page TempData
-        var repo = Substitute.For<IEnforcementOrderRepository>();
-        var httpContext = new DefaultHttpContext();
-        var tempData = new TempDataDictionary(httpContext, Substitute.For<ITempDataProvider>());
-
-        var page = new Index { TempData = tempData };
-
-        page.TempData.SetDisplayMessage(DisplayMessage.AlertContext.Info, "Info message");
-        await page.OnGetAsync(repo);
-
-        var expected = new DisplayMessage(DisplayMessage.AlertContext.Info, "Info message");
-        page.Message.Should().BeEquivalentTo(expected);
     }
 }

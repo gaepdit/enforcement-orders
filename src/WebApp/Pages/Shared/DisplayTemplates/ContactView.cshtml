@@ -18,7 +18,7 @@
 
 @if (!string.IsNullOrEmpty(Model.Telephone) || !string.IsNullOrEmpty(Model.Email))
 {
-    <p class="text-nowrap">
+    <p class="text-nowrap mb-0">
         <a href="mailto:@(Model.Email)">@Model.Email</a>
         @if (!string.IsNullOrEmpty(Model.Telephone) && !string.IsNullOrEmpty(Model.Email))
         {

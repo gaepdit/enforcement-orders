@@ -1,111 +1,94 @@
 @page "{id}"
+@using Enfo.WebApp.Pages.Shared.DisplayTemplates
 @model DetailsModel
 @{
     ViewData["Title"] = $"Enforcement Order {Model.Item.OrderNumber}";
 }
-<partial name="_AlertPartial" for="Message" />
 
-<h1>@ViewData["Title"]</h1>
-
-@if (User.Identity?.IsAuthenticated == true)
-{
-    <div class="gaepd-noprint">
-        <a asp-page="/Admin/Details" asp-route-id="@Model.Item.Id.ToString()">Go to admin view</a>
-    </div>
-}
-
-<table class="gaepd-table-compact gaepd-table-rowheadings gaepd-table-autowidth" aria-label="Enforcement order details">
-    <tbody>
-    <tr>
-        <th scope="row">@Html.DisplayNameFor(m => m.Item.FacilityName)</th>
-        <td>@Html.DisplayFor(m => m.Item.FacilityName)</td>
-    </tr>
-    <tr>
-        <th scope="row">@Html.DisplayNameFor(m => m.Item.County)</th>
-        <td>@Html.DisplayFor(m => m.Item.County) County</td>
-    </tr>
-    <tr>
-        <th scope="row">@Html.DisplayNameFor(m => m.Item.Cause)</th>
-        <td>@Html.DisplayFor(m => m.Item.Cause)</td>
-    </tr>
-    <tr>
-        <th scope="row">@Html.DisplayNameFor(m => m.Item.Requirements)</th>
-        <td>@Html.DisplayFor(m => m.Item.Requirements)</td>
-    </tr>
-    <tr>
-        <th scope="row">@(Model.Item.IsExecutedOrder ? "" : "Proposed ")@Html.DisplayNameFor(m => m.Item.SettlementAmount)</th>
-        <td>@Html.DisplayFor(m => m.Item.SettlementAmount)</td>
-    </tr>
-    <tr>
-        <th scope="row">@Html.DisplayNameFor(m => m.Item.LegalAuthority)</th>
-        <td>@Html.DisplayFor(m => m.Item.LegalAuthority.AuthorityName)</td>
-    </tr>
-
-    @if (Model.Item.IsPublicProposedOrder)
-    {
-        <tr>
-            <th scope="row">@Html.DisplayNameFor(m => m.Item.ProposedOrderPostedDate)</th>
-            <td>@Html.DisplayFor(m => m.Item.ProposedOrderPostedDate)</td>
-        </tr>
-        <tr>
-            <th scope="row">@Html.DisplayNameFor(m => m.Item.CommentPeriodClosesDate)</th>
-            <td>@Html.DisplayFor(m => m.Item.CommentPeriodClosesDate)</td>
-        </tr>
-        @if (Model.Item.CommentPeriodClosesDate.HasValue
-            && Model.Item.CommentPeriodClosesDate.Value >= DateTime.Today
-            && Model.Item.CommentContact != null)
+<div class="container-full">
+    <div class="row justify-content-between align-items-baseline g-0 mt-1 mb-3">
+        <div class="col"><h1>Enforcement Order <span class="text-nowrap">@Model.Item.OrderNumber</span></h1></div>
+        @if (User.Identity?.IsAuthenticated == true)
         {
-            <tr>
-                <th scope="row">@Html.DisplayNameFor(m => m.Item.CommentContact)</th>
-                <td>@Html.DisplayFor(m => m.Item.CommentContact)</td>
-            </tr>
+            <div class="col-auto d-print-none ms-2">
+                <a asp-page="/Admin/Details" asp-route-id="@Model.Item.Id"
+                   class="link-underline link-underline-opacity-25 link-underline-opacity-100-hover link-offset-2">
+                    <svg class="bi me-2">
+                        <use href="@Url.Content("~/images/app-icons.svg")#app-icon-person-badge"></use>
+                    </svg>
+                    Go to admin view
+                </a>
+            </div>
         }
-    }
+    </div>
+</div>
 
-    @if (Model.Item.IsPublicExecutedOrder)
-    {
-        <tr>
-            <th scope="row">@Html.DisplayNameFor(m => m.Item.ExecutedDate)</th>
-            <td>@Html.DisplayFor(m => m.Item.ExecutedDate)</td>
-        </tr>
-        <tr>
-            <th scope="row">@Html.DisplayNameFor(m => m.Item.ExecutedOrderPostedDate)</th>
-            <td>@Html.DisplayFor(m => m.Item.ExecutedOrderPostedDate)</td>
-        </tr>
-    }
+<div class="container">
+    <dl class="row">
+        <dt class="col-sm-4">@Html.DisplayNameFor(m => m.Item.FacilityName)</dt>
+        <dd class="col-sm-8">@Html.DisplayFor(m => m.Item.FacilityName)</dd>
+        <dt class="col-sm-4">@Html.DisplayNameFor(m => m.Item.County)</dt>
+        <dd class="col-sm-8">@Html.DisplayFor(m => m.Item.County) County</dd>
+        <dt class="col-sm-4">@Html.DisplayNameFor(m => m.Item.Cause)</dt>
+        <dd class="col-sm-8">@Html.DisplayFor(m => m.Item.Cause)</dd>
+        <dt class="col-sm-4">@Html.DisplayNameFor(m => m.Item.Requirements)</dt>
+        <dd class="col-sm-8">@Html.DisplayFor(m => m.Item.Requirements)</dd>
+        <dt class="col-sm-4">@(Model.Item.IsExecutedOrder ? "" : "Proposed ")@Html.DisplayNameFor(m => m.Item.SettlementAmount)</dt>
+        <dd class="col-sm-8">@Html.DisplayFor(m => m.Item.SettlementAmount)</dd>
+        <dt class="col-sm-4">@Html.DisplayNameFor(m => m.Item.LegalAuthority)</dt>
+        <dd class="col-sm-8">@Html.DisplayFor(m => m.Item.LegalAuthority.AuthorityName)</dd>
 
-    @if (Model.Item.IsHearingScheduled)
-    {
-        <tr>
-            <th scope="row">@Html.DisplayNameFor(m => m.Item.IsHearingScheduled)</th>
-            <td>
-            <p>
-                <em>@Html.DisplayNameFor(m => m.Item.HearingDate)</em><br />
-                @Html.DisplayFor(m => m.Item.HearingDate)
-            </p>
-            <p>
-                <em>@Html.DisplayNameFor(m => m.Item.HearingLocation)</em><br />
-                @Html.DisplayFor(m => m.Item.HearingLocation)
-            </p>
-            <p>
-                <em>@Html.DisplayNameFor(m => m.Item.HearingCommentPeriodClosesDate)</em><br />
-                @Html.DisplayFor(m => m.Item.HearingCommentPeriodClosesDate)
-            </p>
-            @if (Model.Item.HearingCommentPeriodClosesDate.HasValue
-                && Model.Item.HearingCommentPeriodClosesDate.Value >= DateTime.Today
-                && Model.Item.HearingContact != null)
+        @if (Model.Item.IsPublicProposedOrder)
+        {
+            <dt class="col-sm-4">@Html.DisplayNameFor(m => m.Item.ProposedOrderPostedDate)</dt>
+            <dd class="col-sm-8">@Html.DisplayFor(m => m.Item.ProposedOrderPostedDate, DisplayTemplate.DateTimeNullableAsShort)</dd>
+            <dt class="col-sm-4">@Html.DisplayNameFor(m => m.Item.CommentPeriodClosesDate)</dt>
+            <dd class="col-sm-8">@Html.DisplayFor(m => m.Item.CommentPeriodClosesDate, DisplayTemplate.DateTimeNullableAsShort)</dd>
+            @if (Model.Item.CommentPeriodClosesDate.HasValue
+                 && Model.Item.CommentPeriodClosesDate.Value >= DateTime.Today
+                 && Model.Item.CommentContact != null)
             {
-                <p>
-                    <em>@Html.DisplayNameFor(m => m.Item.HearingContact)</em>
-                </p>
-                    @Html.DisplayFor(m => m.Item.HearingContact)
+                <dt class="col-sm-4">@Html.DisplayNameFor(m => m.Item.CommentContact)</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(m => m.Item.CommentContact, DisplayTemplate.ContactView)</dd>
             }
-        </tr>
-    }
+        }
 
-    <tr>
-        <th scope="row">@Html.DisplayNameFor(m => m.Item.Attachments)</th>
-        <td>
+        @if (Model.Item.IsPublicExecutedOrder)
+        {
+            <dt class="col-sm-4">@Html.DisplayNameFor(m => m.Item.ExecutedDate)</dt>
+            <dd class="col-sm-8">@Html.DisplayFor(m => m.Item.ExecutedDate, DisplayTemplate.DateTimeNullableAsShort)</dd>
+            <dt class="col-sm-4">@Html.DisplayNameFor(m => m.Item.ExecutedOrderPostedDate)</dt>
+            <dd class="col-sm-8">@Html.DisplayFor(m => m.Item.ExecutedOrderPostedDate, DisplayTemplate.DateTimeNullableAsShort)</dd>
+        }
+
+        @if (Model.Item.IsHearingScheduled)
+        {
+            <dt class="col-sm-4">@Html.DisplayNameFor(m => m.Item.IsHearingScheduled)</dt>
+            <dd class="col-sm-8">
+                <p>
+                    <em>@Html.DisplayNameFor(m => m.Item.HearingDate)</em><br />
+                    @Html.DisplayFor(m => m.Item.HearingDate, DisplayTemplate.DateTimeNullableAsShort)
+                </p>
+                <p>
+                    <em>@Html.DisplayNameFor(m => m.Item.HearingLocation)</em><br />
+                    @Html.DisplayFor(m => m.Item.HearingLocation)
+                </p>
+                <p>
+                    <em>@Html.DisplayNameFor(m => m.Item.HearingCommentPeriodClosesDate)</em><br />
+                    @Html.DisplayFor(m => m.Item.HearingCommentPeriodClosesDate, DisplayTemplate.DateTimeNullableAsShort)
+                </p>
+                @if (Model.Item.HearingCommentPeriodClosesDate.HasValue
+                     && Model.Item.HearingCommentPeriodClosesDate.Value >= DateTime.Today
+                     && Model.Item.HearingContact != null)
+                {
+                    <div><em>@Html.DisplayNameFor(m => m.Item.HearingContact)</em></div>
+                    @Html.DisplayFor(m => m.Item.HearingContact, DisplayTemplate.ContactView)
+                }
+            </dd>
+        }
+
+        <dt class="col-sm-4">@Html.DisplayNameFor(m => m.Item.Attachments)</dt>
+        <dd class="col-sm-8">
             @if (Model.Item.Attachments.Count == 0)
             {
                 <em>None</em>
@@ -125,7 +108,6 @@
                     }
                 </ul>
             }
-        </td>
-    </tr>
-    </tbody>
-</table>
+        </dd>
+    </dl>
+</div>

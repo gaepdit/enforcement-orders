@@ -5,7 +5,7 @@ namespace Enfo.WebApp.Pages;
 
 public class CurrentProposed : PageModel
 {
-    public IReadOnlyList<EnforcementOrderDetailedView> Orders { get; private set; }
+    public IReadOnlyList<EnforcementOrderDetailedView> Orders { get; private set; } = null!;
 
     public async Task OnGetAsync([FromServices] IEnforcementOrderRepository repository) =>
         Orders = await repository.ListCurrentProposedEnforcementOrdersAsync();

@@ -1,59 +1,57 @@
 ﻿@page
 @using Enfo.Domain.Utils
-@model Enfo.WebApp.Pages.Index
+@using Enfo.WebApp.Pages.Shared.DisplayTemplates
+@using System.Globalization
+@model IndexModel
 @{
     ViewData["Title"] = "";
 }
 
-<partial name="_AlertPartial" for="Message" />
-
-<h1>@ViewData["Title"]</h1>
-
-<div class="usa-grid-full">
-    <p class="usa-width-two-thirds">
-        The Georgia Environmental Protection Division uses enforcement actions to correct serious environmental problems and to bring businesses,
-        individuals, and government entities into compliance with environmental laws. The most common enforcement actions are consent orders and
-        administrative orders. The order explains the nature of the problem, details the action necessary to correct the problem, and may or may
-        not include a settlement amount or fine.
-    </p>
-    <p class="usa-width-one-third">
-        <a asp-page="Search" class="usa-button usa-button-secondary">Search Orders</a>
-    </p>
+<h1>Georgia EPD Enforcement Orders</h1>
+<div class="mt-3 mb-4">
+    <div class="row g-4">
+        <div class="col-lg">
+            <div class="py-3 px-4 bg-light-subtle border rounded-3">
+                <p>
+                    The Georgia Environmental Protection Division uses enforcement actions to correct serious environmental problems and to bring businesses,
+                    individuals, and government entities into compliance with environmental laws. The most common enforcement actions are consent orders and
+                    administrative orders. The order explains the nature of the problem, details the action necessary to correct the problem, and may or may
+                    not include a settlement amount or fine.
+                </p>
+                <a asp-page="Search" class="btn btn-lg btn-outline-info">Search Orders</a>
+            </div>
+        </div>
+    </div>
 </div>
 
 <h2>Current Orders (notices that change weekly)</h2>
+<p class="lead">Date of Posting: @DateUtils.MostRecentMonday().ToString(DisplayFormats.LongDate, CultureInfo.InvariantCulture)</p>
 
-<p>
-    <strong>Date of Posting: @DateUtils.MostRecentMonday().ToString(DisplayFormats.LongDate)</strong>
-</p>
-
-<section class="usa-grid-full">
+<section class="row mt-3">
     <h3>Proposed Orders</h3>
-    <div class="usa-width-one-half">
+    <div class="col-lg">
         <p>
             Georgia EPD provides notice and opportunity for public comment on certain proposed orders. Notices are posted on this
             website weekly, usually on Monday. A thirty-day comment period is provided. Comments, suggestions, hearing requests, and other information
             (including but not limited to letters, documents, photos, and videos) should be mailed to the address shown in the notice.
         </p>
         <p>
-            <a asp-page="CurrentProposed" class="usa-button usa-button-secondary">View Full Report</a>
+            <a asp-page="CurrentProposed" class="btn btn-lg btn-outline-info">View Full Report</a>
         </p>
     </div>
-    <div class="usa-width-one-half">
-        @if (Model.CurrentProposedOrders == null || Model.CurrentProposedOrders.Count == 0)
+    <div class="col-lg">
+        @if (Model.CurrentProposedOrders.Count == 0)
         {
-            <p>
-                <strong>No Current Proposed Orders</strong>
-            </p>
+            <p><strong>No Current Proposed Orders</strong></p>
         }
         else
         {
-            <table class="gaepd-table-compact" aria-label="Current proposed orders">
+            <table class="table table-striped" aria-label="Current proposed orders">
                 <thead>
                 <tr>
                     <th scope="col">Facility</th>
-                    <th scope="col" class="gaepd-tablecell-alignright">Date Comment Period Closes</th>
-                    <th scope="col"></th>
+                    <th scope="col">Date Comment Period Closes</th>
+                    <th scope="col"><span class="visually-hidden">Actions</span></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -64,12 +62,8 @@
                             @enfo.FacilityName <br />
                             <em>@enfo.County County</em>
                         </th>
-                        <td class="gaepd-tablecell-alignright">
-                            @(enfo.CommentPeriodClosesDate?.ToString(DisplayFormats.ShortDate) ?? "not entered")
-                        </td>
-                        <td>
-                            <a asp-page="Details" asp-route-id="@enfo.Id.ToString()">View</a>
-                        </td>
+                        <td>@Html.DisplayFor(_ => enfo.CommentPeriodClosesDate, DisplayTemplate.DateTimeNullableAsShort)</td>
+                        <td><a asp-page="Details" class="btn btn-sm btn-outline-info" asp-route-id="@enfo.Id.ToString()">View</a></td>
                     </tr>
                 }
                 </tbody>
@@ -78,19 +72,19 @@
     </div>
 </section>
 
-<section class="usa-grid-full">
+<section class="row mt-3">
     <h3>Executed Orders</h3>
-    <div class="usa-width-one-half">
+    <div class="col-lg">
         <p>
             Georgia EPD issues a notice of fully executed administrative orders and fully executed consent orders issued by the Director.
             The list is posted on this website weekly, usually on Monday.
         </p>
         <p>
-            <a asp-page="RecentExecuted" class="usa-button usa-button-secondary">View Full Report</a>
+            <a asp-page="RecentExecuted" class="btn btn-lg btn-outline-info">View Full Report</a>
         </p>
     </div>
-    <div class="usa-width-one-half">
-        @if (Model.RecentExecutedOrders == null || Model.RecentExecutedOrders.Count == 0)
+    <div class="col-lg">
+        @if (Model.RecentExecutedOrders.Count == 0)
         {
             <p>
                 <strong>No Current Executed Orders</strong>
@@ -98,12 +92,12 @@
         }
         else
         {
-            <table class="gaepd-table-compact" aria-label="Current executed orders">
+            <table class="table table-striped" aria-label="Current executed orders">
                 <thead>
                 <tr>
                     <th scope="col">Facility</th>
-                    <th scope="col" class="gaepd-tablecell-alignright">Date Executed</th>
-                    <th scope="col"></th>
+                    <th scope="col">Date Executed</th>
+                    <th scope="col"><span class="visually-hidden">Actions</span></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -114,12 +108,8 @@
                             @enfo.FacilityName <br />
                             <em>@enfo.County County</em>
                         </th>
-                        <td class="gaepd-tablecell-alignright">
-                            @(enfo.ExecutedDate?.ToString(DisplayFormats.ShortDate) ?? "not entered")
-                        </td>
-                        <td>
-                            <a asp-page="Details" asp-route-id="@enfo.Id.ToString()">View</a>
-                        </td>
+                        <td>@Html.DisplayFor(_ => enfo.ExecutedDate, DisplayTemplate.DateTimeNullableAsShort)</td>
+                        <td><a asp-page="Details" class="btn btn-sm btn-outline-info" asp-route-id="@enfo.Id.ToString()">View</a></td>
                     </tr>
                 }
                 </tbody>
@@ -128,23 +118,25 @@
     </div>
 </section>
 
-<section>
-    <h2>Mail Subscriptions</h2>
-    <p>
-        Mail subscriptions to these notices are available at a cost of $50 per year. That fee provides the subscriber with all notices of proposed
-        and executed orders issued from July 1 through June 30 of the following year. For information about subscriptions, call Georgia EPD at
-        (404) 657-5947 (inside the Atlanta calling area), or toll-free within Georgia at (888) 373-5947.
-    </p>
-</section>
+<div class="row">
+    <section class="col-lg mt-3">
+        <h2>Mail Subscriptions</h2>
+        <p>
+            Mail subscriptions to these notices are available at a cost of $50 per year. That fee provides the subscriber with all notices of proposed
+            and executed orders issued from July 1 through June 30 of the following year. For information about subscriptions, call Georgia EPD at
+            (404) 657-5947 (inside the Atlanta calling area), or toll-free within Georgia at (888) 373-5947.
+        </p>
+    </section>
 
-<section>
-    <h2>API Access</h2>
-    <p>
-        In an effort to increase open access to government data, we have released
-        an API (application programming interface) with access to the entire 
-        public set of enforcement orders. 
-    </p>
-    <p>
-        View details at the <a href="~/api-docs/">API documentation site</a>.
-    </p>
-</section>
+    <section class="col-lg mt-3">
+        <h2>API Access</h2>
+        <p>
+            In an effort to increase open access to government data, we have released
+            an API (application programming interface) with access to the entire
+            public set of enforcement orders.
+        </p>
+        <p>
+            View details at the <a href="~/api-docs/">API documentation site</a>.
+        </p>
+    </section>
+</div>

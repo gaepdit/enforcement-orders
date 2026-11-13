@@ -1,21 +1,20 @@
 ﻿using Enfo.Domain.EnforcementOrders.Repositories;
 using Enfo.Domain.EnforcementOrders.Resources;
-using Enfo.WebApp.Models;
-using Enfo.WebApp.Platform.PageModelHelpers;
 
 namespace Enfo.WebApp.Pages;
 
 public class DetailsModel : PageModel
 {
-    public EnforcementOrderDetailedView Item { get; private set; }
-    public DisplayMessage Message { get; private set; }
+    [FromRoute]
+    public int Id { get; set; }
 
-    public async Task<IActionResult> OnGetAsync([FromServices] IEnforcementOrderRepository repository, int? id)
+    public EnforcementOrderDetailedView Item { get; private set; } = null!;
+
+    public async Task<IActionResult> OnGetAsync([FromServices] IEnforcementOrderRepository repository)
     {
-        if (id == null) return NotFound();
-        Item = await repository.GetAsync(id.Value);
+        if (Id == 0) return NotFound();
+        Item = await repository.GetAsync(Id);
         if (Item == null) return NotFound("ID not found.");
-        Message = TempData?.GetDisplayMessage();
         return Page();
     }
 }

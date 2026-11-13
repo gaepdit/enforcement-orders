@@ -1,0 +1,11 @@
+@using Enfo.Domain.Utils
+@using System.Globalization
+@model DateTime?
+@if (Model is null)
+{
+    <span class="text-body-secondary fw-lighter">[Not entered]</span>
+}
+else
+{
+    @Model.Value.ToString(DisplayFormats.ShortDate, CultureInfo.InvariantCulture)
+}

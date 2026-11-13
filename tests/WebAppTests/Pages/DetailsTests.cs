@@ -1,10 +1,6 @@
 ﻿using Enfo.Domain.EnforcementOrders.Repositories;
-using Enfo.WebApp.Models;
 using Enfo.WebApp.Pages;
-using Enfo.WebApp.Platform.PageModelHelpers;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 namespace WebAppTests.Pages;
 
@@ -18,48 +14,25 @@ public class DetailsModelTests
         var item = ResourceHelper.GetEnforcementOrderDetailedView(itemId);
         var repo = Substitute.For<IEnforcementOrderRepository>();
         repo.GetAsync(itemId).Returns(item);
-        var page = new DetailsModel();
+        var page = new DetailsModel { Id = itemId };
 
-        await page.OnGetAsync(repo, itemId);
+        await page.OnGetAsync(repo);
 
         page.Item.Should().Be(item);
-    }
-
-    [Test]
-    public async Task SetDisplayMessage_ReturnsWithDisplayMessage()
-    {
-        // Not testing returned Item, but it must be populated to return Page
-        var itemId = EnforcementOrderData.EnforcementOrders[0].Id;
-        var item = ResourceHelper.GetEnforcementOrderDetailedView(itemId);
-        var repo = Substitute.For<IEnforcementOrderRepository>();
-        repo.GetAsync(itemId).Returns(item);
-
-        // Initialize Page TempData
-        var httpContext = new DefaultHttpContext();
-        var tempData = new TempDataDictionary(httpContext, Substitute.For<ITempDataProvider>());
-
-        var page = new DetailsModel { TempData = tempData };
-
-        page.TempData.SetDisplayMessage(DisplayMessage.AlertContext.Info, "Info message");
-        await page.OnGetAsync(repo, itemId);
-
-        var expected = new DisplayMessage(DisplayMessage.AlertContext.Info, "Info message");
-        page.Message.Should().BeEquivalentTo(expected);
     }
 
     [Test]
     public async Task OnGet_NullId_ReturnsNotFound()
     {
         var repo = Substitute.For<IEnforcementOrderRepository>();
-        var page = new DetailsModel();
+        var page = new DetailsModel { Id = 0 };
 
-        var result = await page.OnGetAsync(repo, null);
+        var result = await page.OnGetAsync(repo);
 
         using (new AssertionScope())
         {
             result.Should().BeOfType<NotFoundResult>();
             page.Item.Should().BeNull();
-            page.Message.Should().BeNull();
         }
     }
 
@@ -67,15 +40,14 @@ public class DetailsModelTests
     public async Task OnGet_NonexistentId_ReturnsNotFound()
     {
         var repo = Substitute.For<IEnforcementOrderRepository>();
-        var page = new DetailsModel();
+        var page = new DetailsModel() { Id = -1 };
 
-        var result = await page.OnGetAsync(repo, -1);
+        var result = await page.OnGetAsync(repo);
 
         using (new AssertionScope())
         {
             result.Should().BeOfType<NotFoundObjectResult>();
             page.Item.Should().BeNull();
-            page.Message.Should().BeNull();
         }
     }
 }
