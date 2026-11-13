@@ -1,11 +1,9 @@
 ﻿using Enfo.Domain.LegalAuthorities;
 using Enfo.Domain.LegalAuthorities.Resources;
-using Enfo.WebApp.Models;
+using Enfo.WebApp.Pages.Admin.Maintenance.LegalAuthorities;
 using FluentValidation;
 using FluentValidation.Results;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 namespace WebAppTests.Pages.Admin.Maintenance.LegalAuthorities;
 
@@ -18,14 +16,15 @@ public class EditTests
         var item = ResourceHelper.GetLegalAuthorityViewList()[0];
         var repo = Substitute.For<ILegalAuthorityRepository>();
         repo.GetAsync(item.Id).Returns(item);
-        var page = new Edit(repo);
+        var page = new EditModel(repo) { Id = item.Id };
 
-        await page.OnGetAsync(item.Id);
+        await page.OnGetAsync();
 
         using (new AssertionScope())
         {
-            page.Item.Should().BeEquivalentTo(new LegalAuthorityCommand(item));
-            page.Item.Id.Should().Be(item.Id);
+            page.Item.Should().BeEquivalentTo(new LegalAuthorityUpdateDto()
+                { Active = item.Active, AuthorityName = item.AuthorityName });
+            page.Id.Should().Be(item.Id);
             page.OriginalName.Should().Be(item.AuthorityName);
         }
     }
@@ -34,9 +33,9 @@ public class EditTests
     public async Task OnGet_GivenNullId_ReturnsNotFound()
     {
         var repo = Substitute.For<ILegalAuthorityRepository>();
-        var page = new Edit(repo);
+        var page = new EditModel(repo);
 
-        var result = await page.OnGetAsync(null);
+        var result = await page.OnGetAsync();
 
         using (new AssertionScope())
         {
@@ -50,9 +49,9 @@ public class EditTests
     {
         var repo = Substitute.For<ILegalAuthorityRepository>();
         repo.GetAsync(Arg.Any<int>()).Returns(null as LegalAuthorityViewDto);
-        var page = new Edit(repo);
+        var page = new EditModel(repo) { Id = -1 };
 
-        var result = await page.OnGetAsync(-1);
+        var result = await page.OnGetAsync();
 
         using (new AssertionScope())
         {
@@ -62,103 +61,17 @@ public class EditTests
     }
 
     [Test]
-    public async Task OnGet_GivenInactiveItem_RedirectsWithDisplayMessage()
-    {
-        var item = ResourceHelper.GetLegalAuthorityViewList().Single(e => !e.Active);
-        var repo = Substitute.For<ILegalAuthorityRepository>();
-        repo.GetAsync(Arg.Any<int>()).Returns(item);
-
-        // Initialize Page TempData
-        var httpContext = new DefaultHttpContext();
-        var tempData = new TempDataDictionary(httpContext, Substitute.For<ITempDataProvider>());
-        var page = new Edit(repo) { TempData = tempData };
-
-        var result = await page.OnGetAsync(item.Id);
-
-        var expected = new DisplayMessage(DisplayMessage.AlertContext.Warning,
-            $"Inactive {Edit.ThisOption.PluralName} cannot be edited.");
-
-        using (new AssertionScope())
-        {
-            page.TempData.GetDisplayMessage().Should().BeEquivalentTo(expected);
-            result.Should().BeOfType<RedirectToPageResult>();
-            ((RedirectToPageResult)result).PageName.Should().Be("Index");
-        }
-    }
-
-    [Test]
     public async Task OnPost_GivenInvalidId_ReturnsNotFound()
     {
         var repo = Substitute.For<ILegalAuthorityRepository>();
         repo.GetAsync(Arg.Any<int>()).Returns(null as LegalAuthorityViewDto);
-        var validator = Substitute.For<IValidator<LegalAuthorityCommand>>();
-        validator.ValidateAsync(Arg.Any<LegalAuthorityCommand>(), CancellationToken.None)
+        var validator = Substitute.For<IValidator<LegalAuthorityUpdateDto>>();
+        validator.ValidateAsync(Arg.Any<LegalAuthorityUpdateDto>(), CancellationToken.None)
             .Returns(new ValidationResult());
-        var page = new Edit(repo) { Item = new LegalAuthorityCommand { Id = 0 } };
+        var page = new EditModel(repo) { Id = 0 };
 
         var result = await page.OnPostAsync(validator);
 
-        result.Should().BeOfType<NotFoundResult>();
-    }
-
-    [Test]
-    public async Task OnPost_GivenInactiveItem_RedirectsWithDisplayMessage()
-    {
-        var item = ResourceHelper.GetLegalAuthorityViewList().Single(e => !e.Active);
-        var repo = Substitute.For<ILegalAuthorityRepository>();
-        repo.GetAsync(Arg.Any<int>()).Returns(item);
-        var validator = Substitute.For<IValidator<LegalAuthorityCommand>>();
-        validator.ValidateAsync(Arg.Any<LegalAuthorityCommand>(), CancellationToken.None)
-            .Returns(new ValidationResult());
-
-        // Initialize Page TempData
-        var httpContext = new DefaultHttpContext();
-        var tempData = new TempDataDictionary(httpContext, Substitute.For<ITempDataProvider>());
-        var page = new Edit(repo)
-        {
-            TempData = tempData,
-            Item = new LegalAuthorityCommand(item),
-        };
-
-        var result = await page.OnPostAsync(validator);
-
-        var expected = new DisplayMessage(DisplayMessage.AlertContext.Warning,
-            $"Inactive {Edit.ThisOption.PluralName} cannot be edited.");
-
-        using (new AssertionScope())
-        {
-            page.TempData.GetDisplayMessage().Should().BeEquivalentTo(expected);
-            result.Should().BeOfType<RedirectToPageResult>();
-            ((RedirectToPageResult)result).PageName.Should().Be("Index");
-        }
-    }
-
-    [Test]
-    public async Task OnPost_GivenSuccess_ReturnsRedirectWithDisplayMessage()
-    {
-        var item = new LegalAuthorityCommand(ResourceHelper.GetLegalAuthorityViewList()[0]);
-        var repo = Substitute.For<ILegalAuthorityRepository>();
-        repo.GetAsync(Arg.Any<int>()).Returns(ResourceHelper.GetLegalAuthorityViewList()[0]);
-        repo.NameExistsAsync(Arg.Any<string>()).Returns(false);
-        var validator = Substitute.For<IValidator<LegalAuthorityCommand>>();
-        validator.ValidateAsync(Arg.Any<LegalAuthorityCommand>(), CancellationToken.None)
-            .Returns(new ValidationResult());
-
-        // Initialize Page TempData
-        var httpContext = new DefaultHttpContext();
-        var tempData = new TempDataDictionary(httpContext, Substitute.For<ITempDataProvider>());
-        var page = new Edit(repo) { TempData = tempData, Item = item };
-
-        var result = await page.OnPostAsync(validator);
-
-        var expected = new DisplayMessage(DisplayMessage.AlertContext.Success,
-            $"{item.AuthorityName} successfully updated.");
-
-        using (new AssertionScope())
-        {
-            page.TempData.GetDisplayMessage().Should().BeEquivalentTo(expected);
-            result.Should().BeOfType<RedirectToPageResult>();
-            ((RedirectToPageResult)result).PageName.Should().Be("Index");
-        }
+        result.Should().BeOfType<BadRequestResult>();
     }
 }

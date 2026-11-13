@@ -12,7 +12,6 @@ public class UpdateTests
         var itemId = EpdContactData.EpdContacts.First(e => e.Active).Id;
         var resource = new EpdContactCommand
         {
-            Id = itemId,
             Email = null,
             Organization = "New Org",
             Telephone = null,
@@ -26,7 +25,7 @@ public class UpdateTests
 
         using var repository = new LocalEpdContactRepository();
 
-        await repository.UpdateAsync(resource);
+        await repository.UpdateAsync(itemId, resource);
 
         var updatedItem = await repository.GetAsync(itemId);
         updatedItem.Should().BeEquivalentTo(resource);
@@ -38,7 +37,6 @@ public class UpdateTests
         var original = EpdContactData.EpdContacts.First(e => e.Active);
         var resource = new EpdContactCommand
         {
-            Id = original.Id,
             Email = original.Email,
             Organization = original.Organization,
             Telephone = original.Telephone,
@@ -52,7 +50,7 @@ public class UpdateTests
 
         using var repository = new LocalEpdContactRepository();
 
-        await repository.UpdateAsync(resource);
+        await repository.UpdateAsync(original.Id, resource);
 
         var updatedItem = await repository.GetAsync(original.Id);
         updatedItem.Should().BeEquivalentTo(original);
@@ -64,7 +62,6 @@ public class UpdateTests
         var itemId = EpdContactData.EpdContacts.First(e => e.Active).Id;
         var resource = new EpdContactCommand
         {
-            Id = itemId,
             Email = null,
             Organization = "EPD",
             Telephone = null,
@@ -79,7 +76,7 @@ public class UpdateTests
         var action = async () =>
         {
             using var repository = new LocalEpdContactRepository();
-            await repository.UpdateAsync(resource);
+            await repository.UpdateAsync(itemId, resource);
         };
 
         await action.Should().ThrowAsync<ArgumentException>();
@@ -91,7 +88,6 @@ public class UpdateTests
         const int itemId = -1;
         var resource = new EpdContactCommand
         {
-            Id = itemId,
             Email = null,
             Organization = "New Org",
             Telephone = null,
@@ -106,7 +102,7 @@ public class UpdateTests
         var action = async () =>
         {
             using var repository = new LocalEpdContactRepository();
-            await repository.UpdateAsync(resource);
+            await repository.UpdateAsync(itemId, resource);
         };
 
         (await action.Should().ThrowAsync<ArgumentException>())

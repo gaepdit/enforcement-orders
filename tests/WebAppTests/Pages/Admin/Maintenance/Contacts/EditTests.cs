@@ -1,6 +1,6 @@
 ﻿using Enfo.Domain.EpdContacts;
 using Enfo.Domain.EpdContacts.Resources;
-using Enfo.WebApp.Models;
+using Enfo.WebApp.Pages.Admin.Maintenance.Contacts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -17,23 +17,23 @@ public class EditTests
         var item = ResourceHelper.GetEpdContactViewList()[0];
         var repo = Substitute.For<IEpdContactRepository>();
         repo.GetAsync(item.Id).Returns(item);
-        var page = new Edit(repo);
+        var page = new EditModel(repo) { Id = item.Id };
 
-        await page.OnGetAsync(item.Id);
+        await page.OnGetAsync();
 
         using (new AssertionScope())
         {
             page.Item.Should().BeEquivalentTo(new EpdContactCommand(item));
-            page.Item.Id.Should().Be(item.Id);
+            page.Id.Should().Be(item.Id);
         }
     }
 
     [Test]
     public async Task OnGet_GivenNullId_ReturnsNotFound()
     {
-        var page = new Edit(Substitute.For<IEpdContactRepository>());
+        var page = new EditModel(Substitute.For<IEpdContactRepository>());
 
-        var result = await page.OnGetAsync(null);
+        var result = await page.OnGetAsync();
 
         using (new AssertionScope())
         {
@@ -47,9 +47,9 @@ public class EditTests
     {
         var repo = Substitute.For<IEpdContactRepository>();
         repo.GetAsync(Arg.Any<int>()).Returns(null as EpdContactViewDto);
-        var page = new Edit(repo);
+        var page = new EditModel(repo) { Id = -1 };
 
-        var result = await page.OnGetAsync(-1);
+        var result = await page.OnGetAsync();
 
         using (new AssertionScope())
         {
@@ -59,90 +59,34 @@ public class EditTests
     }
 
     [Test]
-    public async Task OnGet_GivenInactiveItem_RedirectsWithDisplayMessage()
-    {
-        var item = ResourceHelper.GetEpdContactViewList().Single(e => !e.Active);
-        var repo = Substitute.For<IEpdContactRepository>();
-        repo.GetAsync(Arg.Any<int>()).Returns(item);
-
-        // Initialize Page TempData
-        var httpContext = new DefaultHttpContext();
-        var tempData = new TempDataDictionary(httpContext, Substitute.For<ITempDataProvider>());
-        var page = new Edit(repo)
-            { TempData = tempData };
-
-        var result = await page.OnGetAsync(item.Id);
-
-        var expected = new DisplayMessage(DisplayMessage.AlertContext.Warning,
-            $"Inactive {Edit.ThisOption.PluralName} cannot be edited.");
-
-        using (new AssertionScope())
-        {
-            page.TempData.GetDisplayMessage().Should().BeEquivalentTo(expected);
-            result.Should().BeOfType<RedirectToPageResult>();
-            ((RedirectToPageResult)result).PageName.Should().Be("Index");
-        }
-    }
-
-    [Test]
     public async Task OnPost_GivenInvalidId_ReturnsNotFound()
     {
-        var item = new EpdContactCommand { Id = 0 };
         var repo = Substitute.For<IEpdContactRepository>();
         repo.GetAsync(Arg.Any<int>()).Returns(null as EpdContactViewDto);
-        var page = new Edit(repo) { Item = item };
+        var page = new EditModel(repo) { Id = 0 };
 
         var result = await page.OnPostAsync();
 
-        result.Should().BeOfType<NotFoundResult>();
+        result.Should().BeOfType<BadRequestResult>();
     }
 
     [Test]
-    public async Task OnPost_GivenInactiveItem_RedirectsWithDisplayMessage()
+    public async Task OnPost_GivenSuccess_ReturnsRedirect()
     {
-        var item = ResourceHelper.GetEpdContactViewList().Single(e => !e.Active);
+        var view = ResourceHelper.GetEpdContactViewList()[0];
+        var item = new EpdContactCommand(view);
         var repo = Substitute.For<IEpdContactRepository>();
-        repo.GetAsync(Arg.Any<int>()).Returns(item);
+        repo.GetAsync(Arg.Any<int>()).Returns(view);
 
         // Initialize Page TempData
         var httpContext = new DefaultHttpContext();
         var tempData = new TempDataDictionary(httpContext, Substitute.For<ITempDataProvider>());
-        var page = new Edit(repo)
-            { TempData = tempData, Item = new EpdContactCommand { Id = 0 } };
+        var page = new EditModel(repo) { TempData = tempData, Item = item, Id = view.Id };
 
         var result = await page.OnPostAsync();
 
-        var expected = new DisplayMessage(DisplayMessage.AlertContext.Warning,
-            $"Inactive {Edit.ThisOption.PluralName} cannot be edited.");
-
         using (new AssertionScope())
         {
-            page.TempData.GetDisplayMessage().Should().BeEquivalentTo(expected);
-            result.Should().BeOfType<RedirectToPageResult>();
-            ((RedirectToPageResult)result).PageName.Should().Be("Index");
-        }
-    }
-
-    [Test]
-    public async Task OnPost_GivenSuccess_ReturnsRedirectWithDisplayMessage()
-    {
-        var item = new EpdContactCommand(ResourceHelper.GetEpdContactViewList()[0]);
-        var repo = Substitute.For<IEpdContactRepository>();
-        repo.GetAsync(Arg.Any<int>()).Returns(ResourceHelper.GetEpdContactViewList()[0]);
-
-        // Initialize Page TempData
-        var httpContext = new DefaultHttpContext();
-        var tempData = new TempDataDictionary(httpContext, Substitute.For<ITempDataProvider>());
-        var page = new Edit(repo) { TempData = tempData, Item = item };
-
-        var result = await page.OnPostAsync();
-
-        var expected = new DisplayMessage(DisplayMessage.AlertContext.Success,
-            $"{Edit.ThisOption.SingularName} successfully updated.");
-
-        using (new AssertionScope())
-        {
-            page.TempData.GetDisplayMessage().Should().BeEquivalentTo(expected);
             result.Should().BeOfType<RedirectToPageResult>();
             ((RedirectToPageResult)result).PageName.Should().Be("Index");
         }
@@ -153,7 +97,7 @@ public class EditTests
     {
         var repo = Substitute.For<IEpdContactRepository>();
         repo.GetAsync(Arg.Any<int>()).Returns(ResourceHelper.GetEpdContactViewList()[0]);
-        var page = new Edit(repo) { Item = new EpdContactCommand { Id = 0 } };
+        var page = new EditModel(repo) { Item = new EpdContactCommand(), Id = 1 };
         page.ModelState.AddModelError("key", "message");
 
         var result = await page.OnPostAsync();

@@ -6,7 +6,7 @@ namespace Enfo.LocalRepository.Repositories;
 
 public sealed class LocalLegalAuthorityRepository : ILegalAuthorityRepository
 {
-    public Task<LegalAuthorityViewDto> GetAsync(int id, CancellationToken token) =>
+    public Task<LegalAuthorityViewDto> GetAsync(int id, CancellationToken token = default) =>
         LegalAuthorityData.LegalAuthorities.Exists(e => e.Id == id)
             ? Task.FromResult(new LegalAuthorityViewDto(
                 LegalAuthorityData.LegalAuthorities.SingleOrDefault(e => e.Id == id) ??
@@ -19,7 +19,7 @@ public sealed class LocalLegalAuthorityRepository : ILegalAuthorityRepository
             .Where(e => e.Active || includeInactive)
             .Select(e => new LegalAuthorityViewDto(e)).ToList());
 
-    public Task<int> CreateAsync(LegalAuthorityCreateDto resource, CancellationToken token)
+    public Task<int> CreateAsync(LegalAuthorityCreateDto resource, CancellationToken token = default)
     {
         var id = LegalAuthorityData.LegalAuthorities.Max(e => e.Id) + 1;
         var item = new LegalAuthority { Id = id, AuthorityName = resource.AuthorityName };
@@ -28,7 +28,7 @@ public sealed class LocalLegalAuthorityRepository : ILegalAuthorityRepository
         return Task.FromResult(id);
     }
 
-    public Task UpdateAsync(int id, LegalAuthorityUpdateDto resource, CancellationToken token)
+    public Task UpdateAsync(int id, LegalAuthorityUpdateDto resource, CancellationToken token = default)
     {
         var item = LegalAuthorityData.LegalAuthorities.SingleOrDefault(e => e.Id == id) ??
                    throw new ArgumentException($"ID ({id}) not found.", nameof(resource));
@@ -40,13 +40,13 @@ public sealed class LocalLegalAuthorityRepository : ILegalAuthorityRepository
     }
 
 
-    public Task<bool> ExistsAsync(int id, CancellationToken token) =>
+    public Task<bool> ExistsAsync(int id, CancellationToken token = default) =>
         Task.FromResult(LegalAuthorityData.LegalAuthorities.Exists(e => e.Id == id));
 
-    public Task<bool> NameExistsAsync(string name, CancellationToken token) =>
+    public Task<bool> NameExistsAsync(string name, CancellationToken token = default) =>
         Task.FromResult(LegalAuthorityData.LegalAuthorities.Exists(e => e.AuthorityName == name));
 
-    public Task<int?> FindIdByNameAsync(string name, CancellationToken token) =>
+    public Task<int?> FindIdByNameAsync(string name, CancellationToken token = default) =>
         Task.FromResult(LegalAuthorityData.LegalAuthorities.SingleOrDefault(e => e.AuthorityName == name)?.Id);
 
     public void Dispose()

@@ -6,7 +6,7 @@ namespace Enfo.LocalRepository.Repositories;
 
 public sealed class LocalEpdContactRepository : IEpdContactRepository
 {
-    public Task<EpdContactViewDto> GetAsync(int id, CancellationToken token) =>
+    public Task<EpdContactViewDto> GetAsync(int id, CancellationToken token = default) =>
         EpdContactData.EpdContacts.Exists(e => e.Id == id)
             ? Task.FromResult(new EpdContactViewDto(
                 EpdContactData.EpdContacts.SingleOrDefault(e => e.Id == id)!))
@@ -18,7 +18,7 @@ public sealed class LocalEpdContactRepository : IEpdContactRepository
             .Where(e => e.Active || includeInactive)
             .Select(e => new EpdContactViewDto(e)).ToList());
 
-    public Task<int> CreateAsync(EpdContactCommand resource, CancellationToken token)
+    public Task<int> CreateAsync(EpdContactCommand resource, CancellationToken token = default)
     {
         resource.TrimAll();
         var id = EpdContactData.EpdContacts.Max(e => e.Id) + 1;
@@ -28,7 +28,7 @@ public sealed class LocalEpdContactRepository : IEpdContactRepository
         return Task.FromResult(id);
     }
 
-    public Task UpdateAsync(int id, EpdContactCommand resource, CancellationToken token)
+    public Task UpdateAsync(int id, EpdContactCommand resource, CancellationToken token = default)
     {
         var item = EpdContactData.EpdContacts.SingleOrDefault(e => e.Id == id);
         if (item is null) throw new ArgumentException($"ID ({id}) not found.", nameof(resource));
@@ -39,7 +39,7 @@ public sealed class LocalEpdContactRepository : IEpdContactRepository
         return Task.CompletedTask;
     }
 
-    public Task UpdateStatusAsync(int id, bool newActiveStatus, CancellationToken token)
+    public Task UpdateStatusAsync(int id, bool newActiveStatus, CancellationToken token = default)
     {
         if (!EpdContactData.EpdContacts.Exists(e => e.Id == id))
             throw new ArgumentException($"ID ({id}) not found.", nameof(id));
@@ -50,7 +50,7 @@ public sealed class LocalEpdContactRepository : IEpdContactRepository
         return Task.CompletedTask;
     }
 
-    public Task<bool> ExistsAsync(int id, CancellationToken token) =>
+    public Task<bool> ExistsAsync(int id, CancellationToken token = default) =>
         Task.FromResult(EpdContactData.EpdContacts.Exists(e => e.Id == id));
 
     public void Dispose()

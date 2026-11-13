@@ -36,7 +36,7 @@ public class EditModel(ILegalAuthorityRepository repository) : PageModel
     }
 
     public async Task<IActionResult> OnPostAsync([FromServices] IValidator<LegalAuthorityUpdateDto> validator,
-        CancellationToken token)
+        CancellationToken token = default)
     {
         if (Id == 0) return BadRequest();
 

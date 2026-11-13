@@ -1,6 +1,8 @@
 ﻿using Enfo.Domain.EpdContacts;
 using Enfo.Domain.EpdContacts.Resources;
 using Enfo.WebApp.Models;
+using Enfo.WebApp.Pages.Admin.Maintenance.Contacts;
+using Enfo.WebApp.Platform.PageModelHelpers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -25,12 +27,12 @@ public class AddTests
         // Initialize Page TempData
         var httpContext = new DefaultHttpContext();
         var tempData = new TempDataDictionary(httpContext, Substitute.For<ITempDataProvider>());
-        var page = new Add { TempData = tempData, Item = item };
+        var page = new AddModel { TempData = tempData, Item = item };
 
         var result = await page.OnPostAsync(repo);
 
         var expected = new DisplayMessage(DisplayMessage.AlertContext.Success,
-            $"{Add.ThisOption.SingularName} successfully added.");
+            $"{AddModel.ThisOption.SingularName} successfully added.");
 
         using (new AssertionScope())
         {
@@ -46,7 +48,7 @@ public class AddTests
     public async Task OnPost_GivenModelError_ReturnsPageWithModelError()
     {
         var repo = Substitute.For<IEpdContactRepository>();
-        var page = new Add { Item = new EpdContactCommand() };
+        var page = new AddModel { Item = new EpdContactCommand() };
         page.ModelState.AddModelError("key", "message");
 
         var result = await page.OnPostAsync(repo);

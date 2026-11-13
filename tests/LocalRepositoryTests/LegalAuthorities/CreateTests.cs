@@ -10,13 +10,13 @@ public class CreateTests
     [Test]
     public async Task FromValidItem_AddsNew()
     {
-        var resource = new LegalAuthorityCommand { AuthorityName = "New Item" };
+        var resource = new LegalAuthorityCreateDto { AuthorityName = "New Item" };
         var expectedId = LegalAuthorityData.LegalAuthorities.Max(e => e.Id) + 1;
         var repository = new LocalLegalAuthorityRepository();
 
         var itemId = await repository.CreateAsync(resource);
 
-        var item = new LegalAuthority(resource) { Id = itemId };
+        var item = new LegalAuthority { Id = itemId, AuthorityName = resource.AuthorityName };
         var expected = new LegalAuthorityViewDto(item);
         var newItem = await repository.GetAsync(itemId);
 
@@ -25,19 +25,5 @@ public class CreateTests
             itemId.Should().Be(expectedId);
             newItem.Should().BeEquivalentTo(expected);
         }
-    }
-
-    [Test]
-    public async Task FromInvalidItem_ThrowsException()
-    {
-        var resource = new LegalAuthorityCommand { AuthorityName = null };
-
-        var action = async () =>
-        {
-            using var repository = new LocalLegalAuthorityRepository();
-            await repository.CreateAsync(resource);
-        };
-
-        await action.Should().ThrowAsync<ArgumentException>();
     }
 }

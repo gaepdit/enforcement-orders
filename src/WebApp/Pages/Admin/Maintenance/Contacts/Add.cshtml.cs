@@ -18,7 +18,7 @@ public class AddModel : PageModel
     public int HighlightId { get; set; }
 
     public async Task<IActionResult> OnPostAsync([FromServices] IEpdContactRepository repository,
-        CancellationToken token)
+        CancellationToken token = default)
     {
         Item.TrimAll();
         if (!ModelState.IsValid) return Page();
