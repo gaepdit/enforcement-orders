@@ -1,6 +1,6 @@
 ﻿@page
 @using Enfo.Domain.Utils
-@model Enfo.WebApp.Pages.RecentExecuted
+@model RecentExecuted
 @{
     ViewData["Title"] = "Recently Executed Enforcement Orders";
 }
@@ -77,7 +77,7 @@ else
                         <p>
                             <em>@Html.DisplayNameFor(m => enfo.HearingContact)</em>
                         </p>
-                        @Html.DisplayFor(m => enfo.HearingContact, "EpdContactView")
+                            @Html.DisplayFor(m => enfo.HearingContact)
                     }
                 </tr>
             }

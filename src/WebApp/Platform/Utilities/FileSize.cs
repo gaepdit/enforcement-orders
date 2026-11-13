@@ -1,30 +1,26 @@
-﻿using JetBrains.Annotations;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Globalization;
 
 namespace Enfo.WebApp.Platform.Utilities;
 
 public static class FileSize
 {
-    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    [SuppressMessage("ReSharper", "InconsistentNaming")]
-    private enum FileSizeUnits
+    private static string FileSizeUnits(double power) => power switch
     {
-        bytes = 0,
-        KB = 1,
-        MB = 2,
-        GB = 3,
-        TB = 4,
-        PB = 5,
-        EB = 6,
-    }
+        0 => "bytes",
+        1 => "KB",
+        2 => "MB",
+        3 => "GB",
+        4 => "TB",
+        5 => "PB",
+        6 => "EB",
+        _ => "units",
+    };
 
-    public static string ToFileSizeString(this long value, int precision = 1)
+    public static string ToFileSizeString(this long value)
     {
-        if (value == 0) return "0 bytes";
-        var pow = Math.Min((int)Math.Floor(Math.Log(Math.Abs(value)) / Math.Log(1024)),
-            Enum.GetNames<FileSizeUnits>().Length); // Total number of FileSizeUnits available
-        var valueString = (value / Math.Pow(1024, pow)).ToString(pow == 0 ? "N0" : "N" + precision);
-        var unitString = ((FileSizeUnits)pow).ToString();
-        return $"{valueString} {unitString}";
+        // Seven = total number of FileSizeUnits available
+        var power = Math.Min((int)Math.Floor((value > 0 ? Math.Log(value) : 0) / Math.Log(1024)), 7);
+        return
+            $"{(value / Math.Pow(1024, power)).ToString(power == 0 ? "N0" : "N1", CultureInfo.InvariantCulture)} {FileSizeUnits(power)}";
     }
 }

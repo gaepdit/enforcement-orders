@@ -15,12 +15,13 @@ public class AttachmentView
     }
 
     public Guid Id { get; }
-    
+
     [JsonIgnore]
     public int EnforcementOrderId { get; }
 
     public string FileName { get; }
 
+    [JsonIgnore]
     [UIHint("FileTypeIcon")]
     public string FileExtension { get; }
 

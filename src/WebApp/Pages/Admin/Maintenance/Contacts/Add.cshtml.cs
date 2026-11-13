@@ -7,26 +7,23 @@ using Enfo.WebApp.Platform.PageModelHelpers;
 namespace Enfo.WebApp.Pages.Admin.Maintenance.Contacts;
 
 [Authorize(Roles = AppRole.SiteMaintenance)]
-public class Add : PageModel
+public class AddModel : PageModel
 {
     [BindProperty]
-    public EpdContactCommand Item { get; init; }
+    public EpdContactCommand Item { get; init; } = null!;
 
     public static MaintenanceOption ThisOption => MaintenanceOption.EpdContact;
 
     [TempData]
     public int HighlightId { get; set; }
 
-    public static void OnGet()
-    {
-        // Method intentionally left empty.
-    }
-
     public async Task<IActionResult> OnPostAsync([FromServices] IEpdContactRepository repository)
     {
         Item.TrimAll();
         if (!ModelState.IsValid) return Page();
+
         HighlightId = await repository.CreateAsync(Item);
+
         TempData.SetDisplayMessage(DisplayMessage.AlertContext.Success,
             $"{ThisOption.SingularName} successfully added.");
         return RedirectToPage("Index");

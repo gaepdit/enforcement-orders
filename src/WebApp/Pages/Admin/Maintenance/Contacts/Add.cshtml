@@ -1,72 +1,62 @@
 ﻿@page
-@model Enfo.WebApp.Pages.Admin.Maintenance.Contacts.Add
+@using Enfo.WebApp.Pages.Shared.EditorTemplates
+@model AddModel
 @{
-    ViewData["Title"] = $"Add a new {Add.ThisOption.SingularName}";
+    ViewData["Title"] = $"Add a new {AddModel.ThisOption.SingularName}";
 }
 
 <h1>@ViewData["Title"]</h1>
 
-<div class="gaepd-container-light">
-    <form method="post" class="usa-form-large">
-        <div asp-validation-summary="ModelOnly" class="usa-alert usa-alert-error" role="alert"></div>
-
-        <p>Required fields are marked with an asterisk (<abbr class="required-field-label" title="Required">*</abbr>).</p>
-
-        <label asp-for="Item.ContactName"></label>
-        @Html.EditorFor(m => m.Item.ContactName)
-        <span asp-validation-for="Item.ContactName" class="usa-input-error-message"></span>
-
-        <label asp-for="Item.Title"></label>
-        @Html.EditorFor(m => m.Item.Title)
-        <span asp-validation-for="Item.Title" class="usa-input-error-message"></span>
-
-        <label asp-for="Item.Organization"></label>
-        @Html.EditorFor(m => m.Item.Organization)
-        <span asp-validation-for="Item.Organization" class="usa-input-error-message"></span>
-
-        <fieldset>
-            <legend>Address</legend>
-            <label asp-for="Item.Street"></label>
-            <input asp-for="Item.Street" />
-            <span asp-validation-for="Item.Street" class="usa-input-error-message"></span>
-
-            <label asp-for="Item.Street2"></label>
-            <span class="usa-additional_text">(Optional)</span>
-            <input asp-for="Item.Street2" />
-            <span asp-validation-for="Item.Street2" class="usa-input-error-message"></span>
-
-            <div class="usa-input-grid usa-input-grid-medium">
-                <label asp-for="Item.City"></label>
-                <input asp-for="Item.City" />
-                <span asp-validation-for="Item.City" class="usa-input-error-message"></span>
+<div class="p-3 border rounded-3 bg-light-subtle">
+    <form method="post">
+        <div class="row">
+            <div class="col-md-8 col-lg-6">
+                <div class="mb-3">
+                    @Html.EditorFor(model => model.Item.ContactName, EditorTemplate.Input)
+                </div>
+                <div class="mb-3">
+                    @Html.EditorFor(model => model.Item.Title, EditorTemplate.Input)
+                </div>
+                <div class="mb-3">
+                    @Html.EditorFor(model => model.Item.Organization, EditorTemplate.Input)
+                </div>
             </div>
-
-            <div class="usa-input-grid">
-                <label asp-for="Item.PostalCode"></label>
-                <input asp-for="Item.PostalCode" class="usa-input-medium" />
-                <span asp-validation-for="Item.PostalCode" class="usa-input-error-message"></span>
-            </div>
-        </fieldset>
-
-        <fieldset>
-            <legend>Communication</legend>
-            <label asp-for="Item.Telephone"></label>
-            @Html.EditorFor(m => m.Item.Telephone)
-            <span asp-validation-for="Item.Telephone" class="usa-input-error-message"></span>
-
-            <label asp-for="Item.Email"></label>
-            @Html.EditorFor(m => m.Item.Email)
-            <span asp-validation-for="Item.Email" class="usa-input-error-message"></span>
-        </fieldset>
-
-        <div class="gaepd-buttonrow">
-            <button type="submit">Add New @Add.ThisOption.SingularName</button>
-            <a asp-page="Index" class="usa-button usa-button-secondary">Cancel</a>
         </div>
+        <div class="row">
+            <h3 class="h5">Address</h3>
+            <div class="col-md-8 col-lg-6">
+                <div class="mb-3">
+                    @Html.EditorFor(model => model.Item.Street, EditorTemplate.Input)
+                </div>
+                <div class="mb-3">
+                    @Html.EditorFor(model => model.Item.Street2, EditorTemplate.Input)
+                </div>
+                <div class="input-group mb-3">
+                    @Html.EditorFor(model => model.Item.City, EditorTemplate.Input)
+                    @Html.EditorFor(model => model.Item.PostalCode, EditorTemplate.Input)
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <h3 class="h5">Communication</h3>
+            <div class="col-md-8 col-lg-6">
+                <div class="mb-3">
+                    @Html.EditorFor(model => model.Item.Telephone, EditorTemplate.Input)
+                </div>
+                <div class="mb-3">
+                    @Html.EditorFor(model => model.Item.Email, EditorTemplate.Input)
+                </div>
+            </div>
+        </div>
+        <div class="mb-1">
+            <button id="SubmitButton" type="submit" class="btn btn-primary me-2">Add New @AddModel.ThisOption.SingularName</button>
+            <a asp-page="Index" class="btn btn-outline-secondary">Cancel</a>
+        </div>
+        <div class="text-danger-emphasis mt-3">* denotes a required field</div>
     </form>
 </div>
 
 @section Scripts
 {
-    <partial name="_ValidationScriptsPartial" />
+    <partial name="Shared/_ValidationScriptsPartial" />
 }

@@ -6,20 +6,20 @@ namespace WebAppTests.Platform;
 public class FileSizeTests
 {
     [Test]
-    [TestCase(0, 2, "0 bytes")]
-    [TestCase(1, 2, "1 bytes")]
-    [TestCase(10, 2, "10 bytes")]
-    [TestCase(1024, 2, "1.00 KB")]
-    [TestCase(2048, 1, "2.0 KB")]
-    [TestCase(99999999, 4, "95.3674 MB")]
-    [TestCase(-1, 2, "-1 bytes")]
-    [TestCase(-10, 2, "-10 bytes")]
-    [TestCase(-1024, 2, "-1.00 KB")]
-    [TestCase(-2048, 1, "-2.0 KB")]
-    [TestCase(-99999999, 4, "-95.3674 MB")]
-    public void FileSize_ReturnsCorrectly(long input, int precision, string expected)
+    [TestCase(0, "0 bytes")]
+    [TestCase(1, "1 bytes")]
+    [TestCase(10, "10 bytes")]
+    [TestCase(1024, "1.00 KB")]
+    [TestCase(2048, "2.0 KB")]
+    [TestCase(99999999, "95.3674 MB")]
+    [TestCase(-1, "-1 bytes")]
+    [TestCase(-10, "-10 bytes")]
+    [TestCase(-1024, "-1.00 KB")]
+    [TestCase(-2048, "-2.0 KB")]
+    [TestCase(-99999999, "-95.3674 MB")]
+    public void FileSize_ReturnsCorrectly(long input, string expected)
     {
-        var result = input.ToFileSizeString(precision);
+        var result = input.ToFileSizeString();
         result.Should().Be(expected);
     }
 }

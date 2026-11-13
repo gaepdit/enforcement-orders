@@ -75,7 +75,7 @@ else
             <td>
                 @if (Model.Item.CommentContact != null)
                 {
-                    @Html.DisplayFor(m => m.Item.CommentContact, "EpdContactView")
+                    @Html.DisplayFor(m => m.Item.CommentContact)
                 }
                 else
                 {
@@ -119,7 +119,7 @@ else
             </p>
             @if (Model.Item.HearingContact != null)
             {
-                @Html.DisplayFor(m => m.Item.HearingContact, "EpdContactView")
+                    @Html.DisplayFor(m => m.Item.HearingContact)
             }
             else
             {

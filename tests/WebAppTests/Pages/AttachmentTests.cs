@@ -1,8 +1,8 @@
 ﻿using Enfo.Domain.Attachments;
 using Enfo.Domain.EnforcementOrders.Entities;
 using Enfo.Domain.EnforcementOrders.Repositories;
-using Enfo.Domain.EnforcementOrders.Resources;
 using Enfo.Domain.Utils;
+using Enfo.WebApp.Pages;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Routing;
 using System.Security.Claims;
 using System.Security.Principal;
 using System.Text;
-using Attachment = Enfo.WebApp.Pages.Attachment;
 
 namespace WebAppTests.Pages;
 
@@ -39,7 +38,7 @@ public class AttachmentTests
         fileService.GetFileAttachmentAsync(Arg.Any<string>()).Returns(expectedFile);
 
         // Act
-        var page = new Attachment(repo, fileService) { PageContext = pageContext };
+        var page = new AttachmentModel(repo, fileService) { PageContext = pageContext };
         var response = await page.OnGetAsync(item.Id, item.FileName);
 
         // Assert
@@ -56,7 +55,7 @@ public class AttachmentTests
     [Test]
     public async Task NullId_ReturnsNotFound()
     {
-        var page = new Attachment(default, default);
+        var page = new AttachmentModel(default, default);
         var result = await page.OnGetAsync(null, null);
         result.Should().BeOfType<NotFoundResult>();
     }
@@ -72,7 +71,7 @@ public class AttachmentTests
         var repo = Substitute.For<IEnforcementOrderRepository>();
         repo.GetAttachmentAsync(Arg.Any<Guid>()).Returns(null as AttachmentView);
 
-        var page = new Attachment(repo, default) { PageContext = pageContext };
+        var page = new AttachmentModel(repo, default) { PageContext = pageContext };
         var response = await page.OnGetAsync(Guid.Empty, null);
 
         using (new AssertionScope())
@@ -90,7 +89,7 @@ public class AttachmentTests
         var actionContext = new ActionContext(httpContext, new RouteData(), new PageActionDescriptor());
         var pageContext = new PageContext(actionContext);
 
-        var view = new AttachmentView(new Enfo.Domain.Attachments.Attachment
+        var view = new AttachmentView(new Attachment
         {
             Id = Guid.Empty,
             FileName = null,
@@ -100,7 +99,7 @@ public class AttachmentTests
         var repo = Substitute.For<IEnforcementOrderRepository>();
         repo.GetAttachmentAsync(Arg.Any<Guid>()).Returns(view);
 
-        var page = new Attachment(repo, default) { PageContext = pageContext };
+        var page = new AttachmentModel(repo, default) { PageContext = pageContext };
         var response = await page.OnGetAsync(Guid.Empty, null);
 
         using (new AssertionScope())
@@ -118,7 +117,7 @@ public class AttachmentTests
         var actionContext = new ActionContext(httpContext, new RouteData(), new PageActionDescriptor());
         var pageContext = new PageContext(actionContext);
 
-        var view = new AttachmentView(new Enfo.Domain.Attachments.Attachment
+        var view = new AttachmentView(new Attachment
         {
             Id = Guid.Empty,
             FileName = "right",
@@ -128,7 +127,7 @@ public class AttachmentTests
         var repo = Substitute.For<IEnforcementOrderRepository>();
         repo.GetAttachmentAsync(Arg.Any<Guid>()).Returns(view);
 
-        var page = new Attachment(repo, default) { PageContext = pageContext };
+        var page = new AttachmentModel(repo, default) { PageContext = pageContext };
         var response = await page.OnGetAsync(Guid.Empty, "wrong");
 
         using (new AssertionScope())
@@ -149,7 +148,7 @@ public class AttachmentTests
         var actionContext = new ActionContext(httpContext, new RouteData(), new PageActionDescriptor());
         var pageContext = new PageContext(actionContext);
 
-        var view = new AttachmentView(new Enfo.Domain.Attachments.Attachment
+        var view = new AttachmentView(new Attachment
         {
             Id = Guid.Empty,
             FileName = "abc",
@@ -162,7 +161,7 @@ public class AttachmentTests
         var fileService = Substitute.For<IAttachmentStore>();
         fileService.GetFileAttachmentAsync(Arg.Any<string>()).Returns(Array.Empty<byte>());
 
-        var page = new Attachment(repo, fileService) { PageContext = pageContext };
+        var page = new AttachmentModel(repo, fileService) { PageContext = pageContext };
         var response = await page.OnGetAsync(Guid.Empty, view.FileName);
 
         using (new AssertionScope())

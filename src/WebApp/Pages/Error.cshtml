@@ -1,18 +1,18 @@
 ﻿@page
-@model Enfo.WebApp.Pages.ErrorModel
-@{
-    ViewData["Title"] = "Error";
-}
-
-<h1 class="gaepd-text-danger">@ViewData["Title"]</h1>
-<p>
-    An error occurred while processing your request.
-    If you need assistance related to this error, please contact EPD IT support.
-</p>
-
-@if (Model.ShowRequestId)
+@model ErrorModel
+@if (Model.Status == StatusCodes.Status404NotFound)
 {
-    <p class="gaepd-container-light">
-        <small>Request ID: <code class="gaepd-text-danger">@Model.RequestId</code></small>
-    </p>
+    ViewData["Title"] = "Not Found";
+    <h1 class="text-danger-emphasis">@ViewData["Title"]</h1>
+    <p class="lead">The page you're looking for could not be found.</p>
 }
+else
+{
+    ViewData["Title"] = "Error";
+    <h1 class="text-danger-emphasis">@ViewData["Title"]</h1>
+    <p class="lead">An error occurred while processing your request.</p>
+}
+
+<p>
+    If you need assistance related to this error, please see the <a asp-page="/Support">support page</a>.
+</p>

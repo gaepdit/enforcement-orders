@@ -1,6 +1,6 @@
 ﻿@page
 @using Enfo.Domain.Utils
-@model Enfo.WebApp.Pages.CurrentProposed
+@model CurrentProposed
 @{
     ViewData["Title"] = "Current Proposed Enforcement Orders";
 }
@@ -63,7 +63,7 @@ else
             {
                 <tr>
                     <th scope="row">@Html.DisplayNameFor(m => enfo.CommentContact)</th>
-                    <td>@Html.DisplayFor(m => enfo.CommentContact, "EpdContactView")</td>
+                    <td>@Html.DisplayFor(m => enfo.CommentContact)</td>
                 </tr>
             }
 
@@ -91,7 +91,7 @@ else
                         <p>
                             <em>@Html.DisplayNameFor(m => enfo.HearingContact)</em>
                         </p>
-                        @Html.DisplayFor(m => enfo.HearingContact, "EpdContactView")
+                            @Html.DisplayFor(m => enfo.HearingContact)
                     }
                 </tr>
             }

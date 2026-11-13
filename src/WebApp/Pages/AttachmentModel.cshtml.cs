@@ -1,14 +1,13 @@
 ﻿using Enfo.Domain.Attachments;
 using Enfo.Domain.EnforcementOrders.Repositories;
 using Enfo.Domain.Utils;
-using JetBrains.Annotations;
 
 namespace Enfo.WebApp.Pages;
 
-public class Attachment(IEnforcementOrderRepository repository, IAttachmentStore attachmentStore)
+public class AttachmentModel(IEnforcementOrderRepository repository, IAttachmentStore attachmentStore)
     : PageModel
 {
-    public async Task<IActionResult> OnGetAsync(Guid? id, [CanBeNull] string fileName)
+    public async Task<IActionResult> OnGetAsync(Guid? id, string? fileName)
     {
         if (id == null) return NotFound();
 

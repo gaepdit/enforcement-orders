@@ -1,13 +1,15 @@
-using System.Diagnostics;
-
 namespace Enfo.WebApp.Pages;
 
 [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 [AllowAnonymous]
-public class ErrorModel : PageModel
+public class ErrorModel(IAuthorizationService authorization) : PageModel
 {
-    public string RequestId { get; private set; }
-    public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
+    public int? Status { get; private set; }
+    public bool ActiveUser { get; private set; }
 
-    public void OnGet() => RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier;
+    public void OnGet(int? statusCode)
+    {
+        ActiveUser = User.Identity?.IsAuthenticated ?? false;
+        Status = statusCode;
+    }
 }
