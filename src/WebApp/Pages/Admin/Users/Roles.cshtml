@@ -1,0 +1,58 @@
+﻿@page
+@model RolesModel
+@{
+    ViewData["Title"] = "ENFO User Roles and Capabilities";
+}
+
+<h1 class="mb-3">@ViewData["Title"]</h1>
+
+<h2 class="h4">Public</h2>
+
+<p>Visitors to this site who are not logged in can do the following:</p>
+
+<ul>
+    <li>Search for and view info for all published Enforcement Orders.</li>
+</ul>
+
+<h2 class="h4">User</h2>
+
+<p>All active Users with work accounts who are logged into the application can:</p>
+
+<ul>
+    <li>Search for and view info for all published and draft Enforcement Orders.</li>
+    <li>Search for and view ENFO application users.</li>
+    <li>View the lists of EPD Contacts and Legal Authorities.</li>
+    <li>View this list of roles and capabilities.</li>
+</ul>
+
+<hr />
+<h2 class="h4">Application Roles</h2>
+
+<p>Users can be granted one or more of the following roles.</p>
+
+<h3 class="h5">Order Administrator</h3>
+
+<p>Users in the <em>Order Administrator</em> role can:</p>
+
+<ul>
+    <li>Create and publish new Enforcement Orders.</li>
+    <li>Delete and view deleted Enforcement Orders.</li>
+    <li>Add/delete Attachments for Enforcement Orders.</li>
+</ul>
+
+<h3 class="h5">User Account Admin</h3>
+
+<p>Users in the <em>User Account Admin</em> role can:</p>
+
+<ul>
+    <li>Assign and remove roles for ENFO User accounts.</li>
+</ul>
+
+<h3 class="h5">Site Maintenance</h3>
+
+<p>Users in the <em>Site Maintenance</em> role can:</p>
+
+<ul>
+    <li>Edit EPD Offices and designate the Assignor for each Office.</li>
+    <li>Edit the lookup tables for EPD Contacts and Legal Authorities.</li>
+</ul>

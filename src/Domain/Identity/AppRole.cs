@@ -60,8 +60,8 @@ public class AppRole
     [UsedImplicitly]
     public static AppRole UserMaintenanceRole { get; } = new(
         UserMaintenance,
-        "User Maintenance",
-        "Users with the User Maintenance role are able to add and remove roles for other users."
+        "User Account Admin",
+        "Users with the User Account Admin role are able to add and remove roles for other users."
     );
 
     public static AppRole SiteMaintenanceRole { get; } = new(
