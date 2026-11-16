@@ -76,7 +76,7 @@ public class AddTests
         var result = await page.OnPostAsync(validator);
 
         var expected = new DisplayMessage(DisplayMessage.AlertContext.Success,
-            "The new Enforcement Order has been successfully added.", []);
+            "The new Enforcement Order has been successfully added.");
 
         using (new AssertionScope())
         {

@@ -16,7 +16,7 @@
 {
     // Replace with callout
     @await Html.PartialAsync("_AlertPartial", new DisplayMessage(DisplayMessage.AlertContext.Warning,
-        "This enforcement order has been deleted and will not be displayed to the public.", []))
+        "This enforcement order has been deleted and will not be displayed to the public."))
 }
 else if (Model.Item.IsPublic)
 {

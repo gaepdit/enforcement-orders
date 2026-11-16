@@ -1,53 +1,29 @@
 ﻿@using Enfo.WebApp.Models
-@model Enfo.WebApp.Models.DisplayMessage
-@{
-    var iconsFile = Url.Content("~/images/app-icons.svg");
-}
-
+@model Enfo.WebApp.Models.DisplayMessage?
 @if (Model != null)
 {
     <div class="alert @Model.AlertClass alert-dismissible fade show d-flex align-items-center" role="alert">
-        @{
-            switch (Model.Context)
-            {
-                case DisplayMessage.AlertContext.Success:
-                    <svg class="bi me-3" role="img" aria-label="Success:">
-                        <use href="@iconsFile#app-icon-check-circle-fill"></use>
-                    </svg>
-                    break;
+        @switch (Model.Context)
+        {
+            case DisplayMessage.AlertContext.Success:
+                <partial name="Shared/_AppIconsPartial" model="@AppIcon.CheckIcon" />
+                break;
 
-                case DisplayMessage.AlertContext.Info:
-                    <svg class="bi me-3" role="img" aria-label="Info:">
-                        <use href="@iconsFile#app-icon-info-circle-fill"></use>
-                    </svg>
-                    break;
+            case DisplayMessage.AlertContext.Info:
+                <partial name="Shared/_AppIconsPartial" model="@AppIcon.InfoIcon" />
+                break;
 
-                case DisplayMessage.AlertContext.Danger:
-                case DisplayMessage.AlertContext.Warning:
-                    <svg class="bi me-3" role="img" aria-label="Warning:">
-                        <use href="@iconsFile#app-icon-exclamation-triangle-fill"></use>
-                    </svg>
-                    break;
+            case DisplayMessage.AlertContext.Danger:
+            case DisplayMessage.AlertContext.Warning:
+                <partial name="Shared/_AppIconsPartial" model="@AppIcon.WarningIcon" />
+                break;
 
-                case DisplayMessage.AlertContext.Primary:
-                case DisplayMessage.AlertContext.Secondary:
-                default:
-                    break;
-            }
+            default:
+                throw new ArgumentOutOfRangeException();
         }
 
-        <div>
+        <div class="ms-3">
             @Model.Message
-            @if (Model.Details.Exists(s => !string.IsNullOrEmpty(s)))
-            {
-                @:The following warnings were generated:
-                <ul class="pt-1 mb-0 ps-3">
-                    @foreach (var s in Model.Details)
-                    {
-                        <li>@s</li>
-                    }
-                </ul>
-            }
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     </div>

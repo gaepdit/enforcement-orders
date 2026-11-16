@@ -16,12 +16,8 @@ public static class TempDataDictionaryExtensions
             return o is null ? null : JsonSerializer.Deserialize<T>((string)o);
         }
 
-        public void SetDisplayMessage(DisplayMessage.AlertContext context, string message, string detail) =>
-            tempData.SetDisplayMessage(context, message, [detail]);
-
-        public void SetDisplayMessage(DisplayMessage.AlertContext context, string message,
-            List<string>? details = null) =>
-            tempData.Set(nameof(DisplayMessage), new DisplayMessage(context, message, details ?? []));
+        public void SetDisplayMessage(DisplayMessage.AlertContext context, string message) =>
+            tempData.Set(nameof(DisplayMessage), new DisplayMessage(context, message));
 
         public DisplayMessage? GetDisplayMessage() => tempData.Get<DisplayMessage>(nameof(DisplayMessage));
     }
