@@ -1,10 +1,11 @@
 ﻿using System.Globalization;
+using Enfo.Domain.BaseEntities;
 using Enfo.Domain.Utils;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace Enfo.Domain.EnforcementOrders.Specs;
 
-public class EnforcementOrderSpec
+public record EnforcementOrderSpec : ISearchDto
 {
     [DisplayName("Facility")]
     public string Facility { get; set; }
@@ -33,16 +34,16 @@ public class EnforcementOrderSpec
     public ActivityState Status { get; set; } = ActivityState.All;
 
     public OrderSorting Sort { get; set; } = OrderSorting.DateDesc;
+    public string SortByName => Sort.ToString();
 
-    public void TrimAll()
+    public EnforcementOrderSpec TrimAll() => this with
     {
-        County = County?.Trim();
-        Facility = Facility?.Trim();
-        OrderNumber = OrderNumber?.Trim();
-    }
+        County = County?.Trim(), Facility = Facility?.Trim(), OrderNumber = OrderNumber?.Trim(),
+    };
 
     public IDictionary<string, string> AsRouteValues() => new Dictionary<string, string>
     {
+        { nameof(Sort), SortByName },
         { nameof(Facility), Facility },
         { nameof(County), County },
         { nameof(LegalAuth), LegalAuth?.ToString() },

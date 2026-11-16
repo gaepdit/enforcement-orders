@@ -9,10 +9,7 @@ public class PaginatedResult<T> : IPaginatedResult
         TotalCount = Guard.NotNegative(totalCount);
         PageNumber = paging.PageNumber;
         PageSize = paging.PageSize;
-
-        var itemsList = new List<T>();
-        itemsList.AddRange(items);
-        Items = itemsList;
+        Items = (List<T>)[.. items];
     }
 
     public int TotalCount { get; }
@@ -24,12 +21,21 @@ public class PaginatedResult<T> : IPaginatedResult
 
     [JsonIgnore]
     public int FirstItemIndex => Math.Min(PageSize * (PageNumber - 1) + 1, TotalCount);
+
     [JsonIgnore]
     public int LastItemIndex => Math.Min(PageSize * PageNumber, TotalCount);
+
     [JsonIgnore]
     public bool HasPreviousPage => PageNumber > 1;
+
+    [JsonIgnore]
+    public int PreviousPageNumber => Math.Max(1, PageNumber - 1);
+
     [JsonIgnore]
     public bool HasNextPage => PageNumber < TotalPages;
+
+    [JsonIgnore]
+    public int NextPageNumber => Math.Min(PageNumber + 1, TotalPages);
 
     public IList<T> Items { get; }
 }
@@ -37,11 +43,14 @@ public class PaginatedResult<T> : IPaginatedResult
 public interface IPaginatedResult
 {
     int TotalCount { get; }
+    int PageSize { get; }
     int PageNumber { get; }
     int TotalPages { get; }
-    int CurrentCount { get; }
     int FirstItemIndex { get; }
     int LastItemIndex { get; }
+    int CurrentCount { get; }
     bool HasPreviousPage { get; }
+    int PreviousPageNumber { get; }
     bool HasNextPage { get; }
+    int NextPageNumber { get; }
 }

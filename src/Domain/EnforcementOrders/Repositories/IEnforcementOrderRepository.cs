@@ -11,9 +11,16 @@ public interface IEnforcementOrderRepository : IDisposable
     Task<EnforcementOrderDetailedView> GetAsync(int id);
     Task<EnforcementOrderAdminView> GetAdminViewAsync(int id);
     Task<AttachmentView> GetAttachmentAsync(Guid id);
-    Task<PaginatedResult<EnforcementOrderSummaryView>> ListAsync(EnforcementOrderSpec spec, PaginationSpec paging);
-    Task<PaginatedResult<EnforcementOrderDetailedView>> ListDetailedAsync(EnforcementOrderSpec spec, PaginationSpec paging);
-    Task<PaginatedResult<EnforcementOrderAdminSummaryView>> ListAdminAsync(EnforcementOrderAdminSpec spec, PaginationSpec paging);
+
+    Task<PaginatedResult<EnforcementOrderSummaryView>> ListAsync(EnforcementOrderSpec spec, PaginationSpec paging,
+        CancellationToken token = default);
+
+    Task<PaginatedResult<EnforcementOrderDetailedView>> ListDetailedAsync(EnforcementOrderSpec spec,
+        PaginationSpec paging);
+
+    Task<PaginatedResult<EnforcementOrderAdminSummaryView>> ListAdminAsync(EnforcementOrderAdminSpec spec,
+        PaginationSpec paging);
+
     Task<bool> ExistsAsync(int id, bool onlyPublic = true);
     Task<bool> OrderNumberExistsAsync(string orderNumber, int? ignoreId = null);
     Task<IReadOnlyList<EnforcementOrderDetailedView>> ListCurrentProposedEnforcementOrdersAsync();

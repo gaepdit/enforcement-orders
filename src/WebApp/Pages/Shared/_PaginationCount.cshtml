@@ -1,10 +1,7 @@
-﻿@using System.Globalization
-@model Enfo.Domain.Pagination.IPaginatedResult
-<div class="gaepd-pagination-count">
-    Total results: @Model.TotalCount.ToString("N0", CultureInfo.InvariantCulture)
-    @if (Model.TotalPages > 1)
-    {
-        <br />
-        @($"Showing results {Model.FirstItemIndex.ToString()} – {Model.LastItemIndex.ToString()}")
-    }
-</div>
+﻿@model Enfo.Domain.Pagination.IPaginatedResult
+Total: @Html.DisplayFor(_ => Model.TotalCount)
+@if (Model.TotalPages > 1)
+{
+    <br />
+    @($"Showing results {Model.FirstItemIndex.ToString()} – {Model.LastItemIndex.ToString()}")
+}

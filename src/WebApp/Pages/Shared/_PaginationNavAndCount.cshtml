@@ -1,0 +1,18 @@
+﻿@model Enfo.WebApp.Models.PaginatedResultsDisplay
+
+<div class="container px-0 py-2">
+    <div class="row">
+        <div class="small col-md mt-3 text-secondary-emphasis">
+            Total: @Model.SearchResults.TotalCount.ToString("N0")
+            @if (Model.SearchResults.TotalPages > 1)
+            {
+                <br />
+                @:Showing: @Model.SearchResults.FirstItemIndex.ToString("N0") – @Model.SearchResults.LastItemIndex.ToString("N0")
+            }
+        </div>
+        <div class="col-md">
+            <partial name="Shared/_PaginationNav" />
+        </div>
+        <div class="col-md"></div>
+    </div>
+</div>

@@ -57,8 +57,8 @@ public sealed class EnforcementOrderRepository(
         return item is null ? null : new AttachmentView(item);
     }
 
-    public async Task<PaginatedResult<EnforcementOrderSummaryView>> ListAsync(
-        EnforcementOrderSpec spec, PaginationSpec paging)
+    public async Task<PaginatedResult<EnforcementOrderSummaryView>> ListAsync(EnforcementOrderSpec spec,
+        PaginationSpec paging, CancellationToken token = default)
     {
         Guard.NotNull(spec);
         Guard.NotNull(paging);
@@ -71,9 +71,9 @@ public sealed class EnforcementOrderRepository(
             .Include(e => e.LegalAuthority)
             .ApplyPagination(paging)
             .Select(e => new EnforcementOrderSummaryView(e))
-            .ToListAsync().ConfigureAwait(false);
+            .ToListAsync(cancellationToken: token).ConfigureAwait(false);
 
-        var count = await filteredItems.CountAsync().ConfigureAwait(false);
+        var count = await filteredItems.CountAsync(cancellationToken: token).ConfigureAwait(false);
 
         return new PaginatedResult<EnforcementOrderSummaryView>(items, count, paging);
     }

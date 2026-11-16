@@ -1,64 +1,81 @@
-﻿@model Enfo.WebApp.Models.PaginationNavModel
+﻿@model Enfo.WebApp.Models.PaginatedResultsDisplay
 
-@if (Model.Paging.TotalPages > 1)
+@if (Model.SearchResults.TotalPages > 1)
 {
-    <nav aria-label="Search results pages" class="gaepd-pagination">
-        @if (Model.Paging.HasPreviousPage)
-        {
-            <a asp-fragment="search-results" asp-all-route-data="Model.RouteValues"
-               asp-route-p="@((Model.Paging.PageNumber - 1).ToString())" asp-route-handler="search"
-               class="gaepd-pagination-prev">
-                Previous
-            </a>
-        }
-        else
-        {
-            <span class="gaepd-pagination-prev gaepd-pagination-disabled" title="Previous">Prev</span>
-        }
-
-        <div class="gaepd-pagination-inner">
-            @if (Model.Paging.PageNumber > 3)
+    <nav aria-label="Search results pages" class="mt-3">
+        <ul class="pagination mb-md-0 justify-content-md-center">
+            @if (Model.SearchResults.HasPreviousPage)
             {
-                <span>…</span>
+                <li class="page-item">
+                    <a class="page-link" asp-fragment="@Model.SearchFragment"
+                       asp-all-route-data="Model.RouteValues" asp-route-handler="@Model.SearchHandler"
+                       asp-route-p="@Model.SearchResults.PreviousPageNumber.ToString()">
+                        Previous
+                    </a>
+                </li>
+            }
+            else
+            {
+                <li class="page-item disabled">
+                    <span class="page-link">Previous</span>
+                </li>
             }
 
-            @for (var i = Math.Max(1, Model.Paging.PageNumber - 2);
-                i <= Math.Min(Model.Paging.PageNumber + 2, Model.Paging.TotalPages);
-                i++)
+            @if (Model.SearchResults.PageNumber > 3)
+            {
+                <li class="page-item disabled">
+                    <span class="page-link">…</span>
+                </li>
+            }
+
+            @for (var i = Math.Max(1, Model.SearchResults.PageNumber - 2);
+                      i <= Math.Min(Model.SearchResults.PageNumber + 2, Model.SearchResults.TotalPages);
+                      i++)
             {
                 var index = i;
-                @if (index == Model.Paging.PageNumber)
+                @if (index == Model.SearchResults.PageNumber)
                 {
-                    <a class="gaepd-pagination-active">
-                        @index.ToString() <span class="usa-sr-only">(current)</span>
-                    </a>
+                    <li class="page-item active" aria-current="page">
+                        <span class="page-link">
+                            @index.ToString() <span class="visually-hidden">(current)</span>
+                        </span>
+                    </li>
                 }
                 else
                 {
-                    <a asp-fragment="search-results" asp-all-route-data="@Model.RouteValues"
-                       asp-route-p="@index.ToString()" asp-route-handler="search">
-                        @index.ToString()
-                    </a>
+                    <li class="page-item">
+                        <a class="page-link" asp-fragment="@Model.SearchFragment"
+                           asp-all-route-data="@Model.RouteValues" asp-route-handler="@Model.SearchHandler"
+                           asp-route-p="@index.ToString()">
+                            @index.ToString()
+                        </a>
+                    </li>
                 }
             }
 
-            @if (Model.Paging.TotalPages - Model.Paging.PageNumber > 2)
+            @if (Model.SearchResults.TotalPages - Model.SearchResults.PageNumber > 2)
             {
-                <span>…</span>
+                <li class="page-item disabled">
+                    <span class="page-link">…</span>
+                </li>
             }
-        </div>
 
-        @if (Model.Paging.HasNextPage)
-        {
-            <a asp-fragment="search-results" asp-all-route-data="@Model.RouteValues"
-               asp-route-p="@((Model.Paging.PageNumber + 1).ToString())" asp-route-handler="search"
-               class="gaepd-pagination-next">
-                Next
-            </a>
-        }
-        else
-        {
-            <span class="gaepd-pagination-next gaepd-pagination-disabled" title="Next">Next</span>
-        }
+            @if (Model.SearchResults.HasNextPage)
+            {
+                <li class="page-item">
+                    <a class="page-link" asp-fragment="@Model.SearchFragment"
+                       asp-all-route-data="@Model.RouteValues" asp-route-handler="@Model.SearchHandler"
+                       asp-route-p="@(Model.SearchResults.NextPageNumber.ToString())">
+                        Next
+                    </a>
+                </li>
+            }
+            else
+            {
+                <li class="page-item disabled">
+                    <span class="page-link">Next</span>
+                </li>
+            }
+        </ul>
     </nav>
 }

@@ -40,8 +40,8 @@ public sealed class LocalEnforcementOrderRepository(IAttachmentStore attachmentS
                 AttachmentData.Attachments.Single(a => a.Id == id)!))
             : Task.FromResult<AttachmentView>(null);
 
-    public Task<PaginatedResult<EnforcementOrderSummaryView>> ListAsync(
-        EnforcementOrderSpec spec, PaginationSpec paging)
+    public Task<PaginatedResult<EnforcementOrderSummaryView>> ListAsync(EnforcementOrderSpec spec,
+        PaginationSpec paging, CancellationToken token = default)
     {
         Guard.NotNull(spec);
         Guard.NotNull(paging);

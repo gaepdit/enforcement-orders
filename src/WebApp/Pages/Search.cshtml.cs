@@ -4,6 +4,7 @@ using Enfo.Domain.EnforcementOrders.Specs;
 using Enfo.Domain.LegalAuthorities;
 using Enfo.Domain.LegalAuthorities.Resources;
 using Enfo.Domain.Pagination;
+using Enfo.WebApp.Models;
 using Enfo.WebApp.Platform.AppConfiguration;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -12,23 +13,23 @@ namespace Enfo.WebApp.Pages;
 public class Search(IEnforcementOrderRepository order, ILegalAuthorityRepository legalAuthority) : PageModel
 {
     public EnforcementOrderSpec Spec { get; set; } = null!;
-    public PaginatedResult<EnforcementOrderSummaryView> OrdersList { get; private set; } = null!;
+    public PaginatedResult<EnforcementOrderSummaryView> SearchResults { get; private set; } = null!;
+    public PaginatedResultsDisplay ResultsDisplay => new(Spec, SearchResults);
     public SelectList LegalAuthoritiesSelectList { get; private set; } = null!;
     public bool ShowResults { get; private set; }
 
-    public async Task OnGetAsync() => LegalAuthoritiesSelectList = await GetLegalAuthoritiesSelectList();
+    public async Task OnGetAsync() => await PopulateSelectListsAsync();
 
-    public async Task OnGetSearchAsync(EnforcementOrderSpec spec, [FromQuery] int p = 1)
+    public async Task OnGetSearchAsync(EnforcementOrderSpec spec, [FromQuery] int p = 1,
+        CancellationToken token = default)
     {
-        spec.TrimAll();
-        Spec = spec;
-        OrdersList = await order.ListAsync(spec, new PaginationSpec(p, GlobalConstants.PageSize));
-        LegalAuthoritiesSelectList = await GetLegalAuthoritiesSelectList();
+        Spec = spec.TrimAll();
+        SearchResults = await order.ListAsync(Spec, new PaginationSpec(p, GlobalConstants.PageSize), token);
+        await PopulateSelectListsAsync();
         ShowResults = true;
     }
 
-    private async Task<SelectList> GetLegalAuthoritiesSelectList() =>
-        new(await legalAuthority.ListAsync(),
-            nameof(LegalAuthorityViewDto.Id),
-            nameof(LegalAuthorityViewDto.AuthorityName));
+    private async Task<SelectList> PopulateSelectListsAsync() =>
+        LegalAuthoritiesSelectList = new SelectList(await legalAuthority.ListAsync(),
+            nameof(LegalAuthorityViewDto.Id), nameof(LegalAuthorityViewDto.AuthorityName));
 }
