@@ -1,5 +1,6 @@
 ﻿@page
 @using Enfo.AppServices.AuthenticationServices
+@using Enfo.WebApp.Pages.Shared
 @using Enfo.WebApp.Platform.Settings
 @model LoginModel
 @{
@@ -20,9 +21,8 @@
         <a asp-page="/Support">EPD-IT support</a>.
     </p>
     <div asp-validation-summary="All" class="alert alert-danger d-flex align-items-center" role="alert">
-        <svg class="bi me-2" role="img" aria-label="Danger:">
-            <use href="@Url.Content("~/images/app-icons.svg")#app-icon-exclamation-triangle-fill"></use>
-        </svg>
+        <partial name="Shared/_AppIconsPartial" model="@AppIcon.WarningIcon" view-data="new ViewDataDictionary(ViewData)"
+                 view-data-CssClass="@("me-2")" />
     </div>
 }
 
@@ -38,9 +38,7 @@
                           method="post">
                         <button type="submit" class="btn btn-lg btn-outline-primary btn-img icon-link my-3 py-3 px-4"
                                 title="Sign in as a test user">
-                            <svg class="bi me-2">
-                                <use href="@Url.Content("~/images/app-icons.svg")#app-icon-person-badge"></use>
-                            </svg>
+                            <partial name="Shared/_AppIconsPartial" model="@AppIcon.Badge" />
                             Sign in
                         </button>
                     </form>

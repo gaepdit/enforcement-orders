@@ -1,4 +1,5 @@
 ﻿@page "{id:Guid?}"
+@using Enfo.WebApp.Pages.Shared
 @model EditRolesModel
 @{
     ViewData["Title"] = "Edit User Roles";
@@ -20,10 +21,8 @@
     <p>View a detailed description of <a asp-page="Roles" target="_blank">user roles and capabilities</a>.</p>
     <form method="post">
         <div asp-validation-summary="All" class="alert alert-danger d-flex align-items-center" role="alert">
-            <svg class="bi me-2" role="img" aria-label="Danger:">
-                <use href="@Url.Content("~/images/app-icons.svg")#app-icon-exclamation-triangle-fill"></use>
-            </svg>
-            <div>Roles update failed:</div>
+            <partial name="Shared/_AppIconsPartial" model="@AppIcon.WarningIcon" />
+            <div class="ms-2">Roles update failed:</div>
         </div>
 
         <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">

@@ -1,0 +1,4 @@
+@using Enfo.Domain.Utils
+@using System.Globalization
+@model DateTime
+@Model.ToString(DisplayFormats.ShortDate, CultureInfo.InvariantCulture)

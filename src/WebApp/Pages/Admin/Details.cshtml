@@ -1,142 +1,117 @@
 ﻿@page "{id}"
 @using Enfo.Domain.Identity
-@using Enfo.WebApp.Models
+@using Enfo.WebApp.Pages.Shared
+@using Enfo.WebApp.Pages.Shared.DisplayTemplates
 @model DetailsModel
 @{
     ViewData["Title"] = $"Enforcement Order {Model.Item.OrderNumber}";
 }
 
-<partial name="_AlertPartial" for="Message" />
-
-<h1>
-    <em>Admin View:</em> @ViewData["Title"]
-</h1>
-
-@if (Model.Item.Deleted)
-{
-    // Replace with callout
-    @await Html.PartialAsync("_AlertPartial", new DisplayMessage(DisplayMessage.AlertContext.Warning,
-        "This enforcement order has been deleted and will not be displayed to the public."))
-}
-else if (Model.Item.IsPublic)
-{
-    <div class="gaepd-noprint">
-        <a asp-page="/Details" asp-route-id="@Model.Item.Id.ToString()">Go to public view</a>
-    </div>
-}
-else
-{
-    <div>This Order is not publicly viewable.</div>
-}
-
-<table class="gaepd-table-compact gaepd-table-rowheadings gaepd-table-autowidth" aria-label="Enforcement order details">
-    <tbody>
-    <tr>
-        <th scope="row">@Html.DisplayNameFor(m => m.Item.PublicationStatus)</th>
-        <td>@Html.DisplayFor(m => m.Item.PublicationStatus)</td>
-    </tr>
-    <tr>
-        <th scope="row">@Html.DisplayNameFor(m => m.Item.FacilityName)</th>
-        <td>@Html.DisplayFor(m => m.Item.FacilityName)</td>
-    </tr>
-    <tr>
-        <th scope="row">@Html.DisplayNameFor(m => m.Item.County)</th>
-        <td>@Html.DisplayFor(m => m.Item.County) County</td>
-    </tr>
-    <tr>
-        <th scope="row">@Html.DisplayNameFor(m => m.Item.Cause)</th>
-        <td>@Html.DisplayFor(m => m.Item.Cause)</td>
-    </tr>
-    <tr>
-        <th scope="row">@Html.DisplayNameFor(m => m.Item.Requirements)</th>
-        <td>@Html.DisplayFor(m => m.Item.Requirements)</td>
-    </tr>
-    <tr>
-        <th scope="row">@(Model.Item.IsExecutedOrder ? "" : "Proposed ")@Html.DisplayNameFor(m => m.Item.SettlementAmount)</th>
-        <td>@Html.DisplayFor(m => m.Item.SettlementAmount)</td>
-    </tr>
-    <tr>
-        <th scope="row">@Html.DisplayNameFor(m => m.Item.LegalAuthority)</th>
-        <td>@Html.DisplayFor(m => m.Item.LegalAuthority.AuthorityName)</td>
-    </tr>
-
-    @if (Model.Item.IsProposedOrder)
-    {
-        <tr>
-            <th scope="row">@Html.DisplayNameFor(m => m.Item.ProposedOrderPostedDate)</th>
-            <td>@Html.DisplayFor(m => m.Item.ProposedOrderPostedDate)</td>
-        </tr>
-        <tr>
-            <th scope="row">@Html.DisplayNameFor(m => m.Item.CommentPeriodClosesDate)</th>
-            <td>@Html.DisplayFor(m => m.Item.CommentPeriodClosesDate)</td>
-        </tr>
-        <tr>
-            <th scope="row">@Html.DisplayNameFor(m => m.Item.CommentContact)</th>
-            <td>
-                @if (Model.Item.CommentContact != null)
-                {
-                    @Html.DisplayFor(m => m.Item.CommentContact)
-                }
-                else
-                {
-                    <p>N/A</p>
-                }
-            </td>
-        </tr>
-    }
-
-    @if (Model.Item.IsExecutedOrder)
-    {
-        <tr>
-            <th scope="row">@Html.DisplayNameFor(m => m.Item.ExecutedDate)</th>
-            <td>@Html.DisplayFor(m => m.Item.ExecutedDate)</td>
-        </tr>
-        <tr>
-            <th scope="row">@Html.DisplayNameFor(m => m.Item.ExecutedOrderPostedDate)</th>
-            <td>@Html.DisplayFor(m => m.Item.ExecutedOrderPostedDate)</td>
-        </tr>
-    }
-
-    @if (Model.Item.IsHearingScheduled)
-    {
-        <tr>
-            <th scope="row">@Html.DisplayNameFor(m => m.Item.IsHearingScheduled)</th>
-            <td>
-            <p>
-                <em>@Html.DisplayNameFor(m => m.Item.HearingDate)</em><br />
-                @Html.DisplayFor(m => m.Item.HearingDate)
-            </p>
-            <p>
-                <em>@Html.DisplayNameFor(m => m.Item.HearingLocation)</em><br />
-                @Html.DisplayFor(m => m.Item.HearingLocation)
-            </p>
-            <p>
-                <em>@Html.DisplayNameFor(m => m.Item.HearingCommentPeriodClosesDate)</em><br />
-                @Html.DisplayFor(m => m.Item.HearingCommentPeriodClosesDate)
-            </p>
-            <p>
-                <em>@Html.DisplayNameFor(m => m.Item.HearingContact)</em><br />
-            </p>
-            @if (Model.Item.HearingContact != null)
+<div class="container-full">
+    <div class="row justify-content-between align-items-baseline g-0 mt-1 mb-3">
+        <div class="col">
+            <h1>
+                <em class="text-info-emphasis">Admin View:</em>
+                Enforcement Order <span class="text-nowrap">@Model.Item.OrderNumber</span>
+            </h1>
+        </div>
+        <div class="col-auto d-print-none ms-2">
+            @if (Model.Item.IsPublic)
             {
-                    @Html.DisplayFor(m => m.Item.HearingContact)
+                <a asp-page="/Details" asp-route-id="@Model.Item.Id"
+                   class="link-underline link-underline-opacity-25 link-underline-opacity-100-hover link-offset-2">
+                    <partial name="Shared/_AppIconsPartial" model="@AppIcon.People"
+                             view-data="new ViewDataDictionary(ViewData)" view-data-CssClass="@("me-2")" />
+                    Go to public view
+                </a>
             }
             else
             {
-                <p>N/A</p>
+                <text>Not publicly viewable</text>
             }
-        </tr>
-    }
-    <tr id="attachments">
-        <th scope="row" rowspan="2">@Html.DisplayNameFor(m => m.Item.Attachments)</th>
-        <td>
+        </div>
+    </div>
+</div>
+
+@if (Model.Item.Deleted)
+{
+    <div class="callout callout-danger mb-3">
+        <div class="container-full">
+            <h4 class="text-danger-emphasis">Deleted</h4>
+        </div>
+        <p>
+            This enforcement order has been deleted and will not be displayed to the public.
+        </p>
+    </div>
+}
+
+<div class="container">
+    <dl class="row">
+        <dt class="col-sm-4">@Html.DisplayNameFor(m => m.Item.PublicationStatus)</dt>
+        <dd class="col-sm-8">@Html.DisplayFor(m => m.Item.PublicationStatus)</dd>
+        <dt class="col-sm-4">@Html.DisplayNameFor(m => m.Item.FacilityName)</dt>
+        <dd class="col-sm-8">@Html.DisplayFor(m => m.Item.FacilityName)</dd>
+        <dt class="col-sm-4">@Html.DisplayNameFor(m => m.Item.County)</dt>
+        <dd class="col-sm-8">@Html.DisplayFor(m => m.Item.County) County</dd>
+        <dt class="col-sm-4">@Html.DisplayNameFor(m => m.Item.Cause)</dt>
+        <dd class="col-sm-8">@Html.DisplayFor(m => m.Item.Cause)</dd>
+        <dt class="col-sm-4">@Html.DisplayNameFor(m => m.Item.Requirements)</dt>
+        <dd class="col-sm-8">@Html.DisplayFor(m => m.Item.Requirements)</dd>
+        <dt class="col-sm-4">@(Model.Item.IsExecutedOrder ? "" : "Proposed ")@Html.DisplayNameFor(m => m.Item.SettlementAmount)</dt>
+        <dd class="col-sm-8">@Html.DisplayFor(m => m.Item.SettlementAmount)</dd>
+        <dt class="col-sm-4">@Html.DisplayNameFor(m => m.Item.LegalAuthority)</dt>
+        <dd class="col-sm-8">@Html.DisplayFor(m => m.Item.LegalAuthority.AuthorityName)</dd>
+
+        @if (Model.Item.IsProposedOrder)
+        {
+            <dt class="col-sm-4">@Html.DisplayNameFor(m => m.Item.ProposedOrderPostedDate)</dt>
+            <dd class="col-sm-8">@Html.DisplayFor(m => m.Item.ProposedOrderPostedDate, DisplayTemplate.DateTimeNullableAsShort)</dd>
+            <dt class="col-sm-4">@Html.DisplayNameFor(m => m.Item.CommentPeriodClosesDate)</dt>
+            <dd class="col-sm-8">@Html.DisplayFor(m => m.Item.CommentPeriodClosesDate, DisplayTemplate.DateTimeNullableAsShort)</dd>
+            <dt class="col-sm-4">@Html.DisplayNameFor(m => m.Item.CommentContact)</dt>
+            <dd class="col-sm-8">@Html.DisplayFor(m => m.Item.CommentContact, DisplayTemplate.ContactView)</dd>
+        }
+
+        @if (Model.Item.IsExecutedOrder)
+        {
+            <dt class="col-sm-4">@Html.DisplayNameFor(m => m.Item.ExecutedDate)</dt>
+            <dd class="col-sm-8">@Html.DisplayFor(m => m.Item.ExecutedDate, DisplayTemplate.DateTimeNullableAsShort)</dd>
+            <dt class="col-sm-4">@Html.DisplayNameFor(m => m.Item.ExecutedOrderPostedDate)</dt>
+            <dd class="col-sm-8">@Html.DisplayFor(m => m.Item.ExecutedOrderPostedDate, DisplayTemplate.DateTimeNullableAsShort)</dd>
+        }
+
+        @if (Model.Item.IsHearingScheduled)
+        {
+            <dt class="col-sm-4">@Html.DisplayNameFor(m => m.Item.IsHearingScheduled)</dt>
+            <dd class="col-sm-8">
+                <p>
+                    <em>@Html.DisplayNameFor(m => m.Item.HearingDate)</em><br />
+                    @Html.DisplayFor(m => m.Item.HearingDate, DisplayTemplate.DateTimeNullableAsShort)
+                </p>
+                <p>
+                    <em>@Html.DisplayNameFor(m => m.Item.HearingLocation)</em><br />
+                    @Html.DisplayFor(m => m.Item.HearingLocation)
+                </p>
+                <p>
+                    <em>@Html.DisplayNameFor(m => m.Item.HearingCommentPeriodClosesDate)</em><br />
+                    @Html.DisplayFor(m => m.Item.HearingCommentPeriodClosesDate, DisplayTemplate.DateTimeNullableAsShort)
+                </p>
+                <p>
+                    <em>@Html.DisplayNameFor(m => m.Item.HearingContact)</em><br />
+                </p>
+                @Html.DisplayFor(m => m.Item.HearingContact, DisplayTemplate.ContactView)
+            </dd>
+        }
+
+        <dt class="col-sm-4">@Html.DisplayNameFor(m => m.Item.Attachments)</dt>
+        <dd class="col-sm-8" id="attachments">
             @if (Model.Item.Attachments.Count == 0)
             {
                 <em>None</em>
             }
             else
             {
-                <table class="gaepd-file-links" aria-label="File attachments">
+                <table class="table table-hover" aria-label="File attachments">
                     <thead>
                     <tr>
                         <th scope="col">File</th>
@@ -151,19 +126,21 @@ else
                     <tbody>
                     @foreach (var item in Model.Item.Attachments)
                     {
-                        <tr>
-                            <td>
-                                <a asp-page="/Attachment" asp-route-id="@item.Id.ToString()" asp-route-fileName="@item.FileName" class="gaepd-file-link" target="_blank">
-                                    @Html.DisplayFor(m => item.FileExtension) @item.FileName
+                        <tr class="align-middle">
+                            <th class="fw-normal" scope="row">
+                                <a asp-page="/Attachment" asp-route-id="@item.Id.ToString()" asp-route-fileName="@item.FileName" target="_blank"
+                                   class="text-decoration-hover link-offset-2 no-external-link" target="_blank">
+                                    <partial name="Shared/_AppIconsPartial" model="@AppIcon.Pdf"
+                                             view-data="new ViewDataDictionary(ViewData)" view-data-CssClass="@("me-1")" />@item.FileName
                                 </a>
-                            </td>
-                            <td>@Html.DisplayFor(m => item.Size)</td>
-                            <td>@Html.DisplayFor(m => item.DateUploaded)</td>
+                            </th>
+                            <td>@Html.DisplayFor(m => item.Size, DisplayTemplate.FileSize)</td>
+                            <td>@Html.DisplayFor(m => item.DateUploaded, DisplayTemplate.DateTimeAsShort)</td>
                             @if (User.IsInRole(AppRole.OrderAdministrator) && !Model.Item.Deleted)
                             {
                                 <td>
                                     <form method="post" asp-page-handler="DeleteAttachment" enctype="multipart/form-data">
-                                        <button type="submit" class="usa-button-gray gaepd-button-inline-action">Delete</button>
+                                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                                         <input type="hidden" name="attachmentId" value="@item.Id.ToString()" />
                                     </form>
                                 </td>
@@ -173,38 +150,35 @@ else
                     </tbody>
                 </table>
             }
-        </td>
-    </tr>
-    @if (User.IsInRole(AppRole.OrderAdministrator) && !Model.Item.Deleted)
-    {
-        <tr>
-            <td colspan="2">
-                <form method="post" asp-page-handler="AddAttachment" enctype="multipart/form-data" class="gaepd-container-light">
-                    <h5>Add attachment</h5>
-                    <div>
-                        <em>Only PDF documents are allowed.</em>
-                    </div>
-                    <input asp-for="Attachment" class="filesUploadInput" accept=".pdf" />
-                    <button type="submit" class="usa-button-secondary gaepd-button-inline-action">Attach selected file</button>
-                    <input asp-for="Id" type="hidden" />
-                </form>
-            </td>
-        </tr>
-    }
-    </tbody>
-</table>
+            @if (User.IsInRole(AppRole.OrderAdministrator) && !Model.Item.Deleted)
+            {
+                <div class="p-3 mt-3 rounded-3 bg-light-subtle border">
+                    <form method="post" asp-page-handler="AddAttachment" enctype="multipart/form-data">
+                        <h5>Add attachment</h5>
+                        <div class="mb-3"><em>Only PDF documents are allowed.</em></div>
+                        <div class="mb-3">
+                            <input asp-for="Attachment" class="filesUploadInput" accept=".pdf" />
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-sm">Attach selected file</button>
+                        <input asp-for="Id" type="hidden" />
+                    </form>
+                </div>
+            }
+        </dd>
+    </dl>
 
-@if (User.IsInRole(AppRole.OrderAdministrator))
-{
-    <div>
-        @if (Model.Item.Deleted)
-        {
-            <a asp-page="Restore" asp-route-id="@Model.Item.Id.ToString()" class="usa-button usa-button-secondary">Restore deleted order</a>
-        }
-        else
-        {
-            <a asp-page="Edit" asp-route-id="@Model.Item.Id.ToString()" class="usa-button usa-button-secondary">Edit</a>
-            <a asp-page="Delete" asp-route-id="@Model.Item.Id.ToString()" class="usa-button usa-button-red">Delete</a>
-        }
-    </div>
-}
+    @if (User.IsInRole(AppRole.OrderAdministrator))
+    {
+        <div>
+            @if (Model.Item.Deleted)
+            {
+                <a asp-page="Restore" asp-route-id="@Model.Item.Id.ToString()" class="btn btn-outline-warning">Restore deleted order</a>
+            }
+            else
+            {
+                <a asp-page="Edit" asp-route-id="@Model.Item.Id.ToString()" class="btn btn-outline-primary me-2">Edit</a>
+                <a asp-page="Delete" asp-route-id="@Model.Item.Id.ToString()" class="btn btn-outline-danger">Delete</a>
+            }
+        </div>
+    }
+</div>

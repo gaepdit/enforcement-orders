@@ -1,4 +1,5 @@
 @page "{id}"
+@using Enfo.WebApp.Pages.Shared
 @using Enfo.WebApp.Pages.Shared.DisplayTemplates
 @model DetailsModel
 @{
@@ -13,9 +14,8 @@
             <div class="col-auto d-print-none ms-2">
                 <a asp-page="/Admin/Details" asp-route-id="@Model.Item.Id"
                    class="link-underline link-underline-opacity-25 link-underline-opacity-100-hover link-offset-2">
-                    <svg class="bi me-2">
-                        <use href="@Url.Content("~/images/app-icons.svg")#app-icon-person-badge"></use>
-                    </svg>
+                    <partial name="Shared/_AppIconsPartial" model="@AppIcon.Badge"
+                             view-data="new ViewDataDictionary(ViewData)" view-data-CssClass="@("me-2")" />
                     Go to admin view
                 </a>
             </div>
@@ -95,13 +95,14 @@
             }
             else
             {
-                <ul class="gaepd-file-links">
+                <ul class="list-unstyled">
                     @foreach (var item in Model.Item.Attachments)
                     {
-                        <li>
-                            <a asp-page="/Attachment" asp-route-id="@item.Id.ToString()" asp-route-fileName="@item.FileName" class="gaepd-file-link" target="_blank">
-                                @Html.DisplayFor(m => item.FileExtension)
-                                @item.FileName
+                        <li class="mb-3">
+                            <a asp-page="/Attachment" asp-route-id="@item.Id.ToString()" asp-route-fileName="@item.FileName"
+                               class="text-decoration-hover link-offset-2 no-external-link" target="_blank">
+                                <partial name="Shared/_AppIconsPartial" model="@AppIcon.Pdf"
+                                         view-data="new ViewDataDictionary(ViewData)" view-data-CssClass="@("me-1")" />@item.FileName
                             </a>
                             (@Html.DisplayFor(m => item.Size), uploaded @Html.DisplayFor(m => item.DateUploaded))
                         </li>

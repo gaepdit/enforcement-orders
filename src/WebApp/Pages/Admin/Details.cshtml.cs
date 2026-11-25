@@ -10,26 +10,19 @@ namespace Enfo.WebApp.Pages.Admin;
 [Authorize]
 public class DetailsModel(IEnforcementOrderRepository repository) : PageModel
 {
-    [BindProperty]
+    [FromRoute]
     public int Id { get; set; }
 
     [BindProperty]
-    public IFormFile Attachment { get; set; }
+    public IFormFile? Attachment { get; set; }
 
-    public EnforcementOrderAdminView Item { get; private set; }
-    public DisplayMessage Message { get; private set; }
+    public EnforcementOrderAdminView Item { get; private set; } = null!;
 
-    public async Task<IActionResult> OnGetAsync(int? id)
+    public async Task<IActionResult> OnGetAsync()
     {
-        if (id == null) return NotFound();
-        Item = await repository.GetAdminViewAsync(id.Value);
+        if (Id == 0) return NotFound();
+        Item = await repository.GetAdminViewAsync(Id);
         if (Item == null) return NotFound("ID not found.");
-
-        // TempData might be null when called from unit test
-        // ReSharper disable once ConstantConditionalAccessQualifier
-        Message = TempData?.GetDisplayMessage();
-
-        Id = id.Value;
         return Page();
     }
 
@@ -49,13 +42,13 @@ public class DetailsModel(IEnforcementOrderRepository repository) : PageModel
 
         if (!ModelState.IsValid || Attachment is null)
         {
-            Message = new DisplayMessage(DisplayMessage.AlertContext.Warning, "Please select a valid file.");
+            TempData.SetDisplayMessage(DisplayMessage.AlertContext.Warning, "Please select a valid file.");
             return Page();
         }
 
         if (Attachment.Length == 0)
         {
-            Message = new DisplayMessage(DisplayMessage.AlertContext.Danger, "File upload failed.");
+            TempData.SetDisplayMessage(DisplayMessage.AlertContext.Danger, "File upload failed.");
             return Page();
         }
 
@@ -63,7 +56,7 @@ public class DetailsModel(IEnforcementOrderRepository repository) : PageModel
 
         if (!FileTypes.FileUploadAllowed(extension))
         {
-            Message = new DisplayMessage(DisplayMessage.AlertContext.Danger,
+            TempData.SetDisplayMessage(DisplayMessage.AlertContext.Danger,
                 "Invalid file. Only PDF attachments are allowed.");
             return Page();
         }
@@ -77,7 +70,7 @@ public class DetailsModel(IEnforcementOrderRepository repository) : PageModel
         if (!User.IsInRole(AppRole.OrderAdministrator)) return Forbid();
 
         Item = await repository.GetAdminViewAsync(Id);
-        if (Item == null) return NotFound("ID not found.");
+        if (Item == null) return BadRequest("ID not found.");
 
         if (Item.Deleted)
         {

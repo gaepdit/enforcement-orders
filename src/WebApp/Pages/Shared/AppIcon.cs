@@ -19,6 +19,7 @@ public enum AppIcon
     Map,
     MapPin,
     MoreMenu,
+    Pdf,
     People,
     Plus,
     Print,

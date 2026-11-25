@@ -8,5 +8,7 @@ public static class DisplayTemplate
     public const string ContactPerson = nameof(ContactPerson);
     public const string ContactView = nameof(ContactView);
     public const string DateTimeNullableAsShort = nameof(DateTimeNullableAsShort);
+    public const string DateTimeAsShort = nameof(DateTimeAsShort);
+    public const string FileSize = nameof(FileSize);
     public const string StringOrPlaceholder = nameof(StringOrPlaceholder);
 }

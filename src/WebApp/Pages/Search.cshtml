@@ -1,5 +1,6 @@
 ﻿@page "{handler?}"
 @using Enfo.Domain.EnforcementOrders.Specs
+@using Enfo.WebApp.Pages.Shared
 @using Enfo.WebApp.Platform.PageModelHelpers
 @model Search
 @{
@@ -14,9 +15,7 @@
             <div class="col-auto d-print-none ms-2">
                 <a asp-page="/Admin/Search"
                    class="link-underline link-underline-opacity-25 link-underline-opacity-100-hover link-offset-2">
-                    <svg class="bi me-2">
-                        <use href="@Url.Content("~/images/app-icons.svg")#app-icon-person-badge"></use>
-                    </svg>
+                    <partial name="Shared/_AppIconsPartial" model="@AppIcon.Badge" />
                     Go to admin search
                 </a>
             </div>
