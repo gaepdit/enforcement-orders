@@ -22,7 +22,6 @@ public static class ApiDocumentation
                 Contact = new OpenApiContact
                 {
                     Name = $"{ApiTitle} Support",
-                    Email = AppSettings.Support.TechnicalSupportEmail,
                     Url = AppSettings.Support.TechnicalSupportSiteUrl,
                 },
             });

@@ -1,0 +1,32 @@
+﻿@page
+@using Enfo.WebApp.Platform.Settings
+@model Support
+@{
+    ViewData["Title"] = "Support";
+}
+
+<h1>Enforcement Orders System Support</h1>
+
+@if (Model.ActiveUser)
+{
+    <p>
+        For technical support, please
+        <a href="@AppSettings.Support.TechnicalSupportSite" target="_blank" rel="noopener">open a support ticket</a>.
+    </p>
+}
+
+<div class="callout callout-info">
+    <small>
+        This application was developed by Georgia EPD-IT.<br />
+        @if (!string.IsNullOrEmpty(AppSettings.Version))
+        {
+            @:Current version: <em>@AppSettings.Version</em>
+        }
+        <br />
+        View the
+        <a href="https://github.com/gaepdit/air-web/blob/main/CHANGELOG.md" target="_blank" rel="noopener" class="text-decoration-hover link-offset-2">Changelog</a>.
+        <br />
+        Source code available on
+        <a href="https://github.com/gaepdit/air-web" target="_blank" rel="noopener" class="text-decoration-hover link-offset-2">GitHub</a>.
+    </small>
+</div>

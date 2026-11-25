@@ -24,7 +24,6 @@ internal static partial class AppSettings
 [UsedImplicitly(ImplicitUseTargetFlags.Members)]
 public record Support
 {
-    public string? TechnicalSupportEmail { get; init; }
     public string? TechnicalSupportSite { get; init; }
     public Uri? TechnicalSupportSiteUrl => TechnicalSupportSite is null ? null : new Uri(TechnicalSupportSite);
 }
