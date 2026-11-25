@@ -24,7 +24,7 @@ public class SearchTests
 
         using (new AssertionScope())
         {
-            page.Spec.Should().BeEquivalentTo(new EnforcementOrderSpec());
+            page.Spec.Should().BeNull();
             var expectedLegal = new SelectList(ResourceHelper.GetLegalAuthorityViewList(),
                 nameof(LegalAuthorityViewDto.Id),
                 nameof(LegalAuthorityViewDto.AuthorityName));

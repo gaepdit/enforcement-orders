@@ -3,14 +3,14 @@ using Enfo.Domain.EnforcementOrders.Resources;
 
 namespace Enfo.WebApp.Pages;
 
-public class DetailsModel : PageModel
+public class DetailsModel(IEnforcementOrderRepository repository) : PageModel
 {
     [FromRoute]
     public int Id { get; set; }
 
     public EnforcementOrderDetailedView Item { get; private set; } = null!;
 
-    public async Task<IActionResult> OnGetAsync([FromServices] IEnforcementOrderRepository repository)
+    public async Task<IActionResult> OnGetAsync()
     {
         if (Id == 0) return NotFound();
         Item = await repository.GetAsync(Id);

@@ -14,9 +14,9 @@ public class DetailsModelTests
         var item = ResourceHelper.GetEnforcementOrderDetailedView(itemId);
         var repo = Substitute.For<IEnforcementOrderRepository>();
         repo.GetAsync(itemId).Returns(item);
-        var page = new DetailsModel { Id = itemId };
+        var page = new DetailsModel(repo) { Id = itemId };
 
-        await page.OnGetAsync(repo);
+        await page.OnGetAsync();
 
         page.Item.Should().Be(item);
     }
@@ -25,9 +25,9 @@ public class DetailsModelTests
     public async Task OnGet_NullId_ReturnsNotFound()
     {
         var repo = Substitute.For<IEnforcementOrderRepository>();
-        var page = new DetailsModel { Id = 0 };
+        var page = new DetailsModel(repo) { Id = 0 };
 
-        var result = await page.OnGetAsync(repo);
+        var result = await page.OnGetAsync();
 
         using (new AssertionScope())
         {
@@ -40,9 +40,9 @@ public class DetailsModelTests
     public async Task OnGet_NonexistentId_ReturnsNotFound()
     {
         var repo = Substitute.For<IEnforcementOrderRepository>();
-        var page = new DetailsModel() { Id = -1 };
+        var page = new DetailsModel(repo) { Id = -1 };
 
-        var result = await page.OnGetAsync(repo);
+        var result = await page.OnGetAsync();
 
         using (new AssertionScope())
         {
